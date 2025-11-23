@@ -5,7 +5,7 @@
 </p>
 
 <p align="center" width="100%">
-  
+
   <a href="https://github.com/pyramation/inquirerer/actions/workflows/run-tests.yml">
     <img height="20" src="https://github.com/pyramation/inquirerer/actions/workflows/run-tests.yml/badge.svg" />
   </a>
@@ -14,7 +14,7 @@
    <a href="https://www.npmjs.com/package/inquirerer"><img height="20" src="https://img.shields.io/github/package-json/v/pyramation/inquirerer?filename=packages%2Finquirerer%2Fpackage.json"></a>
 </p>
 
-This library is designed to facilitate the creation of command-line utilities by providing a robust framework for capturing user input through interactive prompts. It supports a variety of question types, making it highly flexible and suitable for a wide range of applications. 
+This library is designed to facilitate the creation of command-line utilities by providing a robust framework for capturing user input through interactive prompts. It supports a variety of question types, making it highly flexible and suitable for a wide range of applications.
 
 ## Install
 
@@ -158,6 +158,6 @@ yarn build
 
 ## Disclaimer
 
-AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED “AS IS”, AT YOUR OWN RISK, AND WITHOUT WARRANTIES OF ANY KIND.
+AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED "AS IS", AT YOUR OWN RISK, AND WITHOUT WARRANTIES OF ANY KIND.
 
 No developer or entity involved in creating this software will be liable for any claims or damages whatsoever associated with your use, inability to use, or your interaction with other users of the code, including any direct, indirect, incidental, special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies, tokens, or anything else of value.
