@@ -1,7 +1,7 @@
 # dev-utils
 
 <p align="center">
-  <img src="https://github.com/cosmology-tech/interweb-utils/assets/545047/89c743c4-be88-409f-9a77-4b02cd7fe9a4" width="80">
+  <img src="https://raw.githubusercontent.com/hyperweb-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80">
   <br />
   Open-source development utilities for modern web applications
   <br />

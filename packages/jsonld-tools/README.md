@@ -388,8 +388,8 @@ const result = createJsonLdBuilder()
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/hyperweb-io/jsonld-tools.git
-cd jsonld-tools
+git clone https://github.com/hyperweb-io/dev-utils.git
+cd dev-utils/packages/jsonld-tools
 ```
 
 2. Install dependencies:

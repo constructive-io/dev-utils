@@ -16,7 +16,7 @@ exports[`memo 1`] = `
 
 exports[`memo camelCase 1`] = `
 "export interface Memo {
-  schema?: string;
+  $schema?: string;
   memoKeys: {
     key: string;
     description: string;

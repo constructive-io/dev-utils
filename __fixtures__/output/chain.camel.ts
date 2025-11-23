@@ -33,7 +33,7 @@ export interface Pointer {
   baseDenom?: string;
 }
 export interface CosmosChain {
-  schema?: string;
+  $schema?: string;
   chainName: string;
   chainId: string;
   preForkChainName?: string;
