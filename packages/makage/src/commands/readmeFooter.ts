@@ -10,19 +10,36 @@ interface ReadmeFooterArgs {
 export async function runReadmeFooter(args: string[]) {
   const parsed = parseArgs(args);
 
-  const [readme, footer] = await Promise.all([
-    fs.readFile(parsed.source, 'utf8'),
-    fs.readFile(parsed.footer, 'utf8')
-  ]);
+  const readme = await fs.readFile(parsed.source, 'utf8');
 
-  const combined = `${readme.trimEnd()}\n\n---\n\n${footer.trim()}\n`;
+  let footer: string | null = null;
+  try {
+    footer = await fs.readFile(parsed.footer, 'utf8');
+  } catch (err: any) {
+    if (err.code === 'ENOENT') {
+      console.log(`[makage] warning: ${parsed.footer} not found, skipping footer`);
+    } else {
+      throw err;
+    }
+  }
+
+  const combined = footer
+    ? `${readme.trimEnd()}\n\n---\n\n${footer.trim()}\n`
+    : readme;
+
   const destDir = path.dirname(parsed.dest);
   await fs.mkdir(destDir, { recursive: true });
   await fs.writeFile(parsed.dest, combined, 'utf8');
 
-  console.log(
-    `[makage] wrote README with footer: ${parsed.source} + ${parsed.footer} -> ${parsed.dest}`
-  );
+  if (footer) {
+    console.log(
+      `[makage] wrote README with footer: ${parsed.source} + ${parsed.footer} -> ${parsed.dest}`
+    );
+  } else {
+    console.log(
+      `[makage] wrote README: ${parsed.source} -> ${parsed.dest}`
+    );
+  }
 }
 
 function parseArgs(args: string[]): ReadmeFooterArgs {
