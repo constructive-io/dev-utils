@@ -63,8 +63,8 @@ importers:
   packages/create-gen-app:
     dependencies:
       inquirerer:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: workspace:*
+        version: link:../inquirerer/dist
     publishDirectory: dist
 
   packages/fetch-api-client:
@@ -89,9 +89,6 @@ importers:
 
   packages/inquirerer:
     dependencies:
-      chalk:
-        specifier: ^4.1.0
-        version: 4.1.2
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
@@ -101,6 +98,9 @@ importers:
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
+      yanse:
+        specifier: workspace:*
+        version: link:../yanse/dist
     devDependencies:
       '@types/minimist':
         specifier: ^1.2.5
@@ -2159,9 +2159,6 @@ packages:
   inquirer@8.2.7:
     resolution: {integrity: sha512-UjOaSel/iddGZJ5xP/Eixh6dY1XghiBw4XK13rCCIJcJfyhhoul/7KhLLUGtebEj6GDYM6Vnx/mVsjx2L/mFIA==}
     engines: {node: '>=12.0.0'}
-
-  inquirerer@2.1.0:
-    resolution: {integrity: sha512-hUkx+EtokFn75bmon/JPSobGZXomrI8XFH8NRXLJ6xbLfuifVEbmKGWvsLUMsJ0477BT1TKtJI3GO/YVuYKP6Q==}
 
   ip-address@10.1.0:
     resolution: {integrity: sha512-XXADHxXmvT9+CRxhXg56LJovE+bmWnEWB78LB83VZTprKTmaC5QfruXocxzTZ2Kl0DNwKuBdlIhjL8LeY8Sf8Q==}
@@ -5912,13 +5909,6 @@ snapshots:
       wrap-ansi: 6.2.0
     transitivePeerDependencies:
       - '@types/node'
-
-  inquirerer@2.1.0:
-    dependencies:
-      chalk: 4.1.2
-      deepmerge: 4.3.1
-      js-yaml: 4.1.1
-      minimist: 1.2.8
 
   ip-address@10.1.0: {}
 
