@@ -1,7 +1,7 @@
 import objectPath from '../src';
 
 describe('Object Path Operations', () => {
-  let obj;
+  let obj: any;
 
   beforeEach(() => {
     obj = {

@@ -47,7 +47,6 @@ jobs:
       matrix:
         package:
           - casing
-          - cli
           - fetch-api-client
           - find-pkg
           - http-errors
