@@ -1,6 +1,6 @@
 {
   "name": "nested-obj",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "manipulate deep objects safely and simply",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "homepage": "https://github.com/hyperweb-io/dev-utils",
