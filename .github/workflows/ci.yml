@@ -51,6 +51,7 @@ jobs:
           - find-pkg
           - http-errors
           - jsonld-tools
+          - makage
           - nested-obj
           - node-api-client
           - schema-sdk
