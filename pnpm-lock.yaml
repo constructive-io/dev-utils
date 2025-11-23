@@ -58,6 +58,10 @@ importers:
         version: 5.9.3
 
   packages/casing:
+    devDependencies:
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/fetch-api-client:
@@ -72,15 +76,30 @@ importers:
       '@types/isomorphic-fetch':
         specifier: ^0.0.39
         version: 0.0.39
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/find-pkg:
+    devDependencies:
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/http-errors:
+    devDependencies:
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/jsonld-tools:
+    devDependencies:
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/makage:
@@ -109,6 +128,9 @@ importers:
       jest-in-case:
         specifier: 1.0.2
         version: 1.0.2
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -131,6 +153,10 @@ importers:
       '@interweb/http-errors':
         specifier: workspace:*
         version: link:../http-errors/dist
+    devDependencies:
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/schema-sdk:
@@ -169,9 +195,16 @@ importers:
       jest-diff:
         specifier: ^30.0.4
         version: 30.2.0
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/schema-ts-cli:
+    devDependencies:
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/schema-typescript:
@@ -195,6 +228,9 @@ importers:
       '@types/babel__generator':
         specifier: ^7.27.0
         version: 7.27.0
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
     publishDirectory: dist
 
   packages/strfy-js:
@@ -224,6 +260,9 @@ importers:
       jest-in-case:
         specifier: 1.0.2
         version: 1.0.2
+      makage:
+        specifier: workspace:*
+        version: link:../makage/dist
       nested-obj:
         specifier: workspace:*
         version: link:../nested-obj/dist
