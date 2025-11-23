@@ -137,15 +137,3 @@ The JSON Patch operations support all standard operations:
 - `test`: Test that a value equals a specified value
 
 For more information about JSON Patch format, see [RFC 6902](https://tools.ietf.org/html/rfc6902) and the [fast-json-patch documentation](https://www.npmjs.com/package/fast-json-patch).
-
-## Contributing 🤝
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-## Need Help?
-
-`schema-sdk` might not work perfectly for all JSON schemas yet. We value your feedback and contributions to make it better. If you encounter any issues or have suggestions for improvements, please [let us know](https://github.com/hyperweb-io/dev-utils/issues).
-
-## License 📜
-
-Distributed under the MIT License. See \`LICENSE\` for more information.

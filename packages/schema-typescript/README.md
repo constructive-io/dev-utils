@@ -76,15 +76,3 @@ interface Person {
   pets: Pet[];
 }
 ```
-
-## Contributing 🤝
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-## Need Help?
-
-`schema-typescript` might not work perfectly for all JSON schemas yet. We value your feedback and contributions to make it better. If you encounter any issues or have suggestions for improvements, please [let us know](https://github.com/hyperweb-io/dev-utils/issues).
-
-## License 📜
-
-Distributed under the MIT License. See \`LICENSE\` for more information.
