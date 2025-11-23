@@ -1,5 +1,4 @@
 import generate from '@babel/generator';
-import template from '@babel/template';
 import * as t from '@babel/types';
 import { toCamelCase, toPascalCase } from '@interweb-utils/casing';
 import { generateTypeScriptTypes } from 'schema-typescript';

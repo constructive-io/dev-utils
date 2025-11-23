@@ -56,7 +56,6 @@ jobs:
           - schema-sdk
           - schema-typescript
           - strfy-js
-          - template-module
 
     steps:
     - name: Checkout code

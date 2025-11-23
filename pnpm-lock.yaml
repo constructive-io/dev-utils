@@ -228,9 +228,6 @@ importers:
         version: 5.9.3
     publishDirectory: dist
 
-  packages/template-module:
-    publishDirectory: dist
-
 packages:
 
   '@babel/code-frame@7.27.1':
