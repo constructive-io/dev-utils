@@ -50,8 +50,6 @@ npm install inquirerer
 
 ## Installation
 
-To install the library, use `npm` or `yarn`:
-
 ```bash
 npm install inquirerer
 ```
