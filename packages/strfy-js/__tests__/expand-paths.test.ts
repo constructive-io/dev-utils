@@ -1,6 +1,6 @@
 const minimatch = require("minimatch").minimatch;
 
-function dirname(path) {
+function dirname(path: string): string {
   return path.substring(0, path.lastIndexOf('/')) || '/';
 }
 
@@ -28,12 +28,12 @@ export function expandPaths(paths: string[]): string[] {
   return sortPaths(Array.from(pathSet));
 }
 
-function sortPaths(paths) {
+function sortPaths(paths: string[]): string[] {
   // First sort alphabetically
-  paths.sort((a, b) => a.localeCompare(b));
+  paths.sort((a: string, b: string) => a.localeCompare(b));
 
   // Then sort by depth (number of '/' in the path)
-  paths.sort((a, b) => {
+  paths.sort((a: string, b: string) => {
     const depthA = (a.match(/\//g) || []).length;
     const depthB = (b.match(/\//g) || []).length;
     return depthB - depthA;  // Sort from deepest to shallowest
@@ -42,14 +42,14 @@ function sortPaths(paths) {
   return paths;
 }
 
-function hasAncestor(currentPath, includePaths) {
+function hasAncestor(currentPath: string, includePaths: string[]): boolean {
   return !!findNearestAncestor(currentPath, includePaths);
 }
 
-function findNearestAncestor(currentPath, includePaths) {
+function findNearestAncestor(currentPath: string, includePaths: string[]): string | null {
   let pathToCheck = currentPath;
   while (pathToCheck !== '/' && pathToCheck !== '') {
-    if (includePaths.some(includePath => minimatch(pathToCheck + '/', includePath))) {
+    if (includePaths.some((includePath: string) => minimatch(pathToCheck + '/', includePath))) {
       if (pathToCheck !== currentPath)
         return pathToCheck; // Return the matching parent directory
     }

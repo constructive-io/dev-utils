@@ -29,9 +29,11 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@babel/generator": "^7.24.4",
-    "@babel/types": "^7.24.0",
-    "@interweb-utils/casing": "^0.2.0",
+    "@babel/generator": "7.28.5",
+    "@babel/parser": "^7.23.6",
+    "@babel/traverse": "7.28.5",
+    "@babel/types": "7.28.5",
+    "@interweb-utils/casing": "^0.3.0",
     "@interweb/fetch-api-client": "^0.6.1",
     "deepmerge": "^4.3.1",
     "fast-json-patch": "^3.1.1",
@@ -45,6 +47,7 @@
     "openapi"
   ],
   "devDependencies": {
+    "@types/babel__generator": "^7.27.0",
     "jest-diff": "^30.0.4"
   }
 }

@@ -156,10 +156,11 @@ export function jsStringify(obj: any, options?: JSStringifyOptions): string {
       });
 
       // Apply custom default values setter if available
-      Object.keys(defaultValuesSetter).forEach(pattern => {
-        if (matchesPattern(currentPath, dirname(pattern))) {
-          const setter: JSStringifySetter = defaultValuesSetter[pattern];
-          const property = pattern.split('/').pop(); // get the last segment as property name
+      if (typeof defaultValuesSetter === 'object') {
+        Object.keys(defaultValuesSetter).forEach(pattern => {
+          if (matchesPattern(currentPath, dirname(pattern))) {
+            const setter: JSStringifySetter = (defaultValuesSetter as { [path: string]: JSStringifySetter })[pattern];
+            const property = pattern.split('/').pop(); // get the last segment as property name
           if (property === '*') {
             // Apply setter to all properties if needed
             Object.keys(obj).forEach(prop => {
@@ -208,12 +209,13 @@ export function jsStringify(obj: any, options?: JSStringifyOptions): string {
             obj[property] = defaultValuesMap[pattern];
           }
         }
-      });
+        });
+      }
 
 
       // INCLUDES EXCLUDES
 
-      obj = Object.keys(obj).reduce((m, key) => {
+      obj = Object.keys(obj).reduce((m: Record<string, any>, key) => {
         const fullPath = `${currentPath}/${key}`;
         if (shouldInclude(fullPath, {
           exclude,

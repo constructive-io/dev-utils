@@ -1059,6 +1059,7 @@ export function generateOpenApiClient(
   const gvkOpsStmts = options.opsIndex?.enabled ? generateGVKOpsStatements(options, patchedSchema) : [];
 
   let code = generate(
+    // @ts-ignore
     t.file(
       t.program([
         t.importDeclaration(
@@ -1078,9 +1079,13 @@ export function generateOpenApiClient(
           ],
           t.stringLiteral(options.npmApiClient)
         ),
+        // @ts-ignore
         ...types,
+        // @ts-ignore
         ...openApiTypes,
+        // @ts-ignore
         clientClass,
+        // @ts-ignore
         ...gvkOpsStmts,
       ])
     )
@@ -1412,7 +1417,7 @@ export function generateReactQueryHooks(
   const funcDecls = components.map((comp) => comp.funcDecl);
   // Build AST and generate code
   const ast = t.file(t.program([...uniqueImportDecls, ...uniqueConstDecls, ...funcDecls]));
-  const code = generate(ast).code;
+  const code = generate(ast as any).code;
   return code;
 }
 

@@ -5,6 +5,7 @@ import { createPathTemplateLiteral, getDefaultSchemaSDKOptions } from '../src';
 const options = getDefaultSchemaSDKOptions();
 export const renderTemplateTag = (str: string) => {
   return generate(
+    // @ts-ignore
     createPathTemplateLiteral(
       {
         ...options,
