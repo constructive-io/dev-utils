@@ -25,9 +25,9 @@
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json \"licenses-templates/**/*\" dist",
-    "clean": "del dist/**",
-    "prepare": "pnpm run build",
-    "build": "pnpm run clean && tsc && tsc -p tsconfig.esm.json && pnpm run copy",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "npm run clean && tsc && tsc -p tsconfig.esm.json && npm run copy",
     "dev": "node -r ts-node/register dev/index.ts",
     "test": "jest",
     "test:watch": "jest --watch"
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@types/minimist": "^1.2.5",
     "copyfiles": "^2.4.1",
-    "del-cli": "^5.1.0"
+    "makage": "0.1.5"
   },
   "keywords": []
 }
