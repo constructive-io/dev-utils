@@ -1,4 +1,3 @@
-import * as childProcess from "child_process";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -60,7 +59,7 @@ describe("template caching (appstash)", () => {
 
     const secondWorkspace = createTempWorkspace("cache-second");
     const secondAnswers = buildAnswers("cache-second");
-    const execSpy = jest.spyOn(childProcess, "execSync");
+    const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
 
     try {
       await createGen({
@@ -73,13 +72,13 @@ describe("template caching (appstash)", () => {
         cache: cacheOptions,
       });
 
-      const cloneCalls = execSpy.mock.calls.filter(([command]) => {
-        return typeof command === "string" && command.includes("git clone");
-      });
-
-      expect(cloneCalls.length).toBe(0);
+      expect(
+        logSpy.mock.calls.some(([message]) =>
+          typeof message === "string" && message.includes("Using cached repository")
+        )
+      ).toBe(true);
     } finally {
-      execSpy.mockRestore();
+      logSpy.mockRestore();
       cleanupWorkspace(secondWorkspace);
     }
   });

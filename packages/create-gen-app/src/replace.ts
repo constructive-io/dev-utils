@@ -85,7 +85,7 @@ async function ensureLicenseFile(
   outputDir: string,
   answers: Record<string, any>
 ): Promise<void> {
-  const licenseValue = answers?.LICENSE;
+  const licenseValue = getAnswer(answers, ["LICENSE", "license"]);
   if (typeof licenseValue !== 'string' || licenseValue.trim() === '') {
     return;
   }
@@ -99,13 +99,19 @@ async function ensureLicenseFile(
   }
 
   const author =
-    answers?.USERFULLNAME ??
-    answers?.AUTHOR ??
-    answers?.AUTHORFULLNAME ??
-    answers?.USERNAME ??
-    'Unknown Author';
+    getAnswer(answers, [
+      "USERFULLNAME",
+      "AUTHOR",
+      "AUTHORFULLNAME",
+      "USERNAME",
+      "fullName",
+      "author",
+      "authorFullName",
+      "userName",
+    ]) ?? "Unknown Author";
 
-  const email = answers?.USEREMAIL ?? answers?.EMAIL ?? '';
+  const email =
+    getAnswer(answers, ["USEREMAIL", "EMAIL", "email", "userEmail"]) ?? "";
 
   const content = renderLicense(selectedLicense, {
     author: String(author),
@@ -122,6 +128,19 @@ async function ensureLicenseFile(
   console.log(
     `[create-gen-app] LICENSE updated with ${selectedLicense} template.`
   );
+}
+
+function getAnswer(
+  answers: Record<string, any>,
+  keys: string[]
+): string | undefined {
+  for (const key of keys) {
+    const value = answers?.[key];
+    if (typeof value === "string" && value.trim() !== "") {
+      return value;
+    }
+  }
+  return undefined;
 }
 
 /**

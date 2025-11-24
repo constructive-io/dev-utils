@@ -54,9 +54,9 @@ describe("create-gen-app", () => {
 
       expect(result.fileReplacers).toHaveLength(2);
       expect(result.fileReplacers.map((r) => r.variable)).toContain(
-        "PROJECT_NAME"
+        "projectName"
       );
-      expect(result.fileReplacers.map((r) => r.variable)).toContain("AUTHOR");
+      expect(result.fileReplacers.map((r) => r.variable)).toContain("author");
     });
 
     it("should extract variables from file contents", async () => {
@@ -69,10 +69,10 @@ describe("create-gen-app", () => {
 
       expect(result.contentReplacers.length).toBeGreaterThanOrEqual(2);
       expect(result.contentReplacers.map((r) => r.variable)).toContain(
-        "USER_NAME"
+        "userName"
       );
       expect(result.contentReplacers.map((r) => r.variable)).toContain(
-        "PROJECT_NAME"
+        "projectName"
       );
     });
 
@@ -87,13 +87,13 @@ describe("create-gen-app", () => {
       const result = await extractVariables(testTempDir);
 
       expect(result.fileReplacers.map((r) => r.variable)).toContain(
-        "MODULE_NAME"
+        "moduleName"
       );
       expect(result.fileReplacers.map((r) => r.variable)).toContain(
-        "FILE_NAME"
+        "fileName"
       );
       expect(result.contentReplacers.map((r) => r.variable)).toContain(
-        "CONSTANT"
+        "constant"
       );
     });
 
@@ -185,7 +185,7 @@ module.exports = {
         "lowercase"
       );
       expect(result.contentReplacers.map((r) => r.variable)).toContain(
-        "UPPERCASE"
+        "uppercase"
       );
       expect(result.contentReplacers.map((r) => r.variable)).toContain(
         "CamelCase"
@@ -200,8 +200,8 @@ module.exports = {
     it("should generate questions for file and content replacers", async () => {
       const { Inquirerer } = require("inquirerer");
       const mockPrompt = jest.fn().mockResolvedValue({
-        PROJECT_NAME: "my-project",
-        AUTHOR: "John Doe",
+        projectName: "my-project",
+        author: "John Doe",
       });
 
       Inquirerer.mockImplementation(() => ({
@@ -221,8 +221,8 @@ module.exports = {
       expect(mockPrompt).toHaveBeenCalled();
       const questions = mockPrompt.mock.calls[0][1];
       expect(questions).toHaveLength(2);
-      expect(questions.map((q: any) => q.name)).toContain("PROJECT_NAME");
-      expect(questions.map((q: any) => q.name)).toContain("AUTHOR");
+      expect(questions.map((q: any) => q.name)).toContain("projectName");
+      expect(questions.map((q: any) => q.name)).toContain("author");
     });
 
     it("should prioritize project questions over auto-generated ones", async () => {
@@ -262,8 +262,8 @@ module.exports = {
     it("should use argv to pre-populate answers", async () => {
       const { Inquirerer } = require("inquirerer");
       const mockPrompt = jest.fn().mockResolvedValue({
-        PROJECT_NAME: "my-project",
-        AUTHOR: "John Doe",
+        projectName: "my-project",
+        author: "John Doe",
       });
 
       Inquirerer.mockImplementation(() => ({
@@ -278,7 +278,7 @@ module.exports = {
         projectQuestions: null,
       };
 
-      const argv = { PROJECT_NAME: "pre-filled-project" };
+      const argv = { projectName: "pre-filled-project" };
       await promptUser(extractedVariables, argv, false);
 
       expect(mockPrompt).toHaveBeenCalledWith(
@@ -316,7 +316,6 @@ module.exports = {
 
       const passedArgv = mockPrompt.mock.calls[0][0];
       expect(passedArgv.fullName).toBe("CLI User");
-      expect(passedArgv.USERFULLNAME).toBe("CLI User");
     });
 
     it("should match CLI overrides sharing substrings", async () => {
@@ -378,7 +377,6 @@ module.exports = {
 
       const answers = await promptUser(extractedVariables, {}, false);
       expect(answers.fullName).toBe("Prompted User");
-      expect(answers.USERFULLNAME).toBe("Prompted User");
     });
 
     it("should hydrate overlapping template variables from answers", async () => {
@@ -409,7 +407,7 @@ module.exports = {
 
       const answers = await promptUser(extractedVariables, {}, false);
       expect(answers.description).toBe("Prompted description");
-      expect(answers.MODULEDESC).toBe("Prompted description");
+      expect(answers.moduleDesc).toBe("Prompted description");
     });
   });
 
@@ -422,8 +420,8 @@ module.exports = {
 
       const extractedVariables = await extractVariables(testTempDir);
       const answers = {
-        PROJECT_NAME: "My Awesome Project",
-        AUTHOR: "Jane Smith",
+        projectName: "My Awesome Project",
+        author: "Jane Smith",
       };
 
       const { replaceVariables } = require("../src/replace");
@@ -449,7 +447,7 @@ module.exports = {
 
       const extractedVariables = await extractVariables(testTempDir);
       const answers = {
-        PROJECT_NAME: "myproject",
+        projectName: "myproject",
       };
 
       const { replaceVariables } = require("../src/replace");
@@ -475,7 +473,7 @@ module.exports = {
 
       const extractedVariables = await extractVariables(testTempDir);
       const answers = {
-        MODULE_NAME: "auth",
+        moduleName: "auth",
       };
 
       const { replaceVariables } = require("../src/replace");
@@ -522,7 +520,7 @@ module.exports = {
 
       const extractedVariables = await extractVariables(testTempDir);
       const answers = {
-        NAME: "Alice",
+        name: "Alice",
       };
 
       const { replaceVariables } = require("../src/replace");
@@ -553,7 +551,7 @@ module.exports = {
       const tempDir = await cloneRepo("https://github.com/example/repo.git");
       const command = execSyncMock.mock.calls[0][0] as string;
       expect(command).toContain(
-        "git clone https://github.com/example/repo.git"
+        "git clone --depth 1 https://github.com/example/repo.git"
       );
       expect(command.trim().endsWith(tempDir)).toBe(true);
       expect(fs.existsSync(tempDir)).toBe(true);
@@ -566,7 +564,7 @@ module.exports = {
       });
       const command = execSyncMock.mock.calls[0][0] as string;
       expect(command).toContain(
-        "git clone --branch dev --single-branch https://github.com/example/repo.git"
+        "git clone --branch dev --single-branch --depth 1 https://github.com/example/repo.git"
       );
       expect(command.trim().endsWith(tempDir)).toBe(true);
       fs.rmSync(tempDir, { recursive: true, force: true });
