@@ -9,7 +9,7 @@ import {
   buildAnswers,
   cleanupWorkspace,
   createTempWorkspace,
-} from "../../../create-gen-app/test-utils/integration-helpers";
+} from "../test-utils/integration-helpers";
 
 jest.setTimeout(180_000);
 

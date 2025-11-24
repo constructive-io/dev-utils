@@ -33,30 +33,30 @@ exports[`cached template integration tests first clone with variable replacement
 exports[`cached template integration tests first clone with variable replacement should snapshot package.json files if they exist 1`] = `
 {
   "module/package.json": {
-    "author": "__USERFULLNAME__ <__USEREMAIL__>",
+    "author": "____fullName____ <____email____>",
     "bugs": {
-      "url": "https://github.com/__USERNAME__/__REPONAME__/issues",
+      "url": "https://github.com/____username____/____repoName____/issues",
     },
-    "description": "__MODULEDESC__",
+    "description": "____moduleDesc____",
     "devDependencies": {
       "pgsql-test": "^2.13.2",
     },
-    "homepage": "https://github.com/__USERNAME__/__REPONAME__",
+    "homepage": "https://github.com/____username____/____repoName____",
     "keywords": [],
-    "license": "SEE LICENSE IN LICENSE",
-    "name": "__PACKAGE_IDENTIFIER__",
+    "license": "____license____",
+    "name": "____packageIdentifier____",
     "pnpm": {
       "overrides": {
         "graphql": "14.7.0",
       },
     },
     "publishConfig": {
-      "access": "__ACCESS__",
+      "access": "____access____",
       "directory": "dist",
     },
     "repository": {
       "type": "git",
-      "url": "https://github.com/__USERNAME__/__REPONAME__",
+      "url": "https://github.com/____username____/____repoName____",
     },
     "scripts": {
       "lint": "eslint . --fix",
@@ -66,7 +66,7 @@ exports[`cached template integration tests first clone with variable replacement
     "version": "0.0.1",
   },
   "workspace/package.json": {
-    "author": "__USERFULLNAME__ <__USEREMAIL__>",
+    "author": "____fullName____ <____email____>",
     "devDependencies": {
       "@types/jest": "^29.5.14",
       "@types/node": "^22.10.2",
@@ -85,7 +85,7 @@ exports[`cached template integration tests first clone with variable replacement
       "typescript": "^5.6.3",
     },
     "license": "SEE LICENSE IN LICENSE",
-    "name": "__MODULENAME__",
+    "name": "____moduleName____",
     "pnpm": {
       "overrides": {
         "graphql": "14.7.0",
@@ -97,7 +97,7 @@ exports[`cached template integration tests first clone with variable replacement
     },
     "repository": {
       "type": "git",
-      "url": "https://github.com/__USERNAME__/__MODULENAME__",
+      "url": "https://github.com/____username____/____moduleName____",
     },
     "scripts": {
       "lint": "pnpm -r run lint",
@@ -143,30 +143,30 @@ exports[`cached template integration tests second clone from cache should snapsh
 exports[`cached template integration tests second clone from cache should snapshot package.json files from cached template 1`] = `
 {
   "module/package.json": {
-    "author": "__USERFULLNAME__ <__USEREMAIL__>",
+    "author": "____fullName____ <____email____>",
     "bugs": {
-      "url": "https://github.com/__USERNAME__/__REPONAME__/issues",
+      "url": "https://github.com/____username____/____repoName____/issues",
     },
-    "description": "__MODULEDESC__",
+    "description": "____moduleDesc____",
     "devDependencies": {
       "pgsql-test": "^2.13.2",
     },
-    "homepage": "https://github.com/__USERNAME__/__REPONAME__",
+    "homepage": "https://github.com/____username____/____repoName____",
     "keywords": [],
-    "license": "SEE LICENSE IN LICENSE",
-    "name": "__PACKAGE_IDENTIFIER__",
+    "license": "____license____",
+    "name": "____packageIdentifier____",
     "pnpm": {
       "overrides": {
         "graphql": "14.7.0",
       },
     },
     "publishConfig": {
-      "access": "__ACCESS__",
+      "access": "____access____",
       "directory": "dist",
     },
     "repository": {
       "type": "git",
-      "url": "https://github.com/__USERNAME__/__REPONAME__",
+      "url": "https://github.com/____username____/____repoName____",
     },
     "scripts": {
       "lint": "eslint . --fix",
@@ -176,7 +176,7 @@ exports[`cached template integration tests second clone from cache should snapsh
     "version": "0.0.1",
   },
   "workspace/package.json": {
-    "author": "__USERFULLNAME__ <__USEREMAIL__>",
+    "author": "____fullName____ <____email____>",
     "devDependencies": {
       "@types/jest": "^29.5.14",
       "@types/node": "^22.10.2",
@@ -195,7 +195,7 @@ exports[`cached template integration tests second clone from cache should snapsh
       "typescript": "^5.6.3",
     },
     "license": "SEE LICENSE IN LICENSE",
-    "name": "__MODULENAME__",
+    "name": "____moduleName____",
     "pnpm": {
       "overrides": {
         "graphql": "14.7.0",
@@ -207,7 +207,7 @@ exports[`cached template integration tests second clone from cache should snapsh
     },
     "repository": {
       "type": "git",
-      "url": "https://github.com/__USERNAME__/__MODULENAME__",
+      "url": "https://github.com/____username____/____moduleName____",
     },
     "scripts": {
       "lint": "pnpm -r run lint",
