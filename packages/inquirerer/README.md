@@ -31,6 +31,7 @@ npm install inquirerer
 - ✅ **Smart Validation** - Built-in pattern matching, custom validators, and sanitizers
 - 🔀 **Conditional Logic** - Show/hide questions based on previous answers
 - 🎨 **Interactive UX** - Fuzzy search, keyboard navigation, and visual feedback
+- 🔄 **Dynamic Defaults** - Auto-populate defaults from git config, date/time, or custom resolvers
 
 ## Table of Contents
 
@@ -55,6 +56,10 @@ npm install inquirerer
   - [CLI with Commander Integration](#cli-with-commander-integration)
   - [Dynamic Dependencies](#dynamic-dependencies)
   - [Custom Validation](#custom-validation)
+- [Dynamic Defaults with Resolvers](#dynamic-defaults-with-resolvers)
+  - [Built-in Resolvers](#built-in-resolvers)
+  - [Custom Resolvers](#custom-resolvers)
+  - [Resolver Examples](#resolver-examples)
 - [CLI Helper](#cli-helper)
 - [Developing](#developing)
 
@@ -100,7 +105,10 @@ import {
   ListQuestion,
   AutocompleteQuestion,
   CheckboxQuestion,
-  InquirererOptions
+  InquirererOptions,
+  DefaultResolverRegistry,
+  registerDefaultResolver,
+  resolveDefault
 } from 'inquirerer';
 
 interface UserConfig {
@@ -124,6 +132,7 @@ interface BaseQuestion {
   message?: string;       // Prompt message to display
   description?: string;   // Additional context
   default?: any;          // Default value
+  defaultFrom?: string;   // Dynamic default from resolver (e.g., 'git.user.name')
   useDefault?: boolean;   // Skip prompt and use default
   required?: boolean;     // Validation requirement
   validate?: (input: any, answers: any) => boolean | Validation;
@@ -153,12 +162,13 @@ const prompter = new Inquirerer({
 
 ```typescript
 interface InquirererOptions {
-  noTty?: boolean;          // Disable interactive mode
-  input?: Readable;         // Input stream (default: process.stdin)
-  output?: Writable;        // Output stream (default: process.stdout)
-  useDefaults?: boolean;    // Skip prompts and use defaults
-  globalMaxLines?: number;  // Max lines for list displays (default: 10)
-  mutateArgs?: boolean;     // Mutate argv object (default: true)
+  noTty?: boolean;                     // Disable interactive mode
+  input?: Readable;                    // Input stream (default: process.stdin)
+  output?: Writable;                   // Output stream (default: process.stdout)
+  useDefaults?: boolean;               // Skip prompts and use defaults
+  globalMaxLines?: number;             // Max lines for list displays (default: 10)
+  mutateArgs?: boolean;                // Mutate argv object (default: true)
+  resolverRegistry?: DefaultResolverRegistry;  // Custom resolver registry
 }
 
 const prompter = new Inquirerer(options);
@@ -667,6 +677,261 @@ const questions: Question[] = [
   }
 ];
 ```
+
+## Dynamic Defaults with Resolvers
+
+The `defaultFrom` feature allows you to automatically populate question defaults from dynamic sources like git configuration, environment variables, date/time values, or custom resolvers. This eliminates repetitive boilerplate code for common default values.
+
+### Quick Example
+
+```typescript
+import { Inquirerer } from 'inquirerer';
+
+const questions = [
+  {
+    type: 'text',
+    name: 'authorName',
+    message: 'Author name?',
+    defaultFrom: 'git.user.name'  // Auto-fills from git config
+  },
+  {
+    type: 'text',
+    name: 'authorEmail',
+    message: 'Author email?',
+    defaultFrom: 'git.user.email'  // Auto-fills from git config
+  },
+  {
+    type: 'text',
+    name: 'copyrightYear',
+    message: 'Copyright year?',
+    defaultFrom: 'date.year'  // Auto-fills current year
+  }
+];
+
+const prompter = new Inquirerer();
+const answers = await prompter.prompt({}, questions);
+```
+
+### Built-in Resolvers
+
+Inquirerer comes with several built-in resolvers ready to use:
+
+#### Git Configuration
+
+| Resolver | Description | Example Output |
+|----------|-------------|----------------|
+| `git.user.name` | Git global user name | `"John Doe"` |
+| `git.user.email` | Git global user email | `"john@example.com"` |
+
+#### Date & Time
+
+| Resolver | Description | Example Output |
+|----------|-------------|----------------|
+| `date.year` | Current year | `"2025"` |
+| `date.month` | Current month (zero-padded) | `"11"` |
+| `date.day` | Current day (zero-padded) | `"23"` |
+| `date.iso` | ISO date (YYYY-MM-DD) | `"2025-11-23"` |
+| `date.now` | ISO timestamp | `"2025-11-23T15:30:45.123Z"` |
+| `date.timestamp` | Unix timestamp (ms) | `"1732375845123"` |
+
+### Priority Order
+
+When resolving default values, inquirerer follows this priority:
+
+1. **CLI Arguments** - Values passed via command line (highest priority)
+2. **`defaultFrom`** - Dynamically resolved values
+3. **`default`** - Static default values
+4. **`undefined`** - No default available
+
+```typescript
+{
+  type: 'text',
+  name: 'author',
+  defaultFrom: 'git.user.name',  // Try git first
+  default: 'Anonymous'            // Fallback if git not configured
+}
+```
+
+### Custom Resolvers
+
+Register your own custom resolvers for project-specific needs:
+
+```typescript
+import { registerDefaultResolver } from 'inquirerer';
+
+// Register a resolver for current directory name
+registerDefaultResolver('cwd.name', () => {
+  return process.cwd().split('/').pop();
+});
+
+// Register a resolver for environment variable
+registerDefaultResolver('env.user', () => {
+  return process.env.USER;
+});
+
+// Use in questions
+const questions = [
+  {
+    type: 'text',
+    name: 'projectName',
+    message: 'Project name?',
+    defaultFrom: 'cwd.name',
+    default: 'my-project'
+  },
+  {
+    type: 'text',
+    name: 'author',
+    message: 'Author?',
+    defaultFrom: 'env.user'
+  }
+];
+```
+
+### Instance-Specific Resolvers
+
+For isolated resolver registries, use a custom resolver registry per Inquirerer instance:
+
+```typescript
+import { DefaultResolverRegistry, Inquirerer } from 'inquirerer';
+
+const customRegistry = new DefaultResolverRegistry();
+
+// Register resolvers specific to this instance
+customRegistry.register('app.name', () => 'my-app');
+customRegistry.register('app.port', () => 3000);
+
+const prompter = new Inquirerer({
+  resolverRegistry: customRegistry  // Use custom registry
+});
+
+const questions = [
+  {
+    type: 'text',
+    name: 'appName',
+    defaultFrom: 'app.name'
+  },
+  {
+    type: 'number',
+    name: 'port',
+    defaultFrom: 'app.port'
+  }
+];
+
+const answers = await prompter.prompt({}, questions);
+```
+
+### Resolver Examples
+
+#### System Information
+
+```typescript
+import os from 'os';
+import { registerDefaultResolver } from 'inquirerer';
+
+registerDefaultResolver('system.hostname', () => os.hostname());
+registerDefaultResolver('system.username', () => os.userInfo().username);
+
+const questions = [
+  {
+    type: 'text',
+    name: 'hostname',
+    message: 'Hostname?',
+    defaultFrom: 'system.hostname'
+  }
+];
+```
+
+#### Conditional Defaults
+
+```typescript
+registerDefaultResolver('app.port', () => {
+  return process.env.NODE_ENV === 'production' ? 80 : 3000;
+});
+
+const questions = [
+  {
+    type: 'number',
+    name: 'port',
+    message: 'Port?',
+    defaultFrom: 'app.port'
+  }
+];
+```
+
+### Error Handling
+
+Resolvers fail silently by default. If a resolver throws an error or returns `undefined`, inquirerer falls back to the static `default` value (if provided):
+
+```typescript
+{
+  type: 'text',
+  name: 'author',
+  defaultFrom: 'git.user.name',  // May fail if git not configured
+  default: 'Anonymous',           // Used if resolver fails
+  required: true
+}
+```
+
+For debugging, set `DEBUG=inquirerer` to see resolver errors:
+
+```bash
+DEBUG=inquirerer node your-cli.js
+```
+
+### Real-World Use Case
+
+```typescript
+import { Inquirerer, registerDefaultResolver } from 'inquirerer';
+
+// Register a resolver for current directory name
+registerDefaultResolver('cwd.name', () => {
+  return process.cwd().split('/').pop();
+});
+
+const questions = [
+  {
+    type: 'text',
+    name: 'projectName',
+    message: 'Project name?',
+    defaultFrom: 'cwd.name',
+    required: true
+  },
+  {
+    type: 'text',
+    name: 'author',
+    message: 'Author?',
+    defaultFrom: 'git.user.name',
+    required: true
+  },
+  {
+    type: 'text',
+    name: 'email',
+    message: 'Email?',
+    defaultFrom: 'git.user.email',
+    required: true
+  },
+  {
+    type: 'text',
+    name: 'year',
+    message: 'Copyright year?',
+    defaultFrom: 'date.year'
+  }
+];
+
+const prompter = new Inquirerer();
+const config = await prompter.prompt({}, questions);
+```
+
+With git configured, the prompts will show:
+
+```bash
+Project name? (my-project-dir)
+Author? (John Doe)
+Email? (john@example.com)
+Copyright year? (2025)
+```
+
+All defaults automatically populated from git config, directory name, and current date!
 
 ## CLI Helper
 
