@@ -170,27 +170,27 @@ async function loadProjectQuestions(
     try {
       const content = fs.readFileSync(jsonPath, "utf8");
       const questions = JSON.parse(content);
-      return validateQuestions(questions) ? questions : null;
+      return validateQuestions(questions) ? normalizeQuestions(questions) : null;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.warn(`Failed to parse .questions.json: ${errorMessage}`);
     }
   }
-  
+
   const jsPath = path.join(templateDir, ".questions.js");
   if (fs.existsSync(jsPath)) {
     try {
       const module = require(jsPath);
       const questions = module.default || module;
-      return validateQuestions(questions) ? questions : null;
+      return validateQuestions(questions) ? normalizeQuestions(questions) : null;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.warn(`Failed to load .questions.js: ${errorMessage}`);
     }
   }
-  
+
   return null;
 }
 
@@ -284,6 +284,21 @@ function normalizePlaceholder(entry: string): string | null {
     return entry.slice(2, -2);
   }
   return entry || null;
+}
+
+/**
+ * Normalize questions by ensuring all required fields have default values
+ * @param questions - Questions object to normalize
+ * @returns Normalized questions object
+ */
+function normalizeQuestions(questions: Questions): Questions {
+  return {
+    ...questions,
+    questions: questions.questions.map((q: any) => ({
+      ...q,
+      type: q.type || 'text'
+    }))
+  };
 }
 
 /**

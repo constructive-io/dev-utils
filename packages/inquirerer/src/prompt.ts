@@ -176,7 +176,7 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
   const {
     message,
     name,
-    type,
+    type = 'text',
     default: def,
     options = [],
     description
