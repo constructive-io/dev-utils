@@ -1,7 +1,7 @@
 {
   "name": "strfy-js",
   "version": "3.1.2",
-  "description": "kinda like JSON.stringify, but for generating JSON that is meant for JS objects",
+  "description": "Stringify JSON as JavaScript with extended serialization capabilities",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "homepage": "https://github.com/hyperweb-io/dev-utils",
   "license": "MIT",

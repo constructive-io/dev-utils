@@ -1,7 +1,7 @@
 {
   "name": "jsonldjs",
   "version": "0.2.4",
-  "description": "JSON-LD Tooling",
+  "description": "Powerful JSON-LD builder with comprehensive filtering and subgraph extraction",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "homepage": "https://github.com/hyperweb-io/dev-utils",
   "license": "MIT",

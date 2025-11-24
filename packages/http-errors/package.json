@@ -2,7 +2,7 @@
   "name": "@interweb/http-errors",
   "version": "0.2.3",
   "author": "Dan Lynch <pyramation@gmail.com>",
-  "description": "http errors",
+  "description": "HTTP error handling utilities for API clients",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
