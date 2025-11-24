@@ -16,133 +16,124 @@
   <a href="https://www.npmjs.com/package/create-gen-app"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/dev-utils?filename=packages%2Fcreate-gen-app%2Fpackage.json"></a>
 </p>
 
-A TypeScript library for cloning and customizing template repositories with variable replacement.
+A TypeScript-first CLI/library for cloning template repositories, asking the user for variables, and generating a new project with sensible defaults.
 
 ## Features
 
-- Clone GitHub repositories or any git URL
-- Extract template variables from filenames and file contents using `__VARIABLE__` syntax
-- Load custom questions from `.questions.json` or `.questions.js` files
-- Interactive prompts using inquirerer with CLI argument support
-- Stream-based file processing for efficient variable replacement
+- Clone any Git repo (or GitHub `org/repo` shorthand) and optionally select a branch + subdirectory
+- Extract template variables from filenames and file contents using the safer `____VARIABLE____` convention
+- Merge auto-discovered variables with `.questions.{json,js}` (questions win, including `ignore` patterns)
+- Interactive prompts powered by `inquirerer`, with CLI flag overrides (`--VAR value`) and non-TTY mode for CI
+- Built-in CLI (`create-gen-app` / `cga`) that discovers templates, prompts once, and writes output safely
+- License scaffolding: choose from MIT, Apache-2.0, ISC, GPL-3.0, BSD-3-Clause, Unlicense, or MPL-2.0 and generate a populated `LICENSE`
 
 ## Installation
 
 ```bash
 npm install create-gen-app
+# or for CLI only
+npm install -g create-gen-app
 ```
 
-## Usage
+## CLI Usage
 
-### Basic Usage
+```bash
+# interactively pick a template from launchql/pgpm-boilerplates
+create-gen-app --output ./workspace
+
+# short alias
+cga --template module --branch main --output ./module \
+    --USERFULLNAME "Jane Dev" --USEREMAIL jane@example.com
+
+# point to a different repo/branch/path
+cga --repo github:my-org/my-templates --branch release \
+    --path ./templates --template api --output ./api
+```
+
+Key flags:
+
+- `--repo`, `--branch`, `--path` – choose the Git repo, branch/tag, and subdirectory that contains templates
+- `--template` – folder inside `--path` (auto-prompted if omitted)
+- `--output` – destination directory (defaults to `./<template>`); use `--force` to overwrite
+- `--no-tty` – disable interactive prompts (ideal for CI)
+- `--version`, `--help` – standard metadata
+- Any extra `--VAR value` pairs become variable overrides
+
+## Library Usage
 
 ```typescript
-import { createGen } from 'create-gen-app';
+import { createGen } from "create-gen-app";
 
 await createGen({
-  templateUrl: 'https://github.com/user/template-repo',
-  outputDir: './my-new-project',
+  templateUrl: "https://github.com/user/template-repo",
+  fromBranch: "main",
+  fromPath: "templates/module",
+  outputDir: "./my-new-project",
   argv: {
-    PROJECT_NAME: 'my-project',
-    AUTHOR: 'John Doe'
-  }
+    USERFULLNAME: "Jane Dev",
+    USEREMAIL: "jane@example.com",
+    MODULENAME: "awesome-module",
+    LICENSE: "MIT",
+  },
+  noTty: true,
 });
 ```
 
 ### Template Variables
 
-Variables in your template should be wrapped in double underscores:
+Variables should be wrapped in four underscores on each side:
 
-**Filename variables:**
 ```
-__PROJECT_NAME__/
-  __MODULE_NAME__.ts
+____PROJECT_NAME____/
+  src/____MODULE_NAME____.ts
 ```
 
-**Content variables:**
 ```typescript
-// __MODULE_NAME__.ts
-export const projectName = "__PROJECT_NAME__";
-export const author = "__AUTHOR__";
+// ____MODULE_NAME____.ts
+export const projectName = "____PROJECT_NAME____";
+export const author = "____USERFULLNAME____";
 ```
 
-### Custom Questions
+### Custom Questions & Ignore Rules
 
-Create a `.questions.json` file in your template repository:
+Create a `.questions.json`:
 
 ```json
 {
+  "ignore": ["__tests__", "docs/drafts"],
   "questions": [
     {
-      "name": "PROJECT_NAME",
+      "name": "____USERFULLNAME____",
       "type": "text",
-      "message": "What is your project name?",
+      "message": "Enter author full name",
       "required": true
     },
     {
-      "name": "AUTHOR",
-      "type": "text",
-      "message": "Who is the author?"
+      "name": "____LICENSE____",
+      "type": "list",
+      "message": "Choose a license",
+      "options": ["MIT", "Apache-2.0", "ISC", "GPL-3.0"]
     }
   ]
 }
 ```
 
-Or use `.questions.js` for dynamic questions:
+Or `.questions.js` for dynamic logic. Question names can use `____VAR____` or plain `VAR`; they'll be normalized automatically.
 
-```javascript
-/**
- * @typedef {Object} Questions
- * @property {Array} questions - Array of question objects
- */
+### License Templates
 
-module.exports = {
-  questions: [
-    {
-      name: 'PROJECT_NAME',
-      type: 'text',
-      message: 'What is your project name?',
-      required: true
-    }
-  ]
-};
-```
+`create-gen-app` ships text templates in `licenses-templates/`. To add another license, drop a `.txt` file matching the desired key (e.g., `BSD-2-CLAUSE.txt`) with placeholders:
 
-## API
+- `{{YEAR}}`, `{{AUTHOR}}`, `{{EMAIL_LINE}}`
 
-### `createGen(options: CreateGenOptions): Promise<string>`
+No code changes are needed; the CLI discovers templates at runtime and will warn if a `.questions` option doesn’t have a matching template.
 
-Main function to create a project from a template.
+## API Overview
 
-**Options:**
-- `templateUrl` (string): URL or path to the template repository
-- `outputDir` (string): Destination directory for the generated project
-- `argv` (Record<string, any>): Command-line arguments to pre-populate answers
-- `noTty` (boolean): Whether to disable TTY mode for non-interactive usage
+- `createGen(options)` – full pipeline (clone → extract → prompt → replace)
+- `cloneRepo(url, { branch })` – clone to a temp dir
+- `extractVariables(dir)` – parse file/folder names + content for variables, load `.questions`
+- `promptUser(extracted, argv, noTty)` – run interactive questions with CLI overrides and alias deduping
+- `replaceVariables(templateDir, outputDir, extracted, answers)` – copy files, rename paths, render licenses
 
-### `extractVariables(templateDir: string): Promise<ExtractedVariables>`
-
-Extract all variables from a template directory.
-
-### `promptUser(extractedVariables: ExtractedVariables, argv?: Record<string, any>, noTty?: boolean): Promise<Record<string, any>>`
-
-Prompt the user for variable values using inquirerer.
-
-### `replaceVariables(templateDir: string, outputDir: string, extractedVariables: ExtractedVariables, answers: Record<string, any>): Promise<void>`
-
-Replace variables in all files and filenames.
-
-## Variable Naming Rules
-
-Variables can contain:
-- Letters (a-z, A-Z)
-- Numbers (0-9)
-- Underscores (_)
-- Must start with a letter or underscore
-
-Examples of valid variables:
-- `__PROJECT_NAME__`
-- `__author__`
-- `__CamelCase__`
-- `__snake_case__`
-- `__VERSION_1__`
+See `dev/README.md` for the local development helper script (`pnpm dev`).
