@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.6](https://github.com/hyperweb-io/dev-utils/compare/schema-sdk@0.15.5...schema-sdk@0.15.6) (2025-11-24)
+
+**Note:** Version bump only for package schema-sdk
+
 ## [0.15.5](https://github.com/hyperweb-io/dev-utils/compare/schema-sdk@0.15.4...schema-sdk@0.15.5) (2025-11-24)
 
 **Note:** Version bump only for package schema-sdk

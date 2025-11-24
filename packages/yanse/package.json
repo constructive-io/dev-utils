@@ -1,6 +1,6 @@
 {
   "name": "yanse",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "description": "Fast and lightweight terminal color styling library with chalk-like API",
   "main": "index.js",
