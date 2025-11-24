@@ -52,7 +52,6 @@ jobs:
           - http-errors
           - jsonld-tools
           - komoji
-          - makage
           - nested-obj
           - node-api-client
           - schema-sdk
