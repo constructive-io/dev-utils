@@ -1,7 +1,7 @@
-import { execSync } from 'child_process';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
+import { execSync } from "child_process";
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 
 export interface CloneOptions {
   branch?: string;
@@ -12,23 +12,27 @@ export interface CloneOptions {
  * @param url - Repository URL (GitHub or any git URL)
  * @returns Path to the cloned repository
  */
-export async function cloneRepo(url: string, options: CloneOptions = {}): Promise<string> {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'create-gen-'));
+export async function cloneRepo(
+  url: string,
+  options: CloneOptions = {}
+): Promise<string> {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "create-gen-"));
   const { branch } = options;
-  
+
   try {
     const gitUrl = normalizeGitUrl(url);
-    const branchArgs = branch ? ` --branch ${branch} --single-branch` : '';
-    
-    execSync(`git clone${branchArgs} ${gitUrl} ${tempDir}`, {
-      stdio: 'inherit'
+    const branchArgs = branch ? ` --branch ${branch} --single-branch` : "";
+    const depthArgs = " --depth 1"; // use shallow clone for speed; remove if future features need full history
+
+    execSync(`git clone${branchArgs}${depthArgs} ${gitUrl} ${tempDir}`, {
+      stdio: "inherit",
     });
-    
-    const gitDir = path.join(tempDir, '.git');
+
+    const gitDir = path.join(tempDir, ".git");
     if (fs.existsSync(gitDir)) {
       fs.rmSync(gitDir, { recursive: true, force: true });
     }
-    
+
     return tempDir;
   } catch (error) {
     if (fs.existsSync(tempDir)) {
@@ -45,13 +49,17 @@ export async function cloneRepo(url: string, options: CloneOptions = {}): Promis
  * @returns Normalized git URL
  */
 function normalizeGitUrl(url: string): string {
-  if (url.startsWith('git@') || url.startsWith('https://') || url.startsWith('http://')) {
+  if (
+    url.startsWith("git@") ||
+    url.startsWith("https://") ||
+    url.startsWith("http://")
+  ) {
     return url;
   }
-  
+
   if (/^[\w-]+\/[\w-]+$/.test(url)) {
     return `https://github.com/${url}.git`;
   }
-  
+
   return url;
 }
