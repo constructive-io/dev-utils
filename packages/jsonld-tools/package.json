@@ -20,13 +20,16 @@
     "jsonld-tools"
   ],
   "scripts": {
-    "copy": "cpy ../../LICENSE README.md package.json dist --flat",
-    "clean": "rimraf dist",
+    "copy": "makage assets",
+    "clean": "makage clean dist",
     "prepublishOnly": "pnpm run build",
-    "build": "pnpm run clean && tsc && tsc -p tsconfig.esm.json && pnpm run copy",
+    "build": "pnpm run clean && makage build-ts && pnpm run copy",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
+  },
+  "devDependencies": {
+    "makage": "workspace:*"
   },
   "bugs": {
     "url": "https://github.com/hyperweb-io/dev-utils/issues"

@@ -20,16 +20,19 @@
     "url": "https://github.com/hyperweb-io/dev-utils/issues"
   },
   "scripts": {
-    "copy": "cpy ../../LICENSE README.md package.json dist --flat",
-    "clean": "rimraf dist/**",
+    "copy": "makage assets",
+    "clean": "makage clean dist",
     "prepublishOnly": "npm run build",
-    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "build": "npm run clean && makage build-ts && npm run copy",
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
     "@interweb/http-errors": "workspace:*"
+  },
+  "devDependencies": {
+    "makage": "workspace:*"
   },
   "keywords": []
 }

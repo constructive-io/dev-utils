@@ -13,10 +13,10 @@
     "directory": "dist"
   },
   "scripts": {
-    "copy": "cpy ../../LICENSE README.md package.json dist --flat",
-    "clean": "rimraf dist/**",
+    "copy": "makage assets",
+    "clean": "makage clean dist",
     "prepublishOnly": "npm run build",
-    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "build": "npm run clean && makage build-ts && npm run copy",
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -38,6 +38,7 @@
     "esprima": "4.0.1",
     "jest": "^30.2.0",
     "jest-in-case": "1.0.2",
+    "makage": "workspace:*",
     "nested-obj": "workspace:*",
     "prettier": "^3.6.2",
     "rimraf": "6.1.2",
