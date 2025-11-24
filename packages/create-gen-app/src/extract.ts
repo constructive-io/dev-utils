@@ -11,7 +11,7 @@ import {
 const PLACEHOLDER_BOUNDARY = "____";
 
 /**
- * Pattern to match ____VARIABLE____ in filenames and content
+ * Pattern to match ____variable____ in filenames and content
  */
 const VARIABLE_PATTERN = new RegExp(
   `${PLACEHOLDER_BOUNDARY}([A-Za-z_][A-Za-z0-9_]*)${PLACEHOLDER_BOUNDARY}`,

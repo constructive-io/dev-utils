@@ -21,7 +21,7 @@ A TypeScript-first CLI/library for cloning template repositories, asking the use
 ## Features
 
 - Clone any Git repo (or GitHub `org/repo` shorthand) and optionally select a branch + subdirectory
-- Extract template variables from filenames and file contents using the safer `____VARIABLE____` convention
+- Extract template variables from filenames and file contents using the safer `____variable____` convention
 - Merge auto-discovered variables with `.questions.{json,js}` (questions win, including `ignore` patterns)
 - Interactive prompts powered by `inquirerer`, with CLI flag overrides (`--VAR value`) and non-TTY mode for CI
 - Built-in CLI (`create-gen-app` / `cga`) that discovers templates, prompts once, and writes output safely
@@ -84,14 +84,14 @@ await createGen({
 Variables should be wrapped in four underscores on each side:
 
 ```
-____PROJECT_NAME____/
-  src/____MODULE_NAME____.ts
+____projectName____/
+  src/____moduleName____.ts
 ```
 
 ```typescript
-// ____MODULE_NAME____.ts
-export const projectName = "____PROJECT_NAME____";
-export const author = "____USERFULLNAME____";
+// ____moduleName____.ts
+export const projectName = "____projectName____";
+export const author = "____fullName____";
 ```
 
 ### Custom Questions & Ignore Rules
@@ -103,13 +103,13 @@ Create a `.questions.json`:
   "ignore": ["__tests__", "docs/drafts"],
   "questions": [
     {
-      "name": "____USERFULLNAME____",
+      "name": "____fullName____",
       "type": "text",
       "message": "Enter author full name",
       "required": true
     },
     {
-      "name": "____LICENSE____",
+      "name": "____license____",
       "type": "list",
       "message": "Choose a license",
       "options": ["MIT", "Apache-2.0", "ISC", "GPL-3.0"]
@@ -118,7 +118,7 @@ Create a `.questions.json`:
 }
 ```
 
-Or `.questions.js` for dynamic logic. Question names can use `____VAR____` or plain `VAR`; they'll be normalized automatically.
+Or `.questions.js` for dynamic logic. Question names can use `____var____` or plain `VAR`; they'll be normalized automatically.
 
 ### License Templates
 
