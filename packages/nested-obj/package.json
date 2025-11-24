@@ -31,6 +31,6 @@
     "url": "https://github.com/hyperweb-io/dev-utils/issues"
   },
   "devDependencies": {
-    "makage": "workspace:*"
+    "makage": "0.1.3"
   }
 }

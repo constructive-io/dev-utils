@@ -29,7 +29,7 @@
     "test:watch": "jest --watch"
   },
   "devDependencies": {
-    "makage": "workspace:*"
+    "makage": "0.1.3"
   },
   "keywords": []
 }

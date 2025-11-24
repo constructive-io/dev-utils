@@ -49,6 +49,6 @@
   "devDependencies": {
     "@types/babel__generator": "^7.27.0",
     "jest-diff": "^30.0.4",
-    "makage": "workspace:*"
+    "makage": "0.1.3"
   }
 }

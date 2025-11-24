@@ -37,6 +37,6 @@
   "keywords": [],
   "devDependencies": {
     "@types/minimist": "^1.2.5",
-    "makage": "workspace:*"
+    "makage": "0.1.3"
   }
 }

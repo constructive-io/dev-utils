@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.39",
-    "makage": "workspace:*"
+    "makage": "0.1.3"
   }
 }
