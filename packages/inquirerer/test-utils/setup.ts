@@ -1,6 +1,6 @@
 import readline from 'readline';
 import { Readable, Transform, Writable } from 'stream';
-import { stripAnsi } from './strip-ansi';
+import { stripAnsi } from 'clean-ansi';
 
 import { CLIOptions } from '../src';
 

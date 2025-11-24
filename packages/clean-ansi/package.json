@@ -1,8 +1,8 @@
 {
-  "name": "inquirerer",
-  "version": "2.1.3",
+  "name": "clean-ansi",
+  "version": "0.1.0",
   "author": "Dan Lynch <pyramation@gmail.com>",
-  "description": "TypeScript-first library for building beautiful CLI interfaces with interactive prompts",
+  "description": "Remove ANSI escape codes from strings",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
@@ -24,20 +24,19 @@
     "clean": "makage clean",
     "prepublishOnly": "npm run build",
     "build": "npm run clean && makage build-ts && npm run copy",
-    "dev": "ts-node dev/index",
+    "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "dependencies": {
-    "deepmerge": "^4.3.1",
-    "js-yaml": "^4.1.0",
-    "minimist": "^1.2.8",
-    "yanse": "workspace:*"
-  },
-  "keywords": [],
   "devDependencies": {
-    "@types/minimist": "^1.2.5",
-    "clean-ansi": "workspace:*",
     "makage": "0.1.5"
-  }
+  },
+  "keywords": [
+    "ansi",
+    "strip",
+    "clean",
+    "escape codes",
+    "terminal",
+    "colors"
+  ]
 }

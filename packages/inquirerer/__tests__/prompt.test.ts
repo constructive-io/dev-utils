@@ -1,6 +1,6 @@
 import readline from 'readline';
 import { Readable, Transform, Writable } from 'stream';
-import { stripAnsi } from '../test-utils/strip-ansi';
+import { stripAnsi } from 'clean-ansi';
 import { Inquirerer } from '../src';
 import { Question } from '../src/question';
   

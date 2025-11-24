@@ -47,6 +47,7 @@ jobs:
       matrix:
         package:
           - appstash
+          - clean-ansi
           - fetch-api-client
           - find-pkg
           - http-errors
