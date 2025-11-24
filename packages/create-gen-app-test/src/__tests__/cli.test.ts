@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { runCli } from "../src/cli";
+import { runCli } from "../cli";
 import {
   TEST_BRANCH,
   TEST_REPO,
@@ -9,11 +9,11 @@ import {
   buildAnswers,
   cleanupWorkspace,
   createTempWorkspace,
-} from "../test-utils/integration-helpers";
+} from "../../../create-gen-app/test-utils/integration-helpers";
 
 jest.setTimeout(180_000);
 
-describe("CLI integration (GitHub templates)", () => {
+describe("CLI integration via create-gen-app-test harness", () => {
   it("generates a project using the real repo", async () => {
     const workspace = createTempWorkspace("cli");
     const answers = buildAnswers("cli");
@@ -65,12 +65,15 @@ describe("CLI integration (GitHub templates)", () => {
   });
 
   it("prints version and exits when --version is provided", async () => {
-    const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+    const logSpy = jest
+      .spyOn(console, "log")
+      .mockImplementation(() => undefined);
 
     await runCli(["--version"]);
 
-    expect(logSpy).toHaveBeenCalledWith(expect.stringMatching(/create-gen-app v/));
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/create-gen-app v/)
+    );
     logSpy.mockRestore();
   });
 });
-

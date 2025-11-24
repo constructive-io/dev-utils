@@ -30,9 +30,12 @@
   },
   "dependencies": {
     "appstash": "workspace:*",
-    "create-gen-app": "workspace:*"
+    "create-gen-app": "workspace:*",
+    "inquirerer": "workspace:*",
+    "minimist": "^1.2.8"
   },
   "devDependencies": {
+    "@types/minimist": "^1.2.5",
     "makage": "0.1.5"
   },
   "keywords": []

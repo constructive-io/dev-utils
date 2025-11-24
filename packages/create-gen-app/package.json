@@ -3,10 +3,6 @@
   "version": "0.1.7",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "description": "Clone and customize template repositories with variable replacement",
-  "bin": {
-    "create-gen-app": "./cli.js",
-    "cga": "./cli.js"
-  },
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
@@ -33,11 +29,9 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "inquirerer": "workspace:*",
-    "minimist": "^1.2.8"
+    "inquirerer": "workspace:*"
   },
   "devDependencies": {
-    "@types/minimist": "^1.2.5",
     "copyfiles": "^2.4.1",
     "makage": "0.1.5"
   },

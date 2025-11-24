@@ -16,48 +16,23 @@
   <a href="https://www.npmjs.com/package/create-gen-app"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/dev-utils?filename=packages%2Fcreate-gen-app%2Fpackage.json"></a>
 </p>
 
-A TypeScript-first CLI/library for cloning template repositories, asking the user for variables, and generating a new project with sensible defaults.
+A TypeScript-first library for cloning template repositories, asking the user for variables, and generating a new project with sensible defaults.
 
 ## Features
 
 - Clone any Git repo (or GitHub `org/repo` shorthand) and optionally select a branch + subdirectory
 - Extract template variables from filenames and file contents using the safer `____variable____` convention
 - Merge auto-discovered variables with `.questions.{json,js}` (questions win, including `ignore` patterns)
-- Interactive prompts powered by `inquirerer`, with CLI flag overrides (`--VAR value`) and non-TTY mode for CI
-- Built-in CLI (`create-gen-app` / `cga`) that discovers templates, prompts once, and writes output safely
+- Interactive prompts powered by `inquirerer`, with flexible override mapping (`argv` support) and non-TTY mode for CI
 - License scaffolding: choose from MIT, Apache-2.0, ISC, GPL-3.0, BSD-3-Clause, Unlicense, or MPL-2.0 and generate a populated `LICENSE`
 
 ## Installation
 
 ```bash
 npm install create-gen-app
-# or for CLI only
-npm install -g create-gen-app
 ```
 
-## CLI Usage
-
-```bash
-# interactively pick a template from launchql/pgpm-boilerplates
-create-gen-app --output ./workspace
-
-# short alias
-cga --template module --branch main --output ./module \
-    --USERFULLNAME "Jane Dev" --USEREMAIL jane@example.com
-
-# point to a different repo/branch/path
-cga --repo github:my-org/my-templates --branch release \
-    --path ./templates --template api --output ./api
-```
-
-Key flags:
-
-- `--repo`, `--branch`, `--path` – choose the Git repo, branch/tag, and subdirectory that contains templates
-- `--template` – folder inside `--path` (auto-prompted if omitted)
-- `--output` – destination directory (defaults to `./<template>`); use `--force` to overwrite
-- `--no-tty` – disable interactive prompts (ideal for CI)
-- `--version`, `--help` – standard metadata
-- Any extra `--VAR value` pairs become variable overrides
+> **Note:** The published package is API-only. An internal CLI harness used for integration testing now lives in `packages/create-gen-app-test/`.
 
 ## Library Usage
 
@@ -126,14 +101,14 @@ Or `.questions.js` for dynamic logic. Question names can use `____var____` or pl
 
 - `{{YEAR}}`, `{{AUTHOR}}`, `{{EMAIL_LINE}}`
 
-No code changes are needed; the CLI discovers templates at runtime and will warn if a `.questions` option doesn’t have a matching template.
+No code changes are needed; the generator discovers templates at runtime and will warn if a `.questions` option doesn’t have a matching template.
 
 ## API Overview
 
 - `createGen(options)` – full pipeline (clone → extract → prompt → replace)
 - `cloneRepo(url, { branch })` – clone to a temp dir
 - `extractVariables(dir)` – parse file/folder names + content for variables, load `.questions`
-- `promptUser(extracted, argv, noTty)` – run interactive questions with CLI overrides and alias deduping
+- `promptUser(extracted, argv, noTty)` – run interactive questions with override alias deduping
 - `replaceVariables(templateDir, outputDir, extracted, answers)` – copy files, rename paths, render licenses
 
 See `dev/README.md` for the local development helper script (`pnpm dev`).

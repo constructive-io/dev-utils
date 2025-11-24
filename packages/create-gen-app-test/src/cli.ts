@@ -6,15 +6,15 @@ import * as path from "path";
 import { Inquirerer, ListQuestion } from "inquirerer";
 import minimist, { ParsedArgs } from "minimist";
 
-import { cloneRepo } from "./clone";
-import { createGen } from "./index";
-import packageJson from "../package.json";
+import { cloneRepo, createGen } from "create-gen-app";
+import createGenPackageJson from "create-gen-app/package.json";
 
 const DEFAULT_REPO = "https://github.com/launchql/pgpm-boilerplates.git";
 const DEFAULT_PATH = ".";
 const DEFAULT_OUTPUT_FALLBACK = "create-gen-app-output";
 
-const PACKAGE_VERSION = packageJson.version ?? "0.0.0";
+const PACKAGE_VERSION =
+  (createGenPackageJson as { version?: string }).version ?? "0.0.0";
 
 const RESERVED_ARG_KEYS = new Set([
   "_",
@@ -43,7 +43,9 @@ export interface CliResult {
   template: string;
 }
 
-export async function runCli(rawArgv: string[] = process.argv.slice(2)): Promise<CliResult | void> {
+export async function runCli(
+  rawArgv: string[] = process.argv.slice(2)
+): Promise<CliResult | void> {
   const args = minimist(rawArgv, {
     alias: {
       r: "repo",
@@ -87,8 +89,13 @@ export async function runCli(rawArgv: string[] = process.argv.slice(2)): Promise
     tempDir = await cloneRepo(args.repo, { branch: args.branch });
 
     const selectionRoot = path.join(tempDir, args.path);
-    if (!fs.existsSync(selectionRoot) || !fs.statSync(selectionRoot).isDirectory()) {
-      throw new Error(`Template path "${args.path}" does not exist in ${args.repo}`);
+    if (
+      !fs.existsSync(selectionRoot) ||
+      !fs.statSync(selectionRoot).isDirectory()
+    ) {
+      throw new Error(
+        `Template path "${args.path}" does not exist in ${args.repo}`
+      );
     }
 
     const templates = fs
@@ -134,7 +141,9 @@ export async function runCli(rawArgv: string[] = process.argv.slice(2)): Promise
     ensureOutputDir(outputDir, Boolean(args.force));
 
     const answerOverrides = extractAnswerOverrides(args);
-    const noTty = Boolean(args["no-tty"] ?? (args as Record<string, unknown>).noTty);
+    const noTty = Boolean(
+      args["no-tty"] ?? (args as Record<string, unknown>).noTty
+    );
 
     await createGen({
       templateUrl: args.repo,
@@ -156,11 +165,10 @@ export async function runCli(rawArgv: string[] = process.argv.slice(2)): Promise
 
 function printHelp(): void {
   console.log(`
-create-gen-app CLI
+create-gen-app CLI (test harness)
 
 Usage:
-  create-gen-app [options] [outputDir]
-  cga [options] [outputDir]
+  node cli [options] [outputDir]
 
 Options:
   -r, --repo <url>         Git repository to clone (default: ${DEFAULT_REPO})
@@ -174,7 +182,7 @@ Options:
   -h, --help               Show this help message
 
 You can also pass variable overrides, e.g.:
-  create-gen-app --template module --PROJECT_NAME my-app
+  node cli --template module --PROJECT_NAME my-app
 `);
 }
 
@@ -193,7 +201,9 @@ async function promptForTemplate(templates: string[]): Promise<string> {
   };
 
   try {
-    const answers = (await prompter.prompt({}, [question])) as { template: string };
+    const answers = (await prompter.prompt({}, [question])) as {
+      template: string;
+    };
     return answers.template;
   } finally {
     if (typeof (prompter as any).close === "function") {
@@ -202,8 +212,13 @@ async function promptForTemplate(templates: string[]): Promise<string> {
   }
 }
 
-function resolveOutputDir(outputArg: string | undefined, template?: string): string {
-  const base = outputArg ?? (template ? path.join(process.cwd(), template) : DEFAULT_OUTPUT_FALLBACK);
+function resolveOutputDir(
+  outputArg: string | undefined,
+  template?: string
+): string {
+  const base =
+    outputArg ??
+    (template ? path.join(process.cwd(), template) : DEFAULT_OUTPUT_FALLBACK);
   return path.resolve(base);
 }
 
@@ -238,4 +253,3 @@ if (require.main === module) {
     process.exitCode = 1;
   });
 }
-
