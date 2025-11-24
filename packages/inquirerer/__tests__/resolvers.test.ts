@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import {
     DefaultResolverRegistry,
     globalResolverRegistry,
@@ -8,8 +7,11 @@ import {
 } from '../src/resolvers';
 
 // Mock child_process.execSync for git config tests
-jest.mock('child_process');
+jest.mock('child_process', () => ({
+    execSync: jest.fn()
+}));
 
+import { execSync } from 'child_process';
 const mockedExecSync = execSync as jest.MockedFunction<typeof execSync>;
 
 describe('DefaultResolverRegistry', () => {
