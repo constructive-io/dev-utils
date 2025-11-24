@@ -4,6 +4,7 @@ import { Readable, Writable } from 'stream';
 
 import { KEY_CODES, TerminalKeypress } from './keypress';
 import { AutocompleteQuestion, CheckboxQuestion, ConfirmQuestion, ListQuestion, NumberQuestion, OptionValue, Question, TextQuestion, Validation, Value } from './question';
+import { DefaultResolverRegistry, globalResolverRegistry } from './resolvers';
 // import { writeFileSync } from 'fs';
 
 // const debuglog = (obj: any) => {
@@ -250,6 +251,7 @@ export interface InquirererOptions {
   useDefaults?: boolean;
   globalMaxLines?: number;
   mutateArgs?: boolean;
+  resolverRegistry?: DefaultResolverRegistry;
 
 }
 export class Inquirerer {
@@ -261,6 +263,7 @@ export class Inquirerer {
   private useDefaults: boolean;
   private globalMaxLines: number;
   private mutateArgs: boolean;
+  private resolverRegistry: DefaultResolverRegistry;
 
   private handledKeys: Set<string> = new Set();
 
@@ -273,7 +276,8 @@ export class Inquirerer {
       output = process.stdout,
       useDefaults = false,
       globalMaxLines = 10,
-      mutateArgs = true
+      mutateArgs = true,
+      resolverRegistry = globalResolverRegistry
     } = options ?? {}
 
     this.useDefaults = useDefaults;
@@ -282,6 +286,7 @@ export class Inquirerer {
     this.mutateArgs = mutateArgs;
     this.input = input;
     this.globalMaxLines = globalMaxLines;
+    this.resolverRegistry = resolverRegistry;
 
     if (!noTty) {
       this.rl = readline.createInterface({
@@ -461,6 +466,9 @@ export class Inquirerer {
     const shouldMutate = options?.mutateArgs !== undefined ? options.mutateArgs : this.mutateArgs;
     let obj: any = shouldMutate ? argv : { ...argv };
 
+    // Resolve dynamic defaults before processing questions
+    await this.resolveDynamicDefaults(questions);
+
     // first loop through the question, and set any overrides in case other questions use objs for validation
     this.applyOverrides(argv, obj, questions);
 
@@ -541,6 +549,43 @@ export class Inquirerer {
 
   private hasMissingRequiredArgs(questions: Question[], argv: any): boolean {
     return questions.some(question => question.required && this.isEmptyAnswer(argv[question.name]));
+  }
+
+  /**
+   * Resolves the default value for a question using the resolver system.
+   * Priority: defaultFrom > default > undefined
+   */
+  private async resolveQuestionDefault(question: Question): Promise<any> {
+    // Try to resolve from defaultFrom first
+    if ('defaultFrom' in question && question.defaultFrom) {
+      const resolved = await this.resolverRegistry.resolve(question.defaultFrom);
+      if (resolved !== undefined) {
+        return resolved;
+      }
+    }
+
+    // Fallback to static default
+    if ('default' in question) {
+      return question.default;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Resolves dynamic defaults for all questions that have defaultFrom specified.
+   * Updates the question.default property with the resolved value.
+   */
+  private async resolveDynamicDefaults(questions: Question[]): Promise<void> {
+    for (const question of questions) {
+      if ('defaultFrom' in question && question.defaultFrom) {
+        const resolved = await this.resolveQuestionDefault(question);
+        if (resolved !== undefined) {
+          // Update question.default with resolved value
+          (question as any).default = resolved;
+        }
+      }
+    }
   }
 
   private applyDefaultValues(questions: Question[], obj: any): void {
