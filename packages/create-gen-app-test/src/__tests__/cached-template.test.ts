@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import { appstash, resolve } from 'appstash';
 
-import { createFromCachedTemplate, getCachedRepo, cloneToCache } from '../index';
+import { createFromCachedTemplate, TemplateCache } from '../index';
 
 const DEFAULT_TEMPLATE_URL = 'https://github.com/launchql/pgpm-boilerplates';
 
@@ -35,15 +35,23 @@ describe('cached template integration tests', () => {
 
   describe('cache functionality', () => {
     let sharedCachePath: string;
+    let templateCache: TemplateCache;
+
+    beforeAll(() => {
+      templateCache = new TemplateCache({
+        enabled: true,
+        toolName: testCacheTool,
+      });
+    });
 
     it('should return null when cache does not exist for new URL', () => {
       const nonExistentUrl = 'https://github.com/nonexistent/repo-test-123456';
-      const cachedRepo = getCachedRepo(nonExistentUrl, testCacheTool);
+      const cachedRepo = templateCache.get(nonExistentUrl);
       expect(cachedRepo).toBeNull();
     });
 
     it('should clone repository to cache', () => {
-      const cachePath = cloneToCache(DEFAULT_TEMPLATE_URL, testCacheTool);
+      const cachePath = templateCache.set(DEFAULT_TEMPLATE_URL);
       sharedCachePath = cachePath;
 
       expect(fs.existsSync(cachePath)).toBe(true);
@@ -54,7 +62,7 @@ describe('cached template integration tests', () => {
     }, 60000);
 
     it('should retrieve cached repository', () => {
-      const cachedRepo = getCachedRepo(DEFAULT_TEMPLATE_URL, testCacheTool);
+      const cachedRepo = templateCache.get(DEFAULT_TEMPLATE_URL);
       expect(cachedRepo).not.toBeNull();
       expect(cachedRepo).toBe(sharedCachePath);
       expect(fs.existsSync(cachedRepo!)).toBe(true);
@@ -120,7 +128,11 @@ describe('cached template integration tests', () => {
     });
 
     it('should verify template cache was created', () => {
-      const cachedRepo = getCachedRepo(DEFAULT_TEMPLATE_URL, testCacheTool);
+      const templateCache = new TemplateCache({
+        enabled: true,
+        toolName: testCacheTool,
+      });
+      const cachedRepo = templateCache.get(DEFAULT_TEMPLATE_URL);
       expect(cachedRepo).not.toBeNull();
       expect(fs.existsSync(cachedRepo!)).toBe(true);
     });

@@ -82,6 +82,69 @@ describe("template caching (appstash)", () => {
       cleanupWorkspace(secondWorkspace);
     }
   });
+
+  it("invalidates cache when TTL expires", async () => {
+    const shortTtl = 1000; // 1 second
+    const cacheOptions = {
+      toolName: `${cacheTool}-ttl`,
+      baseDir: tempBaseDir,
+      enabled: true,
+      ttl: shortTtl,
+    };
+
+    const firstWorkspace = createTempWorkspace("ttl-first");
+    const firstAnswers = buildAnswers("ttl-first");
+    const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+
+    try {
+      await createGen({
+        templateUrl: TEST_REPO,
+        fromBranch: TEST_BRANCH,
+        fromPath: TEST_TEMPLATE,
+        outputDir: firstWorkspace.outputDir,
+        argv: firstAnswers,
+        noTty: true,
+        cache: cacheOptions,
+      });
+
+      expect(
+        logSpy.mock.calls.some(([message]) =>
+          typeof message === "string" && message.includes("Caching repository")
+        )
+      ).toBe(true);
+    } finally {
+      cleanupWorkspace(firstWorkspace);
+    }
+
+    // Wait for TTL to expire
+    await new Promise((resolve) => setTimeout(resolve, shortTtl + 200));
+
+    logSpy.mockClear();
+    const secondWorkspace = createTempWorkspace("ttl-second");
+    const secondAnswers = buildAnswers("ttl-second");
+
+    try {
+      await createGen({
+        templateUrl: TEST_REPO,
+        fromBranch: TEST_BRANCH,
+        fromPath: TEST_TEMPLATE,
+        outputDir: secondWorkspace.outputDir,
+        argv: secondAnswers,
+        noTty: true,
+        cache: cacheOptions,
+      });
+
+      // Should re-cache since TTL expired
+      expect(
+        logSpy.mock.calls.some(([message]) =>
+          typeof message === "string" && message.includes("Caching repository")
+        )
+      ).toBe(true);
+    } finally {
+      logSpy.mockRestore();
+      cleanupWorkspace(secondWorkspace);
+    }
+  });
 });
 
 

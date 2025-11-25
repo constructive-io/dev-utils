@@ -7,12 +7,13 @@ import { Inquirerer, ListQuestion } from "inquirerer";
 import minimist, { ParsedArgs } from "minimist";
 
 import { cloneRepo, createGen } from "create-gen-app";
-import createGenPackageJson from "create-gen-app/package.json";
 
 const DEFAULT_REPO = "https://github.com/launchql/pgpm-boilerplates.git";
 const DEFAULT_PATH = ".";
 const DEFAULT_OUTPUT_FALLBACK = "create-gen-app-output";
 
+// Use require for package.json to avoid module resolution issues
+const createGenPackageJson = require("create-gen-app/package.json");
 const PACKAGE_VERSION =
   (createGenPackageJson as { version?: string }).version ?? "0.0.0";
 

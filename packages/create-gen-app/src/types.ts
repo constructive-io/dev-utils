@@ -84,6 +84,18 @@ export interface CacheOptions {
    * Optional base directory for appstash. Useful for tests to avoid touching the real home dir.
    */
   baseDir?: string;
+
+  /**
+   * Time-to-live in milliseconds. If set, cached templates older than this will be invalidated.
+   * Defaults to undefined (no expiration).
+   */
+  ttl?: number;
+
+  /**
+   * Alias for ttl. Maximum age in milliseconds for cached templates.
+   * Defaults to undefined (no expiration).
+   */
+  maxAge?: number;
 }
 
 /**

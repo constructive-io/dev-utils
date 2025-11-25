@@ -1,0 +1,39 @@
+{
+  "name": "create-gen-app",
+  "version": "0.1.7",
+  "author": "Dan Lynch <pyramation@gmail.com>",
+  "description": "Clone and customize template repositories with variable replacement",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/hyperweb-io/dev-utils",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyperweb-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/hyperweb-io/dev-utils/issues"
+  },
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE README.md package.json \"licenses-templates/**/*\" dist",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "npm run clean && tsc && tsc -p tsconfig.esm.json && npm run copy",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "appstash": "workspace:*",
+    "inquirerer": "workspace:*"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "makage": "0.1.5"
+  },
+  "keywords": []
+}

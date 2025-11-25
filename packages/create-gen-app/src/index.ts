@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { normalizeCacheOptions, prepareTemplateDirectory } from "./cache";
+import { prepareTemplateDirectory, TemplateCache } from "./cache";
 import { extractVariables } from "./extract";
 import { promptUser } from "./prompt";
 import { replaceVariables } from "./replace";
@@ -13,6 +13,7 @@ export * from "./extract";
 export * from "./prompt";
 export * from "./replace";
 export * from "./types";
+export * from "./template-cache";
 
 /**
  * Create a new project from a template repository
@@ -30,16 +31,15 @@ export async function createGen(options: CreateGenOptions): Promise<string> {
     cache,
   } = options;
 
-  const cacheConfig = normalizeCacheOptions(cache);
-
   console.log(`Preparing template from ${templateUrl}...`);
   const templateSource = await prepareTemplateDirectory({
     templateUrl,
     branch: fromBranch,
-    cache: cacheConfig,
+    cache,
   });
 
-  if (cacheConfig.enabled) {
+  const cacheEnabled = cache !== false && (cache?.enabled !== false);
+  if (cacheEnabled) {
     console.log(
       templateSource.cacheUsed
         ? "Using cached repository"
