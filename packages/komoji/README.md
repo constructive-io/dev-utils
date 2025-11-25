@@ -60,6 +60,42 @@ toCamelCase('__private_field', true);  // privateField
 toCamelCase('123-invalid', true);      // invalid
 ```
 
+### Transform to snake_case
+
+```typescript
+import { toSnakeCase } from 'komoji';
+
+toSnakeCase('helloWorld');        // hello_world
+toSnakeCase('UserName');          // user_name
+toSnakeCase('api-response-data'); // api_response_data
+toSnakeCase('myComponentV2');     // my_component_v2
+toSnakeCase('HTTPSConnection');   // https_connection
+```
+
+### Transform to kebab-case
+
+```typescript
+import { toKebabCase } from 'komoji';
+
+toKebabCase('helloWorld');        // hello-world
+toKebabCase('UserName');          // user-name
+toKebabCase('api_response_data'); // api-response-data
+toKebabCase('myComponentV2');     // my-component-v2
+toKebabCase('HTTPSConnection');   // https-connection
+```
+
+### Transform to CONSTANT_CASE
+
+```typescript
+import { toConstantCase } from 'komoji';
+
+toConstantCase('helloWorld');        // HELLO_WORLD
+toConstantCase('UserName');          // USER_NAME
+toConstantCase('api-response-data'); // API_RESPONSE_DATA
+toConstantCase('myComponentV2');     // MY_COMPONENT_V2
+toConstantCase('HTTPSConnection');   // HTTPS_CONNECTION
+```
+
 ### Validate Identifiers
 
 ```typescript
@@ -79,13 +115,15 @@ isValidIdentifierCamelized('-invalid'); // false (starts with hyphen)
 
 ## API
 
-### `toPascalCase(str: string): string`
+### Case Transformation Functions
+
+#### `toPascalCase(str: string): string`
 
 Converts a string to PascalCase by capitalizing the first letter of each word and removing separators.
 
 **Supported separators:** hyphens (`-`), underscores (`_`), spaces (` `)
 
-### `toCamelCase(key: string, stripLeadingNonAlphabetChars?: boolean): string`
+#### `toCamelCase(key: string, stripLeadingNonAlphabetChars?: boolean): string`
 
 Converts a string to camelCase with an optional flag to strip leading non-alphabetic characters.
 
@@ -93,11 +131,25 @@ Converts a string to camelCase with an optional flag to strip leading non-alphab
 - `key` - The string to transform
 - `stripLeadingNonAlphabetChars` - Remove leading non-alphabetic characters (default: `false`)
 
-### `isValidIdentifier(key: string): boolean`
+#### `toSnakeCase(str: string): string`
+
+Converts a string to snake_case. Handles camelCase, PascalCase, kebab-case, and space-separated strings. Properly inserts underscores between words and before numbers.
+
+#### `toKebabCase(str: string): string`
+
+Converts a string to kebab-case. Handles camelCase, PascalCase, snake_case, and space-separated strings. Properly inserts hyphens between words and before numbers.
+
+#### `toConstantCase(str: string): string`
+
+Converts a string to CONSTANT_CASE (also known as SCREAMING_SNAKE_CASE). Perfect for environment variables and constants. Handles all common case formats and properly separates words and numbers.
+
+### Validation Functions
+
+#### `isValidIdentifier(key: string): boolean`
 
 Checks if a string is a valid JavaScript identifier (follows standard naming rules).
 
-### `isValidIdentifierCamelized(key: string): boolean`
+#### `isValidIdentifierCamelized(key: string): boolean`
 
 Checks if a string can be transformed into a valid JavaScript identifier (allows internal hyphens that will be removed during camelization).
 
