@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/hyperweb-io/dev-utils/compare/appstash@0.2.2...appstash@0.2.3) (2025-11-26)
+
+**Note:** Version bump only for package appstash
+
 ## [0.2.2](https://github.com/hyperweb-io/dev-utils/compare/appstash@0.2.1...appstash@0.2.2) (2025-11-24)
 
 **Note:** Version bump only for package appstash

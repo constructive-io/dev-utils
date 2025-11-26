@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.6](https://github.com/hyperweb-io/dev-utils/compare/jsonldjs@0.2.5...jsonldjs@0.2.6) (2025-11-26)
+
+**Note:** Version bump only for package jsonldjs
+
 ## [0.2.5](https://github.com/hyperweb-io/dev-utils/compare/jsonldjs@0.2.4...jsonldjs@0.2.5) (2025-11-24)
 
 **Note:** Version bump only for package jsonldjs

@@ -1,6 +1,6 @@
 {
   "name": "@interweb/fetch-api-client",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "description": "Universal Fetch-based HTTP client for Node.js and browsers",
   "main": "index.js",

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.8](https://github.com/hyperweb-io/dev-utils/compare/komoji@0.7.7...komoji@0.7.8) (2025-11-26)
+
+**Note:** Version bump only for package komoji
+
 ## [0.7.7](https://github.com/hyperweb-io/dev-utils/compare/komoji@0.7.6...komoji@0.7.7) (2025-11-25)
 
 **Note:** Version bump only for package komoji

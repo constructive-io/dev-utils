@@ -1,6 +1,6 @@
 {
   "name": "@interweb/node-api-client",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "description": "Lightweight HTTP client for Node.js RESTful APIs",
   "main": "index.js",
