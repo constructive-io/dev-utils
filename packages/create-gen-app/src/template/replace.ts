@@ -3,8 +3,8 @@ import * as path from 'path';
 import { Transform } from 'stream';
 import { pipeline } from 'stream/promises';
 
-import { ExtractedVariables } from './types';
-import { renderLicense, isSupportedLicense } from './licenses';
+import { ExtractedVariables } from '../types';
+import { renderLicense, isSupportedLicense } from '../licenses';
 
 /**
  * Replace variables in all files in the template directory
@@ -162,7 +162,7 @@ async function replaceInFile(
   }
   
   const replaceTransform = new Transform({
-    transform(chunk: Buffer, encoding, callback) {
+    transform(chunk: Buffer, _encoding, callback) {
       let content = chunk.toString();
       
       for (const replacer of extractedVariables.contentReplacers) {

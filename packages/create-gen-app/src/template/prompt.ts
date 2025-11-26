@@ -1,6 +1,6 @@
 import { Inquirerer, Question } from "inquirerer";
 
-import { ExtractedVariables } from "./types";
+import { ExtractedVariables } from "../types";
 
 const PLACEHOLDER_BOUNDARY = "____";
 

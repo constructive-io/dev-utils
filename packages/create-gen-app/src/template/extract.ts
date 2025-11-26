@@ -6,7 +6,7 @@ import {
   ExtractedVariables,
   FileReplacer,
   Questions,
-} from "./types";
+} from "../types";
 
 const PLACEHOLDER_BOUNDARY = "____";
 
