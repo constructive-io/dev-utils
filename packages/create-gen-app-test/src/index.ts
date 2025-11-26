@@ -4,7 +4,6 @@ import { GitCloner } from 'create-gen-app';
 import { Templatizer } from 'create-gen-app';
 
 // Configuration constants (top-most layer owns defaults)
-const DEFAULT_REPO = 'launchql/boilerplates';
 const DEFAULT_TTL = 604800000; // 1 week in milliseconds
 const DEFAULT_TOOL_NAME = 'pgpm';
 
