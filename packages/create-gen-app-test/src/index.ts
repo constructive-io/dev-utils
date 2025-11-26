@@ -4,7 +4,6 @@ import { GitCloner } from 'create-gen-app';
 import { Templatizer } from 'create-gen-app';
 
 // Configuration constants (top-most layer owns defaults)
-const DEFAULT_TTL = 604800000; // 1 week in milliseconds
 const DEFAULT_TOOL_NAME = 'pgpm';
 
 export interface CreateFromTemplateOptions {
@@ -39,7 +38,7 @@ export async function createFromTemplate(
     answers = {},
     toolName = DEFAULT_TOOL_NAME,
     branch,
-    ttl = DEFAULT_TTL,
+    ttl,
     baseDir,
     fromPath,
     noTty = false,
@@ -79,7 +78,7 @@ export async function createFromTemplate(
   } else {
     // 4. Clone to cache
     console.log(`Cloning ${normalizedUrl}...`);
-    const tempDest = path.join(cacheManager['reposDir'], cacheKey);
+    const tempDest = path.join(cacheManager.getReposDir(), cacheKey);
 
     gitCloner.clone(normalizedUrl, tempDest, { branch, depth: 1 });
     cacheManager.set(cacheKey, tempDest);

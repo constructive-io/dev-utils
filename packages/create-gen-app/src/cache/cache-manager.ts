@@ -20,17 +20,41 @@ export class CacheManager {
       toolName: config.toolName,
       baseDir: config.baseDir,
       ttl: config.ttl,
+      dirs: config.dirs,
     };
 
-    this.dirs = appstash(this.config.toolName, {
-      ensure: true,
-      baseDir: this.config.baseDir,
-    });
+    this.dirs =
+      config.dirs ??
+      appstash(this.config.toolName, {
+        ensure: true,
+        baseDir: this.config.baseDir,
+      });
 
     this.reposDir = resolveAppstash(this.dirs, 'cache', 'repos');
     this.metadataDir = resolveAppstash(this.dirs, 'cache', 'metadata');
 
     this.ensureDirectories();
+  }
+
+  /**
+   * Public accessor for the repos cache directory path.
+   */
+  getReposDir(): string {
+    return this.reposDir;
+  }
+
+  /**
+   * Public accessor for the metadata cache directory path.
+   */
+  getMetadataDir(): string {
+    return this.metadataDir;
+  }
+
+  /**
+   * Public accessor for resolved appstash directories.
+   */
+  getAppstashDirs(): AppStashResult {
+    return this.dirs;
   }
 
   /**

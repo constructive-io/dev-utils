@@ -14,9 +14,11 @@ const DEFAULT_PATH = ".";
 const DEFAULT_OUTPUT_FALLBACK = "create-gen-app-output";
 const DEFAULT_TOOL_NAME = "create-gen-app-test";
 const DEFAULT_TTL = 604800000; // 1 week
+const DEFAULT_TTL_DAYS = DEFAULT_TTL / (24 * 60 * 60 * 1000);
 
 // Import package.json for version
 import * as createGenPackageJson from "create-gen-app/package.json";
+const PACKAGE_NAME = createGenPackageJson.name ?? "@launchql/cli";
 const PACKAGE_VERSION = createGenPackageJson.version ?? "0.0.0";
 
 const RESERVED_ARG_KEYS = new Set([
@@ -41,6 +43,8 @@ const RESERVED_ARG_KEYS = new Set([
   "n",
   "clear-cache",
   "c",
+  "ttl",
+  "no-ttl",
 ]);
 
 export interface CliResult {
@@ -63,9 +67,10 @@ export async function runCli(
       v: "version",
       n: "no-tty",
       c: "clear-cache",
+      // no alias for ttl to keep it explicit
     },
-    string: ["repo", "branch", "path", "template", "output"],
-    boolean: ["force", "help", "version", "no-tty", "clear-cache"],
+    string: ["repo", "branch", "path", "template", "output", "ttl"],
+    boolean: ["force", "help", "version", "no-tty", "clear-cache", "no-ttl"],
     default: {
       repo: DEFAULT_REPO,
       path: DEFAULT_PATH,
@@ -84,21 +89,23 @@ export async function runCli(
 
   // Check for updates
   try {
-    const versionCheck = await checkNpmVersion("create-gen-app", PACKAGE_VERSION);
+    const versionCheck = await checkNpmVersion(PACKAGE_NAME, PACKAGE_VERSION);
     if (versionCheck.isOutdated && versionCheck.latestVersion) {
       console.warn(
         `\n⚠️  New version available: ${versionCheck.currentVersion} → ${versionCheck.latestVersion}`
       );
-      console.warn(`   Run: npm install -g create-gen-app@latest\n`);
+      console.warn(`   Run: npm install -g ${PACKAGE_NAME}@latest\n`);
     }
   } catch {
     // Silently ignore version check failures
   }
 
+  const ttl = resolveTtlOption(args);
+
   // Initialize modules
   const cacheManager = new CacheManager({
     toolName: DEFAULT_TOOL_NAME,
-    ttl: DEFAULT_TTL,
+    ttl,
   });
 
   // Handle --clear-cache
@@ -139,7 +146,7 @@ export async function runCli(
     if (args.branch) {
       console.log(`Using branch ${args.branch}`);
     }
-    const tempDest = path.join(cacheManager['reposDir'], cacheKey);
+    const tempDest = path.join(cacheManager.getReposDir(), cacheKey);
     gitCloner.clone(normalizedUrl, tempDest, { branch: args.branch, depth: 1 });
     cacheManager.set(cacheKey, tempDest);
     templateDir = tempDest;
@@ -213,7 +220,7 @@ export async function runCli(
       answers: answerOverrides,
       noTty,
       toolName: DEFAULT_TOOL_NAME,
-      ttl: DEFAULT_TTL,
+      ttl,
     });
 
     console.log(`\n✨ Done! Project ready at ${outputDir}`);
@@ -238,6 +245,8 @@ Options:
   -o, --output <dir>       Output directory (defaults to ./<template>)
   -f, --force              Overwrite the output directory if it exists
   -c, --clear-cache        Clear the template cache and exit
+      --ttl <ms>           Set cache TTL in milliseconds (flag alone uses 1 week)
+      --no-ttl             Disable TTL (cache never expires)
   -v, --version            Show CLI version
   -n, --no-tty             Disable TTY mode for prompts
   -h, --help               Show this help message
@@ -246,7 +255,7 @@ You can also pass variable overrides, e.g.:
   node cli --template module --PROJECT_NAME my-app
 
 Cache is stored at: ~/.${DEFAULT_TOOL_NAME}/cache/repos
-TTL: ${DEFAULT_TTL / (24 * 60 * 60 * 1000)} days
+TTL: none by default; use --ttl to enable (default ${DEFAULT_TTL_DAYS} days when flag provided)
 `);
 }
 
@@ -316,4 +325,27 @@ if (require.main === module) {
     console.error(error instanceof Error ? error.message : error);
     process.exitCode = 1;
   });
+}
+
+function resolveTtlOption(args: ParsedArgs): number | undefined {
+  const disableTtl = Boolean(args["no-ttl"] ?? (args as Record<string, unknown>).noTtl);
+  if (disableTtl) {
+    return undefined;
+  }
+
+  if (args.ttl === undefined) {
+    return undefined;
+  }
+
+  // Support --ttl with no value to use the default 1-week TTL
+  if (args.ttl === true) {
+    return DEFAULT_TTL;
+  }
+
+  const ttlMs = Number(args.ttl);
+  if (Number.isNaN(ttlMs) || ttlMs < 0) {
+    throw new Error("TTL must be a non-negative number of milliseconds");
+  }
+
+  return ttlMs === 0 ? undefined : ttlMs;
 }

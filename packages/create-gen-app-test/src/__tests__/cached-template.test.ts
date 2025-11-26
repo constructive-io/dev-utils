@@ -58,7 +58,7 @@ describe('cached template integration tests', () => {
       const cacheKey = cacheManager.createKey(normalizedUrl);
 
       // Clone to cache directory
-      const cachePath = path.join(cacheManager['reposDir'], cacheKey);
+      const cachePath = path.join(cacheManager.getReposDir(), cacheKey);
       gitCloner.clone(normalizedUrl, cachePath, { depth: 1 });
 
       // Register in cache manager

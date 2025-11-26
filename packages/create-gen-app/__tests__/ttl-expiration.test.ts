@@ -19,7 +19,7 @@ describe('TTL expiration', () => {
     try {
       // First clone - cache miss
       const cacheKey = cacheManager.createKey(testRepo);
-      const tempDest = path.join(cacheManager['reposDir'], cacheKey);
+      const tempDest = path.join(cacheManager.getReposDir(), cacheKey);
 
       console.log(`Cloning test repository to ${tempDest}...`);
       gitCloner.clone(testRepo, tempDest, { depth: 1 });

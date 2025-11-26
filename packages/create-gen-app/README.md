@@ -25,7 +25,7 @@ A TypeScript-first library for cloning template repositories, asking the user fo
 - Merge auto-discovered variables with `.questions.{json,js}` (questions win)
 - Interactive prompts powered by `inquirerer`, with flexible override mapping (`argv` support) and non-TTY mode for CI
 - License scaffolding: choose from MIT, Apache-2.0, ISC, GPL-3.0, BSD-3-Clause, Unlicense, or MPL-2.0 and generate a populated `LICENSE`
-- Built-in template caching powered by `appstash`, so repeat runs skip `git clone` (configurable via `cache` options)
+- Built-in template caching powered by `appstash`, so repeat runs skip `git clone` (configurable via `cache` options; TTL is opt-in)
 
 ## Installation
 
@@ -60,7 +60,8 @@ async function main() {
   // 1. Initialize components
   const cacheManager = new CacheManager({
     toolName: "my-cli", // ~/.my-cli/cache
-    ttl: 604800000,     // 1 week
+    // ttl is optional; omit to keep cache forever, or set (e.g., 1 week) to enable expiration
+    // ttl: 604800000,
   });
   const gitCloner = new GitCloner();
   const templatizer = new Templatizer();
@@ -78,7 +79,7 @@ async function main() {
     if (isExpired) cacheManager.clear(cacheKey);
     
     // Clone to a temporary location managed by CacheManager
-    const tempDest = path.join(cacheManager.reposDir, cacheKey);
+    const tempDest = path.join(cacheManager.getReposDir(), cacheKey);
     await gitCloner.clone(normalizedUrl, tempDest, { depth: 1 });
     
     // Register and update cache
@@ -147,12 +148,14 @@ No code changes are needed; the generator discovers templates at runtime and wil
 ## API Overview
 
 ### CacheManager
-- `new CacheManager(config)`: Initialize with `toolName` and `ttl`.
+- `new CacheManager(config)`: Initialize with `toolName` and optional `ttl`.
 - `get(key)`: Get path to cached repo if exists.
 - `set(key, path)`: Register a path in the cache.
 - `checkExpiration(key)`: Check if a cache entry is expired.
 - `clear(key)`: Remove a specific cache entry.
 - `clearAll()`: Clear all cached repos.
+- When `ttl` is `undefined`, cache entries never expire. Provide a TTL (ms) only when you want automatic invalidation.
+- Advanced: if you already own an appstash instance, pass `dirs` to reuse it instead of letting CacheManager create its own.
 
 ### GitCloner
 - `clone(url, dest, options)`: Clone a repo to a destination.
