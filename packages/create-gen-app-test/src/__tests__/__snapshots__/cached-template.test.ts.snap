@@ -2,61 +2,42 @@
 
 exports[`cached template integration tests first clone with variable replacement should snapshot created directory structure 1`] = `
 [
-  "module/",
-  "module/README.md",
-  "module/__tests__/",
-  "module/__tests__/basic.test.ts",
-  "module/jest.config.js",
-  "module/package.json",
-  "workspace/",
-  "workspace/.eslintrc.json",
-  "workspace/.github/",
-  "workspace/.github/run-tests.yaml",
-  "workspace/.gitignore",
-  "workspace/.prettierrc.json",
-  "workspace/.vscode/",
-  "workspace/.vscode/settings.json",
-  "workspace/LICENSE",
-  "workspace/Makefile",
-  "workspace/README.md",
-  "workspace/bin/",
-  "workspace/bin/install.sh",
-  "workspace/docker-compose.yml",
-  "workspace/launchql.json",
-  "workspace/lerna.json",
-  "workspace/package.json",
-  "workspace/pnpm-workspace.yaml",
-  "workspace/tsconfig.json",
+  "LICENSE",
+  "README.md",
+  "__tests__/",
+  "__tests__/basic.test.ts",
+  "jest.config.js",
+  "package.json",
 ]
 `;
 
 exports[`cached template integration tests first clone with variable replacement should snapshot package.json files if they exist 1`] = `
 {
-  "module/package.json": {
-    "author": "____fullName____ <____email____>",
+  "package.json": {
+    "author": "Test User test <tester-test@example.com>",
     "bugs": {
-      "url": "https://github.com/____username____/____repoName____/issues",
+      "url": "https://github.com/Test User test/Test User test/issues",
     },
-    "description": "____moduleDesc____",
+    "description": "Test Module test",
     "devDependencies": {
       "pgsql-test": "^2.13.2",
     },
-    "homepage": "https://github.com/____username____/____repoName____",
+    "homepage": "https://github.com/Test User test/Test User test",
     "keywords": [],
-    "license": "____license____",
-    "name": "____packageIdentifier____",
+    "license": "MIT",
+    "name": "integration-test",
     "pnpm": {
       "overrides": {
         "graphql": "14.7.0",
       },
     },
     "publishConfig": {
-      "access": "____access____",
+      "access": "public",
       "directory": "dist",
     },
     "repository": {
       "type": "git",
-      "url": "https://github.com/____username____/____repoName____",
+      "url": "https://github.com/Test User test/Test User test",
     },
     "scripts": {
       "lint": "eslint . --fix",
@@ -64,109 +45,48 @@ exports[`cached template integration tests first clone with variable replacement
       "test:watch": "jest --watch",
     },
     "version": "0.0.1",
-  },
-  "workspace/package.json": {
-    "author": "____fullName____ <____email____>",
-    "devDependencies": {
-      "@types/jest": "^29.5.14",
-      "@types/node": "^22.10.2",
-      "@typescript-eslint/eslint-plugin": "^8.15.0",
-      "@typescript-eslint/parser": "^8.15.0",
-      "eslint": "^9.13.0",
-      "eslint-config-prettier": "^10.1.1",
-      "eslint-plugin-simple-import-sort": "^12.1.1",
-      "eslint-plugin-unused-imports": "^4.3.0",
-      "jest": "^29.7.0",
-      "lerna": "^8.2.4",
-      "pgsql-test": "^2.13.2",
-      "prettier": "^3.3.3",
-      "ts-jest": "^29.2.5",
-      "ts-node": "^10.9.2",
-      "typescript": "^5.6.3",
-    },
-    "license": "SEE LICENSE IN LICENSE",
-    "name": "____moduleName____",
-    "pnpm": {
-      "overrides": {
-        "graphql": "14.7.0",
-      },
-    },
-    "private": true,
-    "publishConfig": {
-      "access": "restricted",
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/____username____/____moduleName____",
-    },
-    "scripts": {
-      "lint": "pnpm -r run lint",
-    },
-    "version": "0.0.1",
-    "workspaces": [
-      "packages/*",
-    ],
   },
 }
 `;
 
 exports[`cached template integration tests second clone from cache should snapshot created directory structure from cache 1`] = `
 [
-  "module/",
-  "module/README.md",
-  "module/__tests__/",
-  "module/__tests__/basic.test.ts",
-  "module/jest.config.js",
-  "module/package.json",
-  "workspace/",
-  "workspace/.eslintrc.json",
-  "workspace/.github/",
-  "workspace/.github/run-tests.yaml",
-  "workspace/.gitignore",
-  "workspace/.prettierrc.json",
-  "workspace/.vscode/",
-  "workspace/.vscode/settings.json",
-  "workspace/LICENSE",
-  "workspace/Makefile",
-  "workspace/README.md",
-  "workspace/bin/",
-  "workspace/bin/install.sh",
-  "workspace/docker-compose.yml",
-  "workspace/launchql.json",
-  "workspace/lerna.json",
-  "workspace/package.json",
-  "workspace/pnpm-workspace.yaml",
-  "workspace/tsconfig.json",
+  "LICENSE",
+  "README.md",
+  "__tests__/",
+  "__tests__/basic.test.ts",
+  "jest.config.js",
+  "package.json",
 ]
 `;
 
 exports[`cached template integration tests second clone from cache should snapshot package.json files from cached template 1`] = `
 {
-  "module/package.json": {
-    "author": "____fullName____ <____email____>",
+  "package.json": {
+    "author": "Test User cached <tester-cached@example.com>",
     "bugs": {
-      "url": "https://github.com/____username____/____repoName____/issues",
+      "url": "https://github.com/Test User cached/Test User cached/issues",
     },
-    "description": "____moduleDesc____",
+    "description": "Test Module cached",
     "devDependencies": {
       "pgsql-test": "^2.13.2",
     },
-    "homepage": "https://github.com/____username____/____repoName____",
+    "homepage": "https://github.com/Test User cached/Test User cached",
     "keywords": [],
-    "license": "____license____",
-    "name": "____packageIdentifier____",
+    "license": "MIT",
+    "name": "integration-cached",
     "pnpm": {
       "overrides": {
         "graphql": "14.7.0",
       },
     },
     "publishConfig": {
-      "access": "____access____",
+      "access": "public",
       "directory": "dist",
     },
     "repository": {
       "type": "git",
-      "url": "https://github.com/____username____/____repoName____",
+      "url": "https://github.com/Test User cached/Test User cached",
     },
     "scripts": {
       "lint": "eslint . --fix",
@@ -174,48 +94,6 @@ exports[`cached template integration tests second clone from cache should snapsh
       "test:watch": "jest --watch",
     },
     "version": "0.0.1",
-  },
-  "workspace/package.json": {
-    "author": "____fullName____ <____email____>",
-    "devDependencies": {
-      "@types/jest": "^29.5.14",
-      "@types/node": "^22.10.2",
-      "@typescript-eslint/eslint-plugin": "^8.15.0",
-      "@typescript-eslint/parser": "^8.15.0",
-      "eslint": "^9.13.0",
-      "eslint-config-prettier": "^10.1.1",
-      "eslint-plugin-simple-import-sort": "^12.1.1",
-      "eslint-plugin-unused-imports": "^4.3.0",
-      "jest": "^29.7.0",
-      "lerna": "^8.2.4",
-      "pgsql-test": "^2.13.2",
-      "prettier": "^3.3.3",
-      "ts-jest": "^29.2.5",
-      "ts-node": "^10.9.2",
-      "typescript": "^5.6.3",
-    },
-    "license": "SEE LICENSE IN LICENSE",
-    "name": "____moduleName____",
-    "pnpm": {
-      "overrides": {
-        "graphql": "14.7.0",
-      },
-    },
-    "private": true,
-    "publishConfig": {
-      "access": "restricted",
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/____username____/____moduleName____",
-    },
-    "scripts": {
-      "lint": "pnpm -r run lint",
-    },
-    "version": "0.0.1",
-    "workspaces": [
-      "packages/*",
-    ],
   },
 }
 `;

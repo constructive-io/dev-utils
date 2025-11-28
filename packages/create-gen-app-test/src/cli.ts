@@ -6,16 +6,20 @@ import * as path from "path";
 import { Inquirerer, ListQuestion } from "inquirerer";
 import minimist, { ParsedArgs } from "minimist";
 
-import { cloneRepo, createGen } from "create-gen-app";
+import { CacheManager, GitCloner, checkNpmVersion } from "create-gen-app";
+import { createFromTemplate } from './index';
 
 const DEFAULT_REPO = "https://github.com/launchql/pgpm-boilerplates.git";
 const DEFAULT_PATH = ".";
 const DEFAULT_OUTPUT_FALLBACK = "create-gen-app-output";
+const DEFAULT_TOOL_NAME = "create-gen-app-test";
+const DEFAULT_TTL = 604800000; // 1 week
+const DEFAULT_TTL_DAYS = DEFAULT_TTL / (24 * 60 * 60 * 1000);
 
-// Use require for package.json to avoid module resolution issues
-const createGenPackageJson = require("create-gen-app/package.json");
-const PACKAGE_VERSION =
-  (createGenPackageJson as { version?: string }).version ?? "0.0.0";
+// Import package.json for version
+import * as createGenPackageJson from "create-gen-app/package.json";
+const PACKAGE_NAME = createGenPackageJson.name ?? "@launchql/cli";
+const PACKAGE_VERSION = createGenPackageJson.version ?? "0.0.0";
 
 const RESERVED_ARG_KEYS = new Set([
   "_",
@@ -37,6 +41,10 @@ const RESERVED_ARG_KEYS = new Set([
   "v",
   "no-tty",
   "n",
+  "clear-cache",
+  "c",
+  "ttl",
+  "no-ttl",
 ]);
 
 export interface CliResult {
@@ -58,9 +66,11 @@ export async function runCli(
       h: "help",
       v: "version",
       n: "no-tty",
+      c: "clear-cache",
+      // no alias for ttl to keep it explicit
     },
-    string: ["repo", "branch", "path", "template", "output"],
-    boolean: ["force", "help", "version", "no-tty"],
+    string: ["repo", "branch", "path", "template", "output", "ttl"],
+    boolean: ["force", "help", "version", "no-tty", "clear-cache", "no-ttl"],
     default: {
       repo: DEFAULT_REPO,
       path: DEFAULT_PATH,
@@ -77,19 +87,74 @@ export async function runCli(
     return;
   }
 
+  // Check for updates
+  try {
+    const versionCheck = await checkNpmVersion(PACKAGE_NAME, PACKAGE_VERSION);
+    if (versionCheck.isOutdated && versionCheck.latestVersion) {
+      console.warn(
+        `\n⚠️  New version available: ${versionCheck.currentVersion} → ${versionCheck.latestVersion}`
+      );
+      console.warn(`   Run: npm install -g ${PACKAGE_NAME}@latest\n`);
+    }
+  } catch {
+    // Silently ignore version check failures
+  }
+
+  const ttl = resolveTtlOption(args);
+
+  // Initialize modules
+  const cacheManager = new CacheManager({
+    toolName: DEFAULT_TOOL_NAME,
+    ttl,
+  });
+
+  // Handle --clear-cache
+  if (args["clear-cache"]) {
+    console.log("Clearing cache...");
+    cacheManager.clearAll();
+    console.log("✨ Cache cleared successfully!");
+    return;
+  }
+
+  const gitCloner = new GitCloner();
+
   if (!args.output && args._[0]) {
     args.output = args._[0];
   }
 
-  let tempDir: string | null = null;
-  try {
+  // Get or clone template
+  const normalizedUrl = gitCloner.normalizeUrl(args.repo);
+  const cacheKey = cacheManager.createKey(normalizedUrl, args.branch);
+
+  let templateDir: string;
+  const cachedPath = cacheManager.get(cacheKey);
+  const expiredMetadata = cacheManager.checkExpiration(cacheKey);
+
+  if (expiredMetadata) {
+    console.warn(
+      `⚠️  Cached template expired (last updated: ${new Date(expiredMetadata.lastUpdated).toLocaleString()})`
+    );
+    console.log('Updating cache...');
+    cacheManager.clear(cacheKey);
+  }
+
+  if (cachedPath && !expiredMetadata) {
+    console.log(`Using cached template from ${cachedPath}`);
+    templateDir = cachedPath;
+  } else {
     console.log(`Cloning template from ${args.repo}...`);
     if (args.branch) {
       console.log(`Using branch ${args.branch}`);
     }
-    tempDir = await cloneRepo(args.repo, { branch: args.branch });
+    const tempDest = path.join(cacheManager.getReposDir(), cacheKey);
+    gitCloner.clone(normalizedUrl, tempDest, { branch: args.branch, depth: 1 });
+    cacheManager.set(cacheKey, tempDest);
+    templateDir = tempDest;
+    console.log('Template cached for future runs');
+  }
 
-    const selectionRoot = path.join(tempDir, args.path);
+  try {
+    const selectionRoot = path.join(templateDir, args.path);
     if (
       !fs.existsSync(selectionRoot) ||
       !fs.statSync(selectionRoot).isDirectory()
@@ -146,21 +211,22 @@ export async function runCli(
       args["no-tty"] ?? (args as Record<string, unknown>).noTty
     );
 
-    await createGen({
+    // Use the createFromTemplate function which will use the same cache
+    await createFromTemplate({
       templateUrl: args.repo,
-      fromBranch: args.branch,
+      branch: args.branch,
       fromPath,
       outputDir,
-      argv: answerOverrides,
+      answers: answerOverrides,
       noTty,
+      toolName: DEFAULT_TOOL_NAME,
+      ttl,
     });
 
     console.log(`\n✨ Done! Project ready at ${outputDir}`);
     return { outputDir, template: selectedTemplate };
-  } finally {
-    if (tempDir && fs.existsSync(tempDir)) {
-      fs.rmSync(tempDir, { recursive: true, force: true });
-    }
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -178,12 +244,18 @@ Options:
   -t, --template <name>    Template folder to use (will prompt if omitted)
   -o, --output <dir>       Output directory (defaults to ./<template>)
   -f, --force              Overwrite the output directory if it exists
+  -c, --clear-cache        Clear the template cache and exit
+      --ttl <ms>           Set cache TTL in milliseconds (flag alone uses 1 week)
+      --no-ttl             Disable TTL (cache never expires)
   -v, --version            Show CLI version
   -n, --no-tty             Disable TTY mode for prompts
   -h, --help               Show this help message
 
 You can also pass variable overrides, e.g.:
   node cli --template module --PROJECT_NAME my-app
+
+Cache is stored at: ~/.${DEFAULT_TOOL_NAME}/cache/repos
+TTL: none by default; use --ttl to enable (default ${DEFAULT_TTL_DAYS} days when flag provided)
 `);
 }
 
@@ -253,4 +325,27 @@ if (require.main === module) {
     console.error(error instanceof Error ? error.message : error);
     process.exitCode = 1;
   });
+}
+
+function resolveTtlOption(args: ParsedArgs): number | undefined {
+  const disableTtl = Boolean(args["no-ttl"] ?? (args as Record<string, unknown>).noTtl);
+  if (disableTtl) {
+    return undefined;
+  }
+
+  if (args.ttl === undefined) {
+    return undefined;
+  }
+
+  // Support --ttl with no value to use the default 1-week TTL
+  if (args.ttl === true) {
+    return DEFAULT_TTL;
+  }
+
+  const ttlMs = Number(args.ttl);
+  if (Number.isNaN(ttlMs) || ttlMs < 0) {
+    throw new Error("TTL must be a non-negative number of milliseconds");
+  }
+
+  return ttlMs === 0 ? undefined : ttlMs;
 }

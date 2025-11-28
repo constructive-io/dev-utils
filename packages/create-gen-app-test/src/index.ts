@@ -1,63 +1,105 @@
-import { replaceVariables, extractVariables, TemplateCache } from 'create-gen-app';
+import * as path from 'path';
+import { CacheManager } from 'create-gen-app';
+import { GitCloner } from 'create-gen-app';
+import { Templatizer } from 'create-gen-app';
 
-export interface CachedTemplateOptions {
+// Configuration constants (top-most layer owns defaults)
+const DEFAULT_TOOL_NAME = 'pgpm';
+
+export interface CreateFromTemplateOptions {
   templateUrl: string;
   outputDir: string;
-  answers: Record<string, any>;
-  cacheTool?: string;
+  answers?: Record<string, any>;
+  toolName?: string;
   branch?: string;
   ttl?: number;
-  maxAge?: number;
+  baseDir?: string;
+  fromPath?: string;
+  noTty?: boolean;
 }
 
-export interface CachedTemplateResult {
+export interface CreateFromTemplateResult {
   outputDir: string;
   cacheUsed: boolean;
+  cacheExpired: boolean;
   cachePath?: string;
 }
 
 /**
- * Create project from cached template using the shared TemplateCache
- * @param options - Options for creating from cached template
- * @returns Result with output directory and cache information
+ * Create a project from a template with caching support
+ * Orchestrates CacheManager + GitCloner + Templatizer
  */
-export async function createFromCachedTemplate(options: CachedTemplateOptions): Promise<CachedTemplateResult> {
-  const { templateUrl, outputDir, answers, cacheTool = 'mymodule', branch, ttl, maxAge } = options;
-
-  const templateCache = new TemplateCache({
-    enabled: true,
-    toolName: cacheTool,
+export async function createFromTemplate(
+  options: CreateFromTemplateOptions
+): Promise<CreateFromTemplateResult> {
+  const {
+    templateUrl,
+    outputDir,
+    answers = {},
+    toolName = DEFAULT_TOOL_NAME,
+    branch,
     ttl,
-    maxAge,
-  });
+    baseDir,
+    fromPath,
+    noTty = false,
+  } = options;
 
+  // 1. Initialize modules
+  const cacheManager = new CacheManager({ toolName, ttl, baseDir });
+  const gitCloner = new GitCloner();
+  const templatizer = new Templatizer();
+
+  // 2. Create cache key
+  const normalizedUrl = gitCloner.normalizeUrl(templateUrl);
+  const cacheKey = cacheManager.createKey(normalizedUrl, branch);
+
+  // 3. Check cache + expiration
   let templateDir: string;
   let cacheUsed = false;
-  let cachePath: string | undefined;
+  let cacheExpired = false;
 
-  const cachedRepo = templateCache.get(templateUrl, branch);
+  const cachedPath = cacheManager.get(cacheKey);
+  const expiredMetadata = cacheManager.checkExpiration(cacheKey);
 
-  if (cachedRepo) {
-    console.log(`Using cached template from ${cachedRepo}`);
-    templateDir = cachedRepo;
-    cacheUsed = true;
-    cachePath = cachedRepo;
-  } else {
-    console.log(`Cloning template to cache from ${templateUrl}`);
-    templateDir = templateCache.set(templateUrl, branch);
-    cachePath = templateDir;
+  if (expiredMetadata) {
+    // Cache exists but expired - warn user then auto-update
+    console.warn(
+      `⚠️  Cached template expired (last updated: ${new Date(expiredMetadata.lastUpdated).toLocaleString()})`
+    );
+    console.log('Updating cache...');
+    cacheManager.clear(cacheKey);
+    cacheExpired = true;
   }
 
-  const extractedVariables = await extractVariables(templateDir);
+  if (cachedPath && !expiredMetadata) {
+    console.log(`Using cached template: ${cachedPath}`);
+    templateDir = cachedPath;
+    cacheUsed = true;
+  } else {
+    // 4. Clone to cache
+    console.log(`Cloning ${normalizedUrl}...`);
+    const tempDest = path.join(cacheManager.getReposDir(), cacheKey);
 
-  await replaceVariables(templateDir, outputDir, extractedVariables, answers);
+    gitCloner.clone(normalizedUrl, tempDest, { branch, depth: 1 });
+    cacheManager.set(cacheKey, tempDest);
+
+    templateDir = tempDest;
+    console.log('Template cached for future runs');
+  }
+
+  // 5. Process template
+  console.log('Processing template...');
+  await templatizer.process(templateDir, outputDir, { argv: answers, noTty, fromPath });
+
+  console.log(`✨ Project created at ${outputDir}`);
 
   return {
     outputDir,
     cacheUsed,
-    cachePath
+    cacheExpired,
+    cachePath: templateDir,
   };
 }
 
-// Re-export TemplateCache for convenience
-export { TemplateCache } from 'create-gen-app';
+// Re-export components for external use
+export { CacheManager, GitCloner, Templatizer } from 'create-gen-app';

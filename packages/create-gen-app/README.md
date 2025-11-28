@@ -22,10 +22,10 @@ A TypeScript-first library for cloning template repositories, asking the user fo
 
 - Clone any Git repo (or GitHub `org/repo` shorthand) and optionally select a branch + subdirectory
 - Extract template variables from filenames and file contents using the safer `____variable____` convention
-- Merge auto-discovered variables with `.questions.{json,js}` (questions win, including `ignore` patterns)
+- Merge auto-discovered variables with `.questions.{json,js}` (questions win)
 - Interactive prompts powered by `inquirerer`, with flexible override mapping (`argv` support) and non-TTY mode for CI
 - License scaffolding: choose from MIT, Apache-2.0, ISC, GPL-3.0, BSD-3-Clause, Unlicense, or MPL-2.0 and generate a populated `LICENSE`
-- Built-in template caching powered by `appstash`, so repeat runs skip `git clone` (configurable via `cache` options)
+- Built-in template caching powered by `appstash`, so repeat runs skip `git clone` (configurable via `cache` options; TTL is opt-in)
 
 ## Installation
 
@@ -37,50 +37,65 @@ npm install create-gen-app
 
 ## Library Usage
 
+`create-gen-app` provides a modular set of classes to handle template cloning, caching, and processing.
+
+### Core Components
+
+- **CacheManager**: Handles local caching of git repositories with TTL (Time-To-Live) support.
+- **GitCloner**: Handles cloning git repositories.
+- **Templatizer**: Handles variable extraction, user prompting, and template generation.
+
+### Example: Orchestration
+
+Here is how you can combine these components to create a full CLI pipeline (similar to `create-gen-app-test`):
+
 ```typescript
-import * as os from "os";
 import * as path from "path";
+import { CacheManager, GitCloner, Templatizer } from "create-gen-app";
 
-import { createGen } from "create-gen-app";
+async function main() {
+  const repoUrl = "https://github.com/user/template-repo";
+  const outputDir = "./my-new-project";
 
-await createGen({
-  templateUrl: "https://github.com/user/template-repo",
-  fromBranch: "main",
-  fromPath: "templates/module",
-  outputDir: "./my-new-project",
-  argv: {
-    USERFULLNAME: "Jane Dev",
-    USEREMAIL: "jane@example.com",
-    MODULENAME: "awesome-module",
-    LICENSE: "MIT",
-  },
-  noTty: true,
-  cache: {
-    // optional: override tool/baseDir (defaults to pgpm + ~/.pgpm)
-    toolName: "pgpm",
-    baseDir: path.join(os.tmpdir(), "create-gen-cache"),
-  },
-});
+  // 1. Initialize components
+  const cacheManager = new CacheManager({
+    toolName: "my-cli", // ~/.my-cli/cache
+    // ttl is optional; omit to keep cache forever, or set (e.g., 1 week) to enable expiration
+    // ttl: 604800000,
+  });
+  const gitCloner = new GitCloner();
+  const templatizer = new Templatizer();
+
+  // 2. Resolve template path (Cache or Clone)
+  const normalizedUrl = gitCloner.normalizeUrl(repoUrl);
+  const cacheKey = cacheManager.createKey(normalizedUrl);
+  
+  // Check cache
+  let templateDir = cacheManager.get(cacheKey);
+  const isExpired = cacheManager.checkExpiration(cacheKey);
+
+  if (!templateDir || isExpired) {
+    console.log("Cloning template...");
+    if (isExpired) cacheManager.clear(cacheKey);
+    
+    // Clone to a temporary location managed by CacheManager
+    const tempDest = path.join(cacheManager.getReposDir(), cacheKey);
+    await gitCloner.clone(normalizedUrl, tempDest, { depth: 1 });
+    
+    // Register and update cache
+    cacheManager.set(cacheKey, tempDest);
+    templateDir = tempDest;
+  }
+
+  // 3. Process Template
+  await templatizer.process(templateDir, outputDir, {
+    argv: {
+      PROJECT_NAME: "my-app",
+      LICENSE: "MIT"
+    }
+  });
+}
 ```
-
-### Template Caching
-
-`create-gen-app` caches repositories under `~/.pgpm/cache/repos/<hash>` by default (using [`appstash`](https://github.com/hyperweb-io/dev-utils/tree/main/packages/appstash)). The first run clones & stores the repo, subsequent runs re-use the cached directory.
-
-- Disable caching with `cache: false` or `cache: { enabled: false }`
-- Override the tool name or base directory with `cache: { toolName, baseDir }`
-- For tests/CI, point `baseDir` to a temporary folder so the suite does not touch the developer’s real home directory:
-
-```ts
-const tempBase = fs.mkdtempSync(path.join(os.tmpdir(), "create-gen-cache-"));
-
-await createGen({
-  ...options,
-  cache: { baseDir: tempBase, toolName: "pgpm-test-suite" },
-});
-```
-
-The cache directory never mutates the template, so reusing the same cached repo across many runs is safe.
 
 ### Template Variables
 
@@ -97,13 +112,12 @@ export const projectName = "____projectName____";
 export const author = "____fullName____";
 ```
 
-### Custom Questions & Ignore Rules
+### Custom Questions
 
 Create a `.questions.json`:
 
 ```json
 {
-  "ignore": ["__tests__", "docs/drafts"],
   "questions": [
     {
       "name": "____fullName____",
@@ -133,11 +147,21 @@ No code changes are needed; the generator discovers templates at runtime and wil
 
 ## API Overview
 
-- `createGen(options)` – full pipeline (clone → extract → prompt → replace)
-- `cloneRepo(url, { branch })` – clone to a temp dir
-- `normalizeCacheOptions(cache)` / `prepareTemplateDirectory(...)` – inspect or reuse cached template repos
-- `extractVariables(dir)` – parse file/folder names + content for variables, load `.questions`
-- `promptUser(extracted, argv, noTty)` – run interactive questions with override alias deduping
-- `replaceVariables(templateDir, outputDir, extracted, answers)` – copy files, rename paths, render licenses
+### CacheManager
+- `new CacheManager(config)`: Initialize with `toolName` and optional `ttl`.
+- `get(key)`: Get path to cached repo if exists.
+- `set(key, path)`: Register a path in the cache.
+- `checkExpiration(key)`: Check if a cache entry is expired.
+- `clear(key)`: Remove a specific cache entry.
+- `clearAll()`: Clear all cached repos.
+- When `ttl` is `undefined`, cache entries never expire. Provide a TTL (ms) only when you want automatic invalidation.
+- Advanced: if you already own an appstash instance, pass `dirs` to reuse it instead of letting CacheManager create its own.
 
-See `packages/create-gen-app-test/dev/README.md` for the local development helper script (`pnpm --filter create-gen-app-test dev`).
+### GitCloner
+- `clone(url, dest, options)`: Clone a repo to a destination.
+- `normalizeUrl(url)`: Normalize a git URL for consistency.
+
+### Templatizer
+- `process(templateDir, outputDir, options)`: Run the full template generation pipeline (extract -> prompt -> replace).
+
+See `packages/create-gen-app-test` for a complete reference implementation.

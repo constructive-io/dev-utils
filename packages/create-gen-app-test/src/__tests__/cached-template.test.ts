@@ -4,9 +4,10 @@ import * as path from 'path';
 
 import { appstash, resolve } from 'appstash';
 
-import { createFromCachedTemplate, TemplateCache } from '../index';
+import { createFromTemplate, CacheManager, GitCloner } from '../index';
+import { buildAnswers, TEST_REPO, TEST_TEMPLATE } from '../test-utils/integration-helpers';
 
-const DEFAULT_TEMPLATE_URL = 'https://github.com/launchql/pgpm-boilerplates';
+const DEFAULT_TEMPLATE_URL = TEST_REPO;
 
 describe('cached template integration tests', () => {
   let testOutputDir: string;
@@ -35,25 +36,36 @@ describe('cached template integration tests', () => {
 
   describe('cache functionality', () => {
     let sharedCachePath: string;
-    let templateCache: TemplateCache;
+    let cacheManager: CacheManager;
 
     beforeAll(() => {
-      templateCache = new TemplateCache({
-        enabled: true,
+      cacheManager = new CacheManager({
         toolName: testCacheTool,
       });
     });
 
     it('should return null when cache does not exist for new URL', () => {
       const nonExistentUrl = 'https://github.com/nonexistent/repo-test-123456';
-      const cachedRepo = templateCache.get(nonExistentUrl);
+      const cacheKey = cacheManager.createKey(nonExistentUrl);
+      const cachedRepo = cacheManager.get(cacheKey);
       expect(cachedRepo).toBeNull();
     });
 
     it('should clone repository to cache', () => {
-      const cachePath = templateCache.set(DEFAULT_TEMPLATE_URL);
+      // Use GitCloner + CacheManager to clone and cache
+      const gitCloner = new GitCloner();
+      const normalizedUrl = gitCloner.normalizeUrl(DEFAULT_TEMPLATE_URL);
+      const cacheKey = cacheManager.createKey(normalizedUrl);
+
+      // Clone to cache directory
+      const cachePath = path.join(cacheManager.getReposDir(), cacheKey);
+      gitCloner.clone(normalizedUrl, cachePath, { depth: 1 });
+
+      // Register in cache manager
+      cacheManager.set(cacheKey, cachePath);
       sharedCachePath = cachePath;
 
+      // Verify cache was created correctly
       expect(fs.existsSync(cachePath)).toBe(true);
       expect(fs.existsSync(path.join(cachePath, '.git'))).toBe(false);
 
@@ -62,7 +74,11 @@ describe('cached template integration tests', () => {
     }, 60000);
 
     it('should retrieve cached repository', () => {
-      const cachedRepo = templateCache.get(DEFAULT_TEMPLATE_URL);
+      const gitCloner = new GitCloner();
+      const normalizedUrl = gitCloner.normalizeUrl(DEFAULT_TEMPLATE_URL);
+      const cacheKey = cacheManager.createKey(normalizedUrl);
+      const cachedRepo = cacheManager.get(cacheKey);
+
       expect(cachedRepo).not.toBeNull();
       expect(cachedRepo).toBe(sharedCachePath);
       expect(fs.existsSync(cachedRepo!)).toBe(true);
@@ -76,16 +92,13 @@ describe('cached template integration tests', () => {
     beforeAll(async () => {
       firstOutputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'first-clone-'));
 
-      firstCloneResult = await createFromCachedTemplate({
+      firstCloneResult = await createFromTemplate({
         templateUrl: DEFAULT_TEMPLATE_URL,
         outputDir: firstOutputDir,
-        answers: {
-          PROJECT_NAME: 'test-project',
-          AUTHOR: 'Test Author',
-          DESCRIPTION: 'A test project',
-          MODULE_NAME: 'testmodule'
-        },
-        cacheTool: testCacheTool
+        answers: buildAnswers('test'),
+        toolName: testCacheTool,
+        noTty: true,
+        fromPath: TEST_TEMPLATE
       });
     }, 60000);
 
@@ -128,11 +141,15 @@ describe('cached template integration tests', () => {
     });
 
     it('should verify template cache was created', () => {
-      const templateCache = new TemplateCache({
-        enabled: true,
+      // Verify cache was created by createFromTemplate
+      const cacheManager = new CacheManager({
         toolName: testCacheTool,
       });
-      const cachedRepo = templateCache.get(DEFAULT_TEMPLATE_URL);
+      const gitCloner = new GitCloner();
+      const normalizedUrl = gitCloner.normalizeUrl(DEFAULT_TEMPLATE_URL);
+      const cacheKey = cacheManager.createKey(normalizedUrl);
+      const cachedRepo = cacheManager.get(cacheKey);
+
       expect(cachedRepo).not.toBeNull();
       expect(fs.existsSync(cachedRepo!)).toBe(true);
     });
@@ -143,28 +160,24 @@ describe('cached template integration tests', () => {
     let secondOutputDir: string;
 
     beforeAll(async () => {
-      await createFromCachedTemplate({
+      await createFromTemplate({
         templateUrl: DEFAULT_TEMPLATE_URL,
         outputDir: fs.mkdtempSync(path.join(os.tmpdir(), 'warmup-')),
-        answers: {
-          PROJECT_NAME: 'warmup',
-          MODULE_NAME: 'warmup'
-        },
-        cacheTool: testCacheTool
+        answers: buildAnswers('warmup'),
+        toolName: testCacheTool,
+        noTty: true,
+        fromPath: TEST_TEMPLATE
       });
 
       secondOutputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'second-clone-'));
 
-      secondCloneResult = await createFromCachedTemplate({
+      secondCloneResult = await createFromTemplate({
         templateUrl: DEFAULT_TEMPLATE_URL,
         outputDir: secondOutputDir,
-        answers: {
-          PROJECT_NAME: 'cached-project',
-          AUTHOR: 'Cached Author',
-          DESCRIPTION: 'A cached test project',
-          MODULE_NAME: 'cachedmodule'
-        },
-        cacheTool: testCacheTool
+        answers: buildAnswers('cached'),
+        toolName: testCacheTool,
+        noTty: true,
+        fromPath: TEST_TEMPLATE
       });
     }, 60000);
 

@@ -3,10 +3,7 @@ import * as os from "os";
 import * as path from "path";
 import { execSync } from "child_process";
 
-import { cloneRepo } from "../src/clone";
-import { extractVariables } from "../src/extract";
-import { promptUser } from "../src/prompt";
-import { ExtractedVariables } from "../src/types";
+import { extractVariables, promptUser, replaceVariables, ExtractedVariables, GitCloner } from "../src/index";
 
 jest.mock("child_process", () => {
   return {
@@ -424,7 +421,6 @@ module.exports = {
         author: "Jane Smith",
       };
 
-      const { replaceVariables } = require("../src/replace");
       await replaceVariables(
         testTempDir,
         testOutputDir,
@@ -450,7 +446,6 @@ module.exports = {
         projectName: "myproject",
       };
 
-      const { replaceVariables } = require("../src/replace");
       await replaceVariables(
         testTempDir,
         testOutputDir,
@@ -476,7 +471,6 @@ module.exports = {
         moduleName: "auth",
       };
 
-      const { replaceVariables } = require("../src/replace");
       await replaceVariables(
         testTempDir,
         testOutputDir,
@@ -498,7 +492,6 @@ module.exports = {
       fs.writeFileSync(path.join(testTempDir, "README.md"), "Regular file");
 
       const extractedVariables = await extractVariables(testTempDir);
-      const { replaceVariables } = require("../src/replace");
       await replaceVariables(
         testTempDir,
         testOutputDir,
@@ -523,7 +516,6 @@ module.exports = {
         name: "Alice",
       };
 
-      const { replaceVariables } = require("../src/replace");
       await replaceVariables(
         testTempDir,
         testOutputDir,
@@ -539,27 +531,29 @@ module.exports = {
     });
   });
 
-  describe("cloneRepo", () => {
+  describe("GitCloner", () => {
     const execSyncMock = execSync as jest.MockedFunction<typeof execSync>;
+    let gitCloner: GitCloner;
 
     beforeEach(() => {
+      gitCloner = new GitCloner();
       execSyncMock.mockReset();
       execSyncMock.mockImplementation(() => undefined);
     });
 
-    it("clones default branch when no branch provided", async () => {
-      const tempDir = await cloneRepo("https://github.com/example/repo.git");
+    it("clones default branch when no branch provided", () => {
+      const tempDir = path.join(testTempDir, "clone-test");
+      gitCloner.clone("https://github.com/example/repo.git", tempDir);
       const command = execSyncMock.mock.calls[0][0] as string;
       expect(command).toContain(
-        "git clone --depth 1 https://github.com/example/repo.git"
+        "git clone --single-branch --depth 1 https://github.com/example/repo.git"
       );
       expect(command.trim().endsWith(tempDir)).toBe(true);
-      expect(fs.existsSync(tempDir)).toBe(true);
-      fs.rmSync(tempDir, { recursive: true, force: true });
     });
 
-    it("clones a specific branch when provided", async () => {
-      const tempDir = await cloneRepo("https://github.com/example/repo.git", {
+    it("clones a specific branch when provided", () => {
+      const tempDir = path.join(testTempDir, "clone-branch-test");
+      gitCloner.clone("https://github.com/example/repo.git", tempDir, {
         branch: "dev",
       });
       const command = execSyncMock.mock.calls[0][0] as string;
@@ -567,7 +561,6 @@ module.exports = {
         "git clone --branch dev --single-branch --depth 1 https://github.com/example/repo.git"
       );
       expect(command.trim().endsWith(tempDir)).toBe(true);
-      fs.rmSync(tempDir, { recursive: true, force: true });
     });
   });
 
