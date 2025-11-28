@@ -93,11 +93,10 @@ export async function promptUser(
 
   try {
     const promptAnswers = await prompter.prompt(preparedArgv, questions);
-    const mergedAnswers = {
+    return {
       ...argv,
       ...promptAnswers,
     };
-    return expandAnswersForVariables(mergedAnswers, extractedVariables);
   } finally {
     if (typeof (prompter as any).close === "function") {
       (prompter as any).close();
@@ -122,121 +121,11 @@ function mapArgvToQuestions(
       continue;
     }
 
-    const matchValue = findMatchingArgValue(name, argvEntries);
-    if (matchValue !== null) {
-      prepared[name] = matchValue;
+    const match = argvEntries.find(([key]) => key === name);
+    if (match) {
+      prepared[name] = match[1];
     }
   }
 
   return prepared;
-}
-
-function findMatchingArgValue(
-  targetName: string,
-  argvEntries: [string, any][]
-): any | null {
-  const normalizedTarget = normalizeIdentifier(targetName);
-
-  for (const [key, value] of argvEntries) {
-    if (value === undefined || value === null) {
-      continue;
-    }
-
-    if (key === targetName) {
-      return value;
-    }
-
-    const normalizedKey = normalizeIdentifier(key);
-    if (identifiersMatch(normalizedTarget, normalizedKey)) {
-      return value;
-    }
-  }
-
-  return null;
-}
-
-function normalizeIdentifier(value: string): string {
-  return value.replace(/[^a-z0-9]/gi, "").toLowerCase();
-}
-
-function identifiersMatch(a: string, b: string): boolean {
-  if (a === b) {
-    return true;
-  }
-  if (a.includes(b) || b.includes(a)) {
-    return true;
-  }
-  return hasSignificantOverlap(a, b);
-}
-
-function hasSignificantOverlap(a: string, b: string): boolean {
-  const minLength = 4;
-  if (a.length < minLength || b.length < minLength) {
-    return false;
-  }
-
-  const shorter = a.length <= b.length ? a : b;
-  const longer = shorter === a ? b : a;
-
-  for (let i = 0; i <= shorter.length - minLength; i++) {
-    const slice = shorter.slice(i, i + minLength);
-    if (longer.includes(slice)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function expandAnswersForVariables(
-  answers: Record<string, any>,
-  extractedVariables: ExtractedVariables
-): Record<string, any> {
-  const expanded = { ...answers };
-  const variables = collectVariableNames(extractedVariables);
-  const answerEntries = Object.entries(expanded).map(([key, value]) => ({
-    key,
-    value,
-    normalized: normalizeIdentifier(key),
-  }));
-
-  for (const variable of variables) {
-    if (expanded[variable] !== undefined) {
-      continue;
-    }
-
-    const normalizedVar = normalizeIdentifier(variable);
-    const match = answerEntries.find(({ normalized }) =>
-      identifiersMatch(normalizedVar, normalized)
-    );
-
-    if (match) {
-      expanded[variable] = match.value;
-      answerEntries.push({
-        key: variable,
-        value: match.value,
-        normalized: normalizedVar,
-      });
-    }
-  }
-
-  return expanded;
-}
-
-function collectVariableNames(
-  extractedVariables: ExtractedVariables
-): Set<string> {
-  const names = new Set<string>();
-  for (const replacer of extractedVariables.fileReplacers) {
-    names.add(replacer.variable);
-  }
-  for (const replacer of extractedVariables.contentReplacers) {
-    names.add(replacer.variable);
-  }
-  if (extractedVariables.projectQuestions) {
-    for (const question of extractedVariables.projectQuestions.questions) {
-      names.add(normalizeQuestionName(question.name));
-    }
-  }
-  return names;
 }

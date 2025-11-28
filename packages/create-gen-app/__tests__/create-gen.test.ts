@@ -284,7 +284,7 @@ module.exports = {
       );
     });
 
-    it("should map CLI overrides with similar names to project questions", async () => {
+    it("should require exact CLI override names", async () => {
       const { Inquirerer } = require("inquirerer");
       const mockPrompt = jest.fn().mockResolvedValue({});
 
@@ -312,10 +312,11 @@ module.exports = {
       await promptUser(extractedVariables, argv, false);
 
       const passedArgv = mockPrompt.mock.calls[0][0];
-      expect(passedArgv.fullName).toBe("CLI User");
+      expect(passedArgv.fullName).toBeUndefined();
+      expect(passedArgv.USERFULLNAME).toBe("CLI User");
     });
 
-    it("should match CLI overrides sharing substrings", async () => {
+    it("should not map CLI overrides sharing substrings", async () => {
       const { Inquirerer } = require("inquirerer");
       const mockPrompt = jest.fn().mockResolvedValue({});
 
@@ -343,7 +344,8 @@ module.exports = {
       await promptUser(extractedVariables, argv, false);
 
       const passedArgv = mockPrompt.mock.calls[0][0];
-      expect(passedArgv.description).toBe("CLI description");
+      expect(passedArgv.description).toBeUndefined();
+      expect(passedArgv.MODULEDESC).toBe("CLI description");
     });
 
     it("should hydrate template variables from alias answers", async () => {
