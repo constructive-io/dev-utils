@@ -31,17 +31,16 @@ export function buildAnswers(
 ): Record<string, string> {
   const safeSuffix = suffix.replace(/[^a-z0-9]/gi, "-").toLowerCase();
   return {
-    USERFULLNAME: `Test User ${suffix}`,
-    USEREMAIL: `tester-${safeSuffix}@example.com`,
-    MODULENAME: `Test Module ${suffix}`,
-    MODULEDESC: `Integration test module ${suffix}`,
-    REPONAME: `integration-${safeSuffix}`,
-    USERNAME: `tester-${safeSuffix}`,
-    ACCESS: "public",
-    LICENSE: "MIT",
-    PACKAGE_IDENTIFIER: `integration-${safeSuffix}`,
+    fullName: `Test User ${suffix}`,
+    email: `tester-${safeSuffix}@example.com`,
+    moduleName: `integration-${safeSuffix}`,
+    moduleDesc: `Integration test module ${suffix}`,
+    repoName: `integration-${safeSuffix}`,
+    username: `tester-${safeSuffix}`,
+    access: "public",
+    license: "MIT",
+    packageIdentifier: `integration-${safeSuffix}`,
     ...overrides,
   };
 }
-
 

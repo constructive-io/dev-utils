@@ -50,15 +50,15 @@ describe("CLI integration via create-gen-app-test harness", () => {
       expect(fs.existsSync(pkgPath)).toBe(true);
 
       const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
-      expect(pkg.name).toBe(answers.PACKAGE_IDENTIFIER);
-      expect(pkg.license).toBe(answers.LICENSE);
+      expect(pkg.name).toBe(answers.packageIdentifier);
+      expect(pkg.license).toBe(answers.license);
 
       const licenseContent = fs.readFileSync(
         path.join(workspace.outputDir, "LICENSE"),
         "utf8"
       );
       expect(licenseContent).toContain("MIT License");
-      expect(licenseContent).toContain(answers.USERFULLNAME);
+      expect(licenseContent).toContain(answers.fullName);
     } finally {
       cleanupWorkspace(workspace);
     }
