@@ -1,6 +1,6 @@
 {
   "name": "nested-obj",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Safely access and modify nested object properties using string paths",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "homepage": "https://github.com/hyperweb-io/dev-utils",
