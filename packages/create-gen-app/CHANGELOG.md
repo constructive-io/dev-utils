@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/hyperweb-io/dev-utils/compare/create-gen-app@0.2.2...create-gen-app@0.3.0) (2025-12-01)
+
+### Features
+
+- enhance license handling with new utility functions ([72d78b4](https://github.com/hyperweb-io/dev-utils/commit/72d78b4ba3cc5c13560058ae0610ea53194de721))
+
 ## [0.2.2](https://github.com/hyperweb-io/dev-utils/compare/create-gen-app@0.2.1...create-gen-app@0.2.2) (2025-11-28)
 
 **Note:** Version bump only for package create-gen-app
