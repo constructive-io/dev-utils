@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/hyperweb-io/dev-utils/compare/create-gen-app@0.3.0...create-gen-app@0.3.1) (2025-12-08)
+
+### Bug Fixes
+
+- update copy script in package.json to separate license templates into their own directory ([eb91513](https://github.com/hyperweb-io/dev-utils/commit/eb91513d260a85a8996a140f0a8bfc7876677cf7))
+
 # [0.3.0](https://github.com/hyperweb-io/dev-utils/compare/create-gen-app@0.2.2...create-gen-app@0.3.0) (2025-12-01)
 
 ### Features
