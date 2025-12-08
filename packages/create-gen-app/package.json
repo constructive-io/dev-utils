@@ -20,7 +20,7 @@
     "url": "https://github.com/hyperweb-io/dev-utils/issues"
   },
   "scripts": {
-    "copy": "copyfiles -f ../../LICENSE README.md package.json \"licenses-templates/**/*\" dist",
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist && copyfiles -f \"licenses-templates/**/*\" dist/licenses-templates",
     "clean": "makage clean",
     "prepublishOnly": "npm run build",
     "build": "npm run clean && tsc && tsc -p tsconfig.esm.json && npm run copy",
