@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.11](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.10...inquirerer@2.1.11) (2025-12-13)
+
+### Bug Fixes
+
+- **inquirerer:** pass \_\_dirname to findAndRequirePackageJson ([21d32d1](https://github.com/hyperweb-io/dev-utils/commit/21d32d1ed58474bca3ce55ab098bf47340bae14d))
+
 ## [2.1.10](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.9...inquirerer@2.1.10) (2025-12-13)
 
 **Note:** Version bump only for package inquirerer

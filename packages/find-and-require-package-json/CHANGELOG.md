@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/hyperweb-io/dev-utils/compare/find-and-require-package-json@0.6.8...find-and-require-package-json@0.8.0) (2025-12-13)
+
+### Bug Fixes
+
+- **find-and-require-package-json:** require callerDir parameter to find correct package.json ([ba4133f](https://github.com/hyperweb-io/dev-utils/commit/ba4133f7671bf799de6259a53c0042fabf1b07dd))
+
+### BREAKING CHANGES
+
+- **find-and-require-package-json:** findAndRequirePackageJson() now requires a callerDir parameter.
+
+Previously, the function used \_\_dirname internally which always pointed to the
+find-and-require-package-json package's own directory, causing it to return
+the wrong package.json when called from other packages.
+
+Now callers must pass their own \_\_dirname (CJS) or
+dirname(fileURLToPath(import.meta.url)) (ESM) to find the correct package.json.
+
+Fixes CI failures in constructive repo where plugins were incorrectly
+identified as 'find-and-require-package-json@0.6.8' instead of their actual names.
+
+Co-Authored-By: Dan Lynch <pyramation@gmail.com>
+
 ## 0.6.8 (2025-12-13)
 
 **Note:** Version bump only for package find-and-require-package-json
