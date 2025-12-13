@@ -49,7 +49,7 @@ jobs:
           - appstash
           - clean-ansi
           - fetch-api-client
-          - find-pkg
+          - find-and-require-package-json
           - http-errors
           - jsonld-tools
           - komoji

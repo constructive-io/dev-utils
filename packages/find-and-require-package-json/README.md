@@ -1,4 +1,4 @@
-# @interweb-utils/find-pkg
+# find-and-require-package-json
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/hyperweb-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80">
@@ -18,15 +18,15 @@ This TypeScript module provides a function to locate, read, and parse the `packa
 ## install
 
 ```sh
-npm install @interweb-utils/find-pkg
+npm install find-and-require-package-json
 ```
 
 ### Example
 
 ```js
-import { findPackageJson } from '@interweb-utils/find-pkg';
+import { findAndRequirePackageJson } from 'find-and-require-package-json';
 
-const packageJson = findPackageJson();
+const packageJson = findAndRequirePackageJson();
 console.log('Package name:', packageJson.name);
 console.log('Version:', packageJson.version);
 ```

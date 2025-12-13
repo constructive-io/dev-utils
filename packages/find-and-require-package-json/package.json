@@ -1,5 +1,5 @@
 {
-  "name": "@interweb/find-pkg",
+  "name": "find-and-require-package-json",
   "version": "0.6.7",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "description": "Find the package.json file from within a build/package",
