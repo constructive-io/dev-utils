@@ -38,7 +38,7 @@ describe('findAndRequirePackageJson', () => {
 
     jest.spyOn(process, 'cwd').mockReturnValue(mockCurrentDir);
 
-    const result = findAndRequirePackageJson();
+    const result = findAndRequirePackageJson(mockCurrentDir);
 
     expect(result).toEqual(mockPackageJson);
     expect(existsSync).toHaveBeenCalledWith(mockFilePath);
@@ -57,7 +57,7 @@ describe('findAndRequirePackageJson', () => {
 
     jest.spyOn(process, 'cwd').mockReturnValue(mockCurrentDir);
 
-    expect(() => findAndRequirePackageJson()).toThrow(
+    expect(() => findAndRequirePackageJson(mockCurrentDir)).toThrow(
       'package.json not found in any parent directory'
     );
     expect(existsSync).toHaveBeenCalledWith(mockFilePath);
