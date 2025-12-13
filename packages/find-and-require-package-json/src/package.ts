@@ -36,7 +36,7 @@ function _findPackageJson(currentDir: string): string {
   return _findPackageJson(parentDir);
 }
 
-export function findPackageJson(): PackageJson {
+export function findAndRequirePackageJson(): PackageJson {
   // Start searching from the current directory
   const pkgPath = _findPackageJson(__dirname);
 

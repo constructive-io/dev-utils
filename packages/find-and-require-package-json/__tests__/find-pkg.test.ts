@@ -1,13 +1,13 @@
 import { existsSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 
-import { findPackageJson } from '../src';
+import { findAndRequirePackageJson } from '../src';
 
 // Mock dependencies
 jest.mock('fs');
 jest.mock('path');
 
-describe('findPackageJson', () => {
+describe('findAndRequirePackageJson', () => {
   const mockPackageJson = {
     name: 'mock-package',
     version: '1.0.0',
@@ -38,7 +38,7 @@ describe('findPackageJson', () => {
 
     jest.spyOn(process, 'cwd').mockReturnValue(mockCurrentDir);
 
-    const result = findPackageJson();
+    const result = findAndRequirePackageJson();
 
     expect(result).toEqual(mockPackageJson);
     expect(existsSync).toHaveBeenCalledWith(mockFilePath);
@@ -57,7 +57,7 @@ describe('findPackageJson', () => {
 
     jest.spyOn(process, 'cwd').mockReturnValue(mockCurrentDir);
 
-    expect(() => findPackageJson()).toThrow(
+    expect(() => findAndRequirePackageJson()).toThrow(
       'package.json not found in any parent directory'
     );
     expect(existsSync).toHaveBeenCalledWith(mockFilePath);
