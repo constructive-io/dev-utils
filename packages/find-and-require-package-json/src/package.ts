@@ -36,9 +36,10 @@ function _findPackageJson(currentDir: string): string {
   return _findPackageJson(parentDir);
 }
 
-export function findAndRequirePackageJson(): PackageJson {
-  // Start searching from the current directory
-  const pkgPath = _findPackageJson(__dirname);
+export function findAndRequirePackageJson(callerDir: string): PackageJson {
+  // Start searching from the caller's directory
+  // The caller should pass __dirname (CJS) or dirname(fileURLToPath(import.meta.url)) (ESM)
+  const pkgPath = _findPackageJson(callerDir);
 
   // Read and parse the package.json
   const str = readFileSync(pkgPath, 'utf8');
