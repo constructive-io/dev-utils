@@ -496,3 +496,40 @@ describe('Debug Mode', () => {
         expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
 });
+
+describe('Workspace Resolvers', () => {
+    it('should have workspace resolvers registered by default', () => {
+        expect(globalResolverRegistry.has('workspace.repo.name')).toBe(true);
+        expect(globalResolverRegistry.has('workspace.repo.organization')).toBe(true);
+        expect(globalResolverRegistry.has('workspace.author')).toBe(true);
+        expect(globalResolverRegistry.has('workspace.author.name')).toBe(true);
+        expect(globalResolverRegistry.has('workspace.author.email')).toBe(true);
+    });
+
+    it('should resolve workspace.repo.name from package.json', async () => {
+        // This test runs from the dev-utils directory which has a package.json with repository
+        const result = await globalResolverRegistry.resolve('workspace.repo.name');
+
+        expect(result).toBe('dev-utils');
+    });
+
+    it('should resolve workspace.repo.organization from package.json', async () => {
+        const result = await globalResolverRegistry.resolve('workspace.repo.organization');
+
+        // Tests run from inquirerer package which has constructive-io as the org
+        expect(result).toBe('constructive-io');
+    });
+
+    it('should resolve workspace.author from package.json', async () => {
+        const result = await globalResolverRegistry.resolve('workspace.author');
+
+        expect(result).toBe('Constructive');
+    });
+
+    it('should resolve workspace.author.email from package.json', async () => {
+        const result = await globalResolverRegistry.resolve('workspace.author.email');
+
+        // Tests run from inquirerer package which has pyramation@constructive.io
+        expect(result).toBe('pyramation@constructive.io');
+    });
+});
