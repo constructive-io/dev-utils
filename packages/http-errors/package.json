@@ -1,12 +1,12 @@
 {
   "name": "@interweb/http-errors",
   "version": "0.2.6",
-  "author": "Dan Lynch <pyramation@gmail.com>",
+  "author": "Constructive <pyramation@constructive.io>",
   "description": "HTTP error handling utilities for API clients",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/hyperweb-io/dev-utils",
+  "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
   "publishConfig": {
     "access": "public",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperweb-io/dev-utils"
+    "url": "https://github.com/constructive-io/dev-utils"
   },
   "bugs": {
-    "url": "https://github.com/hyperweb-io/dev-utils/issues"
+    "url": "https://github.com/constructive-io/dev-utils/issues"
   },
   "scripts": {
     "copy": "makage assets",

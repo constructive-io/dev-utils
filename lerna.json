@@ -11,7 +11,7 @@
   "registry": "https://registry.npmjs.org",
   "command": {
     "create": {
-      "homepage": "https://github.com/hyperweb-io/dev-utils",
+      "homepage": "https://github.com/constructive-io/dev-utils",
       "license": "MIT",
       "access": "restricted"
     },

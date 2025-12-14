@@ -2,8 +2,8 @@
   "name": "jsonldjs",
   "version": "0.2.7",
   "description": "Powerful JSON-LD builder with comprehensive filtering and subgraph extraction",
-  "author": "Dan Lynch <pyramation@gmail.com>",
-  "homepage": "https://github.com/hyperweb-io/dev-utils",
+  "author": "Constructive <pyramation@constructive.io>",
+  "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
   "main": "index.js",
   "module": "esm/index.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperweb-io/dev-utils"
+    "url": "https://github.com/constructive-io/dev-utils"
   },
   "keywords": [
     "jsonld-tools"
@@ -32,6 +32,6 @@
     "makage": "0.1.8"
   },
   "bugs": {
-    "url": "https://github.com/hyperweb-io/dev-utils/issues"
+    "url": "https://github.com/constructive-io/dev-utils/issues"
   }
 }

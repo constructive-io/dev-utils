@@ -5,7 +5,7 @@
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/hyperweb-io/dev-utils.git
+git clone https://github.com/constructive-io/dev-utils.git
 ```
 
 2. Install dependencies:

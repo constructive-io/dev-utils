@@ -4,10 +4,10 @@
   <img src="https://raw.githubusercontent.com/hyperweb-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80"><br />
     @interweb/http-errors
   <br />
-  <a href="https://github.com/hyperweb-io/dev-utils/actions/workflows/ci.yml">
-    <img height="20" src="https://github.com/hyperweb-io/dev-utils/actions/workflows/ci.yml/badge.svg" />
+  <a href="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml">
+    <img height="20" src="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml/badge.svg" />
   </a>
-  <a href="https://github.com/hyperweb-io/dev-utils/blob/main/LICENSE">
+  <a href="https://github.com/constructive-io/dev-utils/blob/main/LICENSE">
     <img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"/>
   </a>
 </p>

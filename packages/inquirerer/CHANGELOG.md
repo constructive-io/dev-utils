@@ -3,49 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.1.11](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.10...inquirerer@2.1.11) (2025-12-13)
+## [2.1.11](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.10...inquirerer@2.1.11) (2025-12-13)
 
 ### Bug Fixes
 
-- **inquirerer:** pass \_\_dirname to findAndRequirePackageJson ([21d32d1](https://github.com/hyperweb-io/dev-utils/commit/21d32d1ed58474bca3ce55ab098bf47340bae14d))
+- **inquirerer:** pass \_\_dirname to findAndRequirePackageJson ([21d32d1](https://github.com/constructive-io/dev-utils/commit/21d32d1ed58474bca3ce55ab098bf47340bae14d))
 
-## [2.1.10](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.9...inquirerer@2.1.10) (2025-12-13)
-
-**Note:** Version bump only for package inquirerer
-
-## [2.1.9](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.8...inquirerer@2.1.9) (2025-11-28)
+## [2.1.10](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.9...inquirerer@2.1.10) (2025-12-13)
 
 **Note:** Version bump only for package inquirerer
 
-## [2.1.8](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.7...inquirerer@2.1.8) (2025-11-26)
+## [2.1.9](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.8...inquirerer@2.1.9) (2025-11-28)
 
 **Note:** Version bump only for package inquirerer
 
-## [2.1.7](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.6...inquirerer@2.1.7) (2025-11-24)
+## [2.1.8](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.7...inquirerer@2.1.8) (2025-11-26)
 
 **Note:** Version bump only for package inquirerer
 
-## [2.1.6](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.5...inquirerer@2.1.6) (2025-11-24)
+## [2.1.7](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.6...inquirerer@2.1.7) (2025-11-24)
 
 **Note:** Version bump only for package inquirerer
 
-## [2.1.5](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.4...inquirerer@2.1.5) (2025-11-24)
+## [2.1.6](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.5...inquirerer@2.1.6) (2025-11-24)
 
 **Note:** Version bump only for package inquirerer
 
-## [2.1.4](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.3...inquirerer@2.1.4) (2025-11-24)
+## [2.1.5](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.4...inquirerer@2.1.5) (2025-11-24)
 
 **Note:** Version bump only for package inquirerer
 
-## [2.1.3](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.2...inquirerer@2.1.3) (2025-11-24)
+## [2.1.4](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.3...inquirerer@2.1.4) (2025-11-24)
 
 **Note:** Version bump only for package inquirerer
 
-## [2.1.2](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.1...inquirerer@2.1.2) (2025-11-24)
+## [2.1.3](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.2...inquirerer@2.1.3) (2025-11-24)
 
 **Note:** Version bump only for package inquirerer
 
-## [2.1.1](https://github.com/hyperweb-io/dev-utils/compare/inquirerer@2.1.0...inquirerer@2.1.1) (2025-11-23)
+## [2.1.2](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.1...inquirerer@2.1.2) (2025-11-24)
+
+**Note:** Version bump only for package inquirerer
+
+## [2.1.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.0...inquirerer@2.1.1) (2025-11-23)
 
 **Note:** Version bump only for package inquirerer
 

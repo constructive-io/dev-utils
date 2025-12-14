@@ -2,8 +2,8 @@
   "name": "schema-sdk",
   "version": "0.15.9",
   "description": "Convert JSON Schema OpenAPI Spec to TypeScript Clients",
-  "author": "Dan Lynch <pyramation@gmail.com>",
-  "homepage": "https://github.com/hyperweb-io/dev-utils",
+  "author": "Constructive <pyramation@constructive.io>",
+  "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
   "main": "index.js",
   "module": "esm/index.js",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperweb-io/dev-utils"
+    "url": "https://github.com/constructive-io/dev-utils"
   },
   "bugs": {
-    "url": "https://github.com/hyperweb-io/dev-utils/issues"
+    "url": "https://github.com/constructive-io/dev-utils/issues"
   },
   "scripts": {
     "copy": "makage assets",
