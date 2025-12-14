@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.8](https://github.com/constructive-io/dev-utils/compare/jsonldjs@0.2.7...jsonldjs@0.2.8) (2025-12-14)
+
+**Note:** Version bump only for package jsonldjs
+
 ## [0.2.7](https://github.com/constructive-io/dev-utils/compare/jsonldjs@0.2.6...jsonldjs@0.2.7) (2025-11-28)
 
 **Note:** Version bump only for package jsonldjs

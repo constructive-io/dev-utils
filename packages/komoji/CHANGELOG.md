@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.10](https://github.com/constructive-io/dev-utils/compare/komoji@0.7.9...komoji@0.7.10) (2025-12-14)
+
+**Note:** Version bump only for package komoji
+
 ## [0.7.9](https://github.com/constructive-io/dev-utils/compare/komoji@0.7.8...komoji@0.7.9) (2025-11-28)
 
 **Note:** Version bump only for package komoji

@@ -1,6 +1,6 @@
 {
   "name": "jsonldjs",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Powerful JSON-LD builder with comprehensive filtering and subgraph extraction",
   "author": "Constructive <pyramation@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",

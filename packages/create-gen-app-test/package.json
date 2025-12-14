@@ -1,6 +1,6 @@
 {
   "name": "create-gen-app-test",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "author": "Constructive <pyramation@constructive.io>",
   "description": "Integration tests for create-gen-app with cache leveraging",
   "main": "index.js",
