@@ -72,7 +72,7 @@ describe('Inquirerer - setFrom feature', () => {
 
     jest.clearAllMocks();
     jest.useFakeTimers();
-    jest.setSystemTime(new Date('2025-11-23T15:30:45.123Z'));
+    jest.setSystemTime(new Date('1967-07-14T10:30:00.000Z'));
   });
 
   afterEach(() => {
@@ -147,7 +147,7 @@ describe('Inquirerer - setFrom feature', () => {
 
       const result = await prompter.prompt({}, questions);
 
-      expect(result).toEqual({ year: '2025' });
+      expect(result).toEqual({ year: '1967' });
     });
   });
 
@@ -211,7 +211,7 @@ describe('Inquirerer - setFrom feature', () => {
       const result = await prompter.prompt({}, questions);
 
       expect(result).toEqual({
-        autoYear: '2025',
+        autoYear: '1967',
         authorName: 'Git User'
       });
     });
@@ -353,9 +353,9 @@ describe('Inquirerer - setFrom feature', () => {
       const result = await prompter.prompt({}, questions);
 
       expect(result).toEqual({
-        year: '2025',
-        month: '11',
-        day: '23'
+        year: '1967',
+        month: '07',
+        day: '14'
       });
     });
   });
