@@ -19,6 +19,7 @@ export interface BaseQuestion {
     type: string;
     default?: any;
     defaultFrom?: string;
+    setFrom?: string;
     useDefault?: boolean;
     required?: boolean;
     message?: string;

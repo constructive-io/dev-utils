@@ -469,6 +469,9 @@ export class Inquirerer {
     // Resolve dynamic defaults before processing questions
     await this.resolveDynamicDefaults(questions);
 
+    // Resolve setFrom values - these bypass prompting entirely
+    await this.resolveSetValues(questions, obj);
+
     // first loop through the question, and set any overrides in case other questions use objs for validation
     this.applyOverrides(argv, obj, questions);
 
@@ -583,6 +586,24 @@ export class Inquirerer {
         if (resolved !== undefined) {
           // Update question.default with resolved value
           (question as any).default = resolved;
+        }
+      }
+    }
+  }
+
+  /**
+   * Resolves setFrom values for all questions that have setFrom specified.
+   * Sets the value directly in obj, bypassing the prompt entirely.
+   */
+  private async resolveSetValues(questions: Question[], obj: any): Promise<void> {
+    for (const question of questions) {
+      if ('setFrom' in question && question.setFrom) {
+        // Only set if not already provided in args
+        if (!(question.name in obj)) {
+          const resolved = await this.resolverRegistry.resolve(question.setFrom);
+          if (resolved !== undefined) {
+            obj[question.name] = resolved;
+          }
         }
       }
     }
