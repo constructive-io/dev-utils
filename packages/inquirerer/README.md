@@ -133,6 +133,7 @@ interface BaseQuestion {
   description?: string;   // Additional context
   default?: any;          // Default value
   defaultFrom?: string;   // Dynamic default from resolver (e.g., 'git.user.name')
+  setFrom?: string;       // Auto-set value from resolver, bypassing prompt entirely
   useDefault?: boolean;   // Skip prompt and use default
   required?: boolean;     // Validation requirement
   validate?: (input: any, answers: any) => boolean | Validation;
@@ -751,9 +752,10 @@ Inquirerer comes with several built-in resolvers ready to use:
 When resolving default values, inquirerer follows this priority:
 
 1. **CLI Arguments** - Values passed via command line (highest priority)
-2. **`defaultFrom`** - Dynamically resolved values
-3. **`default`** - Static default values
-4. **`undefined`** - No default available
+2. **`setFrom`** - Auto-set values (bypasses prompt entirely)
+3. **`defaultFrom`** - Dynamically resolved default values
+4. **`default`** - Static default values
+5. **`undefined`** - No default available
 
 ```typescript
 {
@@ -762,6 +764,75 @@ When resolving default values, inquirerer follows this priority:
   defaultFrom: 'git.user.name',  // Try git first
   default: 'Anonymous'            // Fallback if git not configured
 }
+```
+
+### `setFrom` vs `defaultFrom`
+
+Both `setFrom` and `defaultFrom` use resolvers to get values, but they behave differently:
+
+| Feature | `defaultFrom` | `setFrom` |
+|---------|---------------|-----------|
+| Sets value as | Default (user can override) | Final value (no prompt) |
+| User prompted? | Yes, with pre-filled default | No, question is skipped |
+| Use case | Suggested values | Auto-computed values |
+
+**`defaultFrom`** - The resolved value becomes the default, but the user is still prompted and can change it:
+
+```typescript
+{
+  type: 'text',
+  name: 'authorName',
+  message: 'Author name?',
+  defaultFrom: 'git.user.name'  // User sees "Author name? [John Doe]" and can change it
+}
+```
+
+**`setFrom`** - The resolved value is set directly and the question is skipped entirely:
+
+```typescript
+{
+  type: 'text',
+  name: 'year',
+  message: 'Copyright year?',
+  setFrom: 'date.year'  // Automatically set to "2025", no prompt shown
+}
+```
+
+#### When to use each
+
+Use `defaultFrom` when:
+- The value is a suggestion the user might want to change
+- User confirmation is desired
+
+Use `setFrom` when:
+- The value should be computed automatically
+- No user input is needed (e.g., timestamps, computed fields)
+- You want to reduce the number of prompts
+
+#### Combined example
+
+```typescript
+const questions = [
+  {
+    type: 'text',
+    name: 'authorName',
+    message: 'Author name?',
+    defaultFrom: 'git.user.name'  // User can override
+  },
+  {
+    type: 'text',
+    name: 'createdAt',
+    setFrom: 'date.iso'  // Auto-set, no prompt
+  },
+  {
+    type: 'text',
+    name: 'copyrightYear',
+    setFrom: 'date.year'  // Auto-set, no prompt
+  }
+];
+
+// User only sees prompt for authorName
+// createdAt and copyrightYear are set automatically
 ```
 
 ### Custom Resolvers
