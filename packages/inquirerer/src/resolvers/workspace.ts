@@ -1,46 +1,15 @@
 import type { ResolverRegistry } from './types';
-
-// We need to find package.json from cwd, not from the module location
-import { existsSync, readFileSync } from 'fs';
-import { dirname, join } from 'path';
-
-interface PackageJson {
-    name?: string;
-    version?: string;
-    description?: string;
-    author?: string | { name?: string; email?: string; url?: string };
-    license?: string;
-    repository?: string | { type?: string; url?: string };
-    [key: string]: any;
-}
+import { findAndRequirePackageJson, PackageJson } from 'find-and-require-package-json';
 
 /**
  * Find and read the nearest package.json starting from cwd.
- * Uses the same algorithm as find-and-require-package-json but starts from cwd.
+ * Returns undefined if not found (instead of throwing).
  */
 function findPackageJsonFromCwd(): PackageJson | undefined {
-    let currentDir = process.cwd();
-
-    while (true) {
-        const filePath = join(currentDir, 'package.json');
-
-        if (existsSync(filePath)) {
-            try {
-                const str = readFileSync(filePath, 'utf8');
-                return JSON.parse(str);
-            } catch {
-                return undefined;
-            }
-        }
-
-        const parentDir = dirname(currentDir);
-
-        // If reached the root directory, package.json is not found
-        if (parentDir === currentDir) {
-            return undefined;
-        }
-
-        currentDir = parentDir;
+    try {
+        return findAndRequirePackageJson(process.cwd());
+    } catch {
+        return undefined;
     }
 }
 
