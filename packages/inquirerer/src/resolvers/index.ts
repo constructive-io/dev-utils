@@ -1,6 +1,7 @@
 import { gitResolvers } from './git';
 import { dateResolvers } from './date';
 import { npmResolvers } from './npm';
+import { workspaceResolvers } from './workspace';
 import type { DefaultResolver, ResolverRegistry } from './types';
 
 /**
@@ -90,6 +91,7 @@ export const globalResolverRegistry = new DefaultResolverRegistry({
     ...gitResolvers,
     ...dateResolvers,
     ...npmResolvers,
+    ...workspaceResolvers,
 });
 
 /**
