@@ -747,6 +747,19 @@ Inquirerer comes with several built-in resolvers ready to use:
 | `date.now` | ISO timestamp | `"2025-11-23T15:30:45.123Z"` |
 | `date.timestamp` | Unix timestamp (ms) | `"1732375845123"` |
 
+#### Workspace (nearest package.json)
+
+| Resolver | Description | Example Output |
+|----------|-------------|----------------|
+| `workspace.name` | Repo slug from `repository` URL (fallback: `package.json` `name`) | `"dev-utils"` |
+| `workspace.repo.name` | Repo name from `repository` URL | `"dev-utils"` |
+| `workspace.repo.organization` | Repo org/owner from `repository` URL | `"constructive-io"` |
+| `workspace.organization.name` | Alias for `workspace.repo.organization` | `"constructive-io"` |
+| `workspace.license` | License field from `package.json` | `"MIT"` |
+| `workspace.author` | Author name from `package.json` | `"Constructive"` |
+| `workspace.author.name` | Author name from `package.json` | `"Constructive"` |
+| `workspace.author.email` | Author email from `package.json` | `"pyramation@constructive.io"` |
+
 ### Priority Order
 
 When resolving default values, inquirerer follows this priority:

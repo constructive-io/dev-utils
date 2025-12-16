@@ -499,11 +499,21 @@ describe('Debug Mode', () => {
 
 describe('Workspace Resolvers', () => {
     it('should have workspace resolvers registered by default', () => {
+        expect(globalResolverRegistry.has('workspace.name')).toBe(true);
         expect(globalResolverRegistry.has('workspace.repo.name')).toBe(true);
         expect(globalResolverRegistry.has('workspace.repo.organization')).toBe(true);
+        expect(globalResolverRegistry.has('workspace.organization.name')).toBe(true);
+        expect(globalResolverRegistry.has('workspace.license')).toBe(true);
         expect(globalResolverRegistry.has('workspace.author')).toBe(true);
         expect(globalResolverRegistry.has('workspace.author.name')).toBe(true);
         expect(globalResolverRegistry.has('workspace.author.email')).toBe(true);
+    });
+
+    it('should resolve workspace.name preferring repo name', async () => {
+        const result = await globalResolverRegistry.resolve('workspace.name');
+
+        // Repository slug of dev-utils package
+        expect(result).toBe('dev-utils');
     });
 
     it('should resolve workspace.repo.name from package.json', async () => {
@@ -518,6 +528,18 @@ describe('Workspace Resolvers', () => {
 
         // Tests run from inquirerer package which has constructive-io as the org
         expect(result).toBe('constructive-io');
+    });
+
+    it('should resolve workspace.organization.name from package.json', async () => {
+        const result = await globalResolverRegistry.resolve('workspace.organization.name');
+
+        expect(result).toBe('constructive-io');
+    });
+
+    it('should resolve workspace.license from package.json', async () => {
+        const result = await globalResolverRegistry.resolve('workspace.license');
+
+        expect(result).toBe('MIT');
     });
 
     it('should resolve workspace.author from package.json', async () => {
