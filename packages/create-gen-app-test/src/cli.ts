@@ -7,7 +7,7 @@ import { Inquirerer, ListQuestion } from "inquirerer";
 import minimist, { ParsedArgs } from "minimist";
 
 import { CacheManager, GitCloner, checkNpmVersion } from "create-gen-app";
-import { createFromTemplate } from './index';
+import { createFromTemplate } from "./index";
 
 const DEFAULT_REPO = "https://github.com/constructive-io/pgpm-boilerplates.git";
 const DEFAULT_PATH = "default";
@@ -18,7 +18,7 @@ const DEFAULT_TTL_DAYS = DEFAULT_TTL / (24 * 60 * 60 * 1000);
 
 // Import package.json for version
 import * as createGenPackageJson from "create-gen-app/package.json";
-const PACKAGE_NAME = createGenPackageJson.name ?? "@constructive/cli";
+const PACKAGE_NAME = createGenPackageJson.name ?? "@launchql/cli";
 const PACKAGE_VERSION = createGenPackageJson.version ?? "0.0.0";
 
 const RESERVED_ARG_KEYS = new Set([
@@ -134,7 +134,7 @@ export async function runCli(
     console.warn(
       `⚠️  Cached template expired (last updated: ${new Date(expiredMetadata.lastUpdated).toLocaleString()})`
     );
-    console.log('Updating cache...');
+    console.log("Updating cache...");
     cacheManager.clear(cacheKey);
   }
 
@@ -150,7 +150,7 @@ export async function runCli(
     gitCloner.clone(normalizedUrl, tempDest, { branch: args.branch, depth: 1 });
     cacheManager.set(cacheKey, tempDest);
     templateDir = tempDest;
-    console.log('Template cached for future runs');
+    console.log("Template cached for future runs");
   }
 
   try {
@@ -209,8 +209,8 @@ export async function runCli(
     const answerOverrides = extractAnswerOverrides(args);
     const noTty = Boolean(
       args["no-tty"] ??
-        (args as Record<string, unknown>).noTty ??
-        (args as Record<string, unknown>).tty === false
+      (args as Record<string, unknown>).noTty ??
+      (args as Record<string, unknown>).tty === false
     );
 
     // Use the createFromTemplate function which will use the same cache
@@ -330,7 +330,9 @@ if (require.main === module) {
 }
 
 function resolveTtlOption(args: ParsedArgs): number | undefined {
-  const disableTtl = Boolean(args["no-ttl"] ?? (args as Record<string, unknown>).noTtl);
+  const disableTtl = Boolean(
+    args["no-ttl"] ?? (args as Record<string, unknown>).noTtl
+  );
   if (disableTtl) {
     return undefined;
   }
