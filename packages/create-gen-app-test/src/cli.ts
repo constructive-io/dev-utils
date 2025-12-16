@@ -10,7 +10,6 @@ import { CacheManager, GitCloner, checkNpmVersion } from "create-gen-app";
 import { createFromTemplate } from "./index";
 
 const DEFAULT_REPO = "https://github.com/constructive-io/pgpm-boilerplates.git";
-const DEFAULT_PATH = "default";
 const DEFAULT_OUTPUT_FALLBACK = "create-gen-app-output";
 const DEFAULT_TOOL_NAME = "create-gen-app-test";
 const DEFAULT_TTL = 604800000; // 1 week
@@ -73,7 +72,6 @@ export async function runCli(
     boolean: ["force", "help", "version", "no-tty", "clear-cache", "no-ttl"],
     default: {
       repo: DEFAULT_REPO,
-      path: DEFAULT_PATH,
     },
   });
 
@@ -154,13 +152,29 @@ export async function runCli(
   }
 
   try {
-    const selectionRoot = path.join(templateDir, args.path);
+    const userProvidedPath = typeof args.path === "string";
+    const configPath = path.join(templateDir, ".boilerplates.json");
+    const autoDir =
+      !userProvidedPath && fs.existsSync(configPath)
+        ? (() => {
+            try {
+              const parsed = JSON.parse(fs.readFileSync(configPath, "utf8"));
+              return typeof parsed?.dir === "string" ? parsed.dir : undefined;
+            } catch {
+              return undefined;
+            }
+          })()
+        : undefined;
+    const effectivePath =
+      (userProvidedPath ? args.path : undefined) ?? autoDir ?? ".";
+
+    const selectionRoot = path.join(templateDir, effectivePath);
     if (
       !fs.existsSync(selectionRoot) ||
       !fs.statSync(selectionRoot).isDirectory()
     ) {
       throw new Error(
-        `Template path "${args.path}" does not exist in ${args.repo}`
+        `Template path "${effectivePath}" does not exist in ${args.repo}`
       );
     }
 
@@ -180,7 +194,7 @@ export async function runCli(
       if (!templates.includes(selectedTemplate)) {
         throw new Error(
           `Template "${selectedTemplate}" not found in ${args.repo}${
-            args.path === "." ? "" : `/${args.path}`
+            effectivePath === "." ? "" : `/${effectivePath}`
           }`
         );
       }
@@ -196,9 +210,9 @@ export async function runCli(
     }
 
     const normalizedBasePath =
-      args.path === "." || args.path === "./"
+      effectivePath === "." || effectivePath === "./"
         ? ""
-        : args.path.replace(/^[./]+/, "").replace(/\/+$/, "");
+        : effectivePath.replace(/^[./]+/, "").replace(/\/+$/, "");
     const fromPath = normalizedBasePath
       ? path.join(normalizedBasePath, selectedTemplate)
       : selectedTemplate;
@@ -242,7 +256,7 @@ Usage:
 Options:
   -r, --repo <url>         Git repository to clone (default: ${DEFAULT_REPO})
   -b, --branch <name>      Branch to use when cloning
-  -p, --path <dir>         Subdirectory that contains templates (default: .)
+  -p, --path <dir>         Subdirectory that contains templates (default: auto from .boilerplates.json, else .)
   -t, --template <name>    Template folder to use (will prompt if omitted)
   -o, --output <dir>       Output directory (defaults to ./<template>)
   -f, --force              Overwrite the output directory if it exists

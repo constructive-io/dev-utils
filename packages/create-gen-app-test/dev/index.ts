@@ -6,7 +6,6 @@ import * as path from "path";
 import { cloneRepo, extractVariables, promptUser, replaceVariables } from "create-gen-app";
 
 const DEFAULT_REPO = "https://github.com/constructive-io/pgpm-boilerplates/";
-const DEFAULT_DIRECTORY = "default";
 const OUTPUT_DIR = "./test-output";
 
 const argv = minimist(process.argv.slice(2), {
@@ -20,7 +19,6 @@ const argv = minimist(process.argv.slice(2), {
   string: ["repo", "branch", "path", "template", "output"],
   default: {
     repo: DEFAULT_REPO,
-    path: DEFAULT_DIRECTORY,
     output: OUTPUT_DIR,
   },
 });
@@ -35,9 +33,23 @@ async function main() {
     }
     const tempDir = await cloneRepo(argv.repo, { branch: argv.branch });
 
-    const templateDir = path.join(tempDir, argv.path);
+    const configPath = path.join(tempDir, ".boilerplates.json");
+    const autoDir =
+      argv.path === undefined && fs.existsSync(configPath)
+        ? (() => {
+            try {
+              const parsed = JSON.parse(fs.readFileSync(configPath, "utf8"));
+              return typeof parsed?.dir === "string" ? parsed.dir : undefined;
+            } catch {
+              return undefined;
+            }
+          })()
+        : undefined;
+    const effectivePath = argv.path ?? autoDir ?? ".";
+
+    const templateDir = path.join(tempDir, effectivePath);
     if (!fs.existsSync(templateDir)) {
-      throw new Error(`Template path "${argv.path}" does not exist in ${argv.repo}`);
+      throw new Error(`Template path "${effectivePath}" does not exist in ${argv.repo}`);
     }
     const folders = fs
       .readdirSync(templateDir, { withFileTypes: true })
@@ -54,7 +66,7 @@ async function main() {
     if (selectedFolder) {
       if (!folders.includes(selectedFolder)) {
         throw new Error(
-          `Template "${selectedFolder}" not found in ${argv.repo}${argv.path === "." ? "" : `/${argv.path}`}`
+          `Template "${selectedFolder}" not found in ${argv.repo}${effectivePath === "." ? "" : `/${effectivePath}`}`
         );
       }
     } else {
@@ -115,4 +127,3 @@ async function main() {
 }
 
 main();
-
