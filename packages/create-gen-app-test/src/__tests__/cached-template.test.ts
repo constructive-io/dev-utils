@@ -5,7 +5,7 @@ import * as path from 'path';
 import { appstash, resolve } from 'appstash';
 
 import { createFromTemplate, CacheManager, GitCloner } from '../index';
-import { buildAnswers, TEST_REPO, TEST_TEMPLATE } from '../test-utils/integration-helpers';
+import { buildAnswers, TEST_REPO, TEST_TEMPLATE_PATH } from '../test-utils/integration-helpers';
 
 const DEFAULT_TEMPLATE_URL = TEST_REPO;
 
@@ -98,7 +98,7 @@ describe('cached template integration tests', () => {
         answers: buildAnswers('test'),
         toolName: testCacheTool,
         noTty: true,
-        fromPath: TEST_TEMPLATE
+        fromPath: TEST_TEMPLATE_PATH
       });
     }, 60000);
 
@@ -166,7 +166,7 @@ describe('cached template integration tests', () => {
         answers: buildAnswers('warmup'),
         toolName: testCacheTool,
         noTty: true,
-        fromPath: TEST_TEMPLATE
+        fromPath: TEST_TEMPLATE_PATH
       });
 
       secondOutputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'second-clone-'));
@@ -177,7 +177,7 @@ describe('cached template integration tests', () => {
         answers: buildAnswers('cached'),
         toolName: testCacheTool,
         noTty: true,
-        fromPath: TEST_TEMPLATE
+        fromPath: TEST_TEMPLATE_PATH
       });
     }, 60000);
 

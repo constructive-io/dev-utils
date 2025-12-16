@@ -25,8 +25,8 @@ pnpm dev --output ./my-generated-template
 
 ## What it does
 
-1. **Clones the default repository**: `https://github.com/launchql/pgpm-boilerplates/` (override via `--repo`, select branch via `--branch`)
-2. **Lists available templates**: looks for subdirectories inside `--path` (default `.`; typically `module`, `workspace`)
+1. **Clones the default repository**: `https://github.com/constructive-io/pgpm-boilerplates/` (override via `--repo`, select branch via `--branch`)
+2. **Lists available templates**: looks for subdirectories inside `--path` (default `default`; typically contains `module`, `workspace`)
 3. **Prompts for selection**: Uses `inquirerer` to display an interactive list of templates
 4. **Processes the template**:
    - Extracts variables from the selected folder
@@ -39,9 +39,9 @@ pnpm dev --output ./my-generated-template
 
 Command-line flags override the defaults below (see `dev/index.ts`):
 
-- `--repo` (`-r`): repository URL to clone (default: `https://github.com/launchql/pgpm-boilerplates/`)
+- `--repo` (`-r`): repository URL to clone (default: `https://github.com/constructive-io/pgpm-boilerplates/`)
 - `--branch` (`-b`): branch or tag to checkout
-- `--path` (`-p`): directory within the repo to scan for templates (default: `.`)
+- `--path` (`-p`): directory within the repo to scan for templates (default: `default`)
 - `--template` (`-t`): template folder to use (e.g., `module`, `workspace`); if omitted, an interactive list appears
 - `--output` (`-o`): output directory for generated project (default: `./test-output`)
 
@@ -51,7 +51,7 @@ Command-line flags override the defaults below (see `dev/index.ts`):
 $ pnpm dev
 🚀 create-gen-app development script
 
-Cloning template from https://github.com/launchql/pgpm-boilerplates/...
+Cloning template from https://github.com/constructive-io/pgpm-boilerplates/...
 
 Found 2 template(s): module, workspace
 
@@ -72,5 +72,4 @@ Extracting template variables...
 - The `test-output` directory is gitignored
 - The temporary clone directory is automatically cleaned up after generation
 - You can test different templates without affecting your workspace
-
 

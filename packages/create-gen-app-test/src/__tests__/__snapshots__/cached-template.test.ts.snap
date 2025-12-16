@@ -2,6 +2,7 @@
 
 exports[`cached template integration tests first clone with variable replacement should snapshot created directory structure 1`] = `
 [
+  ".boilerplate.json",
   "LICENSE",
   "README.md",
   "__tests__/",
@@ -21,7 +22,7 @@ exports[`cached template integration tests first clone with variable replacement
     "description": "Integration test module test",
     "devDependencies": {
       "makage": "0.1.8",
-      "pgsql-test": "^2.14.12",
+      "pgsql-test": "^2.16.2",
     },
     "homepage": "https://github.com/tester-test/integration-test",
     "keywords": [],
@@ -38,7 +39,7 @@ exports[`cached template integration tests first clone with variable replacement
     "scripts": {
       "lint": "eslint . --fix",
       "test": "jest",
-      "test:watch": "makage test --watch deploy --ext sql",
+      "test:watch": "jest --watch",
     },
     "version": "0.0.1",
   },
@@ -47,6 +48,7 @@ exports[`cached template integration tests first clone with variable replacement
 
 exports[`cached template integration tests second clone from cache should snapshot created directory structure from cache 1`] = `
 [
+  ".boilerplate.json",
   "LICENSE",
   "README.md",
   "__tests__/",
@@ -66,7 +68,7 @@ exports[`cached template integration tests second clone from cache should snapsh
     "description": "Integration test module cached",
     "devDependencies": {
       "makage": "0.1.8",
-      "pgsql-test": "^2.14.12",
+      "pgsql-test": "^2.16.2",
     },
     "homepage": "https://github.com/tester-cached/integration-cached",
     "keywords": [],
@@ -83,7 +85,7 @@ exports[`cached template integration tests second clone from cache should snapsh
     "scripts": {
       "lint": "eslint . --fix",
       "test": "jest",
-      "test:watch": "makage test --watch deploy --ext sql",
+      "test:watch": "jest --watch",
     },
     "version": "0.0.1",
   },

@@ -5,6 +5,7 @@ import { runCli } from "../cli";
 import {
   TEST_BRANCH,
   TEST_REPO,
+  TEST_TEMPLATE_DIR,
   TEST_TEMPLATE,
   buildAnswers,
   cleanupWorkspace,
@@ -24,7 +25,7 @@ describe("CLI integration via create-gen-app-test harness", () => {
       "--branch",
       TEST_BRANCH,
       "--path",
-      ".",
+      TEST_TEMPLATE_DIR,
       "--template",
       TEST_TEMPLATE,
       "--output",

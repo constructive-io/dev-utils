@@ -5,8 +5,8 @@ import * as path from "path";
 
 import { cloneRepo, extractVariables, promptUser, replaceVariables } from "create-gen-app";
 
-const DEFAULT_REPO = "https://github.com/launchql/pgpm-boilerplates/";
-const DEFAULT_DIRECTORY = ".";
+const DEFAULT_REPO = "https://github.com/constructive-io/pgpm-boilerplates/";
+const DEFAULT_DIRECTORY = "default";
 const OUTPUT_DIR = "./test-output";
 
 const argv = minimist(process.argv.slice(2), {
@@ -115,5 +115,4 @@ async function main() {
 }
 
 main();
-
 

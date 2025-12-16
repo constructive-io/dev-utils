@@ -4,11 +4,16 @@ import * as path from "path";
 
 export const TEST_REPO =
   process.env.CREATE_GEN_TEST_REPO ??
-  "https://github.com/launchql/pgpm-boilerplates.git";
+  "https://github.com/constructive-io/pgpm-boilerplates.git";
 export const TEST_BRANCH =
-  process.env.CREATE_GEN_TEST_BRANCH ?? "license";
+  process.env.CREATE_GEN_TEST_BRANCH ?? "main";
+export const TEST_TEMPLATE_DIR =
+  process.env.CREATE_GEN_TEST_BASE_PATH ?? "default";
 export const TEST_TEMPLATE =
   process.env.CREATE_GEN_TEST_TEMPLATE ?? "module";
+export const TEST_TEMPLATE_PATH =
+  process.env.CREATE_GEN_TEST_TEMPLATE_PATH ??
+  path.join(TEST_TEMPLATE_DIR, TEST_TEMPLATE);
 
 export interface TempWorkspace {
   baseDir: string;
