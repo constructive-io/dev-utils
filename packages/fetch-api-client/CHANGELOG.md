@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.8](https://github.com/constructive-io/dev-utils/compare/@interweb/fetch-api-client@0.7.7...@interweb/fetch-api-client@0.7.8) (2025-12-17)
+
+**Note:** Version bump only for package @interweb/fetch-api-client
+
 ## [0.7.7](https://github.com/constructive-io/dev-utils/compare/@interweb/fetch-api-client@0.7.6...@interweb/fetch-api-client@0.7.7) (2025-12-14)
 
 **Note:** Version bump only for package @interweb/fetch-api-client

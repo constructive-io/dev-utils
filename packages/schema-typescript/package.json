@@ -1,6 +1,6 @@
 {
   "name": "schema-typescript",
-  "version": "0.13.10",
+  "version": "0.13.11",
   "description": "Convert JSON Schema to TypeScript Definitions",
   "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",

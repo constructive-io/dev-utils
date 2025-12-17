@@ -1,6 +1,6 @@
 {
   "name": "strfy-js",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "description": "Stringify JSON as JavaScript with extended serialization capabilities",
   "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",

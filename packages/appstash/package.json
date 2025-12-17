@@ -1,6 +1,6 @@
 {
   "name": "appstash",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": "Constructive <developers@constructive.io>",
   "description": "Simple, clean application directory resolution",
   "main": "index.js",
