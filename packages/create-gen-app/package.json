@@ -1,7 +1,7 @@
 {
   "name": "create-gen-app",
   "version": "0.3.5",
-  "author": "Constructive <pyramation@constructive.io>",
+  "author": "Constructive <developers@constructive.io>",
   "description": "Clone and customize template repositories with variable replacement",
   "main": "index.js",
   "module": "esm/index.js",

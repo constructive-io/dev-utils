@@ -2,7 +2,7 @@
   "name": "nested-obj",
   "version": "0.1.6",
   "description": "Safely access and modify nested object properties using string paths",
-  "author": "Constructive <pyramation@constructive.io>",
+  "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
   "main": "index.js",
