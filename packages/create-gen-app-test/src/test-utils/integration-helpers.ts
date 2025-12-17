@@ -7,8 +7,25 @@ export const TEST_REPO =
   "https://github.com/constructive-io/pgpm-boilerplates.git";
 export const TEST_BRANCH =
   process.env.CREATE_GEN_TEST_BRANCH ?? "main";
-export const TEST_TEMPLATE_DIR =
-  process.env.CREATE_GEN_TEST_BASE_PATH ?? "default";
+export const TEST_TEMPLATE_DIR = (() => {
+  const envDir = process.env.CREATE_GEN_TEST_BASE_PATH;
+  if (envDir) return envDir;
+
+  try {
+    const root = fs.realpathSync(process.cwd());
+    const cfgPath = path.join(root, ".boilerplates.json");
+    if (fs.existsSync(cfgPath)) {
+      const parsed = JSON.parse(fs.readFileSync(cfgPath, "utf8"));
+      if (parsed?.dir && typeof parsed.dir === "string") {
+        return parsed.dir;
+      }
+    }
+  } catch {
+    // ignore and fall through
+  }
+
+  return ".";
+})();
 export const TEST_TEMPLATE =
   process.env.CREATE_GEN_TEST_TEMPLATE ?? "module";
 export const TEST_TEMPLATE_PATH =
