@@ -5,11 +5,11 @@ import { runCli } from '../cli';
 import {
   TEST_BRANCH,
   TEST_REPO,
-  TEST_TEMPLATE_DIR,
   TEST_TEMPLATE,
   buildAnswers,
   cleanupWorkspace,
   createTempWorkspace,
+  resolveTemplateBaseDir,
 } from '../test-utils/integration-helpers';
 
 jest.setTimeout(180_000);
@@ -18,6 +18,11 @@ describe('CLI integration via create-gen-app-test harness', () => {
   it('generates a project using the real repo', async () => {
     const workspace = createTempWorkspace('cli');
     const answers = buildAnswers('cli');
+    const { baseDir } = await resolveTemplateBaseDir(
+      TEST_REPO,
+      TEST_BRANCH,
+      'create-gen-app-test'
+    );
 
     const args = [
       '--repo',
@@ -25,7 +30,7 @@ describe('CLI integration via create-gen-app-test harness', () => {
       '--branch',
       TEST_BRANCH,
       '--path',
-      TEST_TEMPLATE_DIR,
+      baseDir,
       '--template',
       TEST_TEMPLATE,
       '--output',

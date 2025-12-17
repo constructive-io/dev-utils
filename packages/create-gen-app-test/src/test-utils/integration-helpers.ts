@@ -2,6 +2,8 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
+import { CacheManager, GitCloner } from 'create-gen-app';
+
 export const TEST_REPO =
   process.env.CREATE_GEN_TEST_REPO ??
   'https://github.com/constructive-io/pgpm-boilerplates.git';
@@ -24,13 +26,51 @@ export const TEST_TEMPLATE_DIR = (() => {
     // ignore and fall through
   }
 
-  return '.';
+  // Default layout for pgpm-boilerplates
+  return 'default';
 })();
 export const TEST_TEMPLATE =
   process.env.CREATE_GEN_TEST_TEMPLATE ?? 'module';
 export const TEST_TEMPLATE_PATH =
   process.env.CREATE_GEN_TEST_TEMPLATE_PATH ??
   path.join(TEST_TEMPLATE_DIR, TEST_TEMPLATE);
+
+function readBoilerplatesDir(root: string): string | undefined {
+  const cfgPath = path.join(root, '.boilerplates.json');
+  if (!fs.existsSync(cfgPath)) return undefined;
+  try {
+    const parsed = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+    if (parsed?.dir && typeof parsed.dir === 'string') {
+      return parsed.dir;
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
+}
+
+export async function resolveTemplateBaseDir(
+  repo: string,
+  branch: string | undefined,
+  toolName: string
+): Promise<{ cachePath: string; baseDir: string }> {
+  const cacheManager = new CacheManager({ toolName });
+  const gitCloner = new GitCloner();
+
+  const normalizedUrl = gitCloner.normalizeUrl(repo);
+  const cacheKey = cacheManager.createKey(normalizedUrl, branch);
+
+  let cachePath = cacheManager.get(cacheKey);
+  if (!cachePath) {
+    const dest = path.join(cacheManager.getReposDir(), cacheKey);
+    gitCloner.clone(normalizedUrl, dest, { branch, depth: 1 });
+    cacheManager.set(cacheKey, dest);
+    cachePath = dest;
+  }
+
+  const baseDir = readBoilerplatesDir(cachePath) ?? '.';
+  return { cachePath, baseDir };
+}
 
 export interface TempWorkspace {
   baseDir: string;

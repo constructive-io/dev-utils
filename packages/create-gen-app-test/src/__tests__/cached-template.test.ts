@@ -5,7 +5,7 @@ import * as path from 'path';
 import { appstash, resolve } from 'appstash';
 
 import { createFromTemplate, CacheManager, GitCloner } from '../index';
-import { buildAnswers, TEST_REPO, TEST_TEMPLATE_PATH } from '../test-utils/integration-helpers';
+import { buildAnswers, TEST_REPO, resolveTemplateBaseDir, TEST_BRANCH, TEST_TEMPLATE } from '../test-utils/integration-helpers';
 
 const DEFAULT_TEMPLATE_URL = TEST_REPO;
 
@@ -88,9 +88,16 @@ describe('cached template integration tests', () => {
   describe('first clone with variable replacement', () => {
     let firstCloneResult: any;
     let firstOutputDir: string;
+    let templatePath: string;
 
     beforeAll(async () => {
       firstOutputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'first-clone-'));
+      const { baseDir } = await resolveTemplateBaseDir(
+        DEFAULT_TEMPLATE_URL,
+        TEST_BRANCH,
+        testCacheTool
+      );
+      templatePath = path.join(baseDir, TEST_TEMPLATE);
 
       firstCloneResult = await createFromTemplate({
         templateUrl: DEFAULT_TEMPLATE_URL,
@@ -98,7 +105,7 @@ describe('cached template integration tests', () => {
         answers: buildAnswers('test'),
         toolName: testCacheTool,
         noTty: true,
-        fromPath: TEST_TEMPLATE_PATH
+        fromPath: templatePath
       });
     }, 60000);
 
@@ -158,15 +165,23 @@ describe('cached template integration tests', () => {
   describe('second clone from cache', () => {
     let secondCloneResult: any;
     let secondOutputDir: string;
+    let templatePath: string;
 
     beforeAll(async () => {
+      const { baseDir } = await resolveTemplateBaseDir(
+        DEFAULT_TEMPLATE_URL,
+        TEST_BRANCH,
+        testCacheTool
+      );
+      templatePath = path.join(baseDir, TEST_TEMPLATE);
+
       await createFromTemplate({
         templateUrl: DEFAULT_TEMPLATE_URL,
         outputDir: fs.mkdtempSync(path.join(os.tmpdir(), 'warmup-')),
         answers: buildAnswers('warmup'),
         toolName: testCacheTool,
         noTty: true,
-        fromPath: TEST_TEMPLATE_PATH
+        fromPath: templatePath
       });
 
       secondOutputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'second-clone-'));
@@ -177,7 +192,7 @@ describe('cached template integration tests', () => {
         answers: buildAnswers('cached'),
         toolName: testCacheTool,
         noTty: true,
-        fromPath: TEST_TEMPLATE_PATH
+        fromPath: templatePath
       });
     }, 60000);
 
