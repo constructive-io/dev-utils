@@ -1,5 +1,5 @@
 import { green, blue } from 'yanse';
-import { findAndRequirePackageJson } from "find-and-require-package-json";
+import { findAndRequirePackageJson } from 'find-and-require-package-json';
 
 // Function to display the version information
 export function displayVersion(): any {

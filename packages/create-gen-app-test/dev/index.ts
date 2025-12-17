@@ -1,22 +1,22 @@
-import * as fs from "fs";
-import { Inquirerer, ListQuestion } from "inquirerer";
-import minimist from "minimist";
-import * as path from "path";
+import * as fs from 'fs';
+import { Inquirerer, ListQuestion } from 'inquirerer';
+import minimist from 'minimist';
+import * as path from 'path';
 
-import { cloneRepo, extractVariables, promptUser, replaceVariables } from "create-gen-app";
+import { cloneRepo, extractVariables, promptUser, replaceVariables } from 'create-gen-app';
 
-const DEFAULT_REPO = "https://github.com/constructive-io/pgpm-boilerplates/";
-const OUTPUT_DIR = "./test-output";
+const DEFAULT_REPO = 'https://github.com/constructive-io/pgpm-boilerplates/';
+const OUTPUT_DIR = './test-output';
 
 const argv = minimist(process.argv.slice(2), {
   alias: {
-    r: "repo",
-    b: "branch",
-    p: "path",
-    t: "template",
-    o: "output",
+    r: 'repo',
+    b: 'branch',
+    p: 'path',
+    t: 'template',
+    o: 'output',
   },
-  string: ["repo", "branch", "path", "template", "output"],
+  string: ['repo', 'branch', 'path', 'template', 'output'],
   default: {
     repo: DEFAULT_REPO,
     output: OUTPUT_DIR,
@@ -24,7 +24,7 @@ const argv = minimist(process.argv.slice(2), {
 });
 
 async function main() {
-  console.log("🚀 create-gen-app development script\n");
+  console.log('🚀 create-gen-app development script\n');
 
   try {
     console.log(`Cloning template from ${argv.repo}...`);
@@ -33,19 +33,19 @@ async function main() {
     }
     const tempDir = await cloneRepo(argv.repo, { branch: argv.branch });
 
-    const configPath = path.join(tempDir, ".boilerplates.json");
+    const configPath = path.join(tempDir, '.boilerplates.json');
     const autoDir =
       argv.path === undefined && fs.existsSync(configPath)
         ? (() => {
             try {
-              const parsed = JSON.parse(fs.readFileSync(configPath, "utf8"));
-              return typeof parsed?.dir === "string" ? parsed.dir : undefined;
+              const parsed = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+              return typeof parsed?.dir === 'string' ? parsed.dir : undefined;
             } catch {
               return undefined;
             }
           })()
         : undefined;
-    const effectivePath = argv.path ?? autoDir ?? ".";
+    const effectivePath = argv.path ?? autoDir ?? '.';
 
     const templateDir = path.join(tempDir, effectivePath);
     if (!fs.existsSync(templateDir)) {
@@ -53,28 +53,28 @@ async function main() {
     }
     const folders = fs
       .readdirSync(templateDir, { withFileTypes: true })
-      .filter((dirent) => dirent.isDirectory() && !dirent.name.startsWith("."))
+      .filter((dirent) => dirent.isDirectory() && !dirent.name.startsWith('.'))
       .map((dirent) => dirent.name);
 
     if (folders.length === 0) {
-      throw new Error("No template folders found in repository");
+      throw new Error('No template folders found in repository');
     }
 
-    console.log(`\nFound ${folders.length} template(s): ${folders.join(", ")}\n`);
+    console.log(`\nFound ${folders.length} template(s): ${folders.join(', ')}\n`);
 
     let selectedFolder = argv.template;
     if (selectedFolder) {
       if (!folders.includes(selectedFolder)) {
         throw new Error(
-          `Template "${selectedFolder}" not found in ${argv.repo}${effectivePath === "." ? "" : `/${effectivePath}`}`
+          `Template "${selectedFolder}" not found in ${argv.repo}${effectivePath === '.' ? '' : `/${effectivePath}`}`
         );
       }
     } else {
       const inquirerer = new Inquirerer();
       const question: ListQuestion = {
-        type: "list",
-        name: "template",
-        message: "Which template would you like to use?",
+        type: 'list',
+        name: 'template',
+        message: 'Which template would you like to use?',
         options: folders,
         required: true,
       };
@@ -93,7 +93,7 @@ async function main() {
 
     const selectedTemplateDir = path.join(templateDir, selectedFolder);
 
-    console.log("Extracting template variables...");
+    console.log('Extracting template variables...');
     const extractedVariables = await extractVariables(selectedTemplateDir);
 
     console.log(`Found ${extractedVariables.fileReplacers.length} file replacers`);
@@ -102,7 +102,7 @@ async function main() {
       console.log(`Found ${extractedVariables.projectQuestions.questions.length} project questions`);
     }
 
-    console.log("\nPrompting for variable values...");
+    console.log('\nPrompting for variable values...');
     const variableAnswers = await promptUser(extractedVariables, {}, false);
 
     const absoluteOutputDir = path.resolve(argv.output);
@@ -114,14 +114,14 @@ async function main() {
     console.log(`\nGenerating project in ${absoluteOutputDir}...`);
     await replaceVariables(selectedTemplateDir, absoluteOutputDir, extractedVariables, variableAnswers);
 
-    console.log("\n✅ Project created successfully!");
+    console.log('\n✅ Project created successfully!');
     console.log(`📁 Output directory: ${absoluteOutputDir}\n`);
 
     if (fs.existsSync(tempDir)) {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   } catch (error) {
-    console.error("\n❌ Error:", error instanceof Error ? error.message : String(error));
+    console.error('\n❌ Error:', error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }

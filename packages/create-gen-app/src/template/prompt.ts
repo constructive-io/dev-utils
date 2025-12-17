@@ -1,8 +1,8 @@
-import { Inquirerer, Question } from "inquirerer";
+import { Inquirerer, Question } from 'inquirerer';
 
-import { ExtractedVariables } from "../types";
+import { ExtractedVariables } from '../types';
 
-const PLACEHOLDER_BOUNDARY = "____";
+const PLACEHOLDER_BOUNDARY = '____';
 
 /**
  * Generate questions from extracted variables
@@ -28,7 +28,7 @@ export function generateQuestions(
     if (!askedVariables.has(replacer.variable)) {
       questions.push({
         name: replacer.variable,
-        type: "text",
+        type: 'text',
         message: `Enter value for ${replacer.variable}:`,
         required: true
       });
@@ -40,7 +40,7 @@ export function generateQuestions(
     if (!askedVariables.has(replacer.variable)) {
       questions.push({
         name: replacer.variable,
-        type: "text",
+        type: 'text',
         message: `Enter value for ${replacer.variable}:`,
         required: true
       });
@@ -61,7 +61,7 @@ function normalizeQuestionName(name: string): string {
       -PLACEHOLDER_BOUNDARY.length
     );
   }
-  if (name.startsWith("__") && name.endsWith("__")) {
+  if (name.startsWith('__') && name.endsWith('__')) {
     return name.slice(2, -2);
   }
   return name;
@@ -98,7 +98,7 @@ export async function promptUser(
       ...promptAnswers,
     };
   } finally {
-    if (typeof (prompter as any).close === "function") {
+    if (typeof (prompter as any).close === 'function') {
       (prompter as any).close();
     }
   }

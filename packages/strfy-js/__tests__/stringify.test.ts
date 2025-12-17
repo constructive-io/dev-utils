@@ -26,7 +26,7 @@ it('handles complex nested objects with arrays', () => {
 
 it('uses single quotes for strings by default', () => {
   const obj = {
-    greeting: "Hello, world!"
+    greeting: 'Hello, world!'
   };
   const output = jsStringify(obj);
   expect(output).toMatchSnapshot();
@@ -34,7 +34,7 @@ it('uses single quotes for strings by default', () => {
 
 it('switches to backticks when single quotes are in the string', () => {
   const obj = {
-    message: "It's a wonderful day!"
+    message: 'It\'s a wonderful day!'
   };
   const output = jsStringify(obj);
   expect(output).toMatchSnapshot();
@@ -42,7 +42,7 @@ it('switches to backticks when single quotes are in the string', () => {
 
 it('uses double quotes when backticks and single quotes are present', () => {
   const obj = {
-    quote: "`This` is 'awesome'!"
+    quote: '`This` is \'awesome\'!'
   };
   const output = jsStringify(obj, { quotes: 'double' });
   expect(output).toMatchSnapshot();
@@ -50,7 +50,7 @@ it('uses double quotes when backticks and single quotes are present', () => {
 
 it('properly escapes strings when necessary', () => {
   const obj = {
-    complexString: "She said, \"That's `incredible`!\""
+    complexString: 'She said, "That\'s `incredible`!"'
   };
   const output = jsStringify(obj, { quotes: 'double' });
   expect(output).toMatchSnapshot();

@@ -1,4 +1,4 @@
-const minimatch = require("minimatch").minimatch;
+const minimatch = require('minimatch').minimatch;
 
 function dirname(path: string): string {
   return path.substring(0, path.lastIndexOf('/')) || '/';
@@ -65,20 +65,20 @@ test('0', () => {
     '/assets/*/denom_units',
     '/assets/*/base'
   ])).toEqual([
-    "/assets/*/base",
-    "/assets/*/denom_units",
-    "/assets/*/type_asset",
-    "/assets/*",
-    "/assets",
+    '/assets/*/base',
+    '/assets/*/denom_units',
+    '/assets/*/type_asset',
+    '/assets/*',
+    '/assets',
   ]);
 
   expect(expandPaths([
     '/chains/*',
     '/chains/*/codebase'
   ])).toEqual([
-    "/chains/*/codebase",
-    "/chains/*",
-    "/chains",
+    '/chains/*/codebase',
+    '/chains/*',
+    '/chains',
   ]);
 });
 

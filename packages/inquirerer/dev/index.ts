@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import minimist from 'minimist';
 
-import { Inquirerer } from "../src";
+import { Inquirerer } from '../src';
 import { AutocompleteQuestion, ConfirmQuestion, Question } from '../src/question';
 import { displayVersion } from '../src/utils';
 

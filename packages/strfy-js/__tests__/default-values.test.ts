@@ -1,4 +1,4 @@
-import { jsStringify, JSStringifyOptions, JSStringifySetterOptions } from "../src";
+import { jsStringify, JSStringifyOptions, JSStringifySetterOptions } from '../src';
 import { Asset, AssetList } from '../test-utils';
 import assetList from '../__fixtures__/assets.json';
 import assetList2 from '../__fixtures__/assets2.json';
@@ -8,7 +8,7 @@ it('defaultValue', () => {
     camelCase: true,
     space: 2,
     defaultValuesSetter: {
-      "/assets/*/type_asset": function (options: JSStringifySetterOptions<Asset, AssetList>): any {
+      '/assets/*/type_asset': function (options: JSStringifySetterOptions<Asset, AssetList>): any {
         const asset = options.obj;
         switch (true) {
           case asset.base.startsWith('factory/'):
@@ -44,7 +44,7 @@ it('defaultValue undefined', () => {
     camelCase: true,
     space: 2,
     defaultValuesSetter: {
-      "/assets/*/type_asset": function (options: JSStringifySetterOptions<Asset, AssetList>): any {
+      '/assets/*/type_asset': function (options: JSStringifySetterOptions<Asset, AssetList>): any {
         const asset = options.obj;
         switch (true) {
           case asset.base.startsWith('factory/'):

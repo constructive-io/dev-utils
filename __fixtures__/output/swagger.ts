@@ -3039,12 +3039,12 @@ export interface JSONSchemaProps {
   title?: string;
   type?: string;
   uniqueItems?: boolean;
-  "x-kubernetes-embedded-resource"?: boolean;
-  "x-kubernetes-int-or-string"?: boolean;
-  "x-kubernetes-list-map-keys"?: string[];
-  "x-kubernetes-list-type"?: string;
-  "x-kubernetes-map-type"?: string;
-  "x-kubernetes-preserve-unknown-fields"?: boolean;
+  'x-kubernetes-embedded-resource'?: boolean;
+  'x-kubernetes-int-or-string'?: boolean;
+  'x-kubernetes-list-map-keys'?: string[];
+  'x-kubernetes-list-type'?: string;
+  'x-kubernetes-map-type'?: string;
+  'x-kubernetes-preserve-unknown-fields'?: boolean;
 }
 export type JSONSchemaPropsOrArray = any;
 export type JSONSchemaPropsOrBool = any;

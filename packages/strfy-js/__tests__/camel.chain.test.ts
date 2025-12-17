@@ -1,4 +1,4 @@
-import { jsStringify } from "../src";
+import { jsStringify } from '../src';
 
 import chain from '../__fixtures__/chain.json';
 

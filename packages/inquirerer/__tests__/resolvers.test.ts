@@ -478,7 +478,7 @@ describe('Debug Mode', () => {
         await registry.resolve('test.error');
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(
-            "[inquirerer] Resolver 'test.error' failed:",
+            '[inquirerer] Resolver \'test.error\' failed:',
             expect.any(Error)
         );
     });

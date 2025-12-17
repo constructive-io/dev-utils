@@ -1,5 +1,5 @@
-import { minimatch } from "minimatch";
-import { jsStringify, JSStringifyOptions, JSStringifyReplacer, JSStringifyPropertyReplacerOptions, JSStringifySetterOptions } from "../src";
+import { minimatch } from 'minimatch';
+import { jsStringify, JSStringifyOptions, JSStringifyReplacer, JSStringifyPropertyReplacerOptions, JSStringifySetterOptions } from '../src';
 
 import assetList from '../__fixtures__/assets.json';
 
@@ -9,8 +9,8 @@ it('assetlist', () => {
     camelCase: true,
     space: 2,
     propertyRenameMap: {
-      "/assets/*/denom_units": "denominations",
-      "/assets/[0-1]/logo_URIs": "logos"
+      '/assets/*/denom_units': 'denominations',
+      '/assets/[0-1]/logo_URIs': 'logos'
     }
   };
 
@@ -34,8 +34,8 @@ it('replacer', () => {
     camelCase: true,
     space: 2,
     propertyRenameMap: {
-      "/assets/*/denom_units": "denominations",
-      "/assets/[0-1]/logo_URIs": "logos"
+      '/assets/*/denom_units': 'denominations',
+      '/assets/[0-1]/logo_URIs': 'logos'
     },
     propertyReplacer
   };

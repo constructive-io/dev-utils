@@ -20,7 +20,7 @@ export function escapeStringForSingleQuotes(str: string): string {
   str = str.replace(/\r/g, '\\r');
   str = str.replace(/\t/g, '\\t');
   // Escape only single quotes
-  str = str.replace(/'/g, "\\'");
+  str = str.replace(/'/g, '\\\'');
   return str;
 }
 
