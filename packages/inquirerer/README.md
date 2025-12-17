@@ -758,7 +758,7 @@ Inquirerer comes with several built-in resolvers ready to use:
 | `workspace.license` | License field from `package.json` | `"MIT"` |
 | `workspace.author` | Author name from `package.json` | `"Constructive"` |
 | `workspace.author.name` | Author name from `package.json` | `"Constructive"` |
-| `workspace.author.email` | Author email from `package.json` | `"pyramation@constructive.io"` |
+| `workspace.author.email` | Author email from `package.json` | `"email@example.org"` |
 
 ### Priority Order
 
