@@ -1,7 +1,7 @@
 {
   "name": "appstash",
   "version": "0.2.5",
-  "author": "Constructive <pyramation@constructive.io>",
+  "author": "Constructive <developers@constructive.io>",
   "description": "Simple, clean application directory resolution",
   "main": "index.js",
   "module": "esm/index.js",

@@ -1,7 +1,7 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import { runCli } from "../cli";
+import { runCli } from '../cli';
 import {
   TEST_BRANCH,
   TEST_REPO,
@@ -9,27 +9,33 @@ import {
   buildAnswers,
   cleanupWorkspace,
   createTempWorkspace,
-} from "../test-utils/integration-helpers";
+  resolveTemplateBaseDir,
+} from '../test-utils/integration-helpers';
 
 jest.setTimeout(180_000);
 
-describe("CLI integration via create-gen-app-test harness", () => {
-  it("generates a project using the real repo", async () => {
-    const workspace = createTempWorkspace("cli");
-    const answers = buildAnswers("cli");
+describe('CLI integration via create-gen-app-test harness', () => {
+  it('generates a project using the real repo', async () => {
+    const workspace = createTempWorkspace('cli');
+    const answers = buildAnswers('cli');
+    const { baseDir } = await resolveTemplateBaseDir(
+      TEST_REPO,
+      TEST_BRANCH,
+      'create-gen-app-test'
+    );
 
     const args = [
-      "--repo",
+      '--repo',
       TEST_REPO,
-      "--branch",
+      '--branch',
       TEST_BRANCH,
-      "--path",
-      ".",
-      "--template",
+      '--path',
+      baseDir,
+      '--template',
       TEST_TEMPLATE,
-      "--output",
+      '--output',
       workspace.outputDir,
-      "--no-tty",
+      '--no-tty',
     ];
 
     for (const [key, value] of Object.entries(answers)) {
@@ -46,30 +52,30 @@ describe("CLI integration via create-gen-app-test harness", () => {
       expect(result.template).toBe(TEST_TEMPLATE);
       expect(result.outputDir).toBe(path.resolve(workspace.outputDir));
 
-      const pkgPath = path.join(workspace.outputDir, "package.json");
+      const pkgPath = path.join(workspace.outputDir, 'package.json');
       expect(fs.existsSync(pkgPath)).toBe(true);
 
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
       expect(pkg.name).toBe(answers.packageIdentifier);
       expect(pkg.license).toBe(answers.license);
 
       const licenseContent = fs.readFileSync(
-        path.join(workspace.outputDir, "LICENSE"),
-        "utf8"
+        path.join(workspace.outputDir, 'LICENSE'),
+        'utf8'
       );
-      expect(licenseContent).toContain("MIT License");
+      expect(licenseContent).toContain('MIT License');
       expect(licenseContent).toContain(answers.fullName);
     } finally {
       cleanupWorkspace(workspace);
     }
   });
 
-  it("prints version and exits when --version is provided", async () => {
+  it('prints version and exits when --version is provided', async () => {
     const logSpy = jest
-      .spyOn(console, "log")
+      .spyOn(console, 'log')
       .mockImplementation(() => undefined);
 
-    await runCli(["--version"]);
+    await runCli(['--version']);
 
     expect(logSpy).toHaveBeenCalledWith(
       expect.stringMatching(/create-gen-app v/)

@@ -1,4 +1,4 @@
-import { camelCaseTransform, dirname, escapeStringForBacktickQuotes, escapeStringForDoubleQuotes, escapeStringForSingleQuotes, isSimpleKey, shouldInclude } from "./utils";
+import { camelCaseTransform, dirname, escapeStringForBacktickQuotes, escapeStringForDoubleQuotes, escapeStringForSingleQuotes, isSimpleKey, shouldInclude } from './utils';
 
 export interface JSStringifySetterOptions<ObjType, RootType> {
   currentKey: string;
@@ -46,7 +46,7 @@ export function chooseQuotes(str: string, preferred: 'single' | 'double' | 'back
     case 'backtick':
       return `\`${escapeStringForBacktickQuotes(str)}\``;
     default:
-      throw new Error("Invalid quote type specified.");
+      throw new Error('Invalid quote type specified.');
   }
 }
 
@@ -101,7 +101,7 @@ export function jsStringify(obj: any, options?: JSStringifyOptions): string {
 
   let indentLevel: number = 0;
 
-  const serialize = (root: any, obj: any, currentPath = ""): string => {
+  const serialize = (root: any, obj: any, currentPath = ''): string => {
     if (valueReplacer[''] instanceof Function) {
       obj = valueReplacer['']({
         currentKey: '',

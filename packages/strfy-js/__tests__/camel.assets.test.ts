@@ -1,4 +1,4 @@
-import { jsStringify } from "../src";
+import { jsStringify } from '../src';
 
 import assetList from '../__fixtures__/assets.json';
 

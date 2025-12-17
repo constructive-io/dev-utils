@@ -1,5 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
 const PLACEHOLDER_PATTERN = /{{(\w+)}}/g;
 
@@ -14,18 +14,18 @@ type LicenseTemplateMap = Record<string, string>;
 let cachedTemplates: LicenseTemplateMap | null = null;
 
 export type SupportedLicense = string;
-export const LICENSE_VALUE_KEYS = ["LICENSE", "license"];
+export const LICENSE_VALUE_KEYS = ['LICENSE', 'license'];
 export const LICENSE_AUTHOR_KEYS = [
-  "USERFULLNAME",
-  "AUTHOR",
-  "AUTHORFULLNAME",
-  "USERNAME",
-  "fullName",
-  "author",
-  "authorFullName",
-  "userName",
+  'USERFULLNAME',
+  'AUTHOR',
+  'AUTHORFULLNAME',
+  'USERNAME',
+  'fullName',
+  'author',
+  'authorFullName',
+  'userName',
 ];
-export const LICENSE_EMAIL_KEYS = ["USEREMAIL", "EMAIL", "email", "userEmail"];
+export const LICENSE_EMAIL_KEYS = ['USEREMAIL', 'EMAIL', 'email', 'userEmail'];
 
 export function isSupportedLicense(name: string): name is SupportedLicense {
   if (!name) {
@@ -49,20 +49,20 @@ export function renderLicense(
 
   const ctx: LicenseContext = {
     year: context.year ?? new Date().getFullYear().toString(),
-    author: context.author ?? "Unknown Author",
-    email: context.email ?? "",
+    author: context.author ?? 'Unknown Author',
+    email: context.email ?? '',
   };
 
-  const emailLine = ctx.email ? ` <${ctx.email}>` : "";
+  const emailLine = ctx.email ? ` <${ctx.email}>` : '';
 
   return template.replace(PLACEHOLDER_PATTERN, (_, rawKey: string) => {
     const key = rawKey.toUpperCase();
-    if (key === "EMAIL_LINE") {
+    if (key === 'EMAIL_LINE') {
       return emailLine;
     }
     const normalizedKey = key.toLowerCase() as keyof LicenseContext;
     const value = ctx[normalizedKey];
-    return value || "";
+    return value || '';
   });
 }
 
@@ -109,12 +109,12 @@ function loadLicenseTemplates(): LicenseTemplateMap {
       continue;
     }
 
-    if (path.extname(file).toLowerCase() !== ".txt") {
+    if (path.extname(file).toLowerCase() !== '.txt') {
       continue;
     }
 
     const key = path.basename(file, path.extname(file)).toUpperCase();
-    templates[key] = fs.readFileSync(fullPath, "utf8");
+    templates[key] = fs.readFileSync(fullPath, 'utf8');
   }
 
   cachedTemplates = templates;
@@ -123,8 +123,8 @@ function loadLicenseTemplates(): LicenseTemplateMap {
 
 function findTemplatesDir(): string | null {
   const candidates = [
-    path.resolve(__dirname, "..", "licenses-templates"),
-    path.resolve(__dirname, "licenses-templates"),
+    path.resolve(__dirname, '..', 'licenses-templates'),
+    path.resolve(__dirname, 'licenses-templates'),
   ];
 
   for (const candidate of candidates) {
@@ -142,7 +142,7 @@ function getAnswerValue(
 ): string | undefined {
   for (const key of keys) {
     const value = answers?.[key];
-    if (typeof value === "string" && value.trim() !== "") {
+    if (typeof value === 'string' && value.trim() !== '') {
       return value;
     }
   }

@@ -88,6 +88,18 @@ function parseAuthor(author: string | { name?: string; email?: string; url?: str
  * These resolve values from the nearest package.json in the current working directory.
  */
 export const workspaceResolvers: ResolverRegistry = {
+    'workspace.name': () => {
+        const pkg = findPackageJsonFromCwd();
+        if (!pkg) return undefined;
+        const url = getRepositoryUrl(pkg);
+        // Prefer repo slug when repository is set; fall back to package name
+        if (url) {
+            const parsed = parseGitHubUrl(url);
+            if (parsed.name) return parsed.name;
+        }
+        return pkg.name;
+    },
+
     'workspace.repo.name': () => {
         const pkg = findPackageJsonFromCwd();
         if (!pkg) return undefined;
@@ -102,6 +114,20 @@ export const workspaceResolvers: ResolverRegistry = {
         const url = getRepositoryUrl(pkg);
         if (!url) return undefined;
         return parseGitHubUrl(url).organization;
+    },
+
+    // Alias for repo.organization for template readability
+    'workspace.organization.name': () => {
+        const pkg = findPackageJsonFromCwd();
+        if (!pkg) return undefined;
+        const url = getRepositoryUrl(pkg);
+        if (!url) return undefined;
+        return parseGitHubUrl(url).organization;
+    },
+
+    'workspace.license': () => {
+        const pkg = findPackageJsonFromCwd();
+        return pkg?.license;
     },
 
     'workspace.author': () => {

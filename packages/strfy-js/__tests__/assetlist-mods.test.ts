@@ -1,4 +1,4 @@
-import { jsStringify, JSStringifyOptions, JSStringifyPropertyReplacerOptions, JSStringifySetterOptions } from "../src";
+import { jsStringify, JSStringifyOptions, JSStringifyPropertyReplacerOptions, JSStringifySetterOptions } from '../src';
 import assetList from '../__fixtures__/assetlist.schema.json';
 
 it('AssetList Modification', () => {

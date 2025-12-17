@@ -4029,12 +4029,12 @@ export interface JSONSchemaProps {
   title?: string;
   type?: string;
   uniqueItems?: boolean;
-  "x-kubernetes-embedded-resource"?: boolean;
-  "x-kubernetes-int-or-string"?: boolean;
-  "x-kubernetes-list-map-keys"?: string[];
-  "x-kubernetes-list-type"?: string;
-  "x-kubernetes-map-type"?: string;
-  "x-kubernetes-preserve-unknown-fields"?: boolean;
+  'x-kubernetes-embedded-resource'?: boolean;
+  'x-kubernetes-int-or-string'?: boolean;
+  'x-kubernetes-list-map-keys'?: string[];
+  'x-kubernetes-list-type'?: string;
+  'x-kubernetes-map-type'?: string;
+  'x-kubernetes-preserve-unknown-fields'?: boolean;
 }
 /* io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.JSONSchemaPropsOrArray */
 /* JSONSchemaPropsOrArray represents a value that can either be a JSONSchemaProps or an array of JSONSchemaProps. Mainly here for serialization purposes. */

@@ -2,7 +2,7 @@
   "name": "schema-typescript",
   "version": "0.13.10",
   "description": "Convert JSON Schema to TypeScript Definitions",
-  "author": "Constructive <pyramation@constructive.io>",
+  "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
   "main": "index.js",

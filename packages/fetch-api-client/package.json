@@ -1,7 +1,7 @@
 {
   "name": "@interweb/fetch-api-client",
   "version": "0.7.7",
-  "author": "Constructive <pyramation@constructive.io>",
+  "author": "Constructive <developers@constructive.io>",
   "description": "Universal Fetch-based HTTP client for Node.js and browsers",
   "main": "index.js",
   "module": "esm/index.js",

@@ -1,28 +1,28 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import { extractVariables } from "./template/extract";
-import { promptUser } from "./template/prompt";
-import { replaceVariables } from "./template/replace";
-import { CreateGenOptions } from "./types";
+import { extractVariables } from './template/extract';
+import { promptUser } from './template/prompt';
+import { replaceVariables } from './template/replace';
+import { CreateGenOptions } from './types';
 
 // Export new modular classes
-export * from "./cache/cache-manager";
-export * from "./cache/types";
-export * from "./git/git-cloner";
-export * from "./git/types";
-export * from "./template/templatizer";
-export * from "./template/types";
-export * from "./utils/npm-version-check";
-export * from "./utils/types";
+export * from './cache/cache-manager';
+export * from './cache/types';
+export * from './git/git-cloner';
+export * from './git/types';
+export * from './template/templatizer';
+export * from './template/types';
+export * from './utils/npm-version-check';
+export * from './utils/types';
 
 // Export template processing functions
-export * from "./template/extract";
-export * from "./template/prompt";
-export * from "./template/replace";
+export * from './template/extract';
+export * from './template/prompt';
+export * from './template/replace';
 
 // Export shared types
-export * from "./types";
+export * from './types';
 
 // DEPRECATED: Legacy exports for backward compatibility (will be removed in future)
 // Use CacheManager, GitCloner, and Templatizer classes instead

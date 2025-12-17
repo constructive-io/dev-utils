@@ -1,4 +1,4 @@
-import { jsStringify, JSStringifyOptions, JSStringifySetterOptions } from "../src";
+import { jsStringify, JSStringifyOptions, JSStringifySetterOptions } from '../src';
 import assetList from '../__fixtures__/assets.json';
 import { Asset, AssetList } from '../test-utils';
 import chain from '../__fixtures__/chain.json';
@@ -11,7 +11,7 @@ it('AssetList Modification', () => {
       '/assets/*/type_asset': 'asset_type'
     },
     defaultValuesSetter: {
-      "/assets/*/type_asset": function (options: JSStringifySetterOptions<Asset, AssetList>): any {
+      '/assets/*/type_asset': function (options: JSStringifySetterOptions<Asset, AssetList>): any {
         const asset = options.obj;
         switch (true) {
           case asset.base.startsWith('factory/'):

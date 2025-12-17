@@ -1,21 +1,21 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
 import {
   ContentReplacer,
   ExtractedVariables,
   FileReplacer,
   Questions,
-} from "../types";
+} from '../types';
 
-const PLACEHOLDER_BOUNDARY = "____";
+const PLACEHOLDER_BOUNDARY = '____';
 
 /**
  * Pattern to match ____variable____ in filenames and content
  */
 const VARIABLE_PATTERN = new RegExp(
   `${PLACEHOLDER_BOUNDARY}([A-Za-z_][A-Za-z0-9_]*)${PLACEHOLDER_BOUNDARY}`,
-  "g"
+  'g'
 );
 
 /**
@@ -36,8 +36,8 @@ export async function extractVariables(
     const relativePath = path.relative(templateDir, filePath);
 
     if (
-      relativePath === ".questions.json" ||
-      relativePath === ".questions.js"
+      relativePath === '.questions.json' ||
+      relativePath === '.questions.js'
     ) {
       return;
     }
@@ -51,7 +51,7 @@ export async function extractVariables(
           variable: varName,
           pattern: new RegExp(
             `${PLACEHOLDER_BOUNDARY}${varName}${PLACEHOLDER_BOUNDARY}`,
-            "g"
+            'g'
           ),
         });
       }
@@ -65,7 +65,7 @@ export async function extractVariables(
           variable: varName,
           pattern: new RegExp(
             `${PLACEHOLDER_BOUNDARY}${varName}${PLACEHOLDER_BOUNDARY}`,
-            "g"
+            'g'
           ),
         });
       }
@@ -90,14 +90,14 @@ async function extractFromFileContent(
   const variables = new Set<string>();
 
   return new Promise((resolve) => {
-    const stream = fs.createReadStream(filePath, { encoding: "utf8" });
-    let buffer = "";
+    const stream = fs.createReadStream(filePath, { encoding: 'utf8' });
+    let buffer = '';
 
-    stream.on("data", (chunk: string | Buffer) => {
+    stream.on('data', (chunk: string | Buffer) => {
       buffer += chunk.toString();
 
-      const lines = buffer.split("\n");
-      buffer = lines.pop() || ""; // Keep the last incomplete line in buffer
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || ''; // Keep the last incomplete line in buffer
 
       for (const line of lines) {
         const matches = line.matchAll(VARIABLE_PATTERN);
@@ -107,7 +107,7 @@ async function extractFromFileContent(
       }
     });
 
-    stream.on("end", () => {
+    stream.on('end', () => {
       const matches = buffer.matchAll(VARIABLE_PATTERN);
       for (const match of matches) {
         variables.add(match[1]);
@@ -115,7 +115,7 @@ async function extractFromFileContent(
       resolve(variables);
     });
 
-    stream.on("error", () => {
+    stream.on('error', () => {
       resolve(variables);
     });
   });
@@ -151,10 +151,10 @@ async function walkDirectory(
 async function loadProjectQuestions(
   templateDir: string
 ): Promise<Questions | null> {
-  const jsonPath = path.join(templateDir, ".questions.json");
+  const jsonPath = path.join(templateDir, '.questions.json');
   if (fs.existsSync(jsonPath)) {
     try {
-      const content = fs.readFileSync(jsonPath, "utf8");
+      const content = fs.readFileSync(jsonPath, 'utf8');
       const questions = JSON.parse(content);
       return validateQuestions(questions) ? normalizeQuestions(questions) : null;
     } catch (error) {
@@ -164,7 +164,7 @@ async function loadProjectQuestions(
     }
   }
 
-  const jsPath = path.join(templateDir, ".questions.js");
+  const jsPath = path.join(templateDir, '.questions.js');
   if (fs.existsSync(jsPath)) {
     try {
       const module = require(jsPath);
@@ -201,5 +201,5 @@ function normalizeQuestions(questions: Questions): Questions {
  * @returns True if valid, false otherwise
  */
 function validateQuestions(obj: any): obj is Questions {
-  return obj && typeof obj === "object" && Array.isArray(obj.questions);
+  return obj && typeof obj === 'object' && Array.isArray(obj.questions);
 }

@@ -1,7 +1,7 @@
 {
   "name": "@interweb/http-errors",
   "version": "0.2.7",
-  "author": "Constructive <pyramation@constructive.io>",
+  "author": "Constructive <developers@constructive.io>",
   "description": "HTTP error handling utilities for API clients",
   "main": "index.js",
   "module": "esm/index.js",

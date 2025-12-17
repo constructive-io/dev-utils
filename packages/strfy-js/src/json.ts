@@ -1,4 +1,4 @@
-import { jsStringify, JSStringifyOptions } from "./js";
+import { jsStringify, JSStringifyOptions } from './js';
 
 export interface JSONStringifyOptions extends Omit<JSStringifyOptions, 'json'> { }
 

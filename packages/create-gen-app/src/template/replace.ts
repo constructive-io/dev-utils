@@ -105,10 +105,10 @@ async function ensureLicenseFile(
   }
 
   const author =
-    findLicenseAuthor(answers) ?? "Unknown Author";
+    findLicenseAuthor(answers) ?? 'Unknown Author';
 
   const email =
-    findLicenseEmail(answers) ?? "";
+    findLicenseEmail(answers) ?? '';
 
   const content = renderLicense(selectedLicense, {
     author: String(author),

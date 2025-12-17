@@ -1,7 +1,7 @@
 {
   "name": "find-and-require-package-json",
   "version": "0.8.1",
-  "author": "Constructive <pyramation@constructive.io>",
+  "author": "Constructive <developers@constructive.io>",
   "description": "Find the package.json file from within a build/package",
   "main": "index.js",
   "module": "esm/index.js",

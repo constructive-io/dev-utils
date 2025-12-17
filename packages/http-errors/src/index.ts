@@ -60,7 +60,7 @@ export class ExpectationFailedError extends HTTPError {
   constructor() { super('Expectation Failed', 417); }
 }
 export class ImATeapotError extends HTTPError {
-  constructor() { super("I'm a Teapot", 418); }
+  constructor() { super('I\'m a Teapot', 418); }
 }
 export class MisdirectedRequestError extends HTTPError {
   constructor() { super('Misdirected Request', 421); }

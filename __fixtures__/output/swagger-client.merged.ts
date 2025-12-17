@@ -1,4 +1,4 @@
-import { APIClient, APIClientRequestOpts, APIClientOptions } from "@interweb/fetch-api-client";
+import { APIClient, APIClientRequestOpts, APIClientOptions } from '@interweb/fetch-api-client';
 export interface MutatingWebhook {
   admissionReviewVersions: string[];
   clientConfig: IoK8sApiAdmissionregistrationV1WebhookClientConfig;
@@ -3040,12 +3040,12 @@ export interface JSONSchemaProps {
   title?: string;
   type?: string;
   uniqueItems?: boolean;
-  "x-kubernetes-embedded-resource"?: boolean;
-  "x-kubernetes-int-or-string"?: boolean;
-  "x-kubernetes-list-map-keys"?: string[];
-  "x-kubernetes-list-type"?: string;
-  "x-kubernetes-map-type"?: string;
-  "x-kubernetes-preserve-unknown-fields"?: boolean;
+  'x-kubernetes-embedded-resource'?: boolean;
+  'x-kubernetes-int-or-string'?: boolean;
+  'x-kubernetes-list-map-keys'?: string[];
+  'x-kubernetes-list-type'?: string;
+  'x-kubernetes-map-type'?: string;
+  'x-kubernetes-preserve-unknown-fields'?: boolean;
 }
 export type JSONSchemaPropsOrArray = any;
 export type JSONSchemaPropsOrBool = any;
@@ -10203,7 +10203,7 @@ export class KubernetesClient extends APIClient {
     super(options);
   }
   async getSwaggerJSON() {
-    const path = "/openapi/v2";
+    const path = '/openapi/v2';
     return this.get(path);
   }
   async getServiceAccountIssuerOpenIDConfiguration(params: GetServiceAccountIssuerOpenIDConfigurationRequest, opts?: APIClientRequestOpts): Promise<string> {

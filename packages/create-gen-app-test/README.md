@@ -20,7 +20,7 @@ This package provides functionality to clone and cache template repositories for
 import { createFromCachedTemplate } from 'create-gen-app-test';
 
 const result = await createFromCachedTemplate({
-  templateUrl: 'https://github.com/launchql/pgpm-boilerplates',
+  templateUrl: 'https://github.com/constructive-io/pgpm-boilerplates',
   outputDir: './my-new-project',
   answers: {
     PROJECT_NAME: 'my-project',
@@ -65,7 +65,7 @@ Create project from cached template.
 
 The package includes comprehensive integration tests that:
 
-1. Clone real repositories from GitHub (default: https://github.com/launchql/pgpm-boilerplates)
+1. Clone real repositories from GitHub (default: https://github.com/constructive-io/pgpm-boilerplates)
 2. Cache templates using appstash
 3. Process templates with variable replacement
 4. Snapshot generated files and package.json files

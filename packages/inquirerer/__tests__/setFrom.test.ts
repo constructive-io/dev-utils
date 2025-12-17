@@ -149,6 +149,34 @@ describe('Inquirerer - setFrom feature', () => {
 
       expect(result).toEqual({ year: '1967' });
     });
+
+    it('should use workspace resolvers with setFrom', async () => {
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: true
+      });
+
+      const questions: Question[] = [
+        {
+          name: 'repoName',
+          type: 'text',
+          setFrom: 'workspace.name'
+        },
+        {
+          name: 'license',
+          type: 'text',
+          setFrom: 'workspace.license'
+        }
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      expect(result).toEqual({
+        repoName: 'dev-utils',
+        license: 'MIT'
+      });
+    });
   });
 
   describe('setFrom vs defaultFrom behavior', () => {

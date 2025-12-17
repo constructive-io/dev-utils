@@ -1,4 +1,4 @@
-import { APIClient, APIClientRequestOpts, APIClientOptions } from "@interweb/fetch-api-client";
+import { APIClient, APIClientRequestOpts, APIClientOptions } from '@interweb/fetch-api-client';
 /* io.k8s.api.admissionregistration.v1.MutatingWebhook */
 /* MutatingWebhook describes an admission webhook and the resources and operations it applies to. */
 export interface MutatingWebhook {
@@ -3362,12 +3362,12 @@ export interface JSONSchemaProps {
   title?: string;
   type?: string;
   uniqueItems?: boolean;
-  "x-kubernetes-embedded-resource"?: boolean;
-  "x-kubernetes-int-or-string"?: boolean;
-  "x-kubernetes-list-map-keys"?: string[];
-  "x-kubernetes-list-type"?: string;
-  "x-kubernetes-map-type"?: string;
-  "x-kubernetes-preserve-unknown-fields"?: boolean;
+  'x-kubernetes-embedded-resource'?: boolean;
+  'x-kubernetes-int-or-string'?: boolean;
+  'x-kubernetes-list-map-keys'?: string[];
+  'x-kubernetes-list-type'?: string;
+  'x-kubernetes-map-type'?: string;
+  'x-kubernetes-preserve-unknown-fields'?: boolean;
 }
 /* io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.JSONSchemaPropsOrArray */
 /* JSONSchemaPropsOrArray represents a value that can either be a JSONSchemaProps or an array of JSONSchemaProps. Mainly here for serialization purposes. */
@@ -11596,7 +11596,7 @@ export class KubernetesClient extends APIClient {
     super(options);
   }
   async getSwaggerJSON() {
-    const path = "/openapi/v2";
+    const path = '/openapi/v2';
     return this.get(path);
   }
   async getServiceAccountIssuerOpenIDConfiguration(params: GetServiceAccountIssuerOpenIDConfigurationRequest, opts?: APIClientRequestOpts): Promise<string> {

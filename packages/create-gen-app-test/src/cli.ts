@@ -1,50 +1,49 @@
 #!/usr/bin/env node
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import { Inquirerer, ListQuestion } from "inquirerer";
-import minimist, { ParsedArgs } from "minimist";
+import { Inquirerer, ListQuestion } from 'inquirerer';
+import minimist, { ParsedArgs } from 'minimist';
 
-import { CacheManager, GitCloner, checkNpmVersion } from "create-gen-app";
+import { CacheManager, GitCloner, checkNpmVersion } from 'create-gen-app';
 import { createFromTemplate } from './index';
 
-const DEFAULT_REPO = "https://github.com/launchql/pgpm-boilerplates.git";
-const DEFAULT_PATH = ".";
-const DEFAULT_OUTPUT_FALLBACK = "create-gen-app-output";
-const DEFAULT_TOOL_NAME = "create-gen-app-test";
+const DEFAULT_REPO = 'https://github.com/constructive-io/pgpm-boilerplates.git';
+const DEFAULT_OUTPUT_FALLBACK = 'create-gen-app-output';
+const DEFAULT_TOOL_NAME = 'create-gen-app-test';
 const DEFAULT_TTL = 604800000; // 1 week
 const DEFAULT_TTL_DAYS = DEFAULT_TTL / (24 * 60 * 60 * 1000);
 
 // Import package.json for version
-import * as createGenPackageJson from "create-gen-app/package.json";
-const PACKAGE_NAME = createGenPackageJson.name ?? "@launchql/cli";
-const PACKAGE_VERSION = createGenPackageJson.version ?? "0.0.0";
+import * as createGenPackageJson from 'create-gen-app/package.json';
+const PACKAGE_NAME = createGenPackageJson.name ?? '@launchql/cli';
+const PACKAGE_VERSION = createGenPackageJson.version ?? '0.0.0';
 
 const RESERVED_ARG_KEYS = new Set([
-  "_",
-  "repo",
-  "r",
-  "branch",
-  "b",
-  "path",
-  "p",
-  "template",
-  "t",
-  "output",
-  "o",
-  "force",
-  "f",
-  "help",
-  "h",
-  "version",
-  "v",
-  "no-tty",
-  "n",
-  "clear-cache",
-  "c",
-  "ttl",
-  "no-ttl",
+  '_',
+  'repo',
+  'r',
+  'branch',
+  'b',
+  'path',
+  'p',
+  'template',
+  't',
+  'output',
+  'o',
+  'force',
+  'f',
+  'help',
+  'h',
+  'version',
+  'v',
+  'no-tty',
+  'n',
+  'clear-cache',
+  'c',
+  'ttl',
+  'no-ttl',
 ]);
 
 export interface CliResult {
@@ -57,23 +56,22 @@ export async function runCli(
 ): Promise<CliResult | void> {
   const args = minimist(rawArgv, {
     alias: {
-      r: "repo",
-      b: "branch",
-      p: "path",
-      t: "template",
-      o: "output",
-      f: "force",
-      h: "help",
-      v: "version",
-      n: "no-tty",
-      c: "clear-cache",
+      r: 'repo',
+      b: 'branch',
+      p: 'path',
+      t: 'template',
+      o: 'output',
+      f: 'force',
+      h: 'help',
+      v: 'version',
+      n: 'no-tty',
+      c: 'clear-cache',
       // no alias for ttl to keep it explicit
     },
-    string: ["repo", "branch", "path", "template", "output", "ttl"],
-    boolean: ["force", "help", "version", "no-tty", "clear-cache", "no-ttl"],
+    string: ['repo', 'branch', 'path', 'template', 'output', 'ttl'],
+    boolean: ['force', 'help', 'version', 'no-tty', 'clear-cache', 'no-ttl'],
     default: {
       repo: DEFAULT_REPO,
-      path: DEFAULT_PATH,
     },
   });
 
@@ -109,10 +107,10 @@ export async function runCli(
   });
 
   // Handle --clear-cache
-  if (args["clear-cache"]) {
-    console.log("Clearing cache...");
+  if (args['clear-cache']) {
+    console.log('Clearing cache...');
     cacheManager.clearAll();
-    console.log("✨ Cache cleared successfully!");
+    console.log('✨ Cache cleared successfully!');
     return;
   }
 
@@ -154,24 +152,40 @@ export async function runCli(
   }
 
   try {
-    const selectionRoot = path.join(templateDir, args.path);
+    const userProvidedPath = typeof args.path === 'string';
+    const configPath = path.join(templateDir, '.boilerplates.json');
+    const autoDir =
+      !userProvidedPath && fs.existsSync(configPath)
+        ? (() => {
+            try {
+              const parsed = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+              return typeof parsed?.dir === 'string' ? parsed.dir : undefined;
+            } catch {
+              return undefined;
+            }
+          })()
+        : undefined;
+    const effectivePath =
+      (userProvidedPath ? args.path : undefined) ?? autoDir ?? '.';
+
+    const selectionRoot = path.join(templateDir, effectivePath);
     if (
       !fs.existsSync(selectionRoot) ||
       !fs.statSync(selectionRoot).isDirectory()
     ) {
       throw new Error(
-        `Template path "${args.path}" does not exist in ${args.repo}`
+        `Template path "${effectivePath}" does not exist in ${args.repo}`
       );
     }
 
     const templates = fs
       .readdirSync(selectionRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
+      .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
       .map((entry) => entry.name)
       .sort();
 
     if (templates.length === 0) {
-      throw new Error("No template folders found in repository");
+      throw new Error('No template folders found in repository');
     }
 
     let selectedTemplate: string | undefined = args.template;
@@ -180,7 +194,7 @@ export async function runCli(
       if (!templates.includes(selectedTemplate)) {
         throw new Error(
           `Template "${selectedTemplate}" not found in ${args.repo}${
-            args.path === "." ? "" : `/${args.path}`
+            effectivePath === '.' ? '' : `/${effectivePath}`
           }`
         );
       }
@@ -192,13 +206,13 @@ export async function runCli(
     }
 
     if (!selectedTemplate) {
-      throw new Error("Template selection failed");
+      throw new Error('Template selection failed');
     }
 
     const normalizedBasePath =
-      args.path === "." || args.path === "./"
-        ? ""
-        : args.path.replace(/^[./]+/, "").replace(/\/+$/, "");
+      effectivePath === '.' || effectivePath === './'
+        ? ''
+        : effectivePath.replace(/^[./]+/, '').replace(/\/+$/, '');
     const fromPath = normalizedBasePath
       ? path.join(normalizedBasePath, selectedTemplate)
       : selectedTemplate;
@@ -208,9 +222,9 @@ export async function runCli(
 
     const answerOverrides = extractAnswerOverrides(args);
     const noTty = Boolean(
-      args["no-tty"] ??
-        (args as Record<string, unknown>).noTty ??
-        (args as Record<string, unknown>).tty === false
+      args['no-tty'] ??
+      (args as Record<string, unknown>).noTty ??
+      (args as Record<string, unknown>).tty === false
     );
 
     // Use the createFromTemplate function which will use the same cache
@@ -242,7 +256,7 @@ Usage:
 Options:
   -r, --repo <url>         Git repository to clone (default: ${DEFAULT_REPO})
   -b, --branch <name>      Branch to use when cloning
-  -p, --path <dir>         Subdirectory that contains templates (default: .)
+  -p, --path <dir>         Subdirectory that contains templates (default: auto from .boilerplates.json, else .)
   -t, --template <name>    Template folder to use (will prompt if omitted)
   -o, --output <dir>       Output directory (defaults to ./<template>)
   -f, --force              Overwrite the output directory if it exists
@@ -268,9 +282,9 @@ function printVersion(): void {
 async function promptForTemplate(templates: string[]): Promise<string> {
   const prompter = new Inquirerer();
   const question: ListQuestion = {
-    type: "list",
-    name: "template",
-    message: "Which template would you like to use?",
+    type: 'list',
+    name: 'template',
+    message: 'Which template would you like to use?',
     options: templates,
     required: true,
   };
@@ -281,7 +295,7 @@ async function promptForTemplate(templates: string[]): Promise<string> {
     };
     return answers.template;
   } finally {
-    if (typeof (prompter as any).close === "function") {
+    if (typeof (prompter as any).close === 'function') {
       (prompter as any).close();
     }
   }
@@ -330,7 +344,9 @@ if (require.main === module) {
 }
 
 function resolveTtlOption(args: ParsedArgs): number | undefined {
-  const disableTtl = Boolean(args["no-ttl"] ?? (args as Record<string, unknown>).noTtl);
+  const disableTtl = Boolean(
+    args['no-ttl'] ?? (args as Record<string, unknown>).noTtl
+  );
   if (disableTtl) {
     return undefined;
   }
@@ -346,7 +362,7 @@ function resolveTtlOption(args: ParsedArgs): number | undefined {
 
   const ttlMs = Number(args.ttl);
   if (Number.isNaN(ttlMs) || ttlMs < 0) {
-    throw new Error("TTL must be a non-negative number of milliseconds");
+    throw new Error('TTL must be a non-negative number of milliseconds');
   }
 
   return ttlMs === 0 ? undefined : ttlMs;

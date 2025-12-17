@@ -1,4 +1,4 @@
-import { APIClient, APIClientRequestOpts, APIClientOptions } from "@interweb/fetch-api-client";
+import { APIClient, APIClientRequestOpts, APIClientOptions } from '@interweb/fetch-api-client';
 /* com.coreos.monitoring.v1.Alertmanager */
 /* The `Alertmanager` custom resource definition (CRD) defines a desired [Alertmanager](https://prometheus.io/docs/alerting) setup to run in a Kubernetes cluster. It allows to specify many options such as the number of replicas, persistent storage and many more.
 
@@ -163,7 +163,7 @@ export interface MonitoringCoreosComV1Alertmanager {
       };
     };
     alertmanagerConfigMatcherStrategy?: {
-      type?: "OnNamespace" | "OnNamespaceExceptForAlertmanagerNamespace" | "None";
+      type?: 'OnNamespace' | 'OnNamespaceExceptForAlertmanagerNamespace' | 'None';
     };
     alertmanagerConfigNamespaceSelector?: {
       matchExpressions?: {
@@ -274,8 +274,8 @@ export interface MonitoringCoreosComV1Alertmanager {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -316,8 +316,8 @@ export interface MonitoringCoreosComV1Alertmanager {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -405,8 +405,8 @@ export interface MonitoringCoreosComV1Alertmanager {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -487,8 +487,8 @@ export interface MonitoringCoreosComV1Alertmanager {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       server: {
@@ -795,7 +795,7 @@ export interface MonitoringCoreosComV1Alertmanager {
       }[];
       searches?: string[];
     };
-    dnsPolicy?: "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
+    dnsPolicy?: 'ClusterFirstWithHostNet' | 'ClusterFirst' | 'Default' | 'None';
     enableFeatures?: string[];
     enableServiceLinks?: boolean;
     externalUrl?: string;
@@ -806,7 +806,7 @@ export interface MonitoringCoreosComV1Alertmanager {
     }[];
     hostUsers?: boolean;
     image?: string;
-    imagePullPolicy?: "" | "Always" | "Never" | "IfNotPresent";
+    imagePullPolicy?: '' | 'Always' | 'Never' | 'IfNotPresent';
     imagePullSecrets?: {
       name?: string;
     }[];
@@ -1068,8 +1068,8 @@ export interface MonitoringCoreosComV1Alertmanager {
       maxSilences?: number;
     };
     listenLocal?: boolean;
-    logFormat?: "" | "logfmt" | "json";
-    logLevel?: "" | "debug" | "info" | "warn" | "error";
+    logFormat?: '' | 'logfmt' | 'json';
+    logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
     minReadySeconds?: number;
     nodeSelector?: {
       [key: string]: unknown;
@@ -1633,8 +1633,8 @@ export interface MonitoringCoreosComV1Alertmanager {
         headers?: {
           contentSecurityPolicy?: string;
           strictTransportSecurity?: string;
-          xContentTypeOptions?: "" | "NoSniff";
-          xFrameOptions?: "" | "Deny" | "SameOrigin";
+          xContentTypeOptions?: '' | 'NoSniff';
+          xFrameOptions?: '' | 'Deny' | 'SameOrigin';
           xXSSProtection?: string;
         };
         http2?: boolean;
@@ -1726,7 +1726,7 @@ export interface MonitoringCoreosComV1PodMonitor {
     };
     bodySizeLimit?: string;
     convertClassicHistogramsToNHCB?: boolean;
-    fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+    fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
     jobLabel?: string;
     keepDroppedTargets?: number;
     labelLimit?: number;
@@ -1771,7 +1771,7 @@ export interface MonitoringCoreosComV1PodMonitor {
       honorTimestamps?: boolean;
       interval?: string;
       metricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -1839,8 +1839,8 @@ export interface MonitoringCoreosComV1PodMonitor {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -1857,7 +1857,7 @@ export interface MonitoringCoreosComV1PodMonitor {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       relabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -1865,7 +1865,7 @@ export interface MonitoringCoreosComV1PodMonitor {
         sourceLabels?: string[];
         targetLabel?: string;
       }[];
-      scheme?: "http" | "https";
+      scheme?: 'http' | 'https';
       scrapeTimeout?: string;
       targetPort?: any;
       tlsConfig?: {
@@ -1899,8 +1899,8 @@ export interface MonitoringCoreosComV1PodMonitor {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       trackTimestampsStaleness?: boolean;
@@ -1909,7 +1909,7 @@ export interface MonitoringCoreosComV1PodMonitor {
     sampleLimit?: number;
     scrapeClass?: string;
     scrapeClassicHistograms?: boolean;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     selector: {
       matchExpressions?: {
         key: string;
@@ -1920,7 +1920,7 @@ export interface MonitoringCoreosComV1PodMonitor {
         [key: string]: unknown;
       };
     };
-    selectorMechanism?: "RelabelConfig" | "RoleSelector";
+    selectorMechanism?: 'RelabelConfig' | 'RoleSelector';
     targetLimit?: number;
   };
 }
@@ -1971,7 +1971,7 @@ export interface MonitoringCoreosComV1Probe {
       optional?: boolean;
     };
     convertClassicHistogramsToNHCB?: boolean;
-    fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+    fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
     interval?: string;
     jobName?: string;
     keepDroppedTargets?: number;
@@ -1979,7 +1979,7 @@ export interface MonitoringCoreosComV1Probe {
     labelNameLengthLimit?: number;
     labelValueLengthLimit?: number;
     metricRelabelings?: {
-      action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+      action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
       modulus?: number;
       regex?: string;
       replacement?: string;
@@ -2049,8 +2049,8 @@ export interface MonitoringCoreosComV1Probe {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       tokenUrl: string;
@@ -2067,13 +2067,13 @@ export interface MonitoringCoreosComV1Probe {
       };
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
-      scheme?: "http" | "https";
+      scheme?: 'http' | 'https';
       url: string;
     };
     sampleLimit?: number;
     scrapeClass?: string;
     scrapeClassicHistograms?: boolean;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     scrapeTimeout?: string;
     targetLimit?: number;
     targets?: {
@@ -2083,7 +2083,7 @@ export interface MonitoringCoreosComV1Probe {
           matchNames?: string[];
         };
         relabelingConfigs?: {
-          action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+          action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
           modulus?: number;
           regex?: string;
           replacement?: string;
@@ -2107,7 +2107,7 @@ export interface MonitoringCoreosComV1Probe {
           [key: string]: unknown;
         };
         relabelingConfigs?: {
-          action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+          action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
           modulus?: number;
           regex?: string;
           replacement?: string;
@@ -2149,8 +2149,8 @@ export interface MonitoringCoreosComV1Probe {
         name?: string;
         optional?: boolean;
       };
-      maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-      minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+      maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+      minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
       serverName?: string;
     };
   };
@@ -2345,7 +2345,7 @@ export interface MonitoringCoreosComV1Prometheus {
     alerting?: {
       alertmanagers: {
         alertRelabelings?: {
-          action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+          action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
           modulus?: number;
           regex?: string;
           replacement?: string;
@@ -2353,7 +2353,7 @@ export interface MonitoringCoreosComV1Prometheus {
           sourceLabels?: string[];
           targetLabel?: string;
         }[];
-        apiVersion?: "v1" | "V1" | "v2" | "V2";
+        apiVersion?: 'v1' | 'V1' | 'v2' | 'V2';
         authorization?: {
           credentials?: {
             key: string;
@@ -2387,7 +2387,7 @@ export interface MonitoringCoreosComV1Prometheus {
         proxyFromEnvironment?: boolean;
         proxyUrl?: string;
         relabelings?: {
-          action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+          action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
           modulus?: number;
           regex?: string;
           replacement?: string;
@@ -2446,8 +2446,8 @@ export interface MonitoringCoreosComV1Prometheus {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
       }[];
@@ -2518,8 +2518,8 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     };
@@ -2793,7 +2793,7 @@ export interface MonitoringCoreosComV1Prometheus {
       }[];
       searches?: string[];
     };
-    dnsPolicy?: "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
+    dnsPolicy?: 'ClusterFirstWithHostNet' | 'ClusterFirst' | 'Default' | 'None';
     enableAdminAPI?: boolean;
     enableFeatures?: string[];
     enableOTLPReceiver?: boolean;
@@ -2809,10 +2809,10 @@ export interface MonitoringCoreosComV1Prometheus {
     enforcedTargetLimit?: number;
     evaluationInterval?: string;
     excludedFromEnforcement?: {
-      group?: "monitoring.coreos.com";
+      group?: 'monitoring.coreos.com';
       name?: string;
       namespace: string;
-      resource: "prometheusrules" | "servicemonitors" | "podmonitors" | "probes" | "scrapeconfigs";
+      resource: 'prometheusrules' | 'servicemonitors' | 'podmonitors' | 'probes' | 'scrapeconfigs';
     }[];
     exemplars?: {
       maxSize?: number;
@@ -2829,7 +2829,7 @@ export interface MonitoringCoreosComV1Prometheus {
     hostUsers?: boolean;
     ignoreNamespaceSelectors?: boolean;
     image?: string;
-    imagePullPolicy?: "" | "Always" | "Never" | "IfNotPresent";
+    imagePullPolicy?: '' | 'Always' | 'Never' | 'IfNotPresent';
     imagePullSecrets?: {
       name?: string;
     }[];
@@ -3091,12 +3091,12 @@ export interface MonitoringCoreosComV1Prometheus {
     labelNameLengthLimit?: number;
     labelValueLengthLimit?: number;
     listenLocal?: boolean;
-    logFormat?: "" | "logfmt" | "json";
-    logLevel?: "" | "debug" | "info" | "warn" | "error";
+    logFormat?: '' | 'logfmt' | 'json';
+    logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
     maximumStartupDurationSeconds?: number;
     minReadySeconds?: number;
-    nameEscapingScheme?: "AllowUTF8" | "Underscores" | "Dots" | "Values";
-    nameValidationScheme?: "UTF8" | "Legacy";
+    nameEscapingScheme?: 'AllowUTF8' | 'Underscores' | 'Dots' | 'Values';
+    nameValidationScheme?: 'UTF8' | 'Legacy';
     nodeSelector?: {
       [key: string]: unknown;
     };
@@ -3106,7 +3106,7 @@ export interface MonitoringCoreosComV1Prometheus {
       keepIdentifyingResourceAttributes?: boolean;
       promoteAllResourceAttributes?: boolean;
       promoteResourceAttributes?: string[];
-      translationStrategy?: "NoUTF8EscapingWithSuffixes" | "UnderscoreEscapingWithSuffixes" | "NoTranslation";
+      translationStrategy?: 'NoUTF8EscapingWithSuffixes' | 'UnderscoreEscapingWithSuffixes' | 'NoTranslation';
     };
     overrideHonorLabels?: boolean;
     overrideHonorTimestamps?: boolean;
@@ -3179,7 +3179,7 @@ export interface MonitoringCoreosComV1Prometheus {
       timeout?: string;
     };
     queryLogFile?: string;
-    reloadStrategy?: "HTTP" | "ProcessSignal";
+    reloadStrategy?: 'HTTP' | 'ProcessSignal';
     remoteRead?: {
       authorization?: {
         credentials?: {
@@ -3270,8 +3270,8 @@ export interface MonitoringCoreosComV1Prometheus {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -3320,8 +3320,8 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
@@ -3337,7 +3337,7 @@ export interface MonitoringCoreosComV1Prometheus {
         type?: string;
       };
       azureAd?: {
-        cloud?: "AzureChina" | "AzureGovernment" | "AzurePublic";
+        cloud?: 'AzureChina' | 'AzureGovernment' | 'AzurePublic';
         managedIdentity?: {
           clientId: string;
         };
@@ -3373,7 +3373,7 @@ export interface MonitoringCoreosComV1Prometheus {
       headers?: {
         [key: string]: unknown;
       };
-      messageVersion?: "V1.0" | "V2.0";
+      messageVersion?: 'V1.0' | 'V2.0';
       metadataConfig?: {
         maxSamplesPerSend?: number;
         send?: boolean;
@@ -3440,8 +3440,8 @@ export interface MonitoringCoreosComV1Prometheus {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -3516,13 +3516,13 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
       writeRelabelConfigs?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -3531,7 +3531,7 @@ export interface MonitoringCoreosComV1Prometheus {
         targetLabel?: string;
       }[];
     }[];
-    remoteWriteReceiverMessageVersions?: ("V1.0" | "V2.0")[];
+    remoteWriteReceiverMessageVersions?: ('V1.0' | 'V2.0')[];
     replicaExternalLabelName?: string;
     replicas?: number;
     resources?: {
@@ -3595,9 +3595,9 @@ export interface MonitoringCoreosComV1Prometheus {
         type?: string;
       };
       default?: boolean;
-      fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+      fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
       metricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -3607,7 +3607,7 @@ export interface MonitoringCoreosComV1Prometheus {
       }[];
       name: string;
       relabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -3649,8 +3649,8 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -3677,7 +3677,7 @@ export interface MonitoringCoreosComV1Prometheus {
     };
     scrapeFailureLogFile?: string;
     scrapeInterval?: string;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     scrapeTimeout?: string;
     secrets?: string[];
     securityContext?: {
@@ -3715,7 +3715,7 @@ export interface MonitoringCoreosComV1Prometheus {
       };
     };
     serviceAccountName?: string;
-    serviceDiscoveryRole?: "Endpoints" | "EndpointSlice";
+    serviceDiscoveryRole?: 'Endpoints' | 'EndpointSlice';
     serviceMonitorNamespaceSelector?: {
       matchExpressions?: {
         key: string;
@@ -3742,7 +3742,7 @@ export interface MonitoringCoreosComV1Prometheus {
       retain?: {
         retentionPeriod: string;
       };
-      whenScaled?: "Retain" | "Delete";
+      whenScaled?: 'Retain' | 'Delete';
     };
     shards?: number;
     storage?: {
@@ -3917,15 +3917,15 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       httpListenLocal?: boolean;
       image?: string;
       listenLocal?: boolean;
-      logFormat?: "" | "logfmt" | "json";
-      logLevel?: "" | "debug" | "info" | "warn" | "error";
+      logFormat?: '' | 'logfmt' | 'json';
+      logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
       minTime?: string;
       objectStorageConfig?: {
         key: string;
@@ -3973,7 +3973,7 @@ export interface MonitoringCoreosComV1Prometheus {
       value?: string;
     }[];
     topologySpreadConstraints?: {
-      additionalLabelSelectors?: "OnResource" | "OnShard";
+      additionalLabelSelectors?: 'OnResource' | 'OnShard';
       labelSelector?: {
         matchExpressions?: {
           key: string;
@@ -3993,8 +3993,8 @@ export interface MonitoringCoreosComV1Prometheus {
       whenUnsatisfiable: string;
     }[];
     tracingConfig?: {
-      clientType?: "http" | "grpc";
-      compression?: "gzip";
+      clientType?: 'http' | 'grpc';
+      compression?: 'gzip';
       endpoint: string;
       headers?: {
         [key: string]: unknown;
@@ -4036,8 +4036,8 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     };
@@ -4381,8 +4381,8 @@ export interface MonitoringCoreosComV1Prometheus {
         headers?: {
           contentSecurityPolicy?: string;
           strictTransportSecurity?: string;
-          xContentTypeOptions?: "" | "NoSniff";
-          xFrameOptions?: "" | "Deny" | "SameOrigin";
+          xContentTypeOptions?: '' | 'NoSniff';
+          xFrameOptions?: '' | 'Deny' | 'SameOrigin';
           xXSSProtection?: string;
         };
         http2?: boolean;
@@ -4559,7 +4559,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
       honorTimestamps?: boolean;
       interval?: string;
       metricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -4627,8 +4627,8 @@ export interface MonitoringCoreosComV1ServiceMonitor {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -4644,7 +4644,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       relabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -4652,7 +4652,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
         sourceLabels?: string[];
         targetLabel?: string;
       }[];
-      scheme?: "http" | "https";
+      scheme?: 'http' | 'https';
       scrapeTimeout?: string;
       targetPort?: any;
       tlsConfig?: {
@@ -4689,13 +4689,13 @@ export interface MonitoringCoreosComV1ServiceMonitor {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       trackTimestampsStaleness?: boolean;
     }[];
-    fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+    fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
     jobLabel?: string;
     keepDroppedTargets?: number;
     labelLimit?: number;
@@ -4711,7 +4711,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
     sampleLimit?: number;
     scrapeClass?: string;
     scrapeClassicHistograms?: boolean;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     selector: {
       matchExpressions?: {
         key: string;
@@ -4722,7 +4722,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
         [key: string]: unknown;
       };
     };
-    selectorMechanism?: "RelabelConfig" | "RoleSelector";
+    selectorMechanism?: 'RelabelConfig' | 'RoleSelector';
     targetLabels?: string[];
     targetLimit?: number;
   };
@@ -4734,12 +4734,12 @@ export interface MonitoringCoreosComV1ServiceMonitor {
         observedGeneration?: number;
         reason?: string;
         status: string;
-        type: "Accepted";
+        type: 'Accepted';
       }[];
-      group: "monitoring.coreos.com";
+      group: 'monitoring.coreos.com';
       name: string;
       namespace: string;
-      resource: "prometheuses" | "prometheusagents";
+      resource: 'prometheuses' | 'prometheusagents';
     }[];
   };
 }
@@ -5188,16 +5188,16 @@ export interface MonitoringCoreosComV1ThanosRuler {
       }[];
       searches?: string[];
     };
-    dnsPolicy?: "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
+    dnsPolicy?: 'ClusterFirstWithHostNet' | 'ClusterFirst' | 'Default' | 'None';
     enableFeatures?: string[];
     enableServiceLinks?: boolean;
     enforcedNamespaceLabel?: string;
     evaluationInterval?: string;
     excludedFromEnforcement?: {
-      group?: "monitoring.coreos.com";
+      group?: 'monitoring.coreos.com';
       name?: string;
       namespace: string;
-      resource: "prometheusrules" | "servicemonitors" | "podmonitors" | "probes" | "scrapeconfigs";
+      resource: 'prometheusrules' | 'servicemonitors' | 'podmonitors' | 'probes' | 'scrapeconfigs';
     }[];
     externalPrefix?: string;
     grpcServerTlsConfig?: {
@@ -5234,8 +5234,8 @@ export interface MonitoringCoreosComV1ThanosRuler {
         name?: string;
         optional?: boolean;
       };
-      maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-      minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+      maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+      minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
       serverName?: string;
     };
     hostAliases?: {
@@ -5244,7 +5244,7 @@ export interface MonitoringCoreosComV1ThanosRuler {
     }[];
     hostUsers?: boolean;
     image?: string;
-    imagePullPolicy?: "" | "Always" | "Never" | "IfNotPresent";
+    imagePullPolicy?: '' | 'Always' | 'Never' | 'IfNotPresent';
     imagePullSecrets?: {
       name?: string;
     }[];
@@ -5505,8 +5505,8 @@ export interface MonitoringCoreosComV1ThanosRuler {
       [key: string]: unknown;
     };
     listenLocal?: boolean;
-    logFormat?: "" | "logfmt" | "json";
-    logLevel?: "" | "debug" | "info" | "warn" | "error";
+    logFormat?: '' | 'logfmt' | 'json';
+    logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
     minReadySeconds?: number;
     nodeSelector?: {
       [key: string]: unknown;
@@ -5550,7 +5550,7 @@ export interface MonitoringCoreosComV1ThanosRuler {
         type?: string;
       };
       azureAd?: {
-        cloud?: "AzureChina" | "AzureGovernment" | "AzurePublic";
+        cloud?: 'AzureChina' | 'AzureGovernment' | 'AzurePublic';
         managedIdentity?: {
           clientId: string;
         };
@@ -5586,7 +5586,7 @@ export interface MonitoringCoreosComV1ThanosRuler {
       headers?: {
         [key: string]: unknown;
       };
-      messageVersion?: "V1.0" | "V2.0";
+      messageVersion?: 'V1.0' | 'V2.0';
       metadataConfig?: {
         maxSamplesPerSend?: number;
         send?: boolean;
@@ -5653,8 +5653,8 @@ export interface MonitoringCoreosComV1ThanosRuler {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -5729,13 +5729,13 @@ export interface MonitoringCoreosComV1ThanosRuler {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
       writeRelabelConfigs?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -6314,8 +6314,8 @@ export interface MonitoringCoreosComV1ThanosRuler {
         headers?: {
           contentSecurityPolicy?: string;
           strictTransportSecurity?: string;
-          xContentTypeOptions?: "" | "NoSniff";
-          xFrameOptions?: "" | "Deny" | "SameOrigin";
+          xContentTypeOptions?: '' | 'NoSniff';
+          xFrameOptions?: '' | 'Deny' | 'SameOrigin';
           xXSSProtection?: string;
         };
         http2?: boolean;
@@ -6397,13 +6397,13 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
     inhibitRules?: {
       equal?: string[];
       sourceMatch?: {
-        matchType?: "!=" | "=" | "=~" | "!~";
+        matchType?: '!=' | '=' | '=~' | '!~';
         name: string;
         regex?: boolean;
         value?: string;
       }[];
       targetMatch?: {
-        matchType?: "!=" | "=" | "=~" | "!~";
+        matchType?: '!=' | '=' | '=~' | '!~';
         name: string;
         regex?: boolean;
         value?: string;
@@ -6521,8 +6521,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -6564,8 +6564,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -6629,8 +6629,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         to?: string;
@@ -6723,8 +6723,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -6766,8 +6766,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -6869,8 +6869,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -6912,8 +6912,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7028,8 +7028,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7071,8 +7071,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7188,8 +7188,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7231,8 +7231,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7351,8 +7351,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7394,8 +7394,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7523,8 +7523,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7566,8 +7566,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7708,8 +7708,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7751,8 +7751,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7862,8 +7862,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7905,8 +7905,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8029,8 +8029,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8072,14 +8072,14 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
         message?: string;
         messageThreadID?: number;
-        parseMode?: "MarkdownV2" | "Markdown" | "HTML";
+        parseMode?: 'MarkdownV2' | 'Markdown' | 'HTML';
         sendResolved?: boolean;
       }[];
       victoropsConfigs?: {
@@ -8181,8 +8181,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8224,8 +8224,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8324,8 +8324,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8367,8 +8367,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8464,8 +8464,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8507,8 +8507,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8618,8 +8618,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8661,8 +8661,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8681,7 +8681,7 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
       groupInterval?: string;
       groupWait?: string;
       matchers?: {
-        matchType?: "!=" | "=" | "=~" | "!~";
+        matchType?: '!=' | '=' | '=~' | '!~';
         name: string;
         regex?: boolean;
         value?: string;
@@ -8931,8 +8931,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     };
@@ -9204,7 +9204,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       }[];
       searches?: string[];
     };
-    dnsPolicy?: "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
+    dnsPolicy?: 'ClusterFirstWithHostNet' | 'ClusterFirst' | 'Default' | 'None';
     enableFeatures?: string[];
     enableOTLPReceiver?: boolean;
     enableRemoteWriteReceiver?: boolean;
@@ -9218,10 +9218,10 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
     enforcedSampleLimit?: number;
     enforcedTargetLimit?: number;
     excludedFromEnforcement?: {
-      group?: "monitoring.coreos.com";
+      group?: 'monitoring.coreos.com';
       name?: string;
       namespace: string;
-      resource: "prometheusrules" | "servicemonitors" | "podmonitors" | "probes" | "scrapeconfigs";
+      resource: 'prometheusrules' | 'servicemonitors' | 'podmonitors' | 'probes' | 'scrapeconfigs';
     }[];
     externalLabels?: {
       [key: string]: unknown;
@@ -9235,7 +9235,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
     hostUsers?: boolean;
     ignoreNamespaceSelectors?: boolean;
     image?: string;
-    imagePullPolicy?: "" | "Always" | "Never" | "IfNotPresent";
+    imagePullPolicy?: '' | 'Always' | 'Never' | 'IfNotPresent';
     imagePullSecrets?: {
       name?: string;
     }[];
@@ -9497,13 +9497,13 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
     labelNameLengthLimit?: number;
     labelValueLengthLimit?: number;
     listenLocal?: boolean;
-    logFormat?: "" | "logfmt" | "json";
-    logLevel?: "" | "debug" | "info" | "warn" | "error";
+    logFormat?: '' | 'logfmt' | 'json';
+    logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
     maximumStartupDurationSeconds?: number;
     minReadySeconds?: number;
-    mode?: "StatefulSet" | "DaemonSet";
-    nameEscapingScheme?: "AllowUTF8" | "Underscores" | "Dots" | "Values";
-    nameValidationScheme?: "UTF8" | "Legacy";
+    mode?: 'StatefulSet' | 'DaemonSet';
+    nameEscapingScheme?: 'AllowUTF8' | 'Underscores' | 'Dots' | 'Values';
+    nameValidationScheme?: 'UTF8' | 'Legacy';
     nodeSelector?: {
       [key: string]: unknown;
     };
@@ -9513,7 +9513,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       keepIdentifyingResourceAttributes?: boolean;
       promoteAllResourceAttributes?: boolean;
       promoteResourceAttributes?: string[];
-      translationStrategy?: "NoUTF8EscapingWithSuffixes" | "UnderscoreEscapingWithSuffixes" | "NoTranslation";
+      translationStrategy?: 'NoUTF8EscapingWithSuffixes' | 'UnderscoreEscapingWithSuffixes' | 'NoTranslation';
     };
     overrideHonorLabels?: boolean;
     overrideHonorTimestamps?: boolean;
@@ -9575,7 +9575,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       };
     };
     prometheusExternalLabelName?: string;
-    reloadStrategy?: "HTTP" | "ProcessSignal";
+    reloadStrategy?: 'HTTP' | 'ProcessSignal';
     remoteWrite?: {
       authorization?: {
         credentials?: {
@@ -9587,7 +9587,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
         type?: string;
       };
       azureAd?: {
-        cloud?: "AzureChina" | "AzureGovernment" | "AzurePublic";
+        cloud?: 'AzureChina' | 'AzureGovernment' | 'AzurePublic';
         managedIdentity?: {
           clientId: string;
         };
@@ -9623,7 +9623,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       headers?: {
         [key: string]: unknown;
       };
-      messageVersion?: "V1.0" | "V2.0";
+      messageVersion?: 'V1.0' | 'V2.0';
       metadataConfig?: {
         maxSamplesPerSend?: number;
         send?: boolean;
@@ -9690,8 +9690,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -9766,13 +9766,13 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
       writeRelabelConfigs?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -9781,7 +9781,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
         targetLabel?: string;
       }[];
     }[];
-    remoteWriteReceiverMessageVersions?: ("V1.0" | "V2.0")[];
+    remoteWriteReceiverMessageVersions?: ('V1.0' | 'V2.0')[];
     replicaExternalLabelName?: string;
     replicas?: number;
     resources?: {
@@ -9815,9 +9815,9 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
         type?: string;
       };
       default?: boolean;
-      fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+      fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
       metricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -9827,7 +9827,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       }[];
       name: string;
       relabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -9869,8 +9869,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -9897,7 +9897,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
     };
     scrapeFailureLogFile?: string;
     scrapeInterval?: string;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     scrapeTimeout?: string;
     secrets?: string[];
     securityContext?: {
@@ -9935,7 +9935,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       };
     };
     serviceAccountName?: string;
-    serviceDiscoveryRole?: "Endpoints" | "EndpointSlice";
+    serviceDiscoveryRole?: 'Endpoints' | 'EndpointSlice';
     serviceMonitorNamespaceSelector?: {
       matchExpressions?: {
         key: string;
@@ -10093,7 +10093,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       value?: string;
     }[];
     topologySpreadConstraints?: {
-      additionalLabelSelectors?: "OnResource" | "OnShard";
+      additionalLabelSelectors?: 'OnResource' | 'OnShard';
       labelSelector?: {
         matchExpressions?: {
           key: string;
@@ -10113,8 +10113,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       whenUnsatisfiable: string;
     }[];
     tracingConfig?: {
-      clientType?: "http" | "grpc";
-      compression?: "gzip";
+      clientType?: 'http' | 'grpc';
+      compression?: 'gzip';
       endpoint: string;
       headers?: {
         [key: string]: unknown;
@@ -10156,8 +10156,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     };
@@ -10501,8 +10501,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
         headers?: {
           contentSecurityPolicy?: string;
           strictTransportSecurity?: string;
-          xContentTypeOptions?: "" | "NoSniff";
-          xFrameOptions?: "" | "Deny" | "SameOrigin";
+          xContentTypeOptions?: '' | 'NoSniff';
+          xFrameOptions?: '' | 'Deny' | 'SameOrigin';
           xXSSProtection?: string;
         };
         http2?: boolean;
@@ -10601,7 +10601,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       type?: string;
     };
     azureSDConfigs?: {
-      authenticationMethod?: "OAuth" | "ManagedIdentity" | "SDK";
+      authenticationMethod?: 'OAuth' | 'ManagedIdentity' | 'SDK';
       authorization?: {
         credentials?: {
           key: string;
@@ -10691,8 +10691,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -10738,8 +10738,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -10845,8 +10845,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -10859,7 +10859,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       refreshInterval?: string;
-      scheme?: "HTTP" | "HTTPS";
+      scheme?: 'HTTP' | 'HTTPS';
       server: string;
       services?: string[];
       tagSeparator?: string;
@@ -10895,8 +10895,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       tokenRef?: {
@@ -10977,8 +10977,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11021,8 +11021,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11030,7 +11030,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       names: string[];
       port?: number;
       refreshInterval?: string;
-      type?: "A" | "AAAA" | "MX" | "NS" | "SRV";
+      type?: 'A' | 'AAAA' | 'MX' | 'NS' | 'SRV';
     }[];
     dockerSDConfigs?: {
       authorization?: {
@@ -11122,8 +11122,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11166,8 +11166,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11259,8 +11259,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11272,7 +11272,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       refreshInterval?: string;
-      role: "Services" | "Tasks" | "Nodes";
+      role: 'Services' | 'Tasks' | 'Nodes';
       tlsConfig?: {
         ca?: {
           configMap?: {
@@ -11304,8 +11304,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11367,8 +11367,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11457,8 +11457,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11501,12 +11501,12 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
-    fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+    fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
     fileSDConfigs?: {
       files: string[];
       refreshInterval?: string;
@@ -11603,8 +11603,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11616,7 +11616,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       refreshInterval?: string;
-      role: "hcloud" | "Hcloud" | "robot" | "Robot";
+      role: 'hcloud' | 'Hcloud' | 'robot' | 'Robot';
       tlsConfig?: {
         ca?: {
           configMap?: {
@@ -11648,8 +11648,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11738,8 +11738,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11781,8 +11781,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
@@ -11859,8 +11859,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11903,8 +11903,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12001,8 +12001,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12012,11 +12012,11 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       };
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
-      role: "Pod" | "Endpoints" | "Ingress" | "Service" | "Node" | "EndpointSlice";
+      role: 'Pod' | 'Endpoints' | 'Ingress' | 'Service' | 'Node' | 'EndpointSlice';
       selectors?: {
         field?: string;
         label?: string;
-        role: "Pod" | "Endpoints" | "Ingress" | "Service" | "Node" | "EndpointSlice";
+        role: 'Pod' | 'Endpoints' | 'Ingress' | 'Service' | 'Node' | 'EndpointSlice';
       }[];
       tlsConfig?: {
         ca?: {
@@ -12049,8 +12049,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12139,8 +12139,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12183,8 +12183,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12280,8 +12280,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12331,8 +12331,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12407,8 +12407,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12453,13 +12453,13 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
     metricRelabelings?: {
-      action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+      action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
       modulus?: number;
       regex?: string;
       replacement?: string;
@@ -12468,8 +12468,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       targetLabel?: string;
     }[];
     metricsPath?: string;
-    nameEscapingScheme?: "AllowUTF8" | "Underscores" | "Dots" | "Values";
-    nameValidationScheme?: "UTF8" | "Legacy";
+    nameEscapingScheme?: 'AllowUTF8' | 'Underscores' | 'Dots' | 'Values';
+    nameValidationScheme?: 'UTF8' | 'Legacy';
     nativeHistogramBucketLimit?: number;
     nativeHistogramMinBucketFactor?: any;
     noProxy?: string;
@@ -12558,8 +12558,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12604,8 +12604,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12668,8 +12668,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       tokenUrl: string;
@@ -12683,7 +12683,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
         name?: string;
         optional?: boolean;
       };
-      availability?: "Public" | "public" | "Admin" | "admin" | "Internal" | "internal";
+      availability?: 'Public' | 'public' | 'Admin' | 'admin' | 'Internal' | 'internal';
       domainID?: string;
       domainName?: string;
       identityEndpoint?: string;
@@ -12697,7 +12697,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       projectName?: string;
       refreshInterval?: string;
       region: string;
-      role: "Instance" | "Hypervisor" | "LoadBalancer";
+      role: 'Instance' | 'Hypervisor' | 'LoadBalancer';
       tlsConfig?: {
         ca?: {
           configMap?: {
@@ -12729,8 +12729,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       userid?: string;
@@ -12844,8 +12844,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12889,14 +12889,14 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
     }[];
     relabelings?: {
-      action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+      action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
       modulus?: number;
       regex?: string;
       replacement?: string;
@@ -12920,7 +12920,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       refreshInterval?: string;
-      role: "Instance" | "Baremetal";
+      role: 'Instance' | 'Baremetal';
       secretKey: {
         key: string;
         name?: string;
@@ -12958,17 +12958,17 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       zone?: string;
     }[];
-    scheme?: "HTTP" | "HTTPS";
+    scheme?: 'HTTP' | 'HTTPS';
     scrapeClass?: string;
     scrapeClassicHistograms?: boolean;
     scrapeInterval?: string;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     scrapeTimeout?: string;
     staticConfigs?: {
       labels?: {
@@ -13008,8 +13008,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
         name?: string;
         optional?: boolean;
       };
-      maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-      minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+      maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+      minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
       serverName?: string;
     };
     trackTimestampsStaleness?: boolean;
@@ -14353,7 +14353,7 @@ export interface AcmeCertManagerIoV1Challenge {
             key?: string;
             name: string;
           };
-          environment?: "AzurePublicCloud" | "AzureChinaCloud" | "AzureGermanCloud" | "AzureUSGovernmentCloud";
+          environment?: 'AzurePublicCloud' | 'AzureChinaCloud' | 'AzureGermanCloud' | 'AzureUSGovernmentCloud';
           hostedZoneName?: string;
           managedIdentity?: {
             clientID?: string;
@@ -14383,7 +14383,7 @@ export interface AcmeCertManagerIoV1Challenge {
           };
           email?: string;
         };
-        cnameStrategy?: "None" | "Follow";
+        cnameStrategy?: 'None' | 'Follow';
         digitalocean?: {
           tokenSecretRef: {
             key?: string;
@@ -14860,7 +14860,7 @@ export interface AcmeCertManagerIoV1Challenge {
       };
     };
     token: string;
-    type: "HTTP-01" | "DNS-01";
+    type: 'HTTP-01' | 'DNS-01';
     url: string;
     wildcard?: boolean;
   };
@@ -14868,7 +14868,7 @@ export interface AcmeCertManagerIoV1Challenge {
     presented?: boolean;
     processing?: boolean;
     reason?: string;
-    state?: "valid" | "ready" | "pending" | "processing" | "invalid" | "expired" | "errored";
+    state?: 'valid' | 'ready' | 'pending' | 'processing' | 'invalid' | 'expired' | 'errored';
   };
 }
 /* io.cert-manager.acme.v1.ChallengeList */
@@ -14905,7 +14905,7 @@ export interface AcmeCertManagerIoV1Order {
         url: string;
       }[];
       identifier?: string;
-      initialState?: "valid" | "ready" | "pending" | "processing" | "invalid" | "expired" | "errored";
+      initialState?: 'valid' | 'ready' | 'pending' | 'processing' | 'invalid' | 'expired' | 'errored';
       url: string;
       wildcard?: boolean;
     }[];
@@ -14913,7 +14913,7 @@ export interface AcmeCertManagerIoV1Order {
     failureTime?: string;
     finalizeURL?: string;
     reason?: string;
-    state?: "valid" | "ready" | "pending" | "processing" | "invalid" | "expired" | "errored";
+    state?: 'valid' | 'ready' | 'pending' | 'processing' | 'invalid' | 'expired' | 'errored';
     url?: string;
   };
 }
@@ -14936,7 +14936,7 @@ export interface CertManagerIoV1Certificate {
   metadata?: ObjectMeta;
   spec?: {
     additionalOutputFormats?: {
-      type: "DER" | "CombinedPEM";
+      type: 'DER' | 'CombinedPEM';
     }[];
     commonName?: string;
     dnsNames?: string[];
@@ -14967,7 +14967,7 @@ export interface CertManagerIoV1Certificate {
           key?: string;
           name: string;
         };
-        profile?: "LegacyRC2" | "LegacyDES" | "Modern2023";
+        profile?: 'LegacyRC2' | 'LegacyDES' | 'Modern2023';
       };
     };
     literalSubject?: string;
@@ -14991,9 +14991,9 @@ export interface CertManagerIoV1Certificate {
       utf8Value?: string;
     }[];
     privateKey?: {
-      algorithm?: "RSA" | "ECDSA" | "Ed25519";
-      encoding?: "PKCS1" | "PKCS8";
-      rotationPolicy?: "Never" | "Always";
+      algorithm?: 'RSA' | 'ECDSA' | 'Ed25519';
+      encoding?: 'PKCS1' | 'PKCS8';
+      rotationPolicy?: 'Never' | 'Always';
       size?: number;
     };
     renewBefore?: string;
@@ -15019,7 +15019,7 @@ export interface CertManagerIoV1Certificate {
       streetAddresses?: string[];
     };
     uris?: string[];
-    usages?: ("signing" | "digital signature" | "content commitment" | "key encipherment" | "key agreement" | "data encipherment" | "cert sign" | "crl sign" | "encipher only" | "decipher only" | "any" | "server auth" | "client auth" | "code signing" | "email protection" | "s/mime" | "ipsec end system" | "ipsec tunnel" | "ipsec user" | "timestamping" | "ocsp signing" | "microsoft sgc" | "netscape sgc")[];
+    usages?: ('signing' | 'digital signature' | 'content commitment' | 'key encipherment' | 'key agreement' | 'data encipherment' | 'cert sign' | 'crl sign' | 'encipher only' | 'decipher only' | 'any' | 'server auth' | 'client auth' | 'code signing' | 'email protection' | 's/mime' | 'ipsec end system' | 'ipsec tunnel' | 'ipsec user' | 'timestamping' | 'ocsp signing' | 'microsoft sgc' | 'netscape sgc')[];
   };
   status?: {
     conditions?: {
@@ -15027,7 +15027,7 @@ export interface CertManagerIoV1Certificate {
       message?: string;
       observedGeneration?: number;
       reason?: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
     failedIssuanceAttempts?: number;
@@ -15075,7 +15075,7 @@ export interface CertManagerIoV1CertificateRequest {
     };
     request: string;
     uid?: string;
-    usages?: ("signing" | "digital signature" | "content commitment" | "key encipherment" | "key agreement" | "data encipherment" | "cert sign" | "crl sign" | "encipher only" | "decipher only" | "any" | "server auth" | "client auth" | "code signing" | "email protection" | "s/mime" | "ipsec end system" | "ipsec tunnel" | "ipsec user" | "timestamping" | "ocsp signing" | "microsoft sgc" | "netscape sgc")[];
+    usages?: ('signing' | 'digital signature' | 'content commitment' | 'key encipherment' | 'key agreement' | 'data encipherment' | 'cert sign' | 'crl sign' | 'encipher only' | 'decipher only' | 'any' | 'server auth' | 'client auth' | 'code signing' | 'email protection' | 's/mime' | 'ipsec end system' | 'ipsec tunnel' | 'ipsec user' | 'timestamping' | 'ocsp signing' | 'microsoft sgc' | 'netscape sgc')[];
     username?: string;
   };
   status?: {
@@ -15085,7 +15085,7 @@ export interface CertManagerIoV1CertificateRequest {
       lastTransitionTime?: string;
       message?: string;
       reason?: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
     failureTime?: string;
@@ -15116,7 +15116,7 @@ export interface CertManagerIoV1ClusterIssuer {
       email?: string;
       enableDurationFeature?: boolean;
       externalAccountBinding?: {
-        keyAlgorithm?: "HS256" | "HS384" | "HS512";
+        keyAlgorithm?: 'HS256' | 'HS384' | 'HS512';
         keyID: string;
         keySecretRef: {
           key?: string;
@@ -15160,7 +15160,7 @@ export interface CertManagerIoV1ClusterIssuer {
               key?: string;
               name: string;
             };
-            environment?: "AzurePublicCloud" | "AzureChinaCloud" | "AzureGermanCloud" | "AzureUSGovernmentCloud";
+            environment?: 'AzurePublicCloud' | 'AzureChinaCloud' | 'AzureGermanCloud' | 'AzureUSGovernmentCloud';
             hostedZoneName?: string;
             managedIdentity?: {
               clientID?: string;
@@ -15190,7 +15190,7 @@ export interface CertManagerIoV1ClusterIssuer {
             };
             email?: string;
           };
-          cnameStrategy?: "None" | "Follow";
+          cnameStrategy?: 'None' | 'Follow';
           digitalocean?: {
             tokenSecretRef: {
               key?: string;
@@ -15758,7 +15758,7 @@ export interface CertManagerIoV1ClusterIssuer {
       message?: string;
       observedGeneration?: number;
       reason?: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
   };
@@ -15787,7 +15787,7 @@ export interface CertManagerIoV1Issuer {
       email?: string;
       enableDurationFeature?: boolean;
       externalAccountBinding?: {
-        keyAlgorithm?: "HS256" | "HS384" | "HS512";
+        keyAlgorithm?: 'HS256' | 'HS384' | 'HS512';
         keyID: string;
         keySecretRef: {
           key?: string;
@@ -15831,7 +15831,7 @@ export interface CertManagerIoV1Issuer {
               key?: string;
               name: string;
             };
-            environment?: "AzurePublicCloud" | "AzureChinaCloud" | "AzureGermanCloud" | "AzureUSGovernmentCloud";
+            environment?: 'AzurePublicCloud' | 'AzureChinaCloud' | 'AzureGermanCloud' | 'AzureUSGovernmentCloud';
             hostedZoneName?: string;
             managedIdentity?: {
               clientID?: string;
@@ -15861,7 +15861,7 @@ export interface CertManagerIoV1Issuer {
             };
             email?: string;
           };
-          cnameStrategy?: "None" | "Follow";
+          cnameStrategy?: 'None' | 'Follow';
           digitalocean?: {
             tokenSecretRef: {
               key?: string;
@@ -16429,7 +16429,7 @@ export interface CertManagerIoV1Issuer {
       message?: string;
       observedGeneration?: number;
       reason?: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
   };
@@ -16452,7 +16452,7 @@ export interface PostgresqlCnpgIoV1Backup {
     cluster: {
       name: string;
     };
-    method?: "barmanObjectStore" | "volumeSnapshot" | "plugin";
+    method?: 'barmanObjectStore' | 'volumeSnapshot' | 'plugin';
     online?: boolean;
     onlineConfiguration?: {
       immediateCheckpoint?: boolean;
@@ -16464,7 +16464,7 @@ export interface PostgresqlCnpgIoV1Backup {
         [key: string]: unknown;
       };
     };
-    target?: "primary" | "prefer-standby";
+    target?: 'primary' | 'prefer-standby';
   };
   status?: {
     azureCredentials?: {
@@ -16750,8 +16750,8 @@ export interface PostgresqlCnpgIoV1Cluster {
         };
         data?: {
           additionalCommandArgs?: string[];
-          compression?: "bzip2" | "gzip" | "snappy";
-          encryption?: "AES256" | "aws:kms";
+          compression?: 'bzip2' | 'gzip' | 'snappy';
+          encryption?: 'AES256' | 'aws:kms';
           immediateCheckpoint?: boolean;
           jobs?: number;
         };
@@ -16796,14 +16796,14 @@ export interface PostgresqlCnpgIoV1Cluster {
         };
         wal?: {
           archiveAdditionalCommandArgs?: string[];
-          compression?: "bzip2" | "gzip" | "lz4" | "snappy" | "xz" | "zstd";
-          encryption?: "AES256" | "aws:kms";
+          compression?: 'bzip2' | 'gzip' | 'lz4' | 'snappy' | 'xz' | 'zstd';
+          encryption?: 'AES256' | 'aws:kms';
           maxParallel?: number;
           restoreAdditionalCommandArgs?: string[];
         };
       };
       retentionPolicy?: string;
-      target?: "primary" | "prefer-standby";
+      target?: 'primary' | 'prefer-standby';
       volumeSnapshot?: {
         annotations?: {
           [key: string]: unknown;
@@ -16817,7 +16817,7 @@ export interface PostgresqlCnpgIoV1Cluster {
           immediateCheckpoint?: boolean;
           waitForArchive?: boolean;
         };
-        snapshotOwnerReference?: "none" | "cluster" | "backup";
+        snapshotOwnerReference?: 'none' | 'cluster' | 'backup';
         tablespaceClassName?: {
           [key: string]: unknown;
         };
@@ -16842,7 +16842,7 @@ export interface PostgresqlCnpgIoV1Cluster {
           source: {
             externalCluster: string;
           };
-          type: "microservice" | "monolith";
+          type: 'microservice' | 'monolith';
         };
         locale?: string;
         localeCType?: string;
@@ -17053,8 +17053,8 @@ export interface PostgresqlCnpgIoV1Cluster {
         };
         data?: {
           additionalCommandArgs?: string[];
-          compression?: "bzip2" | "gzip" | "snappy";
-          encryption?: "AES256" | "aws:kms";
+          compression?: 'bzip2' | 'gzip' | 'snappy';
+          encryption?: 'AES256' | 'aws:kms';
           immediateCheckpoint?: boolean;
           jobs?: number;
         };
@@ -17099,8 +17099,8 @@ export interface PostgresqlCnpgIoV1Cluster {
         };
         wal?: {
           archiveAdditionalCommandArgs?: string[];
-          compression?: "bzip2" | "gzip" | "lz4" | "snappy" | "xz" | "zstd";
-          encryption?: "AES256" | "aws:kms";
+          compression?: 'bzip2' | 'gzip' | 'lz4' | 'snappy' | 'xz' | 'zstd';
+          encryption?: 'AES256' | 'aws:kms';
           maxParallel?: number;
           restoreAdditionalCommandArgs?: string[];
         };
@@ -17160,7 +17160,7 @@ export interface PostgresqlCnpgIoV1Cluster {
     };
     instances: number;
     livenessProbeTimeout?: number;
-    logLevel?: "error" | "warning" | "info" | "debug" | "trace";
+    logLevel?: 'error' | 'warning' | 'info' | 'debug' | 'trace';
     managed?: {
       roles?: {
         bypassrls?: boolean;
@@ -17169,7 +17169,7 @@ export interface PostgresqlCnpgIoV1Cluster {
         createdb?: boolean;
         createrole?: boolean;
         disablePassword?: boolean;
-        ensure?: "present" | "absent";
+        ensure?: 'present' | 'absent';
         inRoles?: string[];
         inherit?: boolean;
         login?: boolean;
@@ -17183,7 +17183,7 @@ export interface PostgresqlCnpgIoV1Cluster {
       }[];
       services?: {
         additional?: {
-          selectorType: "rw" | "r" | "ro";
+          selectorType: 'rw' | 'r' | 'ro';
           serviceTemplate: {
             metadata?: {
               annotations?: {
@@ -17230,9 +17230,9 @@ export interface PostgresqlCnpgIoV1Cluster {
               type?: string;
             };
           };
-          updateStrategy?: "patch" | "replace";
+          updateStrategy?: 'patch' | 'replace';
         }[];
-        disabledDefaultServices?: ("rw" | "r" | "ro")[];
+        disabledDefaultServices?: ('rw' | 'r' | 'ro')[];
       };
     };
     maxSyncReplicas?: number;
@@ -17249,7 +17249,7 @@ export interface PostgresqlCnpgIoV1Cluster {
       disableDefaultQueries?: boolean;
       enablePodMonitor?: boolean;
       podMonitorMetricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -17258,7 +17258,7 @@ export interface PostgresqlCnpgIoV1Cluster {
         targetLabel?: string;
       }[];
       podMonitorRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -17303,7 +17303,7 @@ export interface PostgresqlCnpgIoV1Cluster {
           searchFilter?: string;
         };
         port?: number;
-        scheme?: "ldap" | "ldaps";
+        scheme?: 'ldap' | 'ldaps';
         server?: string;
         tls?: boolean;
       };
@@ -17319,16 +17319,16 @@ export interface PostgresqlCnpgIoV1Cluster {
         nodeLabelsAntiAffinity?: string[];
       };
       synchronous?: {
-        dataDurability?: "required" | "preferred";
+        dataDurability?: 'required' | 'preferred';
         maxStandbyNamesFromCluster?: number;
-        method: "any" | "first";
+        method: 'any' | 'first';
         number: number;
         standbyNamesPost?: string[];
         standbyNamesPre?: string[];
       };
     };
-    primaryUpdateMethod?: "switchover" | "restart";
-    primaryUpdateStrategy?: "unsupervised" | "supervised";
+    primaryUpdateMethod?: 'switchover' | 'restart';
+    primaryUpdateStrategy?: 'unsupervised' | 'supervised';
     priorityClassName?: string;
     probes?: {
       liveness?: {
@@ -17642,7 +17642,7 @@ export interface PostgresqlCnpgIoV1Cluster {
       message: string;
       observedGeneration?: number;
       reason: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
     configMapResourceVersion?: {
@@ -17796,9 +17796,9 @@ export interface PostgresqlCnpgIoV1Database {
     };
     collationVersion?: string;
     connectionLimit?: number;
-    databaseReclaimPolicy?: "delete" | "retain";
+    databaseReclaimPolicy?: 'delete' | 'retain';
     encoding?: string;
-    ensure?: "present" | "absent";
+    ensure?: 'present' | 'absent';
     icuLocale?: string;
     icuRules?: string;
     isTemplate?: boolean;
@@ -17867,7 +17867,7 @@ export interface PostgresqlCnpgIoV1Pooler {
     monitoring?: {
       enablePodMonitor?: boolean;
       podMonitorMetricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -17876,7 +17876,7 @@ export interface PostgresqlCnpgIoV1Pooler {
         targetLabel?: string;
       }[];
       podMonitorRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -17895,7 +17895,7 @@ export interface PostgresqlCnpgIoV1Pooler {
       };
       paused?: boolean;
       pg_hba?: string[];
-      poolMode?: "session" | "transaction";
+      poolMode?: 'session' | 'transaction';
     };
     serviceTemplate?: {
       metadata?: {
@@ -19310,7 +19310,7 @@ export interface PostgresqlCnpgIoV1Pooler {
         }[];
       };
     };
-    type?: "rw" | "ro" | "r";
+    type?: 'rw' | 'ro' | 'r';
   };
   status?: {
     instances?: number;
@@ -19359,7 +19359,7 @@ export interface PostgresqlCnpgIoV1Publication {
     parameters?: {
       [key: string]: unknown;
     };
-    publicationReclaimPolicy?: "delete" | "retain";
+    publicationReclaimPolicy?: 'delete' | 'retain';
     target: {
       allTables?: boolean;
       objects?: {
@@ -19394,12 +19394,12 @@ export interface PostgresqlCnpgIoV1ScheduledBackup {
   kind?: string;
   metadata: ObjectMeta;
   spec: {
-    backupOwnerReference?: "none" | "self" | "cluster";
+    backupOwnerReference?: 'none' | 'self' | 'cluster';
     cluster: {
       name: string;
     };
     immediate?: boolean;
-    method?: "barmanObjectStore" | "volumeSnapshot" | "plugin";
+    method?: 'barmanObjectStore' | 'volumeSnapshot' | 'plugin';
     online?: boolean;
     onlineConfiguration?: {
       immediateCheckpoint?: boolean;
@@ -19413,7 +19413,7 @@ export interface PostgresqlCnpgIoV1ScheduledBackup {
     };
     schedule: string;
     suspend?: boolean;
-    target?: "primary" | "prefer-standby";
+    target?: 'primary' | 'prefer-standby';
   };
   status?: {
     lastCheckTime?: string;
@@ -19447,7 +19447,7 @@ export interface PostgresqlCnpgIoV1Subscription {
     };
     publicationDBName?: string;
     publicationName: string;
-    subscriptionReclaimPolicy?: "delete" | "retain";
+    subscriptionReclaimPolicy?: 'delete' | 'retain';
   };
   status?: {
     applied?: boolean;
@@ -19485,7 +19485,7 @@ export interface MatchCondition {
 /* MatchResources decides whether to run the admission control policy on an object based on whether it meets the match criteria. The exclude rules take precedence over include rules (if a resource matches both, it is excluded) */
 export interface MatchResources {
   excludeResourceRules?: NamedRuleWithOperations[];
-  matchPolicy?: "Equivalent" | "Exact";
+  matchPolicy?: 'Equivalent' | 'Exact';
   namespaceSelector?: LabelSelector;
   objectSelector?: LabelSelector;
   resourceRules?: NamedRuleWithOperations[];
@@ -19495,15 +19495,15 @@ export interface MatchResources {
 export interface MutatingWebhook {
   admissionReviewVersions: string[];
   clientConfig: IoK8sApiAdmissionregistrationV1WebhookClientConfig;
-  failurePolicy?: "Fail" | "Ignore";
+  failurePolicy?: 'Fail' | 'Ignore';
   matchConditions?: MatchCondition[];
-  matchPolicy?: "Equivalent" | "Exact";
+  matchPolicy?: 'Equivalent' | 'Exact';
   name: string;
   namespaceSelector?: LabelSelector;
   objectSelector?: LabelSelector;
-  reinvocationPolicy?: "IfNeeded" | "Never";
+  reinvocationPolicy?: 'IfNeeded' | 'Never';
   rules?: RuleWithOperations[];
-  sideEffects: "None" | "NoneOnDryRun" | "Some" | "Unknown";
+  sideEffects: 'None' | 'NoneOnDryRun' | 'Some' | 'Unknown';
   timeoutSeconds?: number;
 }
 /* io.k8s.api.admissionregistration.v1.MutatingWebhookConfiguration */
@@ -19527,7 +19527,7 @@ export interface AdmissionregistrationK8sIoV1MutatingWebhookConfigurationList {
 export interface NamedRuleWithOperations {
   apiGroups?: string[];
   apiVersions?: string[];
-  operations?: ("*" | "CONNECT" | "CREATE" | "DELETE" | "UPDATE")[];
+  operations?: ('*' | 'CONNECT' | 'CREATE' | 'DELETE' | 'UPDATE')[];
   resourceNames?: string[];
   resources?: string[];
   scope?: string;
@@ -19551,7 +19551,7 @@ export interface ParamRef {
 export interface RuleWithOperations {
   apiGroups?: string[];
   apiVersions?: string[];
-  operations?: ("*" | "CONNECT" | "CREATE" | "DELETE" | "UPDATE")[];
+  operations?: ('*' | 'CONNECT' | 'CREATE' | 'DELETE' | 'UPDATE')[];
   resources?: string[];
   scope?: string;
 }
@@ -19603,7 +19603,7 @@ export interface ValidatingAdmissionPolicyBindingSpec {
   matchResources?: MatchResources;
   paramRef?: ParamRef;
   policyName?: string;
-  validationActions?: ("Audit" | "Deny" | "Warn")[];
+  validationActions?: ('Audit' | 'Deny' | 'Warn')[];
 }
 /* io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyList */
 /* ValidatingAdmissionPolicyList is a list of ValidatingAdmissionPolicy. */
@@ -19617,7 +19617,7 @@ export interface AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyList {
 /* ValidatingAdmissionPolicySpec is the specification of the desired behavior of the AdmissionPolicy. */
 export interface ValidatingAdmissionPolicySpec {
   auditAnnotations?: AuditAnnotation[];
-  failurePolicy?: "Fail" | "Ignore";
+  failurePolicy?: 'Fail' | 'Ignore';
   matchConditions?: MatchCondition[];
   matchConstraints?: MatchResources;
   paramKind?: ParamKind;
@@ -19636,14 +19636,14 @@ export interface ValidatingAdmissionPolicyStatus {
 export interface ValidatingWebhook {
   admissionReviewVersions: string[];
   clientConfig: IoK8sApiAdmissionregistrationV1WebhookClientConfig;
-  failurePolicy?: "Fail" | "Ignore";
+  failurePolicy?: 'Fail' | 'Ignore';
   matchConditions?: MatchCondition[];
-  matchPolicy?: "Equivalent" | "Exact";
+  matchPolicy?: 'Equivalent' | 'Exact';
   name: string;
   namespaceSelector?: LabelSelector;
   objectSelector?: LabelSelector;
   rules?: RuleWithOperations[];
-  sideEffects: "None" | "NoneOnDryRun" | "Some" | "Unknown";
+  sideEffects: 'None' | 'NoneOnDryRun' | 'Some' | 'Unknown';
   timeoutSeconds?: number;
 }
 /* io.k8s.api.admissionregistration.v1.ValidatingWebhookConfiguration */
@@ -19753,7 +19753,7 @@ export interface DaemonSetStatus {
 /* DaemonSetUpdateStrategy is a struct used to control the update strategy for a DaemonSet. */
 export interface DaemonSetUpdateStrategy {
   rollingUpdate?: RollingUpdateDaemonSet;
-  type?: "OnDelete" | "RollingUpdate";
+  type?: 'OnDelete' | 'RollingUpdate';
 }
 /* io.k8s.api.apps.v1.Deployment */
 /* Deployment enables declarative updates for Pods and ReplicaSets. */
@@ -19810,7 +19810,7 @@ export interface DeploymentStatus {
 /* DeploymentStrategy describes how to replace existing pods with new ones. */
 export interface DeploymentStrategy {
   rollingUpdate?: RollingUpdateDeployment;
-  type?: "Recreate" | "RollingUpdate";
+  type?: 'Recreate' | 'RollingUpdate';
 }
 /* io.k8s.api.apps.v1.ReplicaSet */
 /* ReplicaSet ensures that a specified number of pod replicas are running at any given time. */
@@ -19921,7 +19921,7 @@ export interface StatefulSetSpec {
   minReadySeconds?: number;
   ordinals?: StatefulSetOrdinals;
   persistentVolumeClaimRetentionPolicy?: StatefulSetPersistentVolumeClaimRetentionPolicy;
-  podManagementPolicy?: "OrderedReady" | "Parallel";
+  podManagementPolicy?: 'OrderedReady' | 'Parallel';
   replicas?: number;
   revisionHistoryLimit?: number;
   selector: LabelSelector;
@@ -19948,7 +19948,7 @@ export interface StatefulSetStatus {
 /* StatefulSetUpdateStrategy indicates the strategy that the StatefulSet controller will use to perform updates. It includes any additional parameters necessary to perform the update for the indicated strategy. */
 export interface StatefulSetUpdateStrategy {
   rollingUpdate?: RollingUpdateStatefulSetStrategy;
-  type?: "OnDelete" | "RollingUpdate";
+  type?: 'OnDelete' | 'RollingUpdate';
 }
 /* io.k8s.api.authentication.v1.BoundObjectReference */
 /* BoundObjectReference is a reference to an object that a token is bound to. */
@@ -20404,7 +20404,7 @@ export interface BatchV1CronJobList {
 /* io.k8s.api.batch.v1.CronJobSpec */
 /* CronJobSpec describes how the job execution will look like and when it will actually run. */
 export interface CronJobSpec {
-  concurrencyPolicy?: "Allow" | "Forbid" | "Replace";
+  concurrencyPolicy?: 'Allow' | 'Forbid' | 'Replace';
   failedJobsHistoryLimit?: number;
   jobTemplate: JobTemplateSpec;
   schedule: string;
@@ -20453,14 +20453,14 @@ export interface JobSpec {
   activeDeadlineSeconds?: number;
   backoffLimit?: number;
   backoffLimitPerIndex?: number;
-  completionMode?: "Indexed" | "NonIndexed";
+  completionMode?: 'Indexed' | 'NonIndexed';
   completions?: number;
   managedBy?: string;
   manualSelector?: boolean;
   maxFailedIndexes?: number;
   parallelism?: number;
   podFailurePolicy?: PodFailurePolicy;
-  podReplacementPolicy?: "Failed" | "TerminatingOrFailed";
+  podReplacementPolicy?: 'Failed' | 'TerminatingOrFailed';
   selector?: LabelSelector;
   successPolicy?: SuccessPolicy;
   suspend?: boolean;
@@ -20497,7 +20497,7 @@ export interface PodFailurePolicy {
 /* PodFailurePolicyOnExitCodesRequirement describes the requirement for handling a failed pod based on its container exit codes. In particular, it lookups the .state.terminated.exitCode for each app container and init container status, represented by the .status.containerStatuses and .status.initContainerStatuses fields in the Pod status, respectively. Containers completed with success (exit code 0) are excluded from the requirement check. */
 export interface PodFailurePolicyOnExitCodesRequirement {
   containerName?: string;
-  operator: "In" | "NotIn";
+  operator: 'In' | 'NotIn';
   values: number[];
 }
 /* io.k8s.api.batch.v1.PodFailurePolicyOnPodConditionsPattern */
@@ -20509,7 +20509,7 @@ export interface PodFailurePolicyOnPodConditionsPattern {
 /* io.k8s.api.batch.v1.PodFailurePolicyRule */
 /* PodFailurePolicyRule describes how a pod failure is handled when the requirements are met. One of onExitCodes and onPodConditions, but not both, can be used in each rule. */
 export interface PodFailurePolicyRule {
-  action: "Count" | "FailIndex" | "FailJob" | "Ignore";
+  action: 'Count' | 'FailIndex' | 'FailJob' | 'Ignore';
   onExitCodes?: PodFailurePolicyOnExitCodesRequirement;
   onPodConditions?: PodFailurePolicyOnPodConditionsPattern[];
 }
@@ -20574,7 +20574,7 @@ export interface CertificateSigningRequestSpec {
   request: string;
   signerName: string;
   uid?: string;
-  usages?: ("any" | "cert sign" | "client auth" | "code signing" | "content commitment" | "crl sign" | "data encipherment" | "decipher only" | "digital signature" | "email protection" | "encipher only" | "ipsec end system" | "ipsec tunnel" | "ipsec user" | "key agreement" | "key encipherment" | "microsoft sgc" | "netscape sgc" | "ocsp signing" | "s/mime" | "server auth" | "signing" | "timestamping")[];
+  usages?: ('any' | 'cert sign' | 'client auth' | 'code signing' | 'content commitment' | 'crl sign' | 'data encipherment' | 'decipher only' | 'digital signature' | 'email protection' | 'encipher only' | 'ipsec end system' | 'ipsec tunnel' | 'ipsec user' | 'key agreement' | 'key encipherment' | 'microsoft sgc' | 'netscape sgc' | 'ocsp signing' | 's/mime' | 'server auth' | 'signing' | 'timestamping')[];
   username?: string;
 }
 /* io.k8s.api.certificates.v1.CertificateSigningRequestStatus */
@@ -20631,7 +20631,7 @@ export interface Affinity {
 /* AppArmorProfile defines a pod or container's AppArmor settings. */
 export interface AppArmorProfile {
   localhostProfile?: string;
-  type: "Localhost" | "RuntimeDefault" | "Unconfined";
+  type: 'Localhost' | 'RuntimeDefault' | 'Unconfined';
 }
 /* io.k8s.api.core.v1.AttachedVolume */
 /* AttachedVolume describes a volume attached to a node */
@@ -20642,11 +20642,11 @@ export interface AttachedVolume {
 /* io.k8s.api.core.v1.AzureDiskVolumeSource */
 /* AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. */
 export interface AzureDiskVolumeSource {
-  cachingMode?: "None" | "ReadOnly" | "ReadWrite";
+  cachingMode?: 'None' | 'ReadOnly' | 'ReadWrite';
   diskName: string;
   diskURI: string;
   fsType?: string;
-  kind?: "Dedicated" | "Managed" | "Shared";
+  kind?: 'Dedicated' | 'Managed' | 'Shared';
   readOnly?: boolean;
 }
 /* io.k8s.api.core.v1.AzureFilePersistentVolumeSource */
@@ -20852,7 +20852,7 @@ export interface Container {
   env?: EnvVar[];
   envFrom?: EnvFromSource[];
   image?: string;
-  imagePullPolicy?: "Always" | "IfNotPresent" | "Never";
+  imagePullPolicy?: 'Always' | 'IfNotPresent' | 'Never';
   lifecycle?: Lifecycle;
   livenessProbe?: IoK8sApiCoreV1Probe;
   name: string;
@@ -20866,7 +20866,7 @@ export interface Container {
   stdin?: boolean;
   stdinOnce?: boolean;
   terminationMessagePath?: string;
-  terminationMessagePolicy?: "FallbackToLogsOnError" | "File";
+  terminationMessagePolicy?: 'FallbackToLogsOnError' | 'File';
   tty?: boolean;
   volumeDevices?: VolumeDevice[];
   volumeMounts?: VolumeMount[];
@@ -20885,7 +20885,7 @@ export interface ContainerPort {
   hostIP?: string;
   hostPort?: number;
   name?: string;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
 }
 /* io.k8s.api.core.v1.ContainerResizePolicy */
 /* ContainerResizePolicy represents resource resize policy for the container. */
@@ -20991,7 +20991,7 @@ export interface IoK8sApiCoreV1EndpointPort {
   appProtocol?: string;
   name?: string;
   port: number;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
 }
 /* io.k8s.api.core.v1.EndpointSubset */
 /* EndpointSubset is a group of addresses with a common set of ports. The expanded set of endpoints is the Cartesian product of Addresses x Ports. For example, given:
@@ -21070,7 +21070,7 @@ export interface EphemeralContainer {
   env?: EnvVar[];
   envFrom?: EnvFromSource[];
   image?: string;
-  imagePullPolicy?: "Always" | "IfNotPresent" | "Never";
+  imagePullPolicy?: 'Always' | 'IfNotPresent' | 'Never';
   lifecycle?: Lifecycle;
   livenessProbe?: IoK8sApiCoreV1Probe;
   name: string;
@@ -21085,7 +21085,7 @@ export interface EphemeralContainer {
   stdinOnce?: boolean;
   targetContainerName?: string;
   terminationMessagePath?: string;
-  terminationMessagePolicy?: "FallbackToLogsOnError" | "File";
+  terminationMessagePolicy?: 'FallbackToLogsOnError' | 'File';
   tty?: boolean;
   volumeDevices?: VolumeDevice[];
   volumeMounts?: VolumeMount[];
@@ -21226,7 +21226,7 @@ export interface HTTPGetAction {
   httpHeaders?: HTTPHeader[];
   path?: string;
   port: IntOrString;
-  scheme?: "HTTP" | "HTTPS";
+  scheme?: 'HTTP' | 'HTTPS';
 }
 /* io.k8s.api.core.v1.HTTPHeader */
 /* HTTPHeader describes a custom header to be used in HTTP probes */
@@ -21249,7 +21249,7 @@ export interface HostIP {
 /* Represents a host path mapped into a pod. Host path volumes do not support ownership management or SELinux relabeling. */
 export interface HostPathVolumeSource {
   path: string;
-  type?: "" | "BlockDevice" | "CharDevice" | "Directory" | "DirectoryOrCreate" | "File" | "FileOrCreate" | "Socket";
+  type?: '' | 'BlockDevice' | 'CharDevice' | 'Directory' | 'DirectoryOrCreate' | 'File' | 'FileOrCreate' | 'Socket';
 }
 /* io.k8s.api.core.v1.ISCSIPersistentVolumeSource */
 /* ISCSIPersistentVolumeSource represents an ISCSI disk. ISCSI volumes can only be mounted as read/write once. ISCSI volumes support ownership management and SELinux relabeling. */
@@ -21284,7 +21284,7 @@ export interface ISCSIVolumeSource {
 /* io.k8s.api.core.v1.ImageVolumeSource */
 /* ImageVolumeSource represents a image volume resource. */
 export interface ImageVolumeSource {
-  pullPolicy?: "Always" | "IfNotPresent" | "Never";
+  pullPolicy?: 'Always' | 'IfNotPresent' | 'Never';
   reference?: string;
 }
 /* io.k8s.api.core.v1.KeyToPath */
@@ -21383,7 +21383,7 @@ export interface LocalVolumeSource {
 /* io.k8s.api.core.v1.ModifyVolumeStatus */
 /* ModifyVolumeStatus represents the status object of ControllerModifyVolume operation */
 export interface ModifyVolumeStatus {
-  status: "InProgress" | "Infeasible" | "Pending";
+  status: 'InProgress' | 'Infeasible' | 'Pending';
   targetVolumeAttributesClassName?: string;
 }
 /* io.k8s.api.core.v1.NFSVolumeSource */
@@ -21428,7 +21428,7 @@ export interface NamespaceSpec {
 /* NamespaceStatus is information about the current status of a Namespace. */
 export interface NamespaceStatus {
   conditions?: NamespaceCondition[];
-  phase?: "Active" | "Terminating";
+  phase?: 'Active' | 'Terminating';
 }
 /* io.k8s.api.core.v1.Node */
 /* Node is a worker node in Kubernetes. Each node will have a unique identifier in the cache (i.e. in etcd). */
@@ -21513,7 +21513,7 @@ export interface NodeSelector {
 /* A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values. */
 export interface NodeSelectorRequirement {
   key: string;
-  operator: "DoesNotExist" | "Exists" | "Gt" | "In" | "Lt" | "NotIn";
+  operator: 'DoesNotExist' | 'Exists' | 'Gt' | 'In' | 'Lt' | 'NotIn';
   values?: string[];
 }
 /* io.k8s.api.core.v1.NodeSelectorTerm */
@@ -21549,7 +21549,7 @@ export interface NodeStatus {
   features?: NodeFeatures;
   images?: ContainerImage[];
   nodeInfo?: NodeSystemInfo;
-  phase?: "Pending" | "Running" | "Terminated";
+  phase?: 'Pending' | 'Running' | 'Terminated';
   runtimeHandlers?: NodeRuntimeHandler[];
   volumesAttached?: AttachedVolume[];
   volumesInUse?: string[];
@@ -21624,20 +21624,20 @@ export interface PersistentVolumeClaimList {
 /* io.k8s.api.core.v1.PersistentVolumeClaimSpec */
 /* PersistentVolumeClaimSpec describes the common attributes of storage devices and allows a Source for provider-specific attributes */
 export interface PersistentVolumeClaimSpec {
-  accessModes?: ("ReadOnlyMany" | "ReadWriteMany" | "ReadWriteOnce" | "ReadWriteOncePod")[];
+  accessModes?: ('ReadOnlyMany' | 'ReadWriteMany' | 'ReadWriteOnce' | 'ReadWriteOncePod')[];
   dataSource?: TypedLocalObjectReference;
   dataSourceRef?: TypedObjectReference;
   resources?: VolumeResourceRequirements;
   selector?: LabelSelector;
   storageClassName?: string;
   volumeAttributesClassName?: string;
-  volumeMode?: "Block" | "Filesystem";
+  volumeMode?: 'Block' | 'Filesystem';
   volumeName?: string;
 }
 /* io.k8s.api.core.v1.PersistentVolumeClaimStatus */
 /* PersistentVolumeClaimStatus is the current status of a persistent volume claim. */
 export interface PersistentVolumeClaimStatus {
-  accessModes?: ("ReadOnlyMany" | "ReadWriteMany" | "ReadWriteOnce" | "ReadWriteOncePod")[];
+  accessModes?: ('ReadOnlyMany' | 'ReadWriteMany' | 'ReadWriteOnce' | 'ReadWriteOncePod')[];
   allocatedResourceStatuses?: {
     [key: string]: unknown;
   };
@@ -21650,7 +21650,7 @@ export interface PersistentVolumeClaimStatus {
   conditions?: PersistentVolumeClaimCondition[];
   currentVolumeAttributesClassName?: string;
   modifyVolumeStatus?: ModifyVolumeStatus;
-  phase?: "Bound" | "Lost" | "Pending";
+  phase?: 'Bound' | 'Lost' | 'Pending';
 }
 /* io.k8s.api.core.v1.PersistentVolumeClaimTemplate */
 /* PersistentVolumeClaimTemplate is used to produce PersistentVolumeClaim objects as part of an EphemeralVolumeSource. */
@@ -21675,7 +21675,7 @@ export interface PersistentVolumeList {
 /* io.k8s.api.core.v1.PersistentVolumeSpec */
 /* PersistentVolumeSpec is the specification of a persistent volume. */
 export interface PersistentVolumeSpec {
-  accessModes?: ("ReadOnlyMany" | "ReadWriteMany" | "ReadWriteOnce" | "ReadWriteOncePod")[];
+  accessModes?: ('ReadOnlyMany' | 'ReadWriteMany' | 'ReadWriteOnce' | 'ReadWriteOncePod')[];
   awsElasticBlockStore?: AWSElasticBlockStoreVolumeSource;
   azureDisk?: AzureDiskVolumeSource;
   azureFile?: AzureFilePersistentVolumeSource;
@@ -21697,7 +21697,7 @@ export interface PersistentVolumeSpec {
   mountOptions?: string[];
   nfs?: NFSVolumeSource;
   nodeAffinity?: VolumeNodeAffinity;
-  persistentVolumeReclaimPolicy?: "Delete" | "Recycle" | "Retain";
+  persistentVolumeReclaimPolicy?: 'Delete' | 'Recycle' | 'Retain';
   photonPersistentDisk?: PhotonPersistentDiskVolumeSource;
   portworxVolume?: PortworxVolumeSource;
   quobyte?: QuobyteVolumeSource;
@@ -21706,7 +21706,7 @@ export interface PersistentVolumeSpec {
   storageClassName?: string;
   storageos?: StorageOSPersistentVolumeSource;
   volumeAttributesClassName?: string;
-  volumeMode?: "Block" | "Filesystem";
+  volumeMode?: 'Block' | 'Filesystem';
   vsphereVolume?: VsphereVirtualDiskVolumeSource;
 }
 /* io.k8s.api.core.v1.PersistentVolumeStatus */
@@ -21714,7 +21714,7 @@ export interface PersistentVolumeSpec {
 export interface PersistentVolumeStatus {
   lastPhaseTransitionTime?: Time;
   message?: string;
-  phase?: "Available" | "Bound" | "Failed" | "Pending" | "Released";
+  phase?: 'Available' | 'Bound' | 'Failed' | 'Pending' | 'Released';
   reason?: string;
 }
 /* io.k8s.api.core.v1.PhotonPersistentDiskVolumeSource */
@@ -21825,7 +21825,7 @@ export interface PodSchedulingGate {
 export interface PodSecurityContext {
   appArmorProfile?: AppArmorProfile;
   fsGroup?: number;
-  fsGroupChangePolicy?: "Always" | "OnRootMismatch";
+  fsGroupChangePolicy?: 'Always' | 'OnRootMismatch';
   runAsGroup?: number;
   runAsNonRoot?: boolean;
   runAsUser?: number;
@@ -21833,7 +21833,7 @@ export interface PodSecurityContext {
   seLinuxOptions?: SELinuxOptions;
   seccompProfile?: SeccompProfile;
   supplementalGroups?: number[];
-  supplementalGroupsPolicy?: "Merge" | "Strict";
+  supplementalGroupsPolicy?: 'Merge' | 'Strict';
   sysctls?: Sysctl[];
   windowsOptions?: WindowsSecurityContextOptions;
 }
@@ -21845,7 +21845,7 @@ export interface PodSpec {
   automountServiceAccountToken?: boolean;
   containers: Container[];
   dnsConfig?: PodDNSConfig;
-  dnsPolicy?: "ClusterFirst" | "ClusterFirstWithHostNet" | "Default" | "None";
+  dnsPolicy?: 'ClusterFirst' | 'ClusterFirstWithHostNet' | 'Default' | 'None';
   enableServiceLinks?: boolean;
   ephemeralContainers?: EphemeralContainer[];
   hostAliases?: HostAlias[];
@@ -21864,13 +21864,13 @@ export interface PodSpec {
   overhead?: {
     [key: string]: unknown;
   };
-  preemptionPolicy?: "Never" | "PreemptLowerPriority";
+  preemptionPolicy?: 'Never' | 'PreemptLowerPriority';
   priority?: number;
   priorityClassName?: string;
   readinessGates?: PodReadinessGate[];
   resourceClaims?: PodResourceClaim[];
   resources?: ResourceRequirements;
-  restartPolicy?: "Always" | "Never" | "OnFailure";
+  restartPolicy?: 'Always' | 'Never' | 'OnFailure';
   runtimeClassName?: string;
   schedulerName?: string;
   schedulingGates?: PodSchedulingGate[];
@@ -21896,10 +21896,10 @@ export interface PodStatus {
   initContainerStatuses?: ContainerStatus[];
   message?: string;
   nominatedNodeName?: string;
-  phase?: "Failed" | "Pending" | "Running" | "Succeeded" | "Unknown";
+  phase?: 'Failed' | 'Pending' | 'Running' | 'Succeeded' | 'Unknown';
   podIP?: string;
   podIPs?: PodIP[];
-  qosClass?: "BestEffort" | "Burstable" | "Guaranteed";
+  qosClass?: 'BestEffort' | 'Burstable' | 'Guaranteed';
   reason?: string;
   resize?: string;
   resourceClaimStatuses?: PodResourceClaimStatus[];
@@ -21932,7 +21932,7 @@ export interface PodTemplateSpec {
 export interface PortStatus {
   error?: string;
   port: number;
-  protocol: "SCTP" | "TCP" | "UDP";
+  protocol: 'SCTP' | 'TCP' | 'UDP';
 }
 /* io.k8s.api.core.v1.PortworxVolumeSource */
 /* PortworxVolumeSource represents a Portworx volume resource. */
@@ -22090,7 +22090,7 @@ export interface ResourceQuotaSpec {
     [key: string]: unknown;
   };
   scopeSelector?: ScopeSelector;
-  scopes?: ("BestEffort" | "CrossNamespacePodAffinity" | "NotBestEffort" | "NotTerminating" | "PriorityClass" | "Terminating")[];
+  scopes?: ('BestEffort' | 'CrossNamespacePodAffinity' | 'NotBestEffort' | 'NotTerminating' | 'PriorityClass' | 'Terminating')[];
 }
 /* io.k8s.api.core.v1.ResourceQuotaStatus */
 /* ResourceQuotaStatus defines the enforced hard limits and observed use. */
@@ -22163,15 +22163,15 @@ export interface ScopeSelector {
 /* io.k8s.api.core.v1.ScopedResourceSelectorRequirement */
 /* A scoped-resource selector requirement is a selector that contains values, a scope name, and an operator that relates the scope name and values. */
 export interface ScopedResourceSelectorRequirement {
-  operator: "DoesNotExist" | "Exists" | "In" | "NotIn";
-  scopeName: "BestEffort" | "CrossNamespacePodAffinity" | "NotBestEffort" | "NotTerminating" | "PriorityClass" | "Terminating";
+  operator: 'DoesNotExist' | 'Exists' | 'In' | 'NotIn';
+  scopeName: 'BestEffort' | 'CrossNamespacePodAffinity' | 'NotBestEffort' | 'NotTerminating' | 'PriorityClass' | 'Terminating';
   values?: string[];
 }
 /* io.k8s.api.core.v1.SeccompProfile */
 /* SeccompProfile defines a pod/container's seccomp profile settings. Only one profile source may be set. */
 export interface SeccompProfile {
   localhostProfile?: string;
-  type: "Localhost" | "RuntimeDefault" | "Unconfined";
+  type: 'Localhost' | 'RuntimeDefault' | 'Unconfined';
 }
 /* io.k8s.api.core.v1.Secret */
 /* Secret holds secret data of a certain type. The total bytes of the values in the Data field must be less than MaxSecretSize bytes. */
@@ -22243,7 +22243,7 @@ export interface SecurityContext {
   appArmorProfile?: AppArmorProfile;
   capabilities?: Capabilities;
   privileged?: boolean;
-  procMount?: "Default" | "Unmasked";
+  procMount?: 'Default' | 'Unmasked';
   readOnlyRootFilesystem?: boolean;
   runAsGroup?: number;
   runAsNonRoot?: boolean;
@@ -22301,7 +22301,7 @@ export interface ServicePort {
   name?: string;
   nodePort?: number;
   port: number;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
   targetPort?: IntOrString;
 }
 /* io.k8s.api.core.v1.ServiceSpec */
@@ -22312,11 +22312,11 @@ export interface ServiceSpec {
   clusterIPs?: string[];
   externalIPs?: string[];
   externalName?: string;
-  externalTrafficPolicy?: "Cluster" | "Local";
+  externalTrafficPolicy?: 'Cluster' | 'Local';
   healthCheckNodePort?: number;
-  internalTrafficPolicy?: "Cluster" | "Local";
-  ipFamilies?: ("" | "IPv4" | "IPv6")[];
-  ipFamilyPolicy?: "PreferDualStack" | "RequireDualStack" | "SingleStack";
+  internalTrafficPolicy?: 'Cluster' | 'Local';
+  ipFamilies?: ('' | 'IPv4' | 'IPv6')[];
+  ipFamilyPolicy?: 'PreferDualStack' | 'RequireDualStack' | 'SingleStack';
   loadBalancerClass?: string;
   loadBalancerIP?: string;
   loadBalancerSourceRanges?: string[];
@@ -22325,10 +22325,10 @@ export interface ServiceSpec {
   selector?: {
     [key: string]: unknown;
   };
-  sessionAffinity?: "ClientIP" | "None";
+  sessionAffinity?: 'ClientIP' | 'None';
   sessionAffinityConfig?: SessionAffinityConfig;
   trafficDistribution?: string;
-  type?: "ClusterIP" | "ExternalName" | "LoadBalancer" | "NodePort";
+  type?: 'ClusterIP' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
 }
 /* io.k8s.api.core.v1.ServiceStatus */
 /* ServiceStatus represents the current status of a service. */
@@ -22379,7 +22379,7 @@ export interface TCPSocketAction {
 /* io.k8s.api.core.v1.Taint */
 /* The node this Taint is attached to has the "effect" on any pod that does not tolerate the Taint. */
 export interface Taint {
-  effect: "NoExecute" | "NoSchedule" | "PreferNoSchedule";
+  effect: 'NoExecute' | 'NoSchedule' | 'PreferNoSchedule';
   key: string;
   timeAdded?: Time;
   value?: string;
@@ -22387,9 +22387,9 @@ export interface Taint {
 /* io.k8s.api.core.v1.Toleration */
 /* The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>. */
 export interface Toleration {
-  effect?: "NoExecute" | "NoSchedule" | "PreferNoSchedule";
+  effect?: 'NoExecute' | 'NoSchedule' | 'PreferNoSchedule';
   key?: string;
-  operator?: "Equal" | "Exists";
+  operator?: 'Equal' | 'Exists';
   tolerationSeconds?: number;
   value?: string;
 }
@@ -22411,10 +22411,10 @@ export interface TopologySpreadConstraint {
   matchLabelKeys?: string[];
   maxSkew: number;
   minDomains?: number;
-  nodeAffinityPolicy?: "Honor" | "Ignore";
-  nodeTaintsPolicy?: "Honor" | "Ignore";
+  nodeAffinityPolicy?: 'Honor' | 'Ignore';
+  nodeTaintsPolicy?: 'Honor' | 'Ignore';
   topologyKey: string;
-  whenUnsatisfiable: "DoNotSchedule" | "ScheduleAnyway";
+  whenUnsatisfiable: 'DoNotSchedule' | 'ScheduleAnyway';
 }
 /* io.k8s.api.core.v1.TypedLocalObjectReference */
 /* TypedLocalObjectReference contains enough information to let you locate the typed referenced object inside the same namespace. */
@@ -22476,7 +22476,7 @@ export interface VolumeDevice {
 /* VolumeMount describes a mounting of a Volume within a container. */
 export interface VolumeMount {
   mountPath: string;
-  mountPropagation?: "Bidirectional" | "HostToContainer" | "None";
+  mountPropagation?: 'Bidirectional' | 'HostToContainer' | 'None';
   name: string;
   readOnly?: boolean;
   recursiveReadOnly?: string;
@@ -22569,12 +22569,12 @@ export interface IoK8sApiDiscoveryV1EndpointPort {
   appProtocol?: string;
   name?: string;
   port?: number;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
 }
 /* io.k8s.api.discovery.v1.EndpointSlice */
 /* EndpointSlice represents a subset of the endpoints that implement a service. For a given service there may be multiple EndpointSlice objects, selected by labels, which must be joined to produce the full set of endpoints. */
 export interface DiscoveryK8sIoV1EndpointSlice {
-  addressType: "FQDN" | "IPv4" | "IPv6";
+  addressType: 'FQDN' | 'IPv4' | 'IPv6';
   apiVersion?: string;
   endpoints: Endpoint[];
   kind?: string;
@@ -22607,7 +22607,7 @@ export interface EventsK8sIoV1EventList {
 export interface HTTPIngressPath {
   backend: IngressBackend;
   path?: string;
-  pathType: "Exact" | "ImplementationSpecific" | "Prefix";
+  pathType: 'Exact' | 'ImplementationSpecific' | 'Prefix';
 }
 /* io.k8s.api.networking.v1.HTTPIngressRuleValue */
 /* HTTPIngressRuleValue is a list of http selectors pointing to backends. In the example: http://<host>/<path>?<searchpart> -> backend where where parts of the url correspond to RFC 3986, this resource will be used to match against everything after the last '/' and before the first '?' or '#'. */
@@ -22691,7 +22691,7 @@ export interface IngressLoadBalancerStatus {
 export interface IngressPortStatus {
   error?: string;
   port: number;
-  protocol: "SCTP" | "TCP" | "UDP";
+  protocol: 'SCTP' | 'TCP' | 'UDP';
 }
 /* io.k8s.api.networking.v1.IngressRule */
 /* IngressRule represents the rules mapping the paths under a specified host to the related backend services. Incoming requests are first evaluated for a host match, then routed to the backend associated with the matching IngressRuleValue. */
@@ -22764,7 +22764,7 @@ export interface NetworkPolicyPeer {
 export interface NetworkPolicyPort {
   endPort?: number;
   port?: IntOrString;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
 }
 /* io.k8s.api.networking.v1.NetworkPolicySpec */
 /* NetworkPolicySpec provides the specification of a NetworkPolicy */
@@ -22772,7 +22772,7 @@ export interface NetworkPolicySpec {
   egress?: NetworkPolicyEgressRule[];
   ingress?: NetworkPolicyIngressRule[];
   podSelector: LabelSelector;
-  policyTypes?: ("Egress" | "Ingress")[];
+  policyTypes?: ('Egress' | 'Ingress')[];
 }
 /* io.k8s.api.networking.v1.ServiceBackendPort */
 /* ServiceBackendPort is the service port being referenced. */
@@ -22844,7 +22844,7 @@ export interface PodDisruptionBudgetSpec {
   maxUnavailable?: IntOrString;
   minAvailable?: IntOrString;
   selector?: LabelSelector;
-  unhealthyPodEvictionPolicy?: "AlwaysAllow" | "IfHealthyBudget";
+  unhealthyPodEvictionPolicy?: 'AlwaysAllow' | 'IfHealthyBudget';
 }
 /* io.k8s.api.policy.v1.PodDisruptionBudgetStatus */
 /* PodDisruptionBudgetStatus represents information about the status of a PodDisruptionBudget. Status may trail the actual state of a system. */
@@ -22963,7 +22963,7 @@ export interface SchedulingK8sIoV1PriorityClass {
   globalDefault?: boolean;
   kind?: string;
   metadata?: ObjectMeta;
-  preemptionPolicy?: "Never" | "PreemptLowerPriority";
+  preemptionPolicy?: 'Never' | 'PreemptLowerPriority';
   value: number;
 }
 /* io.k8s.api.scheduling.v1.PriorityClassList */
@@ -23073,8 +23073,8 @@ export interface StorageK8sIoV1StorageClass {
     [key: string]: unknown;
   };
   provisioner: string;
-  reclaimPolicy?: "Delete" | "Recycle" | "Retain";
-  volumeBindingMode?: "Immediate" | "WaitForFirstConsumer";
+  reclaimPolicy?: 'Delete' | 'Recycle' | 'Retain';
+  volumeBindingMode?: 'Immediate' | 'WaitForFirstConsumer';
 }
 /* io.k8s.api.storage.v1.StorageClassList */
 /* StorageClassList is a collection of storage classes. */
@@ -23305,13 +23305,13 @@ export interface JSONSchemaProps {
   title?: string;
   type?: string;
   uniqueItems?: boolean;
-  "x-kubernetes-embedded-resource"?: boolean;
-  "x-kubernetes-int-or-string"?: boolean;
-  "x-kubernetes-list-map-keys"?: string[];
-  "x-kubernetes-list-type"?: string;
-  "x-kubernetes-map-type"?: string;
-  "x-kubernetes-preserve-unknown-fields"?: boolean;
-  "x-kubernetes-validations"?: ValidationRule[];
+  'x-kubernetes-embedded-resource'?: boolean;
+  'x-kubernetes-int-or-string'?: boolean;
+  'x-kubernetes-list-map-keys'?: string[];
+  'x-kubernetes-list-type'?: string;
+  'x-kubernetes-map-type'?: string;
+  'x-kubernetes-preserve-unknown-fields'?: boolean;
+  'x-kubernetes-validations'?: ValidationRule[];
 }
 /* io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.JSONSchemaPropsOrArray */
 /* JSONSchemaPropsOrArray represents a value that can either be a JSONSchemaProps or an array of JSONSchemaProps. Mainly here for serialization purposes. */
@@ -23342,7 +23342,7 @@ export interface ValidationRule {
   message?: string;
   messageExpression?: string;
   optionalOldSelf?: boolean;
-  reason?: "FieldValueDuplicate" | "FieldValueForbidden" | "FieldValueInvalid" | "FieldValueRequired";
+  reason?: 'FieldValueDuplicate' | 'FieldValueForbidden' | 'FieldValueInvalid' | 'FieldValueRequired';
   rule: string;
 }
 /* io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.WebhookClientConfig */
@@ -38196,7 +38196,7 @@ export class KubernetesClient extends APIClient {
     super(options);
   }
   async getSwaggerJSON() {
-    const path = "/openapi/v2";
+    const path = '/openapi/v2';
     return this.get(path);
   }
   async getServiceAccountIssuerOpenIDConfiguration(params: GetServiceAccountIssuerOpenIDConfigurationRequest, opts?: APIClientRequestOpts): Promise<string> {
