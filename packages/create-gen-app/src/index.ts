@@ -1,10 +1,17 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { registerDefaultResolver } from 'inquirerer';
+
 import { extractVariables } from './template/extract';
 import { promptUser } from './template/prompt';
 import { replaceVariables } from './template/replace';
+import { listSupportedLicenses } from './licenses';
 import { CreateGenOptions } from './types';
+
+// Register the 'licenses' resolver for optionsFrom support
+// This allows boilerplate templates to use: "optionsFrom": "licenses"
+registerDefaultResolver('licenses', () => listSupportedLicenses());
 
 // Export new modular classes
 export * from './cache/cache-manager';

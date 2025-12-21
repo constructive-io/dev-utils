@@ -18,6 +18,7 @@ jest.mock('inquirerer', () => {
         prompt: jest.fn().mockResolvedValue({}),
       };
     }),
+    registerDefaultResolver: jest.fn(),
   };
 });
 
