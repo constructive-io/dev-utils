@@ -30,8 +30,17 @@ describe('license templates', () => {
         'BSD-3-CLAUSE',
         'UNLICENSE',
         'MPL-2.0',
+        'CLOSED',
       ])
     );
+  });
+
+  it('renders CLOSED license with author and email', () => {
+    const content = renderLicense('CLOSED', context);
+    expect(content).toContain('Test User');
+    expect(content).toContain('<test@example.com>');
+    expect(content).toContain('2099');
+    expect(content).toContain('All Rights Reserved');
   });
 
   it('handles case-insensitive lookups', () => {
