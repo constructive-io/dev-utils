@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.14...inquirerer@2.2.0) (2025-12-21)
+
+### Features
+
+- **inquirerer:** add optionsFrom resolver support for dynamic options ([5eaf31c](https://github.com/constructive-io/dev-utils/commit/5eaf31c7ab33400195bda83c94e434e6a0f9af1c))
+
 ## [2.1.14](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.13...inquirerer@2.1.14) (2025-12-17)
 
 **Note:** Version bump only for package inquirerer

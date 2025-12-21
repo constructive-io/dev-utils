@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.5.0...create-gen-app@0.6.0) (2025-12-21)
+
+### Features
+
+- **create-gen-app:** register licenses resolver for optionsFrom support ([0818c77](https://github.com/constructive-io/dev-utils/commit/0818c773ad71aaeee2bd79bfe56e6ed6d69573ff))
+
 # [0.5.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.4.0...create-gen-app@0.5.0) (2025-12-21)
 
 ### Features
