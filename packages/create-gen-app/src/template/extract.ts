@@ -35,9 +35,11 @@ export async function extractVariables(
   await walkDirectory(templateDir, async (filePath) => {
     const relativePath = path.relative(templateDir, filePath);
 
+    // Skip boilerplate configuration files from variable extraction
     if (
-      relativePath === '.questions.json' ||
-      relativePath === '.questions.js'
+      relativePath === '.boilerplate.json' ||
+      relativePath === '.boilerplate.js' ||
+      relativePath === '.boilerplates.json'
     ) {
       return;
     }
@@ -144,36 +146,40 @@ async function walkDirectory(
 }
 
 /**
- * Load project questions from .questions.json or .questions.js
+ * Load project questions from .boilerplate.json or .boilerplate.js
  * @param templateDir - Path to the template directory
  * @returns Questions object or null if not found
  */
 async function loadProjectQuestions(
   templateDir: string
 ): Promise<Questions | null> {
-  const jsonPath = path.join(templateDir, '.questions.json');
+  const jsonPath = path.join(templateDir, '.boilerplate.json');
   if (fs.existsSync(jsonPath)) {
     try {
       const content = fs.readFileSync(jsonPath, 'utf8');
-      const questions = JSON.parse(content);
+      const parsed = JSON.parse(content);
+      // .boilerplate.json has { questions: [...] } structure
+      const questions = parsed.questions ? { questions: parsed.questions } : parsed;
       return validateQuestions(questions) ? normalizeQuestions(questions) : null;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.warn(`Failed to parse .questions.json: ${errorMessage}`);
+      console.warn(`Failed to parse .boilerplate.json: ${errorMessage}`);
     }
   }
 
-  const jsPath = path.join(templateDir, '.questions.js');
+  const jsPath = path.join(templateDir, '.boilerplate.js');
   if (fs.existsSync(jsPath)) {
     try {
       const module = require(jsPath);
-      const questions = module.default || module;
+      const exported = module.default || module;
+      // .boilerplate.js can export { questions: [...] } or just the questions array
+      const questions = exported.questions ? { questions: exported.questions } : exported;
       return validateQuestions(questions) ? normalizeQuestions(questions) : null;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.warn(`Failed to load .questions.js: ${errorMessage}`);
+      console.warn(`Failed to load .boilerplate.js: ${errorMessage}`);
     }
   }
 
