@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.4.0...create-gen-app@0.5.0) (2025-12-21)
+
+### Features
+
+- **create-gen-app:** add CLOSED license option for all rights reserved ([b589212](https://github.com/constructive-io/dev-utils/commit/b589212f53aa0fc937d89e0e1fc914fb4491d23e))
+
 # [0.4.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.3.6...create-gen-app@0.4.0) (2025-12-21)
 
 ### Features
