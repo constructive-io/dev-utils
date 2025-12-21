@@ -94,8 +94,9 @@ describe('create-gen-app', () => {
       );
     });
 
-    it('should load questions from .questions.json', async () => {
-      const questions = {
+    it('should load questions from .boilerplate.json', async () => {
+      const boilerplate = {
+        type: 'module',
         questions: [
           {
             name: 'projectName',
@@ -111,8 +112,8 @@ describe('create-gen-app', () => {
       };
 
       fs.writeFileSync(
-        path.join(testTempDir, '.questions.json'),
-        JSON.stringify(questions, null, 2)
+        path.join(testTempDir, '.boilerplate.json'),
+        JSON.stringify(boilerplate, null, 2)
       );
 
       const result = await extractVariables(testTempDir);
@@ -122,9 +123,10 @@ describe('create-gen-app', () => {
       expect(result.projectQuestions?.questions[0].name).toBe('projectName');
     });
 
-    it('should load questions from .questions.js', async () => {
-      const questionsContent = `
+    it('should load questions from .boilerplate.js', async () => {
+      const boilerplateContent = `
 module.exports = {
+  type: 'module',
   questions: [
     {
       name: 'projectName',
@@ -136,8 +138,8 @@ module.exports = {
 `;
 
       fs.writeFileSync(
-        path.join(testTempDir, '.questions.js'),
-        questionsContent
+        path.join(testTempDir, '.boilerplate.js'),
+        boilerplateContent
       );
 
       const result = await extractVariables(testTempDir);
@@ -157,9 +159,9 @@ module.exports = {
       expect(result.projectQuestions).toBeNull();
     });
 
-    it('should skip .questions.json and .questions.js from variable extraction', async () => {
+    it('should skip .boilerplate.json and .boilerplate.js from variable extraction', async () => {
       fs.writeFileSync(
-        path.join(testTempDir, '.questions.json'),
+        path.join(testTempDir, '.boilerplate.json'),
         '{"questions": [{"name": "____shouldNotExtract____"}]}'
       );
 
@@ -486,10 +488,14 @@ module.exports = {
       expect(content).toBe('export const name = "auth";');
     });
 
-    it('should skip .questions.json and .questions.js files', async () => {
+    it('should skip .boilerplate.json and .boilerplate.js files', async () => {
       fs.writeFileSync(
-        path.join(testTempDir, '.questions.json'),
-        '{"questions": []}'
+        path.join(testTempDir, '.boilerplate.json'),
+        '{"type": "module", "questions": []}'
+      );
+      fs.writeFileSync(
+        path.join(testTempDir, '.boilerplates.json'),
+        '{"dir": "default"}'
       );
       fs.writeFileSync(path.join(testTempDir, 'README.md'), 'Regular file');
 
@@ -501,7 +507,10 @@ module.exports = {
         {}
       );
 
-      expect(fs.existsSync(path.join(testOutputDir, '.questions.json'))).toBe(
+      expect(fs.existsSync(path.join(testOutputDir, '.boilerplate.json'))).toBe(
+        false
+      );
+      expect(fs.existsSync(path.join(testOutputDir, '.boilerplates.json'))).toBe(
         false
       );
       expect(fs.existsSync(path.join(testOutputDir, 'README.md'))).toBe(true);

@@ -6,7 +6,7 @@ import { CacheManager, GitCloner } from 'create-gen-app';
 
 export const TEST_REPO =
   process.env.CREATE_GEN_TEST_REPO ??
-  'https://github.com/constructive-io/pgpm-boilerplates.git';
+  'https://github.com/constructive-io/pgpm-boilerplates-testing.git';
 export const TEST_BRANCH =
   process.env.CREATE_GEN_TEST_BRANCH ?? 'main';
 export const TEST_TEMPLATE_DIR = (() => {

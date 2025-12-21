@@ -114,10 +114,11 @@ export const author = "____fullName____";
 
 ### Custom Questions
 
-Create a `.questions.json`:
+Create a `.boilerplate.json`:
 
 ```json
 {
+  "type": "module",
   "questions": [
     {
       "name": "____fullName____",
@@ -135,7 +136,9 @@ Create a `.questions.json`:
 }
 ```
 
-Or `.questions.js` for dynamic logic. Question names can use `____var____` or plain `VAR`; they'll be normalized automatically.
+Or `.boilerplate.js` for dynamic logic. Question names can use `____var____` or plain `VAR`; they'll be normalized automatically.
+
+Note: `.boilerplate.json`, `.boilerplate.js`, and `.boilerplates.json` files are automatically excluded from the generated output.
 
 ### License Templates
 
