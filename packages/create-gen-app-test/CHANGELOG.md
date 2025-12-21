@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app-test@0.1.14...create-gen-app-test@0.2.0) (2025-12-21)
+
+### Bug Fixes
+
+- **create-gen-app-test:** update snapshots for .boilerplate.json exclusion ([6772739](https://github.com/constructive-io/dev-utils/commit/6772739305875133252dd6555a1f820f3cb2e362))
+
+### Features
+
+- **create-gen-app:** replace .questions.json with .boilerplate.json format ([dc2bf1d](https://github.com/constructive-io/dev-utils/commit/dc2bf1d3ed77c7c63acc67b996926fc4a225599e))
+
+### BREAKING CHANGES
+
+- **create-gen-app:** .questions.json/.js files are no longer supported.
+  Use .boilerplate.json/.js instead.
+
+Co-Authored-By: Dan Lynch <pyramation@gmail.com>
+
 ## [0.1.14](https://github.com/constructive-io/dev-utils/compare/create-gen-app-test@0.1.13...create-gen-app-test@0.1.14) (2025-12-17)
 
 **Note:** Version bump only for package create-gen-app-test

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.3.6...create-gen-app@0.4.0) (2025-12-21)
+
+### Features
+
+- **create-gen-app:** replace .questions.json with .boilerplate.json format ([dc2bf1d](https://github.com/constructive-io/dev-utils/commit/dc2bf1d3ed77c7c63acc67b996926fc4a225599e))
+
+### BREAKING CHANGES
+
+- **create-gen-app:** .questions.json/.js files are no longer supported.
+  Use .boilerplate.json/.js instead.
+
+Co-Authored-By: Dan Lynch <pyramation@gmail.com>
+
 ## [0.3.6](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.3.5...create-gen-app@0.3.6) (2025-12-17)
 
 **Note:** Version bump only for package create-gen-app
