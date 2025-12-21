@@ -56,7 +56,12 @@ async function walkAndReplace(
   for (const entry of entries) {
     const sourceEntryPath = path.join(currentSource, entry.name);
     
-    if (entry.name === '.questions.json' || entry.name === '.questions.js') {
+    // Skip template configuration files - they should not be copied to output
+    if (
+      entry.name === '.boilerplate.json' ||
+      entry.name === '.boilerplate.js' ||
+      entry.name === '.boilerplates.json'
+    ) {
       continue;
     }
     

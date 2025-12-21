@@ -1,7 +1,7 @@
 import { Question } from 'inquirerer';
 
 /**
- * Questions configuration that can be loaded from .questions.json or .questions.js
+ * Questions configuration that can be loaded from .boilerplate.json or .boilerplate.js
  * @typedef {Object} Questions
  * @property {Question[]} questions - Array of inquirerer questions
  */
