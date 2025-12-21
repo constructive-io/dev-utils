@@ -20,6 +20,7 @@ export interface BaseQuestion {
     default?: any;
     defaultFrom?: string;
     setFrom?: string;
+    optionsFrom?: string;
     useDefault?: boolean;
     required?: boolean;
     message?: string;

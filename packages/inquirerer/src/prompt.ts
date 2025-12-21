@@ -469,6 +469,9 @@ export class Inquirerer {
     // Resolve dynamic defaults before processing questions
     await this.resolveDynamicDefaults(questions);
 
+    // Resolve dynamic options before processing questions
+    await this.resolveOptionsFrom(questions);
+
     // Resolve setFrom values - these bypass prompting entirely
     await this.resolveSetValues(questions, obj);
 
@@ -604,6 +607,22 @@ export class Inquirerer {
           if (resolved !== undefined) {
             obj[question.name] = resolved;
           }
+        }
+      }
+    }
+  }
+
+  /**
+   * Resolves optionsFrom values for all questions that have optionsFrom specified.
+   * Updates the question.options property with the resolved array.
+   */
+  private async resolveOptionsFrom(questions: Question[]): Promise<void> {
+    for (const question of questions) {
+      if ('optionsFrom' in question && question.optionsFrom) {
+        const resolved = await this.resolverRegistry.resolve(question.optionsFrom);
+        if (resolved !== undefined && Array.isArray(resolved)) {
+          // Update question.options with resolved array
+          (question as any).options = resolved;
         }
       }
     }
