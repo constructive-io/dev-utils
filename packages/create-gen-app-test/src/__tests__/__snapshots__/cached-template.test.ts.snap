@@ -2,7 +2,6 @@
 
 exports[`cached template integration tests first clone with variable replacement should snapshot created directory structure 1`] = `
 [
-  ".boilerplate.json",
   "LICENSE",
   "README.md",
   "__tests__/",
@@ -39,7 +38,7 @@ exports[`cached template integration tests first clone with variable replacement
     "scripts": {
       "lint": "eslint . --fix",
       "test": "jest",
-      "test:watch": "jest --watch",
+      "test:watch": "jest --watchAll",
     },
     "version": "0.0.1",
   },
@@ -48,7 +47,6 @@ exports[`cached template integration tests first clone with variable replacement
 
 exports[`cached template integration tests second clone from cache should snapshot created directory structure from cache 1`] = `
 [
-  ".boilerplate.json",
   "LICENSE",
   "README.md",
   "__tests__/",
@@ -85,7 +83,7 @@ exports[`cached template integration tests second clone from cache should snapsh
     "scripts": {
       "lint": "eslint . --fix",
       "test": "jest",
-      "test:watch": "jest --watch",
+      "test:watch": "jest --watchAll",
     },
     "version": "0.0.1",
   },
