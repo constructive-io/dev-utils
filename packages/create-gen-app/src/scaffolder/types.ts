@@ -80,6 +80,63 @@ export interface ScaffoldOptions {
 }
 
 /**
+ * Options for inspecting a template without scaffolding
+ */
+export interface InspectOptions {
+  /**
+   * Template repository URL, local path, or org/repo shorthand.
+   * If not provided, uses the defaultRepo from config.
+   */
+  template?: string;
+
+  /**
+   * Branch to clone (for remote repositories)
+   */
+  branch?: string;
+
+  /**
+   * Subdirectory within the template repository to use as the template root.
+   * Can be a direct path or a variant name that gets resolved via .boilerplates.json
+   */
+  fromPath?: string;
+}
+
+/**
+ * Result of inspecting a template
+ */
+export interface InspectResult {
+  /**
+   * Path to the cached/cloned template directory (repository root)
+   */
+  templateDir: string;
+
+  /**
+   * The resolved fromPath after .boilerplates.json resolution
+   */
+  resolvedFromPath?: string;
+
+  /**
+   * Full path to the resolved template subdirectory
+   */
+  resolvedTemplatePath: string;
+
+  /**
+   * Whether a cached template was used
+   */
+  cacheUsed: boolean;
+
+  /**
+   * Whether the cache was expired and refreshed
+   */
+  cacheExpired: boolean;
+
+  /**
+   * Configuration from .boilerplate.json (includes type, questions, etc.)
+   */
+  config: BoilerplateConfig | null;
+}
+
+/**
  * Result of a scaffold operation
  */
 export interface ScaffoldResult {

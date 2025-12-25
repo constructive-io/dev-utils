@@ -8,6 +8,8 @@ import {
   TemplateScaffolderConfig,
   ScaffoldOptions,
   ScaffoldResult,
+  InspectOptions,
+  InspectResult,
   BoilerplatesConfig,
   BoilerplateConfig,
 } from './types';
@@ -81,6 +83,44 @@ export class TemplateScaffolder {
   }
 
   /**
+   * Inspect a template without scaffolding it.
+   *
+   * Clones/caches the template repository and reads its .boilerplate.json
+   * configuration, allowing callers to make decisions based on template
+   * metadata (like type) before actually scaffolding.
+   *
+   * @example
+   * ```typescript
+   * const { config } = await scaffolder.inspect({ fromPath: 'workspace' });
+   * if (config?.type === 'workspace') {
+   *   // Handle workspace-specific logic
+   * }
+   * await scaffolder.scaffold({ fromPath: 'workspace', outputDir: './my-project' });
+   * ```
+   *
+   * @param options - Inspect options
+   * @returns Inspect result with template metadata
+   */
+  async inspect(options: InspectOptions): Promise<InspectResult> {
+    const template = options.template ?? this.config.defaultRepo;
+    if (!template) {
+      throw new Error(
+        'No template specified and no defaultRepo configured. ' +
+        'Either pass template in options or set defaultRepo in config.'
+      );
+    }
+
+    const branch = options.branch ?? this.config.defaultBranch;
+    const resolvedTemplate = this.resolveTemplatePath(template);
+
+    if (this.isLocalPath(resolvedTemplate) && fs.existsSync(resolvedTemplate)) {
+      return this.inspectLocal(resolvedTemplate, options.fromPath);
+    }
+
+    return this.inspectRemote(resolvedTemplate, branch, options.fromPath);
+  }
+
+  /**
    * Read the .boilerplates.json configuration from a template repository root.
    */
   readBoilerplatesConfig(templateDir: string): BoilerplatesConfig | null {
@@ -131,6 +171,75 @@ export class TemplateScaffolder {
    */
   getTemplatizer(): Templatizer {
     return this.templatizer;
+  }
+
+  private inspectLocal(
+    templateDir: string,
+    fromPath?: string
+  ): InspectResult {
+    const { fromPath: resolvedFromPath, resolvedTemplatePath } = this.resolveFromPath(
+      templateDir,
+      fromPath
+    );
+
+    const config = this.readBoilerplateConfig(resolvedTemplatePath);
+
+    return {
+      templateDir,
+      resolvedFromPath,
+      resolvedTemplatePath,
+      cacheUsed: false,
+      cacheExpired: false,
+      config,
+    };
+  }
+
+  private inspectRemote(
+    templateUrl: string,
+    branch: string | undefined,
+    fromPath?: string
+  ): InspectResult {
+    const normalizedUrl = this.gitCloner.normalizeUrl(templateUrl);
+    const cacheKey = this.cacheManager.createKey(normalizedUrl, branch);
+
+    const expiredMetadata = this.cacheManager.checkExpiration(cacheKey);
+    if (expiredMetadata) {
+      this.cacheManager.clear(cacheKey);
+    }
+
+    let templateDir: string;
+    let cacheUsed = false;
+
+    const cachedPath = this.cacheManager.get(cacheKey);
+    if (cachedPath && !expiredMetadata) {
+      templateDir = cachedPath;
+      cacheUsed = true;
+    } else {
+      const tempDest = path.join(this.cacheManager.getReposDir(), cacheKey);
+      this.gitCloner.clone(normalizedUrl, tempDest, {
+        branch,
+        depth: 1,
+        singleBranch: true,
+      });
+      this.cacheManager.set(cacheKey, tempDest);
+      templateDir = tempDest;
+    }
+
+    const { fromPath: resolvedFromPath, resolvedTemplatePath } = this.resolveFromPath(
+      templateDir,
+      fromPath
+    );
+
+    const config = this.readBoilerplateConfig(resolvedTemplatePath);
+
+    return {
+      templateDir,
+      resolvedFromPath,
+      resolvedTemplatePath,
+      cacheUsed,
+      cacheExpired: Boolean(expiredMetadata),
+      config,
+    };
   }
 
   private async scaffoldFromLocal(
