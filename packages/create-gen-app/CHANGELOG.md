@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.6.4...create-gen-app@0.7.0) (2025-12-25)
+
+### Features
+
+- **create-gen-app:** add optional prompter parameter for reuse ([c54e01d](https://github.com/constructive-io/dev-utils/commit/c54e01d7f2efd639e0545ba438ba713bf1377c7a))
+- **create-gen-app:** add TemplateScaffolder orchestrator class ([0a62e36](https://github.com/constructive-io/dev-utils/commit/0a62e362f2e42a3cdc7727731f104afab76c7c07))
+
 ## [0.6.4](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.6.3...create-gen-app@0.6.4) (2025-12-25)
 
 **Note:** Version bump only for package create-gen-app
