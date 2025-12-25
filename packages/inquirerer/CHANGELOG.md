@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.2.0...inquirerer@2.2.1) (2025-12-25)
+
+### Bug Fixes
+
+- **inquirerer:** prevent keypress event duplication with multiple instances ([d15a82a](https://github.com/constructive-io/dev-utils/commit/d15a82aac897e08c45ac1a350d746290d2360319))
+
 # [2.2.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.1.14...inquirerer@2.2.0) (2025-12-21)
 
 ### Features
