@@ -18,6 +18,8 @@ export * from './cache/cache-manager';
 export * from './cache/types';
 export * from './git/git-cloner';
 export * from './git/types';
+export * from './scaffolder/template-scaffolder';
+export * from './scaffolder/types';
 export * from './template/templatizer';
 export * from './template/types';
 export * from './utils/npm-version-check';
