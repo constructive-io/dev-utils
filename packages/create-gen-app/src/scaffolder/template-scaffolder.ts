@@ -104,12 +104,13 @@ export class TemplateScaffolder {
 
     const branch = options.branch ?? this.config.defaultBranch;
     const resolvedTemplate = this.resolveTemplatePath(template);
+    const useBoilerplatesConfig = options.useBoilerplatesConfig ?? true;
 
     if (this.isLocalPath(resolvedTemplate) && fs.existsSync(resolvedTemplate)) {
-      return this.inspectLocal(resolvedTemplate, options.fromPath);
+      return this.inspectLocal(resolvedTemplate, options.fromPath, useBoilerplatesConfig);
     }
 
-    return this.inspectRemote(resolvedTemplate, branch, options.fromPath);
+    return this.inspectRemote(resolvedTemplate, branch, options.fromPath, useBoilerplatesConfig);
   }
 
   /**
@@ -167,11 +168,13 @@ export class TemplateScaffolder {
 
   private inspectLocal(
     templateDir: string,
-    fromPath?: string
+    fromPath?: string,
+    useBoilerplatesConfig: boolean = true
   ): InspectResult {
     const { fromPath: resolvedFromPath, resolvedTemplatePath } = this.resolveFromPath(
       templateDir,
-      fromPath
+      fromPath,
+      useBoilerplatesConfig
     );
 
     const config = this.readBoilerplateConfig(resolvedTemplatePath);
@@ -189,7 +192,8 @@ export class TemplateScaffolder {
   private inspectRemote(
     templateUrl: string,
     branch: string | undefined,
-    fromPath?: string
+    fromPath?: string,
+    useBoilerplatesConfig: boolean = true
   ): InspectResult {
     const normalizedUrl = this.gitCloner.normalizeUrl(templateUrl);
     const cacheKey = this.cacheManager.createKey(normalizedUrl, branch);
@@ -219,7 +223,8 @@ export class TemplateScaffolder {
 
     const { fromPath: resolvedFromPath, resolvedTemplatePath } = this.resolveFromPath(
       templateDir,
-      fromPath
+      fromPath,
+      useBoilerplatesConfig
     );
 
     const config = this.readBoilerplateConfig(resolvedTemplatePath);
@@ -240,7 +245,8 @@ export class TemplateScaffolder {
   ): Promise<ScaffoldResult> {
     const { fromPath, resolvedTemplatePath } = this.resolveFromPath(
       templateDir,
-      options.fromPath
+      options.fromPath,
+      options.useBoilerplatesConfig ?? true
     );
 
     const boilerplateConfig = this.readBoilerplateConfig(resolvedTemplatePath);
@@ -296,7 +302,8 @@ export class TemplateScaffolder {
 
     const { fromPath, resolvedTemplatePath } = this.resolveFromPath(
       templateDir,
-      options.fromPath
+      options.fromPath,
+      options.useBoilerplatesConfig ?? true
     );
 
     const boilerplateConfig = this.readBoilerplateConfig(resolvedTemplatePath);
@@ -324,12 +331,17 @@ export class TemplateScaffolder {
    *
    * Resolution order:
    * 1. If explicit fromPath is provided and exists, use it directly
-   * 2. If .boilerplates.json exists with a dir field, prepend it to fromPath
+   * 2. If useBoilerplatesConfig is true and .boilerplates.json exists with a dir field, prepend it to fromPath
    * 3. Return the fromPath as-is
+   *
+   * @param templateDir - The template repository root directory
+   * @param fromPath - The subdirectory path to resolve
+   * @param useBoilerplatesConfig - Whether to use .boilerplates.json for fallback resolution (default: true)
    */
   private resolveFromPath(
     templateDir: string,
-    fromPath?: string
+    fromPath?: string,
+    useBoilerplatesConfig: boolean = true
   ): { fromPath?: string; resolvedTemplatePath: string } {
     if (!fromPath) {
       return {
@@ -349,14 +361,17 @@ export class TemplateScaffolder {
       };
     }
 
-    const rootConfig = this.readBoilerplatesConfig(templateDir);
-    if (rootConfig?.dir) {
-      const configBasedPath = path.join(templateDir, rootConfig.dir, fromPath);
-      if (fs.existsSync(configBasedPath) && fs.statSync(configBasedPath).isDirectory()) {
-        return {
-          fromPath: path.join(rootConfig.dir, fromPath),
-          resolvedTemplatePath: configBasedPath,
-        };
+    // Only check .boilerplates.json if useBoilerplatesConfig is true
+    if (useBoilerplatesConfig) {
+      const rootConfig = this.readBoilerplatesConfig(templateDir);
+      if (rootConfig?.dir) {
+        const configBasedPath = path.join(templateDir, rootConfig.dir, fromPath);
+        if (fs.existsSync(configBasedPath) && fs.statSync(configBasedPath).isDirectory()) {
+          return {
+            fromPath: path.join(rootConfig.dir, fromPath),
+            resolvedTemplatePath: configBasedPath,
+          };
+        }
       }
     }
 
