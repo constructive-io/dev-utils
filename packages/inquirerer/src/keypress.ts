@@ -22,13 +22,67 @@ export const KEY_CODES = {
   BACKSPACE_LEGACY: '\x08'  // For compatibility with some systems
 };
 
+interface SharedInputState {
+  dataHandler: (key: string) => void;
+  instances: Set<TerminalKeypress>;
+  rawModeSet: boolean;
+}
+
+const sharedInputStates = new WeakMap<Readable, SharedInputState>();
+
+function getOrCreateSharedState(input: Readable, proc: ProcessWrapper): SharedInputState {
+  let state = sharedInputStates.get(input);
+  if (!state) {
+    const dataHandler = (key: string) => {
+      const currentState = sharedInputStates.get(input);
+      if (!currentState) return;
+      
+      for (const instance of currentState.instances) {
+        if (instance.isActive()) {
+          instance.handleKey(key);
+        }
+      }
+      
+      if (key === KEY_CODES.CTRL_C) {
+        proc.exit(0);
+      }
+    };
+    
+    state = {
+      dataHandler,
+      instances: new Set(),
+      rawModeSet: false
+    };
+    
+    sharedInputStates.set(input, state);
+    input.on('data', dataHandler);
+  }
+  return state;
+}
+
+function removeFromSharedState(input: Readable, instance: TerminalKeypress): void {
+  const state = sharedInputStates.get(input);
+  if (!state) return;
+  
+  state.instances.delete(instance);
+  
+  if (state.instances.size === 0) {
+    input.removeListener('data', state.dataHandler);
+    sharedInputStates.delete(input);
+    
+    if (state.rawModeSet && typeof (input as any).setRawMode === 'function') {
+      (input as any).setRawMode(false);
+    }
+  }
+}
+
 export class TerminalKeypress {
   private listeners: Record<string, KeyHandler[]> = {};
   private active: boolean = true;
   private noTty: boolean;
   private input: Readable;
   private proc: ProcessWrapper;
-  private dataHandler: ((key: string) => void) | null = null;
+  private destroyed: boolean = false;
 
   constructor(
     noTty: boolean = false,
@@ -39,28 +93,30 @@ export class TerminalKeypress {
     this.input = input;
     this.proc = proc;
 
-    // Don't set raw mode yet; let resume() handle it when necessary
     if (this.isTTY()) {
       this.input.resume();
       this.input.setEncoding('utf8');
     }
-    this.setupListeners();
+    this.registerWithSharedState();
+  }
+
+  private registerWithSharedState(): void {
+    const state = getOrCreateSharedState(this.input, this.proc);
+    state.instances.add(this);
   }
 
   isTTY() {
     return !this.noTty;
   }
 
-  private setupListeners(): void {
-    this.dataHandler = (key: string) => {
-      if (!this.active) return;
-      const handlers = this.listeners[key];
-      handlers?.forEach(handler => handler());
-      if (key === KEY_CODES.CTRL_C) { // Ctrl+C
-        this.proc.exit(0);
-      }
-    };
-    this.input.on('data', this.dataHandler);
+  isActive(): boolean {
+    return this.active && !this.destroyed;
+  }
+
+  handleKey(key: string): void {
+    if (!this.active || this.destroyed) return;
+    const handlers = this.listeners[key];
+    handlers?.forEach(handler => handler());
   }
 
   on(key: string, callback: KeyHandler): void {
@@ -85,23 +141,34 @@ export class TerminalKeypress {
 
   pause(): void {
     this.active = false;
+    this.clearHandlers();
   }
 
   resume(): void {
     this.active = true;
     if (this.isTTY() && typeof (this.input as any).setRawMode === 'function') {
       (this.input as any).setRawMode(true);
+      const state = sharedInputStates.get(this.input);
+      if (state) {
+        state.rawModeSet = true;
+      }
     }
   }
 
   destroy(): void {
-    if (typeof (this.input as any).setRawMode === 'function') {
-      (this.input as any).setRawMode(false);
-    }
-    this.input.pause();
-    if (this.dataHandler) {
-      this.input.removeListener('data', this.dataHandler);
-      this.dataHandler = null;
+    if (this.destroyed) return;
+    this.destroyed = true;
+    this.active = false;
+    this.clearHandlers();
+    
+    removeFromSharedState(this.input, this);
+    
+    const state = sharedInputStates.get(this.input);
+    if (!state || state.instances.size === 0) {
+      if (typeof (this.input as any).setRawMode === 'function') {
+        (this.input as any).setRawMode(false);
+      }
+      this.input.pause();
     }
   }
 }
