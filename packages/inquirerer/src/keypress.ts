@@ -22,79 +22,24 @@ export const KEY_CODES = {
   BACKSPACE_LEGACY: '\x08'  // For compatibility with some systems
 };
 
-interface SharedInputState {
-  dataHandler: (key: string) => void;
-  instances: Set<TerminalKeypress>;
-  activeStack: TerminalKeypress[];  // Stack of active instances, top is current owner
-  rawModeSet: boolean;
-}
-
-const sharedInputStates = new WeakMap<Readable, SharedInputState>();
-
-function getOrCreateSharedState(input: Readable): SharedInputState {
-  let state = sharedInputStates.get(input);
-  if (!state) {
-    const dataHandler = (key: string) => {
-      const currentState = sharedInputStates.get(input);
-      if (!currentState) return;
-      
-      // Only dispatch to the top of the active stack (current owner)
-      const owner = currentState.activeStack[currentState.activeStack.length - 1];
-      if (owner) {
-        owner.handleKey(key);
-        
-        // Handle Ctrl+C via the current owner's process wrapper
-        if (key === KEY_CODES.CTRL_C) {
-          owner.exitProcess(0);
-        }
-      }
-    };
-    
-    state = {
-      dataHandler,
-      instances: new Set(),
-      activeStack: [],
-      rawModeSet: false
-    };
-    
-    sharedInputStates.set(input, state);
-    input.on('data', dataHandler);
-  }
-  return state;
-}
-
-function removeFromSharedState(input: Readable, instance: TerminalKeypress): void {
-  const state = sharedInputStates.get(input);
-  if (!state) return;
-  
-  state.instances.delete(instance);
-  
-  // Remove from active stack as well
-  const stackIndex = state.activeStack.indexOf(instance);
-  if (stackIndex !== -1) {
-    state.activeStack.splice(stackIndex, 1);
-  }
-  
-  // If stack is now empty, disable raw mode
-  if (state.activeStack.length === 0 && state.rawModeSet) {
-    if (typeof (input as any).setRawMode === 'function') {
-      (input as any).setRawMode(false);
-    }
-    state.rawModeSet = false;
-  }
-  
-  if (state.instances.size === 0) {
-    input.removeListener('data', state.dataHandler);
-    sharedInputStates.delete(input);
-  }
-}
-
+/**
+ * Handles keyboard input for interactive prompts.
+ * 
+ * **Important**: Only one TerminalKeypress instance should be actively listening
+ * on a given input stream at a time. If you need multiple Inquirerer instances,
+ * call `close()` on the first instance before using the second, or reuse a single
+ * instance for all prompts.
+ * 
+ * Multiple instances sharing the same input stream (e.g., process.stdin) will
+ * each receive all keypresses, which can cause duplicate or unexpected behavior.
+ */
 export class TerminalKeypress {
   private listeners: Record<string, KeyHandler[]> = {};
+  private active: boolean = true;
   private noTty: boolean;
   private input: Readable;
   private proc: ProcessWrapper;
-  private destroyed: boolean = false;
+  private dataHandler: ((key: string) => void) | null = null;
 
   constructor(
     noTty: boolean = false,
@@ -109,34 +54,23 @@ export class TerminalKeypress {
       this.input.resume();
       this.input.setEncoding('utf8');
     }
-    this.registerWithSharedState();
-  }
-
-  private registerWithSharedState(): void {
-    const state = getOrCreateSharedState(this.input);
-    state.instances.add(this);
+    this.setupListeners();
   }
 
   isTTY() {
     return !this.noTty;
   }
 
-  isActive(): boolean {
-    if (this.destroyed) return false;
-    const state = sharedInputStates.get(this.input);
-    if (!state) return false;
-    // Active only if this instance is the current owner (top of stack)
-    return state.activeStack[state.activeStack.length - 1] === this;
-  }
-
-  exitProcess(code?: number): void {
-    this.proc.exit(code);
-  }
-
-  handleKey(key: string): void {
-    if (this.destroyed) return;
-    const handlers = this.listeners[key];
-    handlers?.forEach(handler => handler());
+  private setupListeners(): void {
+    this.dataHandler = (key: string) => {
+      if (!this.active) return;
+      const handlers = this.listeners[key];
+      handlers?.forEach(handler => handler());
+      if (key === KEY_CODES.CTRL_C) {
+        this.proc.exit(0);
+      }
+    };
+    this.input.on('data', this.dataHandler);
   }
 
   on(key: string, callback: KeyHandler): void {
@@ -160,57 +94,25 @@ export class TerminalKeypress {
   }
 
   pause(): void {
-    const state = sharedInputStates.get(this.input);
-    if (!state) return;
-    
-    // Remove from active stack (from anywhere, not just top)
-    const stackIndex = state.activeStack.indexOf(this);
-    if (stackIndex !== -1) {
-      state.activeStack.splice(stackIndex, 1);
-    }
-    
-    // If stack is now empty, disable raw mode
-    if (state.activeStack.length === 0 && state.rawModeSet) {
-      if (this.isTTY() && typeof (this.input as any).setRawMode === 'function') {
-        (this.input as any).setRawMode(false);
-      }
-      state.rawModeSet = false;
-    }
+    this.active = false;
+    this.clearHandlers();
   }
 
   resume(): void {
-    if (this.destroyed) return;
-    
-    const state = sharedInputStates.get(this.input);
-    if (!state) return;
-    
-    // Move-to-top semantics: remove from anywhere in stack, then push to top
-    const existingIndex = state.activeStack.indexOf(this);
-    if (existingIndex !== -1) {
-      state.activeStack.splice(existingIndex, 1);
-    }
-    state.activeStack.push(this);
-    
-    // Enable raw mode if TTY
+    this.active = true;
     if (this.isTTY() && typeof (this.input as any).setRawMode === 'function') {
       (this.input as any).setRawMode(true);
-      state.rawModeSet = true;
     }
   }
 
   destroy(): void {
-    if (this.destroyed) return;
-    this.destroyed = true;
-    this.clearHandlers();
-    
-    removeFromSharedState(this.input, this);
-    
-    const state = sharedInputStates.get(this.input);
-    if (!state || state.instances.size === 0) {
-      if (typeof (this.input as any).setRawMode === 'function') {
-        (this.input as any).setRawMode(false);
-      }
-      this.input.pause();
+    if (typeof (this.input as any).setRawMode === 'function') {
+      (this.input as any).setRawMode(false);
+    }
+    this.input.pause();
+    if (this.dataHandler) {
+      this.input.removeListener('data', this.dataHandler);
+      this.dataHandler = null;
     }
   }
 }

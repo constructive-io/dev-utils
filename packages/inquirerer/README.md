@@ -189,6 +189,34 @@ close(): void
 exit(): void
 ```
 
+#### Managing Multiple Instances
+
+When working with multiple `Inquirerer` instances that share the same input stream (typically `process.stdin`), only one instance should be actively prompting at a time. Each instance attaches its own keyboard listener, so having multiple active instances will cause duplicate or unexpected keypress behavior.
+
+**Best practices:**
+
+1. **Reuse a single instance** - Create one `Inquirerer` instance and reuse it for all prompts:
+   ```typescript
+   const prompter = new Inquirerer();
+   
+   // Use the same instance for multiple prompt sessions
+   const answers1 = await prompter.prompt({}, questions1);
+   const answers2 = await prompter.prompt({}, questions2);
+   
+   prompter.close(); // Clean up when done
+   ```
+
+2. **Close before creating another** - If you need separate instances, close the first before using the second:
+   ```typescript
+   const prompter1 = new Inquirerer();
+   const answers1 = await prompter1.prompt({}, questions1);
+   prompter1.close(); // Important: close before creating another
+   
+   const prompter2 = new Inquirerer();
+   const answers2 = await prompter2.prompt({}, questions2);
+   prompter2.close();
+   ```
+
 ### Question Types
 
 #### Text Question
