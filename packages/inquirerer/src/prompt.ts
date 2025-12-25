@@ -113,7 +113,7 @@ class PromptContext {
 }
 
 
-function generatePromptMessageCompact(question: Question, ctx: PromptContext): string {
+function generatePromptMessage(question: Question, ctx: PromptContext): string {
   const {
     message,
     name,
@@ -174,80 +174,6 @@ function generatePromptMessageCompact(question: Question, ctx: PromptContext): s
   return lines.join('\n') + '\n';
 }
 
-function generatePromptMessage(question: Question, ctx: PromptContext): string {
-  const {
-    message,
-    name,
-    type = 'text',
-    default: def,
-    options = [],
-    description
-  } = question as Question & { options?: OptionValue[]; description?: string };
-
-  const lines: string[] = [];
-
-  // 1. Title Message
-  lines.push(whiteBright.bold(message || `${name}?`));
-
-  // 2. Optional description below title
-  if (description) {
-    lines.push(dim(description));
-  }
-
-  // 3. Validation warning (if failed before)
-  const validation = validationMessage(question, ctx);
-  if (validation) {
-    lines.push(validation); // already red-colored
-  }
-
-  // 4. Metadata (name/type)
-  lines.push(
-    `${dim('Argument')} ${green(`--${name}`)} ${dim('type')} ${cyan(`[${type}]`)}`
-  );
-
-  // 5. Default value or guidance
-  let guidance = '';
-
-  switch (type) {
-    case 'confirm':
-      guidance = '(y/n)';
-      if (def !== undefined) {
-        guidance += ` ${yellow(`[default: ${def ? 'y' : 'n'}]`)}`;
-      }
-      break;
-
-    case 'text':
-    case 'number':
-      if (def !== undefined) {
-        guidance = yellow(`[default: ${def}]`);
-      }
-      break;
-
-    case 'autocomplete':
-    case 'list':
-    case 'checkbox':
-      if (def !== undefined) {
-        const defaults = Array.isArray(def) ? def : [def];
-        const rendered = defaults.map(d => yellow(d)).join(gray(', '));
-        guidance += `${yellow(`[default: ${rendered}]`)}`;
-      }
-      break;
-  }
-
-  if (guidance) {
-    lines.push(guidance);
-  }
-
-  // 6. Final input prompt
-  lines.push(white('> ') + dim('Your input:'));
-
-  return lines.join('\n') + '\n';
-}
-
-
-
-export type PromptStyle = 'compact' | 'verbose';
-
 export interface InquirererOptions {
   noTty?: boolean;
   input?: Readable;
@@ -256,7 +182,6 @@ export interface InquirererOptions {
   globalMaxLines?: number;
   mutateArgs?: boolean;
   resolverRegistry?: DefaultResolverRegistry;
-  promptStyle?: PromptStyle;
 }
 export class Inquirerer {
   private rl: readline.Interface | null;
@@ -268,7 +193,6 @@ export class Inquirerer {
   private globalMaxLines: number;
   private mutateArgs: boolean;
   private resolverRegistry: DefaultResolverRegistry;
-  private promptStyle: PromptStyle;
 
   private handledKeys: Set<string> = new Set();
 
@@ -282,8 +206,7 @@ export class Inquirerer {
       useDefaults = false,
       globalMaxLines = 10,
       mutateArgs = true,
-      resolverRegistry = globalResolverRegistry,
-      promptStyle = 'compact'
+      resolverRegistry = globalResolverRegistry
     } = options ?? {}
 
     this.useDefaults = useDefaults;
@@ -293,7 +216,6 @@ export class Inquirerer {
     this.input = input;
     this.globalMaxLines = globalMaxLines;
     this.resolverRegistry = resolverRegistry;
-    this.promptStyle = promptStyle;
 
     if (!noTty) {
       this.rl = readline.createInterface({
@@ -325,9 +247,7 @@ export class Inquirerer {
   }
 
   private getPrompt(question: Question, ctx: PromptContext, input: string) {
-    const promptMessage = this.promptStyle === 'compact'
-      ? generatePromptMessageCompact(question, ctx)
-      : generatePromptMessage(question, ctx);
+    const promptMessage = generatePromptMessage(question, ctx);
     return promptMessage + this.getInput(input);
   }
   private displayPrompt(question: Question, ctx: PromptContext, input: string) {
