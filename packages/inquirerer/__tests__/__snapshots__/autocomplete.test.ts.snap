@@ -17,7 +17,6 @@ exports[`Inquirerer prompts user and correctly processes delayed input 3`] = `
   "",
   "autocompleteField?<SPACE>(--autocompleteField)
 ><SPACE>
-$<SPACE>
 ",
   "><SPACE>first<SPACE>option
 ",
@@ -28,7 +27,6 @@ $<SPACE>
   "",
   "autocompleteField?<SPACE>(--autocompleteField)
 ><SPACE>
-$<SPACE>
 ",
   "<SPACE><SPACE>first<SPACE>option
 ",
@@ -39,7 +37,6 @@ $<SPACE>
   "",
   "autocompleteField?<SPACE>(--autocompleteField)
 ><SPACE>
-$<SPACE>
 ",
   "<SPACE><SPACE>first<SPACE>option
 ",

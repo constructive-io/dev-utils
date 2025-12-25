@@ -168,9 +168,6 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
     lines.push(validation); // already styled red
   }
 
-  // 5. Final input line
-  lines.push(white('> '));
-
   return lines.join('\n') + '\n';
 }
 
@@ -243,7 +240,7 @@ export class Inquirerer {
   }
 
   private getInput(input: string) {
-    return `${white.bold('$')} ${input}`;
+    return `${white('>')} ${input}`;
   }
 
   private getPrompt(question: Question, ctx: PromptContext, input: string) {
