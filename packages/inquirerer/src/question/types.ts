@@ -17,6 +17,7 @@ export interface Validation {
 export interface BaseQuestion {
     name: string;
     type: string;
+    _?: boolean;
     default?: any;
     defaultFrom?: string;
     setFrom?: string;

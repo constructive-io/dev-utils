@@ -401,6 +401,10 @@ export class Inquirerer {
     // Resolve setFrom values - these bypass prompting entirely
     await this.resolveSetValues(questions, obj);
 
+    // Extract positional arguments from argv._ and assign to questions with _: true
+    // This must happen before applyOverrides so positional values flow through override pipeline
+    this.extractPositionalArgs(argv, obj, questions);
+
     // first loop through the question, and set any overrides in case other questions use objs for validation
     this.applyOverrides(argv, obj, questions);
 
@@ -551,6 +555,56 @@ export class Inquirerer {
           (question as any).options = resolved;
         }
       }
+    }
+  }
+
+  /**
+   * Extracts positional arguments from argv._ and assigns them to questions marked with _: true.
+   * 
+   * Rules:
+   * 1. Named arguments take precedence - if a question already has a value in argv, skip it
+   * 2. Positional questions consume from argv._ left-to-right in declaration order
+   * 3. Extra positional values remain in argv._ untouched
+   * 4. Missing positional values leave questions unset (for prompting/validation)
+   * 
+   * This effectively allows "naming positional parameters" - users can pass values
+   * without flags and they'll be assigned to the appropriate question names.
+   */
+  private extractPositionalArgs(argv: any, obj: any, questions: Question[]): void {
+    // Get positional arguments array from argv (minimist convention)
+    const positionals: any[] = Array.isArray(argv._) ? [...argv._] : [];
+    if (positionals.length === 0) {
+      return;
+    }
+
+    // Track which positional index we're consuming from
+    let positionalIndex = 0;
+
+    // Process questions in declaration order to maintain predictable assignment
+    for (const question of questions) {
+      // Only process questions marked as positional
+      if (!question._) {
+        continue;
+      }
+
+      // Skip if this question already has a named argument value
+      // Named arguments always take precedence over positional
+      if (question.name in argv && question.name !== '_') {
+        continue;
+      }
+
+      // Skip if we've exhausted all positional arguments
+      if (positionalIndex >= positionals.length) {
+        break;
+      }
+
+      // Assign the next positional value to this question
+      const value = positionals[positionalIndex];
+      obj[question.name] = value;
+      // Also set in argv so that handleOverrides can process it correctly
+      // (for list/autocomplete/checkbox option mapping)
+      argv[question.name] = value;
+      positionalIndex++;
     }
   }
 
