@@ -295,9 +295,7 @@ async function promptForTemplate(templates: string[]): Promise<string> {
     };
     return answers.template;
   } finally {
-    if (typeof (prompter as any).close === 'function') {
-      (prompter as any).close();
-    }
+    prompter.close();
   }
 }
 

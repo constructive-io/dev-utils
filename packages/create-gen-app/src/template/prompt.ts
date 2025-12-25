@@ -98,9 +98,7 @@ export async function promptUser(
       ...promptAnswers,
     };
   } finally {
-    if (typeof (prompter as any).close === 'function') {
-      (prompter as any).close();
-    }
+    prompter.close();
   }
 }
 
