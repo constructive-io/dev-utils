@@ -57,6 +57,15 @@ export interface ScaffoldOptions {
   fromPath?: string;
 
   /**
+   * Whether to use .boilerplates.json for path resolution fallback.
+   * When true (default), if fromPath doesn't exist directly, the resolver
+   * will check .boilerplates.json for a base directory to prepend.
+   * When false, .boilerplates.json is ignored and fromPath is used as-is.
+   * @default true
+   */
+  useBoilerplatesConfig?: boolean;
+
+  /**
    * Output directory for the generated project
    */
   outputDir: string;
@@ -167,6 +176,15 @@ export interface InspectOptions {
    * Can be a direct path or a variant name that gets resolved via .boilerplates.json
    */
   fromPath?: string;
+
+  /**
+   * Whether to use .boilerplates.json for path resolution fallback.
+   * When true (default), if fromPath doesn't exist directly, the resolver
+   * will check .boilerplates.json for a base directory to prepend.
+   * When false, .boilerplates.json is ignored and fromPath is used as-is.
+   * @default true
+   */
+  useBoilerplatesConfig?: boolean;
 }
 
 /**
