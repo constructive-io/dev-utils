@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.3.2...inquirerer@2.4.0) (2025-12-25)
+
+### Bug Fixes
+
+- **inquirerer:** strip consumed positionals from argv.\_ and respect mutateArgs ([9341f86](https://github.com/constructive-io/dev-utils/commit/9341f860479b473f95af7daa482340b868774859))
+
+### Features
+
+- **inquirerer:** add positional arguments support with \_ property ([227409d](https://github.com/constructive-io/dev-utils/commit/227409df232f7efc520dfc761e901bb5e2eb5979))
+
 ## [2.3.2](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.3.1...inquirerer@2.3.2) (2025-12-25)
 
 ### Reverts
