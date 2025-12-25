@@ -16,6 +16,7 @@ jest.mock('inquirerer', () => {
     Inquirerer: jest.fn().mockImplementation(() => {
       return {
         prompt: jest.fn().mockResolvedValue({}),
+        close: jest.fn(),
       };
     }),
     registerDefaultResolver: jest.fn(),
@@ -206,6 +207,7 @@ module.exports = {
 
       Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
+        close: jest.fn(),
       }));
 
       const extractedVariables: ExtractedVariables = {
@@ -233,6 +235,7 @@ module.exports = {
 
       Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
+        close: jest.fn(),
       }));
 
       const extractedVariables: ExtractedVariables = {
@@ -268,6 +271,7 @@ module.exports = {
 
       Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
+        close: jest.fn(),
       }));
 
       const extractedVariables: ExtractedVariables = {
@@ -293,6 +297,7 @@ module.exports = {
 
       Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
+        close: jest.fn(),
       }));
 
       const extractedVariables: ExtractedVariables = {
@@ -325,6 +330,7 @@ module.exports = {
 
       Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
+        close: jest.fn(),
       }));
 
       const extractedVariables: ExtractedVariables = {
@@ -359,6 +365,7 @@ module.exports = {
 
       Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
+        close: jest.fn(),
       }));
 
       const extractedVariables: ExtractedVariables = {
@@ -389,6 +396,7 @@ module.exports = {
 
       Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
+        close: jest.fn(),
       }));
 
       const extractedVariables: ExtractedVariables = {
