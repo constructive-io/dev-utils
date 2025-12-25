@@ -37,15 +37,65 @@ npm install create-gen-app
 
 ## Library Usage
 
-`create-gen-app` provides a modular set of classes to handle template cloning, caching, and processing.
+`create-gen-app` provides both a high-level orchestrator and modular building blocks for template scaffolding.
 
-### Core Components
+### Quick Start with TemplateScaffolder
 
-- **CacheManager**: Handles local caching of git repositories with TTL (Time-To-Live) support.
-- **GitCloner**: Handles cloning git repositories.
-- **Templatizer**: Handles variable extraction, user prompting, and template generation.
+The easiest way to use `create-gen-app` is with the `TemplateScaffolder` class, which combines caching, cloning, and template processing into a single API:
 
-### Example: Orchestration
+```typescript
+import { TemplateScaffolder } from 'create-gen-app';
+
+const scaffolder = new TemplateScaffolder({
+  toolName: 'my-cli',                    // Cache directory: ~/.my-cli/cache
+  defaultRepo: 'org/my-templates',       // Default template repository
+  ttlMs: 7 * 24 * 60 * 60 * 1000,       // Cache TTL: 1 week
+});
+
+// Scaffold a project from the default repo
+await scaffolder.scaffold({
+  outputDir: './my-project',
+  fromPath: 'starter',                   // Use the "starter" template variant
+  answers: { projectName: 'my-app' },    // Pre-populate answers
+});
+
+// Or scaffold from a specific repo
+await scaffolder.scaffold({
+  template: 'https://github.com/other/templates.git',
+  outputDir: './another-project',
+  branch: 'v2',
+});
+```
+
+### Template Repository Conventions
+
+`TemplateScaffolder` supports the `.boilerplates.json` convention for organizing multiple templates in a single repository:
+
+```
+my-templates/
+├── .boilerplates.json    # { "dir": "templates" }
+└── templates/
+    ├── starter/
+    │   ├── .boilerplate.json
+    │   └── ...template files...
+    └── advanced/
+        ├── .boilerplate.json
+        └── ...template files...
+```
+
+When you call `scaffold({ fromPath: 'starter' })`, the scaffolder will:
+1. Check if `starter/` exists directly in the repo root
+2. If not, read `.boilerplates.json` and look for `templates/starter/`
+
+### Core Components (Building Blocks)
+
+For more control, you can use the individual components directly:
+
+- **CacheManager**: Handles local caching of git repositories with TTL support
+- **GitCloner**: Handles cloning git repositories
+- **Templatizer**: Handles variable extraction, user prompting, and template generation
+
+### Example: Manual Orchestration
 
 Here is how you can combine these components to create a full CLI pipeline (similar to `create-gen-app-test`):
 
@@ -149,6 +199,28 @@ Note: `.boilerplate.json`, `.boilerplate.js`, and `.boilerplates.json` files are
 No code changes are needed; the generator discovers templates at runtime and will warn if a `.questions` option doesn’t have a matching template.
 
 ## API Overview
+
+### TemplateScaffolder (Recommended)
+
+The high-level orchestrator that combines caching, cloning, and template processing:
+
+- `new TemplateScaffolder(config)`: Initialize with configuration:
+  - `toolName` (required): Name for cache directory (e.g., `'my-cli'` → `~/.my-cli/cache`)
+  - `defaultRepo`: Default template repository URL or `org/repo` shorthand
+  - `defaultBranch`: Default branch to clone
+  - `ttlMs`: Cache time-to-live in milliseconds
+  - `cacheBaseDir`: Override cache location (useful for tests)
+- `scaffold(options)`: Scaffold a project from a template:
+  - `template`: Repository URL, local path, or `org/repo` shorthand (uses `defaultRepo` if not provided)
+  - `outputDir` (required): Output directory for generated project
+  - `fromPath`: Subdirectory within template to use
+  - `branch`: Branch to clone
+  - `answers`: Pre-populated answers to skip prompting
+  - `noTty`: Disable interactive prompts
+  - `prompter`: Reuse an existing Inquirerer instance
+- `readBoilerplatesConfig(dir)`: Read `.boilerplates.json` from a template repo
+- `readBoilerplateConfig(dir)`: Read `.boilerplate.json` from a template directory
+- `getCacheManager()`, `getGitCloner()`, `getTemplatizer()`: Access underlying components
 
 ### CacheManager
 - `new CacheManager(config)`: Initialize with `toolName` and optional `ttl`.
