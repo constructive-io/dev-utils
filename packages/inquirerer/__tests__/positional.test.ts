@@ -131,13 +131,13 @@ describe('Positional Arguments (_: true)', () => {
 
       expect(result.foo).toBe('named-foo');
       expect(result.bar).toBe('named-bar');
-      // Extra positionals should remain in argv._
-      expect(argv._).toEqual(['extra1', 'extra2']);
+      // No positionals consumed (all questions had named args), so all remain
+      expect(result._).toEqual(['extra1', 'extra2']);
     });
   });
 
   describe('Extra and missing positional values', () => {
-    it('leaves extra positional values in argv._ untouched', async () => {
+    it('strips consumed positionals and leaves extras in result._', async () => {
       const questions: Question[] = [
         { _: true, name: 'first', type: 'text' }
       ];
@@ -146,8 +146,10 @@ describe('Positional Arguments (_: true)', () => {
       const result = await prompter.prompt(argv, questions);
 
       expect(result.first).toBe('value1');
-      // Extra positionals should remain
-      expect(argv._).toEqual(['value1', 'value2', 'value3']);
+      // Consumed positionals are stripped, extras remain in result._
+      expect(result._).toEqual(['value2', 'value3']);
+      // Original argv._ is also mutated (default mutateArgs: true)
+      expect(argv._).toEqual(['value2', 'value3']);
     });
 
     it('handles fewer positional values than positional questions', async () => {
@@ -301,16 +303,19 @@ describe('Positional Arguments (_: true)', () => {
   });
 
   describe('mutateArgs behavior', () => {
-    it('mutates argv when mutateArgs is true (default)', async () => {
+    it('mutates argv and strips positionals when mutateArgs is true (default)', async () => {
       const questions: Question[] = [
         { _: true, name: 'foo', type: 'text' }
       ];
-      const argv: TestResult = { _: ['value1'] };
+      const argv: TestResult = { _: ['value1', 'extra'] };
 
-      await prompter.prompt(argv, questions);
+      const result = await prompter.prompt(argv, questions);
 
-      // argv should have foo added to it
+      // argv should have foo added and _ stripped
       expect(argv).toHaveProperty('foo', 'value1');
+      expect(argv._).toEqual(['extra']);
+      // result should also have stripped _
+      expect(result._).toEqual(['extra']);
     });
 
     it('does not mutate original argv when mutateArgs is false', async () => {
@@ -318,16 +323,16 @@ describe('Positional Arguments (_: true)', () => {
       const questions: Question[] = [
         { _: true, name: 'foo', type: 'text' }
       ];
-      const argv: TestResult = { _: ['value1'] };
-      const originalArgv = { ...argv };
+      const argv: TestResult = { _: ['value1', 'extra'] };
 
       const result = await nonMutatingPrompter.prompt(argv, questions);
 
-      // Result should have the value
+      // Result should have the value and stripped _
       expect(result.foo).toBe('value1');
-      // Original argv should not have foo (only _ was there originally)
-      // Note: extractPositionalArgs does modify argv to set the key for override processing
-      // but the returned object is a copy
+      expect(result._).toEqual(['extra']);
+      // Original argv should NOT be mutated
+      expect(argv._).toEqual(['value1', 'extra']);
+      expect(argv).not.toHaveProperty('foo');
       nonMutatingPrompter.close();
     });
 
@@ -335,11 +340,14 @@ describe('Positional Arguments (_: true)', () => {
       const questions: Question[] = [
         { _: true, name: 'foo', type: 'text' }
       ];
-      const argv: TestResult = { _: ['value1'] };
+      const argv: TestResult = { _: ['value1', 'extra'] };
 
       const result = await prompter.prompt(argv, questions, { mutateArgs: false });
 
       expect(result.foo).toBe('value1');
+      expect(result._).toEqual(['extra']);
+      // Original argv should NOT be mutated
+      expect(argv._).toEqual(['value1', 'extra']);
     });
   });
 
