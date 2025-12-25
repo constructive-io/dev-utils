@@ -145,3 +145,62 @@ export interface BoilerplateConfig {
    */
   questions?: Question[];
 }
+
+/**
+ * Options for inspecting a template without scaffolding.
+ * Used to read template metadata before deciding how to handle it.
+ */
+export interface InspectOptions {
+  /**
+   * Template repository URL, local path, or org/repo shorthand.
+   * If not provided, uses the defaultRepo from config.
+   */
+  template?: string;
+
+  /**
+   * Branch to clone (for remote repositories)
+   */
+  branch?: string;
+
+  /**
+   * Subdirectory within the template repository to inspect.
+   * Can be a direct path or a variant name that gets resolved via .boilerplates.json
+   */
+  fromPath?: string;
+}
+
+/**
+ * Result of inspecting a template.
+ * Contains metadata about the template without copying any files.
+ */
+export interface InspectResult {
+  /**
+   * Path to the cached/cloned template directory
+   */
+  templateDir: string;
+
+  /**
+   * The resolved fromPath after .boilerplates.json resolution
+   */
+  resolvedFromPath?: string;
+
+  /**
+   * Full path to the resolved template directory
+   */
+  resolvedTemplatePath: string;
+
+  /**
+   * Whether a cached template was used
+   */
+  cacheUsed: boolean;
+
+  /**
+   * Whether the cache was expired and refreshed
+   */
+  cacheExpired: boolean;
+
+  /**
+   * The .boilerplate.json configuration from the template, if present
+   */
+  config: BoilerplateConfig | null;
+}
