@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.2.1...inquirerer@2.3.0) (2025-12-25)
+
+### Bug Fixes
+
+- **inquirerer:** remove redundant $ input indicator, keep only > ([4b1b739](https://github.com/constructive-io/dev-utils/commit/4b1b7394b60ef2fea3cc67b885b92ddd52f01270))
+
+### Features
+
+- **inquirerer:** add compact prompt style as default ([b757265](https://github.com/constructive-io/dev-utils/commit/b757265365b5f5e2541b49cec31f8d141abbe044))
+
 ## [2.2.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.2.0...inquirerer@2.2.1) (2025-12-25)
 
 ### Bug Fixes
