@@ -25,32 +25,35 @@ export const KEY_CODES = {
 interface SharedInputState {
   dataHandler: (key: string) => void;
   instances: Set<TerminalKeypress>;
+  activeStack: TerminalKeypress[];  // Stack of active instances, top is current owner
   rawModeSet: boolean;
 }
 
 const sharedInputStates = new WeakMap<Readable, SharedInputState>();
 
-function getOrCreateSharedState(input: Readable, proc: ProcessWrapper): SharedInputState {
+function getOrCreateSharedState(input: Readable): SharedInputState {
   let state = sharedInputStates.get(input);
   if (!state) {
     const dataHandler = (key: string) => {
       const currentState = sharedInputStates.get(input);
       if (!currentState) return;
       
-      for (const instance of currentState.instances) {
-        if (instance.isActive()) {
-          instance.handleKey(key);
+      // Only dispatch to the top of the active stack (current owner)
+      const owner = currentState.activeStack[currentState.activeStack.length - 1];
+      if (owner) {
+        owner.handleKey(key);
+        
+        // Handle Ctrl+C via the current owner's process wrapper
+        if (key === KEY_CODES.CTRL_C) {
+          owner.exitProcess(0);
         }
-      }
-      
-      if (key === KEY_CODES.CTRL_C) {
-        proc.exit(0);
       }
     };
     
     state = {
       dataHandler,
       instances: new Set(),
+      activeStack: [],
       rawModeSet: false
     };
     
@@ -66,19 +69,28 @@ function removeFromSharedState(input: Readable, instance: TerminalKeypress): voi
   
   state.instances.delete(instance);
   
+  // Remove from active stack as well
+  const stackIndex = state.activeStack.indexOf(instance);
+  if (stackIndex !== -1) {
+    state.activeStack.splice(stackIndex, 1);
+  }
+  
+  // If stack is now empty, disable raw mode
+  if (state.activeStack.length === 0 && state.rawModeSet) {
+    if (typeof (input as any).setRawMode === 'function') {
+      (input as any).setRawMode(false);
+    }
+    state.rawModeSet = false;
+  }
+  
   if (state.instances.size === 0) {
     input.removeListener('data', state.dataHandler);
     sharedInputStates.delete(input);
-    
-    if (state.rawModeSet && typeof (input as any).setRawMode === 'function') {
-      (input as any).setRawMode(false);
-    }
   }
 }
 
 export class TerminalKeypress {
   private listeners: Record<string, KeyHandler[]> = {};
-  private active: boolean = true;
   private noTty: boolean;
   private input: Readable;
   private proc: ProcessWrapper;
@@ -101,7 +113,7 @@ export class TerminalKeypress {
   }
 
   private registerWithSharedState(): void {
-    const state = getOrCreateSharedState(this.input, this.proc);
+    const state = getOrCreateSharedState(this.input);
     state.instances.add(this);
   }
 
@@ -110,11 +122,19 @@ export class TerminalKeypress {
   }
 
   isActive(): boolean {
-    return this.active && !this.destroyed;
+    if (this.destroyed) return false;
+    const state = sharedInputStates.get(this.input);
+    if (!state) return false;
+    // Active only if this instance is the current owner (top of stack)
+    return state.activeStack[state.activeStack.length - 1] === this;
+  }
+
+  exitProcess(code?: number): void {
+    this.proc.exit(code);
   }
 
   handleKey(key: string): void {
-    if (!this.active || this.destroyed) return;
+    if (this.destroyed) return;
     const handlers = this.listeners[key];
     handlers?.forEach(handler => handler());
   }
@@ -140,25 +160,47 @@ export class TerminalKeypress {
   }
 
   pause(): void {
-    this.active = false;
-    this.clearHandlers();
+    const state = sharedInputStates.get(this.input);
+    if (!state) return;
+    
+    // Remove from active stack (from anywhere, not just top)
+    const stackIndex = state.activeStack.indexOf(this);
+    if (stackIndex !== -1) {
+      state.activeStack.splice(stackIndex, 1);
+    }
+    
+    // If stack is now empty, disable raw mode
+    if (state.activeStack.length === 0 && state.rawModeSet) {
+      if (this.isTTY() && typeof (this.input as any).setRawMode === 'function') {
+        (this.input as any).setRawMode(false);
+      }
+      state.rawModeSet = false;
+    }
   }
 
   resume(): void {
-    this.active = true;
+    if (this.destroyed) return;
+    
+    const state = sharedInputStates.get(this.input);
+    if (!state) return;
+    
+    // Move-to-top semantics: remove from anywhere in stack, then push to top
+    const existingIndex = state.activeStack.indexOf(this);
+    if (existingIndex !== -1) {
+      state.activeStack.splice(existingIndex, 1);
+    }
+    state.activeStack.push(this);
+    
+    // Enable raw mode if TTY
     if (this.isTTY() && typeof (this.input as any).setRawMode === 'function') {
       (this.input as any).setRawMode(true);
-      const state = sharedInputStates.get(this.input);
-      if (state) {
-        state.rawModeSet = true;
-      }
+      state.rawModeSet = true;
     }
   }
 
   destroy(): void {
     if (this.destroyed) return;
     this.destroyed = true;
-    this.active = false;
     this.clearHandlers();
     
     removeFromSharedState(this.input, this);

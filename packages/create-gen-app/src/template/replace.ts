@@ -127,9 +127,6 @@ async function ensureLicenseFile(
   const licensePath = path.join(outputDir, 'LICENSE');
   fs.mkdirSync(path.dirname(licensePath), { recursive: true });
   fs.writeFileSync(licensePath, content.trimEnd() + '\n', 'utf8');
-  console.log(
-    `[create-gen-app] LICENSE updated with ${selectedLicense} template.`
-  );
 }
 
 /**
