@@ -15,7 +15,7 @@ export class Templatizer {
    * Process a local template directory (extract + prompt + replace)
    * @param templateDir - Local directory path (MUST be local, NOT git URL)
    * @param outputDir - Output directory for generated project
-   * @param options - Processing options (argv overrides, noTty)
+   * @param options - Processing options (argv overrides, noTty, prompter)
    * @returns Processing result
    */
   async process(
@@ -35,11 +35,12 @@ export class Templatizer {
     // Extract variables
     const variables = await this.extract(actualTemplateDir);
 
-    // Prompt for values
+    // Prompt for values (pass through optional prompter)
     const answers = await this.prompt(
       variables,
       options?.argv,
-      options?.noTty
+      options?.noTty,
+      options?.prompter
     );
 
     // Replace variables
@@ -61,13 +62,18 @@ export class Templatizer {
 
   /**
    * Prompt user for variables
+   * @param extracted - Extracted variables from template
+   * @param argv - Pre-populated answers
+   * @param noTty - Whether to disable TTY mode
+   * @param prompter - Optional existing Inquirerer instance to reuse
    */
   async prompt(
     extracted: ExtractedVariables,
     argv?: Record<string, any>,
-    noTty?: boolean
+    noTty?: boolean,
+    prompter?: import('inquirerer').Inquirerer
   ): Promise<Record<string, any>> {
-    return promptUser(extracted, argv ?? {}, noTty ?? false);
+    return promptUser(extracted, argv ?? {}, noTty ?? false, prompter);
   }
 
   /**

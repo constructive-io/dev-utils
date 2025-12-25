@@ -72,12 +72,16 @@ function normalizeQuestionName(name: string): string {
  * @param extractedVariables - Variables extracted from the template
  * @param argv - Command-line arguments to pre-populate answers
  * @param noTty - Whether to disable TTY mode
+ * @param existingPrompter - Optional existing Inquirerer instance to reuse.
+ *   If provided, the caller retains ownership and must close it themselves.
+ *   If not provided, a new instance is created and closed automatically.
  * @returns Answers from the user
  */
 export async function promptUser(
   extractedVariables: ExtractedVariables,
   argv: Record<string, any> = {},
-  noTty: boolean = false
+  noTty: boolean = false,
+  existingPrompter?: Inquirerer
 ): Promise<Record<string, any>> {
   const questions = generateQuestions(extractedVariables);
   
@@ -87,9 +91,10 @@ export async function promptUser(
 
   const preparedArgv = mapArgvToQuestions(argv, questions);
   
-  const prompter = new Inquirerer({
-    noTty
-  });
+  // If an existing prompter is provided, use it (caller owns lifecycle)
+  // Otherwise, create a new one and close it when done
+  const prompter = existingPrompter ?? new Inquirerer({ noTty });
+  const shouldClose = !existingPrompter;
 
   try {
     const promptAnswers = await prompter.prompt(preparedArgv, questions);
@@ -98,7 +103,9 @@ export async function promptUser(
       ...promptAnswers,
     };
   } finally {
-    prompter.close();
+    if (shouldClose) {
+      prompter.close();
+    }
   }
 }
 
