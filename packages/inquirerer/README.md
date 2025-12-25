@@ -50,6 +50,7 @@ npm install inquirerer
     - [Autocomplete Question](#autocomplete-question)
     - [Checkbox Question](#checkbox-question)
   - [Advanced Question Options](#advanced-question-options)
+  - [Positional Arguments](#positional-arguments)
 - [Real-World Examples](#real-world-examples)
   - [Project Setup Wizard](#project-setup-wizard)
   - [Configuration Builder](#configuration-builder)
@@ -129,6 +130,7 @@ All questions support these base properties:
 interface BaseQuestion {
   name: string;           // Property name in result object
   type: string;           // Question type
+  _?: boolean;            // Mark as positional argument (can be passed without --name flag)
   message?: string;       // Prompt message to display
   description?: string;   // Additional context
   default?: any;          // Default value
@@ -418,6 +420,87 @@ Ensure questions appear in the correct order:
     }
   }
 ]
+```
+
+### Positional Arguments
+
+The `_` property allows you to name positional parameters, enabling users to pass values without flags. This is useful for CLI tools where the first few arguments have obvious meanings.
+
+#### Basic Usage
+
+```typescript
+const questions: Question[] = [
+  {
+    _: true,
+    name: 'database',
+    type: 'text',
+    message: 'Database name',
+    required: true
+  }
+];
+
+const argv = minimist(process.argv.slice(2));
+const result = await prompter.prompt(argv, questions);
+```
+
+Now users can run either:
+```bash
+node myprogram.js mydb1
+# or equivalently:
+node myprogram.js --database mydb1
+```
+
+#### Multiple Positional Arguments
+
+Positional arguments are assigned in declaration order:
+
+```typescript
+const questions: Question[] = [
+  { _: true, name: 'source', type: 'text', message: 'Source file' },
+  { name: 'verbose', type: 'confirm', default: false },
+  { _: true, name: 'destination', type: 'text', message: 'Destination file' }
+];
+
+// Running: node copy.js input.txt output.txt --verbose
+// Results in: { source: 'input.txt', destination: 'output.txt', verbose: true }
+```
+
+#### Named Arguments Take Precedence
+
+When both positional and named arguments are provided, named arguments win and the positional slot is preserved for the next positional question:
+
+```typescript
+const questions: Question[] = [
+  { _: true, name: 'foo', type: 'text' },
+  { _: true, name: 'bar', type: 'text' },
+  { _: true, name: 'baz', type: 'text' }
+];
+
+// Running: node myprogram.js pos1 pos2 --bar named-bar
+// Results in: { foo: 'pos1', bar: 'named-bar', baz: 'pos2' }
+```
+
+In this example, `bar` gets its value from the named flag, so the two positional values go to `foo` and `baz`.
+
+#### Positional with Options
+
+Positional arguments work with list, autocomplete, and checkbox questions. The value is mapped through the options:
+
+```typescript
+const questions: Question[] = [
+  {
+    _: true,
+    name: 'framework',
+    type: 'list',
+    options: [
+      { name: 'React', value: 'react' },
+      { name: 'Vue', value: 'vue' }
+    ]
+  }
+];
+
+// Running: node setup.js React
+// Results in: { framework: 'react' }
 ```
 
 ## Real-World Examples

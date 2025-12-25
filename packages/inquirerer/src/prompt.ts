@@ -390,7 +390,13 @@ export class Inquirerer {
 
     // use local mutateArgs if defined, otherwise global mutateArgs
     const shouldMutate = options?.mutateArgs !== undefined ? options.mutateArgs : this.mutateArgs;
+    
+    // Create a working copy of argv - deep clone the _ array to avoid shared reference
     let obj: any = shouldMutate ? argv : { ...argv };
+    const argvAny = argv as any;
+    if (!shouldMutate && Array.isArray(argvAny._)) {
+      obj._ = [...argvAny._];
+    }
 
     // Resolve dynamic defaults before processing questions
     await this.resolveDynamicDefaults(questions);
@@ -401,8 +407,22 @@ export class Inquirerer {
     // Resolve setFrom values - these bypass prompting entirely
     await this.resolveSetValues(questions, obj);
 
+    // Extract positional arguments from argv._ and assign to questions with _: true
+    // This must happen before applyOverrides so positional values flow through override pipeline
+    // Returns the number of positional arguments consumed for stripping
+    const consumedCount = this.extractPositionalArgs(obj, questions);
+    
+    // Strip consumed positionals from obj._ (the working copy)
+    if (consumedCount > 0 && Array.isArray(obj._)) {
+      obj._ = obj._.slice(consumedCount);
+      // If mutating, also update the original argv._
+      if (shouldMutate) {
+        argvAny._ = obj._;
+      }
+    }
+
     // first loop through the question, and set any overrides in case other questions use objs for validation
-    this.applyOverrides(argv, obj, questions);
+    this.applyOverrides(obj, obj, questions);
 
     // Check for required arguments when no terminal is available (non-interactive mode)
     if (this.noTty && this.hasMissingRequiredArgs(questions, argv)) {
@@ -552,6 +572,57 @@ export class Inquirerer {
         }
       }
     }
+  }
+
+  /**
+   * Extracts positional arguments from obj._ and assigns them to questions marked with _: true.
+   * 
+   * Rules:
+   * 1. Named arguments take precedence - if a question already has a value in obj, skip it
+   * 2. Positional questions consume from obj._ left-to-right in declaration order
+   * 3. Returns the count of consumed positionals so caller can strip them from obj._
+   * 4. Missing positional values leave questions unset (for prompting/validation)
+   * 
+   * This effectively allows "naming positional parameters" - users can pass values
+   * without flags and they'll be assigned to the appropriate question names.
+   * 
+   * @returns The number of positional arguments consumed
+   */
+  private extractPositionalArgs(obj: any, questions: Question[]): number {
+    // Get positional arguments array from obj (minimist convention)
+    const positionals: any[] = Array.isArray(obj._) ? obj._ : [];
+    if (positionals.length === 0) {
+      return 0;
+    }
+
+    // Track which positional index we're consuming from
+    let positionalIndex = 0;
+
+    // Process questions in declaration order to maintain predictable assignment
+    for (const question of questions) {
+      // Only process questions marked as positional
+      if (!question._) {
+        continue;
+      }
+
+      // Skip if this question already has a named argument value
+      // Named arguments always take precedence over positional
+      if (question.name in obj && question.name !== '_') {
+        continue;
+      }
+
+      // Skip if we've exhausted all positional arguments
+      if (positionalIndex >= positionals.length) {
+        break;
+      }
+
+      // Assign the next positional value to this question
+      const value = positionals[positionalIndex];
+      obj[question.name] = value;
+      positionalIndex++;
+    }
+
+    return positionalIndex;
   }
 
   private applyDefaultValues(questions: Question[], obj: any): void {
