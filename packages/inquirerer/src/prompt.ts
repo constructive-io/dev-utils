@@ -113,70 +113,11 @@ class PromptContext {
 }
 
 
-function generatePromptMessageSuccinct(question: Question, ctx: PromptContext): string {
-  const {
-    message,
-    name,
-    type,
-    default: def,
-    options = []
-  } = question as Question & { options?: OptionValue[] };
-
-  const lines: string[] = [];
-
-  // 1. Main prompt label
-  lines.push(whiteBright.bold(message || `${name}?`));
-
-  // 2. Validation message if applicable
-  const validation = validationMessage(question, ctx);
-  if (validation) {
-    lines.push(validation); // already styled red
-  }
-
-  // 3. Append default inline (only if present)
-  let inline = '';
-
-  switch (type) {
-    case 'confirm':
-      inline = '(y/n)';
-      if (def !== undefined) {
-        inline += ` ${yellow(`[${def ? 'y' : 'n'}]`)}`;
-      }
-      break;
-
-    case 'text':
-    case 'number':
-      if (def !== undefined) {
-        inline += `${yellow(`[${def}]`)}`;
-      }
-      break;
-
-    case 'autocomplete':
-    case 'list':
-    case 'checkbox':
-      if (def !== undefined) {
-        const defaults = Array.isArray(def) ? def : [def];
-        const rendered = defaults.map(d => yellow(d)).join(gray(', '));
-        inline += `${yellow(`[${rendered}]`)}`;
-      }
-      break;
-  }
-
-  if (inline) {
-    lines[lines.length - 1] += ' ' + inline; // append to prompt line
-  }
-
-  // 4. Final input line
-  lines.push('> ');
-
-  return lines.join('\n');
-}
-
 function generatePromptMessage(question: Question, ctx: PromptContext): string {
   const {
     message,
     name,
-    type = 'text',
+    type,
     default: def,
     options = [],
     description
@@ -184,40 +125,22 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
 
   const lines: string[] = [];
 
-  // 1. Title Message
-  lines.push(whiteBright.bold(message || `${name}?`));
+  // 1. Main prompt label with --name inline
+  let promptLine = whiteBright.bold(message || `${name}?`) + ' ' + dim(`(--${name})`);
 
-  // 2. Optional description below title
-  if (description) {
-    lines.push(dim(description));
-  }
-
-  // 3. Validation warning (if failed before)
-  const validation = validationMessage(question, ctx);
-  if (validation) {
-    lines.push(validation); // already red-colored
-  }
-
-  // 4. Metadata (name/type)
-  lines.push(
-    `${dim('Argument')} ${green(`--${name}`)} ${dim('type')} ${cyan(`[${type}]`)}`
-  );
-
-  // 5. Default value or guidance
-  let guidance = '';
-
+  // 2. Append default inline (only if present)
   switch (type) {
     case 'confirm':
-      guidance = '(y/n)';
+      promptLine += ' (y/n)';
       if (def !== undefined) {
-        guidance += ` ${yellow(`[default: ${def ? 'y' : 'n'}]`)}`;
+        promptLine += ` ${yellow(`[${def ? 'y' : 'n'}]`)}`;
       }
       break;
 
     case 'text':
     case 'number':
       if (def !== undefined) {
-        guidance = yellow(`[default: ${def}]`);
+        promptLine += ` ${yellow(`[${def}]`)}`;
       }
       break;
 
@@ -227,22 +150,26 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
       if (def !== undefined) {
         const defaults = Array.isArray(def) ? def : [def];
         const rendered = defaults.map(d => yellow(d)).join(gray(', '));
-        guidance += `${yellow(`[default: ${rendered}]`)}`;
+        promptLine += ` ${yellow(`[${rendered}]`)}`;
       }
       break;
   }
 
-  if (guidance) {
-    lines.push(guidance);
+  lines.push(promptLine);
+
+  // 3. Optional description below title
+  if (description) {
+    lines.push(dim(description));
   }
 
-  // 6. Final input prompt
-  lines.push(white('> ') + dim('Your input:'));
+  // 4. Validation message if applicable
+  const validation = validationMessage(question, ctx);
+  if (validation) {
+    lines.push(validation); // already styled red
+  }
 
   return lines.join('\n') + '\n';
 }
-
-
 
 export interface InquirererOptions {
   noTty?: boolean;
@@ -252,7 +179,6 @@ export interface InquirererOptions {
   globalMaxLines?: number;
   mutateArgs?: boolean;
   resolverRegistry?: DefaultResolverRegistry;
-
 }
 export class Inquirerer {
   private rl: readline.Interface | null;
@@ -314,7 +240,7 @@ export class Inquirerer {
   }
 
   private getInput(input: string) {
-    return `${white.bold('$')} ${input}`;
+    return `${white('>')} ${input}`;
   }
 
   private getPrompt(question: Question, ctx: PromptContext, input: string) {
