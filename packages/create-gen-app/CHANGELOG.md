@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.8.1...create-gen-app@0.9.0) (2025-12-25)
+
+### Features
+
+- **create-gen-app:** add useBoilerplatesConfig option to control .boilerplates.json resolution ([f700cfe](https://github.com/constructive-io/dev-utils/commit/f700cfe35b0886de80946648cbdb8dc49154ffd3))
+
 ## [0.8.1](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.8.0...create-gen-app@0.8.1) (2025-12-25)
 
 **Note:** Version bump only for package create-gen-app
