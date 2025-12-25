@@ -71,17 +71,17 @@ function normalizeQuestionName(name: string): string {
  * Prompt the user for variable values
  * @param extractedVariables - Variables extracted from the template
  * @param argv - Command-line arguments to pre-populate answers
- * @param noTty - Whether to disable TTY mode
  * @param existingPrompter - Optional existing Inquirerer instance to reuse.
  *   If provided, the caller retains ownership and must close it themselves.
  *   If not provided, a new instance is created and closed automatically.
+ * @param noTty - Whether to disable TTY mode (only used when creating a new prompter)
  * @returns Answers from the user
  */
 export async function promptUser(
   extractedVariables: ExtractedVariables,
   argv: Record<string, any> = {},
-  noTty: boolean = false,
-  existingPrompter?: Inquirerer
+  existingPrompter?: Inquirerer,
+  noTty: boolean = false
 ): Promise<Record<string, any>> {
   const questions = generateQuestions(extractedVariables);
   

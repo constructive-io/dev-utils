@@ -39,8 +39,8 @@ export class Templatizer {
     const answers = await this.prompt(
       variables,
       options?.argv,
-      options?.noTty,
-      options?.prompter
+      options?.prompter,
+      options?.noTty
     );
 
     // Replace variables
@@ -64,16 +64,16 @@ export class Templatizer {
    * Prompt user for variables
    * @param extracted - Extracted variables from template
    * @param argv - Pre-populated answers
-   * @param noTty - Whether to disable TTY mode
    * @param prompter - Optional existing Inquirerer instance to reuse
+   * @param noTty - Whether to disable TTY mode (only used when creating a new prompter)
    */
   async prompt(
     extracted: ExtractedVariables,
     argv?: Record<string, any>,
-    noTty?: boolean,
-    prompter?: import('inquirerer').Inquirerer
+    prompter?: import('inquirerer').Inquirerer,
+    noTty?: boolean
   ): Promise<Record<string, any>> {
-    return promptUser(extracted, argv ?? {}, noTty ?? false, prompter);
+    return promptUser(extracted, argv ?? {}, prompter, noTty ?? false);
   }
 
   /**

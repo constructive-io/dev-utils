@@ -218,7 +218,7 @@ module.exports = {
         projectQuestions: null,
       };
 
-      await promptUser(extractedVariables, {}, false);
+      await promptUser(extractedVariables, {}, undefined, false);
 
       expect(mockPrompt).toHaveBeenCalled();
       const questions = mockPrompt.mock.calls[0][1];
@@ -254,7 +254,7 @@ module.exports = {
         },
       };
 
-      await promptUser(extractedVariables, {}, false);
+      await promptUser(extractedVariables, {}, undefined, false);
 
       expect(mockPrompt).toHaveBeenCalled();
       const questions = mockPrompt.mock.calls[0][1];
@@ -283,7 +283,7 @@ module.exports = {
       };
 
       const argv = { projectName: 'pre-filled-project' };
-      await promptUser(extractedVariables, argv, false);
+      await promptUser(extractedVariables, argv, undefined, false);
 
       expect(mockPrompt).toHaveBeenCalledWith(
         expect.objectContaining(argv),
@@ -317,7 +317,7 @@ module.exports = {
       };
 
       const argv = { USERFULLNAME: 'CLI User' };
-      await promptUser(extractedVariables, argv, false);
+      await promptUser(extractedVariables, argv, undefined, false);
 
       const passedArgv = mockPrompt.mock.calls[0][0];
       expect(passedArgv.fullName).toBeUndefined();
@@ -350,7 +350,7 @@ module.exports = {
       };
 
       const argv = { MODULEDESC: 'CLI description' };
-      await promptUser(extractedVariables, argv, false);
+      await promptUser(extractedVariables, argv, undefined, false);
 
       const passedArgv = mockPrompt.mock.calls[0][0];
       expect(passedArgv.description).toBeUndefined();
@@ -384,7 +384,7 @@ module.exports = {
         },
       };
 
-      const answers = await promptUser(extractedVariables, {}, false);
+      const answers = await promptUser(extractedVariables, {}, undefined, false);
       expect(answers.fullName).toBe('Prompted User');
     });
 
@@ -415,7 +415,7 @@ module.exports = {
         },
       };
 
-      const answers = await promptUser(extractedVariables, {}, false);
+      const answers = await promptUser(extractedVariables, {}, undefined, false);
       expect(answers.description).toBe('Prompted description');
       expect(answers.moduleDesc).toBeUndefined();
     });
