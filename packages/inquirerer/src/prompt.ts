@@ -113,41 +113,34 @@ class PromptContext {
 }
 
 
-function generatePromptMessageSuccinct(question: Question, ctx: PromptContext): string {
+function generatePromptMessageCompact(question: Question, ctx: PromptContext): string {
   const {
     message,
     name,
     type,
     default: def,
-    options = []
-  } = question as Question & { options?: OptionValue[] };
+    options = [],
+    description
+  } = question as Question & { options?: OptionValue[]; description?: string };
 
   const lines: string[] = [];
 
-  // 1. Main prompt label
-  lines.push(whiteBright.bold(message || `${name}?`));
+  // 1. Main prompt label with --name inline
+  let promptLine = whiteBright.bold(message || `${name}?`) + ' ' + dim(`(--${name})`);
 
-  // 2. Validation message if applicable
-  const validation = validationMessage(question, ctx);
-  if (validation) {
-    lines.push(validation); // already styled red
-  }
-
-  // 3. Append default inline (only if present)
-  let inline = '';
-
+  // 2. Append default inline (only if present)
   switch (type) {
     case 'confirm':
-      inline = '(y/n)';
+      promptLine += ' (y/n)';
       if (def !== undefined) {
-        inline += ` ${yellow(`[${def ? 'y' : 'n'}]`)}`;
+        promptLine += ` ${yellow(`[${def ? 'y' : 'n'}]`)}`;
       }
       break;
 
     case 'text':
     case 'number':
       if (def !== undefined) {
-        inline += `${yellow(`[${def}]`)}`;
+        promptLine += ` ${yellow(`[${def}]`)}`;
       }
       break;
 
@@ -157,19 +150,28 @@ function generatePromptMessageSuccinct(question: Question, ctx: PromptContext): 
       if (def !== undefined) {
         const defaults = Array.isArray(def) ? def : [def];
         const rendered = defaults.map(d => yellow(d)).join(gray(', '));
-        inline += `${yellow(`[${rendered}]`)}`;
+        promptLine += ` ${yellow(`[${rendered}]`)}`;
       }
       break;
   }
 
-  if (inline) {
-    lines[lines.length - 1] += ' ' + inline; // append to prompt line
+  lines.push(promptLine);
+
+  // 3. Optional description below title
+  if (description) {
+    lines.push(dim(description));
   }
 
-  // 4. Final input line
-  lines.push('> ');
+  // 4. Validation message if applicable
+  const validation = validationMessage(question, ctx);
+  if (validation) {
+    lines.push(validation); // already styled red
+  }
 
-  return lines.join('\n');
+  // 5. Final input line
+  lines.push(white('> '));
+
+  return lines.join('\n') + '\n';
 }
 
 function generatePromptMessage(question: Question, ctx: PromptContext): string {
@@ -244,6 +246,8 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
 
 
 
+export type PromptStyle = 'compact' | 'verbose';
+
 export interface InquirererOptions {
   noTty?: boolean;
   input?: Readable;
@@ -252,7 +256,7 @@ export interface InquirererOptions {
   globalMaxLines?: number;
   mutateArgs?: boolean;
   resolverRegistry?: DefaultResolverRegistry;
-
+  promptStyle?: PromptStyle;
 }
 export class Inquirerer {
   private rl: readline.Interface | null;
@@ -264,6 +268,7 @@ export class Inquirerer {
   private globalMaxLines: number;
   private mutateArgs: boolean;
   private resolverRegistry: DefaultResolverRegistry;
+  private promptStyle: PromptStyle;
 
   private handledKeys: Set<string> = new Set();
 
@@ -277,7 +282,8 @@ export class Inquirerer {
       useDefaults = false,
       globalMaxLines = 10,
       mutateArgs = true,
-      resolverRegistry = globalResolverRegistry
+      resolverRegistry = globalResolverRegistry,
+      promptStyle = 'compact'
     } = options ?? {}
 
     this.useDefaults = useDefaults;
@@ -287,6 +293,7 @@ export class Inquirerer {
     this.input = input;
     this.globalMaxLines = globalMaxLines;
     this.resolverRegistry = resolverRegistry;
+    this.promptStyle = promptStyle;
 
     if (!noTty) {
       this.rl = readline.createInterface({
@@ -318,7 +325,9 @@ export class Inquirerer {
   }
 
   private getPrompt(question: Question, ctx: PromptContext, input: string) {
-    const promptMessage = generatePromptMessage(question, ctx);
+    const promptMessage = this.promptStyle === 'compact'
+      ? generatePromptMessageCompact(question, ctx)
+      : generatePromptMessage(question, ctx);
     return promptMessage + this.getInput(input);
   }
   private displayPrompt(question: Question, ctx: PromptContext, input: string) {
