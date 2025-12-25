@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.3.0...inquirerer@2.3.1) (2025-12-25)
+
+### Bug Fixes
+
+- **inquirerer:** implement stack-based ownership for keypress handling ([1c57b2f](https://github.com/constructive-io/dev-utils/commit/1c57b2fa2a794af7f3f86dc713904c5a6a4970da))
+
 # [2.3.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.2.1...inquirerer@2.3.0) (2025-12-25)
 
 ### Bug Fixes

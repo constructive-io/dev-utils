@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.3](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.6.2...create-gen-app@0.6.3) (2025-12-25)
+
+### Bug Fixes
+
+- **inquirerer:** implement stack-based ownership for keypress handling ([1c57b2f](https://github.com/constructive-io/dev-utils/commit/1c57b2fa2a794af7f3f86dc713904c5a6a4970da))
+
 ## [0.6.2](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.6.1...create-gen-app@0.6.2) (2025-12-25)
 
 **Note:** Version bump only for package create-gen-app
