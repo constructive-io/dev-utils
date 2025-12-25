@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.2](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.3.1...inquirerer@2.3.2) (2025-12-25)
+
+### Reverts
+
+- **inquirerer:** simplify keypress to per-instance model ([36a4697](https://github.com/constructive-io/dev-utils/commit/36a469754329e8fbc2adbd86915fd73e1c4284f7))
+
 ## [2.3.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@2.3.0...inquirerer@2.3.1) (2025-12-25)
 
 ### Bug Fixes

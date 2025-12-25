@@ -1,6 +1,6 @@
 {
   "name": "create-gen-app",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "author": "Constructive <developers@constructive.io>",
   "description": "Clone and customize template repositories with variable replacement",
   "main": "index.js",
