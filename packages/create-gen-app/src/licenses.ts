@@ -14,6 +14,8 @@ type LicenseTemplateMap = Record<string, string>;
 let cachedTemplates: LicenseTemplateMap | null = null;
 
 export type SupportedLicense = string;
+export const DEFAULT_LICENSE = 'MIT';
+export const CLOSED_LICENSE = 'CLOSED';
 export const LICENSE_VALUE_KEYS = ['LICENSE', 'license'];
 export const LICENSE_AUTHOR_KEYS = [
   'USERFULLNAME',
@@ -67,7 +69,15 @@ export function renderLicense(
 }
 
 export function listSupportedLicenses(): string[] {
-  return Object.keys(loadLicenseTemplates());
+  const licenses = Object.keys(loadLicenseTemplates());
+  // Sort with DEFAULT_LICENSE first, CLOSED_LICENSE last, then alphabetically
+  return licenses.sort((a, b) => {
+    if (a === DEFAULT_LICENSE) return -1;
+    if (b === DEFAULT_LICENSE) return 1;
+    if (a === CLOSED_LICENSE) return 1;
+    if (b === CLOSED_LICENSE) return -1;
+    return a.localeCompare(b);
+  });
 }
 
 export function findLicenseValue(
