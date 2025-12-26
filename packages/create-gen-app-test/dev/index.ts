@@ -70,7 +70,7 @@ async function main() {
         );
       }
     } else {
-      const genomic = new Prompter();
+      const prompter = new Prompter();
       const question: ListQuestion = {
         type: 'list',
         name: 'template',
@@ -80,12 +80,12 @@ async function main() {
       };
 
       try {
-        const answers = (await genomic.prompt({}, [question])) as {
+        const answers = (await prompter.prompt({}, [question])) as {
           template: string;
         };
         selectedFolder = answers.template;
       } finally {
-        genomic.close();
+        prompter.close();
       }
     }
 
