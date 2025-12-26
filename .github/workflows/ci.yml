@@ -59,8 +59,9 @@ jobs:
           - schema-typescript
           - strfy-js
           - yanse
-          - inquirerer
-          - create-gen-app
+          - genomic
+          - scaffolds
+          - utils
           - create-gen-app-test
 
     steps:
