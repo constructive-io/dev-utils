@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.9.0...create-gen-app@0.10.0) (2025-12-26)
+
+### Features
+
+- **create-gen-app:** make MIT the default license ([4834848](https://github.com/constructive-io/dev-utils/commit/4834848fe990ef4d841c5041401eb9fecc78d885))
+- **create-gen-app:** put CLOSED license last in the list ([d5ab753](https://github.com/constructive-io/dev-utils/commit/d5ab7530510a8f40473962d3ca1c3acb1fe1f6f6))
+
 # [0.9.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app@0.8.1...create-gen-app@0.9.0) (2025-12-25)
 
 ### Features
