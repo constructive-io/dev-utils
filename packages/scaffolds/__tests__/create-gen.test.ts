@@ -1,0 +1,587 @@
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+import { execSync } from 'child_process';
+
+import { extractVariables, promptUser, replaceVariables, ExtractedVariables, GitCloner } from '../src/index';
+
+jest.mock('child_process', () => {
+  return {
+    execSync: jest.fn(),
+  };
+});
+
+jest.mock('genomic', () => {
+  return {
+    Prompter: jest.fn().mockImplementation(() => {
+      return {
+        prompt: jest.fn().mockResolvedValue({}),
+        close: jest.fn(),
+      };
+    }),
+    registerDefaultResolver: jest.fn(),
+  };
+});
+
+describe('@genomic/scaffolds', () => {
+  let testTempDir: string;
+  let testOutputDir: string;
+
+  beforeEach(() => {
+    testTempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'test-template-'));
+    testOutputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'test-output-'));
+  });
+
+  afterEach(() => {
+    if (fs.existsSync(testTempDir)) {
+      fs.rmSync(testTempDir, { recursive: true, force: true });
+    }
+    if (fs.existsSync(testOutputDir)) {
+      fs.rmSync(testOutputDir, { recursive: true, force: true });
+    }
+  });
+
+  describe('extractVariables', () => {
+    it('should extract variables from filenames', async () => {
+      fs.writeFileSync(
+        path.join(testTempDir, '____projectName____.txt'),
+        'content'
+      );
+      fs.writeFileSync(path.join(testTempDir, '____author____.md'), 'content');
+
+      const result = await extractVariables(testTempDir);
+
+      expect(result.fileReplacers).toHaveLength(2);
+      expect(result.fileReplacers.map((r) => r.variable)).toContain(
+        'projectName'
+      );
+      expect(result.fileReplacers.map((r) => r.variable)).toContain('author');
+    });
+
+    it('should extract variables from file contents', async () => {
+      fs.writeFileSync(
+        path.join(testTempDir, 'test.txt'),
+        'Hello ____userName____, welcome to ____projectName____!'
+      );
+
+      const result = await extractVariables(testTempDir);
+
+      expect(result.contentReplacers.length).toBeGreaterThanOrEqual(2);
+      expect(result.contentReplacers.map((r) => r.variable)).toContain(
+        'userName'
+      );
+      expect(result.contentReplacers.map((r) => r.variable)).toContain(
+        'projectName'
+      );
+    });
+
+    it('should extract variables from nested directories', async () => {
+      const nestedDir = path.join(testTempDir, 'src', '____moduleName____');
+      fs.mkdirSync(nestedDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(nestedDir, '____fileName____.ts'),
+        'export const ____constant____ = "value";'
+      );
+
+      const result = await extractVariables(testTempDir);
+
+      expect(result.fileReplacers.map((r) => r.variable)).toContain(
+        'moduleName'
+      );
+      expect(result.fileReplacers.map((r) => r.variable)).toContain(
+        'fileName'
+      );
+      expect(result.contentReplacers.map((r) => r.variable)).toContain(
+        'constant'
+      );
+    });
+
+    it('should load questions from .boilerplate.json', async () => {
+      const boilerplate = {
+        type: 'module',
+        questions: [
+          {
+            name: 'projectName',
+            type: 'text',
+            message: 'What is your project name?',
+          },
+          {
+            name: 'author',
+            type: 'text',
+            message: 'Who is the author?',
+          },
+        ],
+      };
+
+      fs.writeFileSync(
+        path.join(testTempDir, '.boilerplate.json'),
+        JSON.stringify(boilerplate, null, 2)
+      );
+
+      const result = await extractVariables(testTempDir);
+
+      expect(result.projectQuestions).not.toBeNull();
+      expect(result.projectQuestions?.questions).toHaveLength(2);
+      expect(result.projectQuestions?.questions[0].name).toBe('projectName');
+    });
+
+    it('should load questions from .boilerplate.js', async () => {
+      const boilerplateContent = `
+module.exports = {
+  type: 'module',
+  questions: [
+    {
+      name: 'projectName',
+      type: 'text',
+      message: 'What is your project name?'
+    }
+  ]
+};
+`;
+
+      fs.writeFileSync(
+        path.join(testTempDir, '.boilerplate.js'),
+        boilerplateContent
+      );
+
+      const result = await extractVariables(testTempDir);
+
+      expect(result.projectQuestions).not.toBeNull();
+      expect(result.projectQuestions?.questions).toHaveLength(1);
+      expect(result.projectQuestions?.questions[0].name).toBe('projectName');
+    });
+
+    it('should handle templates with no variables', async () => {
+      fs.writeFileSync(path.join(testTempDir, 'README.md'), 'Simple readme');
+
+      const result = await extractVariables(testTempDir);
+
+      expect(result.fileReplacers).toHaveLength(0);
+      expect(result.contentReplacers).toHaveLength(0);
+      expect(result.projectQuestions).toBeNull();
+    });
+
+    it('should skip .boilerplate.json and .boilerplate.js from variable extraction', async () => {
+      fs.writeFileSync(
+        path.join(testTempDir, '.boilerplate.json'),
+        '{"questions": [{"name": "____shouldNotExtract____"}]}'
+      );
+
+      const result = await extractVariables(testTempDir);
+
+      expect(result.fileReplacers.map((r) => r.variable)).not.toContain(
+        'SHOULD_NOT_EXTRACT'
+      );
+    });
+
+    it('should handle variables with different casings', async () => {
+      fs.writeFileSync(
+        path.join(testTempDir, 'test.txt'),
+        '____lowercase____ ____uppercase____ ____CamelCase____ ____snake_case____'
+      );
+
+      const result = await extractVariables(testTempDir);
+
+      expect(result.contentReplacers.map((r) => r.variable)).toContain(
+        'lowercase'
+      );
+      expect(result.contentReplacers.map((r) => r.variable)).toContain(
+        'uppercase'
+      );
+      expect(result.contentReplacers.map((r) => r.variable)).toContain(
+        'CamelCase'
+      );
+      expect(result.contentReplacers.map((r) => r.variable)).toContain(
+        'snake_case'
+      );
+    });
+  });
+
+  describe('promptUser', () => {
+    it('should generate questions for file and content replacers', async () => {
+      const { Prompter } = require('genomic');
+      const mockPrompt = jest.fn().mockResolvedValue({
+        projectName: 'my-project',
+        author: 'John Doe',
+      });
+
+      Prompter.mockImplementation(() => ({
+        prompt: mockPrompt,
+        close: jest.fn(),
+      }));
+
+      const extractedVariables: ExtractedVariables = {
+        fileReplacers: [
+          { variable: 'projectName', pattern: /____projectName____/g },
+        ],
+        contentReplacers: [{ variable: 'author', pattern: /____author____/g }],
+        projectQuestions: null,
+      };
+
+      await promptUser(extractedVariables, {}, undefined, false);
+
+      expect(mockPrompt).toHaveBeenCalled();
+      const questions = mockPrompt.mock.calls[0][1];
+      expect(questions).toHaveLength(2);
+      expect(questions.map((q: any) => q.name)).toContain('projectName');
+      expect(questions.map((q: any) => q.name)).toContain('author');
+    });
+
+    it('should prioritize project questions over auto-generated ones', async () => {
+      const { Prompter } = require('genomic');
+      const mockPrompt = jest.fn().mockResolvedValue({
+        projectName: 'my-project',
+      });
+
+      Prompter.mockImplementation(() => ({
+        prompt: mockPrompt,
+        close: jest.fn(),
+      }));
+
+      const extractedVariables: ExtractedVariables = {
+        fileReplacers: [
+          { variable: 'projectName', pattern: /__projectName__/g },
+        ],
+        contentReplacers: [],
+        projectQuestions: {
+          questions: [
+            {
+              name: 'projectName',
+              type: 'text' as const,
+              message: 'Custom question for project name',
+            },
+          ],
+        },
+      };
+
+      await promptUser(extractedVariables, {}, undefined, false);
+
+      expect(mockPrompt).toHaveBeenCalled();
+      const questions = mockPrompt.mock.calls[0][1];
+      expect(questions).toHaveLength(1);
+      expect(questions[0].message).toBe('Custom question for project name');
+    });
+
+    it('should use argv to pre-populate answers', async () => {
+      const { Prompter } = require('genomic');
+      const mockPrompt = jest.fn().mockResolvedValue({
+        projectName: 'my-project',
+        author: 'John Doe',
+      });
+
+      Prompter.mockImplementation(() => ({
+        prompt: mockPrompt,
+        close: jest.fn(),
+      }));
+
+      const extractedVariables: ExtractedVariables = {
+        fileReplacers: [
+          { variable: 'projectName', pattern: /____projectName____/g },
+        ],
+        contentReplacers: [],
+        projectQuestions: null,
+      };
+
+      const argv = { projectName: 'pre-filled-project' };
+      await promptUser(extractedVariables, argv, undefined, false);
+
+      expect(mockPrompt).toHaveBeenCalledWith(
+        expect.objectContaining(argv),
+        expect.any(Array)
+      );
+    });
+
+    it('should require exact CLI override names', async () => {
+      const { Prompter } = require('genomic');
+      const mockPrompt = jest.fn().mockResolvedValue({});
+
+      Prompter.mockImplementation(() => ({
+        prompt: mockPrompt,
+        close: jest.fn(),
+      }));
+
+      const extractedVariables: ExtractedVariables = {
+        fileReplacers: [],
+        contentReplacers: [
+          { variable: 'fullName', pattern: /____fullName____/g },
+        ],
+        projectQuestions: {
+          questions: [
+            {
+              name: '____fullName____',
+              type: 'text' as const,
+              message: 'Enter author full name',
+            },
+          ],
+        },
+      };
+
+      const argv = { USERFULLNAME: 'CLI User' };
+      await promptUser(extractedVariables, argv, undefined, false);
+
+      const passedArgv = mockPrompt.mock.calls[0][0];
+      expect(passedArgv.fullName).toBeUndefined();
+      expect(passedArgv.USERFULLNAME).toBe('CLI User');
+    });
+
+    it('should not map CLI overrides sharing substrings', async () => {
+      const { Prompter } = require('genomic');
+      const mockPrompt = jest.fn().mockResolvedValue({});
+
+      Prompter.mockImplementation(() => ({
+        prompt: mockPrompt,
+        close: jest.fn(),
+      }));
+
+      const extractedVariables: ExtractedVariables = {
+        fileReplacers: [],
+        contentReplacers: [
+          { variable: 'moduleDesc', pattern: /____moduleDesc____/g },
+        ],
+        projectQuestions: {
+          questions: [
+            {
+              name: '____description____',
+              type: 'text' as const,
+              message: 'Enter the module description',
+            },
+          ],
+        },
+      };
+
+      const argv = { MODULEDESC: 'CLI description' };
+      await promptUser(extractedVariables, argv, undefined, false);
+
+      const passedArgv = mockPrompt.mock.calls[0][0];
+      expect(passedArgv.description).toBeUndefined();
+      expect(passedArgv.MODULEDESC).toBe('CLI description');
+    });
+
+    it('should hydrate template variables from alias answers', async () => {
+      const { Prompter } = require('genomic');
+      const mockPrompt = jest.fn().mockResolvedValue({
+        fullName: 'Prompted User',
+      });
+
+      Prompter.mockImplementation(() => ({
+        prompt: mockPrompt,
+        close: jest.fn(),
+      }));
+
+      const extractedVariables: ExtractedVariables = {
+        fileReplacers: [],
+        contentReplacers: [
+          { variable: 'fullName', pattern: /____fullName____/g },
+        ],
+        projectQuestions: {
+          questions: [
+            {
+              name: '____fullName____',
+              type: 'text' as const,
+              message: 'Enter author full name',
+            },
+          ],
+        },
+      };
+
+      const answers = await promptUser(extractedVariables, {}, undefined, false);
+      expect(answers.fullName).toBe('Prompted User');
+    });
+
+    it('should not hydrate overlapping template variables implicitly', async () => {
+      const { Prompter } = require('genomic');
+      const mockPrompt = jest.fn().mockResolvedValue({
+        description: 'Prompted description',
+      });
+
+      Prompter.mockImplementation(() => ({
+        prompt: mockPrompt,
+        close: jest.fn(),
+      }));
+
+      const extractedVariables: ExtractedVariables = {
+        fileReplacers: [],
+        contentReplacers: [
+          { variable: 'moduleDesc', pattern: /____moduleDesc____/g },
+        ],
+        projectQuestions: {
+          questions: [
+            {
+              name: '____description____',
+              type: 'text' as const,
+              message: 'Enter the module description',
+            },
+          ],
+        },
+      };
+
+      const answers = await promptUser(extractedVariables, {}, undefined, false);
+      expect(answers.description).toBe('Prompted description');
+      expect(answers.moduleDesc).toBeUndefined();
+    });
+  });
+
+  describe('variable replacement', () => {
+    it('should replace variables in file contents', async () => {
+      fs.writeFileSync(
+        path.join(testTempDir, 'README.md'),
+        '# ____projectName____\n\nBy ____author____'
+      );
+
+      const extractedVariables = await extractVariables(testTempDir);
+      const answers = {
+        projectName: 'My Awesome Project',
+        author: 'Jane Smith',
+      };
+
+      await replaceVariables(
+        testTempDir,
+        testOutputDir,
+        extractedVariables,
+        answers
+      );
+
+      const content = fs.readFileSync(
+        path.join(testOutputDir, 'README.md'),
+        'utf8'
+      );
+      expect(content).toBe('# My Awesome Project\n\nBy Jane Smith');
+    });
+
+    it('should replace variables in filenames', async () => {
+      fs.writeFileSync(
+        path.join(testTempDir, '____projectName____.config.js'),
+        'module.exports = {};'
+      );
+
+      const extractedVariables = await extractVariables(testTempDir);
+      const answers = {
+        projectName: 'myproject',
+      };
+
+      await replaceVariables(
+        testTempDir,
+        testOutputDir,
+        extractedVariables,
+        answers
+      );
+
+      expect(
+        fs.existsSync(path.join(testOutputDir, 'myproject.config.js'))
+      ).toBe(true);
+    });
+
+    it('should replace variables in nested directory names', async () => {
+      const nestedDir = path.join(testTempDir, 'src', '____moduleName____');
+      fs.mkdirSync(nestedDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(nestedDir, 'index.ts'),
+        'export const name = "____moduleName____";'
+      );
+
+      const extractedVariables = await extractVariables(testTempDir);
+      const answers = {
+        moduleName: 'auth',
+      };
+
+      await replaceVariables(
+        testTempDir,
+        testOutputDir,
+        extractedVariables,
+        answers
+      );
+
+      const outputFile = path.join(testOutputDir, 'src', 'auth', 'index.ts');
+      expect(fs.existsSync(outputFile)).toBe(true);
+      const content = fs.readFileSync(outputFile, 'utf8');
+      expect(content).toBe('export const name = "auth";');
+    });
+
+    it('should skip .boilerplate.json and .boilerplate.js files', async () => {
+      fs.writeFileSync(
+        path.join(testTempDir, '.boilerplate.json'),
+        '{"type": "module", "questions": []}'
+      );
+      fs.writeFileSync(
+        path.join(testTempDir, '.boilerplates.json'),
+        '{"dir": "default"}'
+      );
+      fs.writeFileSync(path.join(testTempDir, 'README.md'), 'Regular file');
+
+      const extractedVariables = await extractVariables(testTempDir);
+      await replaceVariables(
+        testTempDir,
+        testOutputDir,
+        extractedVariables,
+        {}
+      );
+
+      expect(fs.existsSync(path.join(testOutputDir, '.boilerplate.json'))).toBe(
+        false
+      );
+      expect(fs.existsSync(path.join(testOutputDir, '.boilerplates.json'))).toBe(
+        false
+      );
+      expect(fs.existsSync(path.join(testOutputDir, 'README.md'))).toBe(true);
+    });
+
+    it('should handle multiple occurrences of the same variable', async () => {
+      fs.writeFileSync(
+        path.join(testTempDir, 'test.txt'),
+        '____name____ loves ____name____ and ____name____ is great!'
+      );
+
+      const extractedVariables = await extractVariables(testTempDir);
+      const answers = {
+        name: 'Alice',
+      };
+
+      await replaceVariables(
+        testTempDir,
+        testOutputDir,
+        extractedVariables,
+        answers
+      );
+
+      const content = fs.readFileSync(
+        path.join(testOutputDir, 'test.txt'),
+        'utf8'
+      );
+      expect(content).toBe('Alice loves Alice and Alice is great!');
+    });
+  });
+
+  describe('GitCloner', () => {
+    const execSyncMock = execSync as jest.MockedFunction<typeof execSync>;
+    let gitCloner: GitCloner;
+
+    beforeEach(() => {
+      gitCloner = new GitCloner();
+      execSyncMock.mockReset();
+      execSyncMock.mockImplementation(() => undefined);
+    });
+
+    it('clones default branch when no branch provided', () => {
+      const tempDir = path.join(testTempDir, 'clone-test');
+      gitCloner.clone('https://github.com/example/repo.git', tempDir);
+      const command = execSyncMock.mock.calls[0][0] as string;
+      expect(command).toContain(
+        'git clone --single-branch --depth 1 https://github.com/example/repo.git'
+      );
+      expect(command.trim().endsWith(tempDir)).toBe(true);
+    });
+
+    it('clones a specific branch when provided', () => {
+      const tempDir = path.join(testTempDir, 'clone-branch-test');
+      gitCloner.clone('https://github.com/example/repo.git', tempDir, {
+        branch: 'dev',
+      });
+      const command = execSyncMock.mock.calls[0][0] as string;
+      expect(command).toContain(
+        'git clone --branch dev --single-branch --depth 1 https://github.com/example/repo.git'
+      );
+      expect(command.trim().endsWith(tempDir)).toBe(true);
+    });
+  });
+
+});

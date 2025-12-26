@@ -1,0 +1,136 @@
+import { Prompter, Question } from 'genomic';
+
+import { ExtractedVariables } from '../types';
+
+const PLACEHOLDER_BOUNDARY = '____';
+
+/**
+ * Generate questions from extracted variables
+ * @param extractedVariables - Variables extracted from the template
+ * @returns Array of questions to prompt the user
+ */
+export function generateQuestions(
+  extractedVariables: ExtractedVariables
+): Question[] {
+  const questions: Question[] = [];
+  const askedVariables = new Set<string>();
+  
+  if (extractedVariables.projectQuestions) {
+    for (const question of extractedVariables.projectQuestions.questions) {
+      const normalizedName = normalizeQuestionName(question.name);
+      question.name = normalizedName;
+      questions.push(question);
+      askedVariables.add(normalizedName);
+    }
+  }
+  
+  for (const replacer of extractedVariables.fileReplacers) {
+    if (!askedVariables.has(replacer.variable)) {
+      questions.push({
+        name: replacer.variable,
+        type: 'text',
+        message: `Enter value for ${replacer.variable}:`,
+        required: true
+      });
+      askedVariables.add(replacer.variable);
+    }
+  }
+  
+  for (const replacer of extractedVariables.contentReplacers) {
+    if (!askedVariables.has(replacer.variable)) {
+      questions.push({
+        name: replacer.variable,
+        type: 'text',
+        message: `Enter value for ${replacer.variable}:`,
+        required: true
+      });
+      askedVariables.add(replacer.variable);
+    }
+  }
+  
+  return questions;
+}
+
+function normalizeQuestionName(name: string): string {
+  if (
+    name.startsWith(PLACEHOLDER_BOUNDARY) &&
+    name.endsWith(PLACEHOLDER_BOUNDARY)
+  ) {
+    return name.slice(
+      PLACEHOLDER_BOUNDARY.length,
+      -PLACEHOLDER_BOUNDARY.length
+    );
+  }
+  if (name.startsWith('__') && name.endsWith('__')) {
+    return name.slice(2, -2);
+  }
+  return name;
+}
+
+/**
+ * Prompt the user for variable values
+ * @param extractedVariables - Variables extracted from the template
+ * @param argv - Command-line arguments to pre-populate answers
+ * @param existingPrompter - Optional existing Prompter instance to reuse.
+ *   If provided, the caller retains ownership and must close it themselves.
+ *   If not provided, a new instance is created and closed automatically.
+ * @param noTty - Whether to disable TTY mode (only used when creating a new prompter)
+ * @returns Answers from the user
+ */
+export async function promptUser(
+  extractedVariables: ExtractedVariables,
+  argv: Record<string, any> = {},
+  existingPrompter?: Prompter,
+  noTty: boolean = false
+): Promise<Record<string, any>> {
+  const questions = generateQuestions(extractedVariables);
+  
+  if (questions.length === 0) {
+    return argv;
+  }
+
+  const preparedArgv = mapArgvToQuestions(argv, questions);
+  
+  // If an existing prompter is provided, use it (caller owns lifecycle)
+  // Otherwise, create a new one and close it when done
+  const prompter = existingPrompter ?? new Prompter({ noTty });
+  const shouldClose = !existingPrompter;
+
+  try {
+    const promptAnswers = await prompter.prompt(preparedArgv, questions);
+    return {
+      ...argv,
+      ...promptAnswers,
+    };
+  } finally {
+    if (shouldClose) {
+      prompter.close();
+    }
+  }
+}
+
+function mapArgvToQuestions(
+  argv: Record<string, any>,
+  questions: Question[]
+): Record<string, any> {
+  if (!questions.length) {
+    return argv;
+  }
+
+  const prepared = { ...argv };
+  const argvEntries = Object.entries(argv);
+
+  for (const question of questions) {
+    const name = question.name;
+    if (prepared[name] !== undefined) {
+      continue;
+    }
+
+    const match = argvEntries.find(([key]) => key === name);
+    if (match) {
+      prepared[name] = match[1];
+    }
+  }
+
+  return prepared;
+}

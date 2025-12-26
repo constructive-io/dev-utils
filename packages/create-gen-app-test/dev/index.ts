@@ -1,9 +1,9 @@
 import * as fs from 'fs';
-import { Inquirerer, ListQuestion } from 'inquirerer';
+import { Prompter, ListQuestion } from 'genomic';
 import minimist from 'minimist';
 import * as path from 'path';
 
-import { cloneRepo, extractVariables, promptUser, replaceVariables } from 'create-gen-app';
+import { cloneRepo, extractVariables, promptUser, replaceVariables } from '@genomic/scaffolds';
 
 const DEFAULT_REPO = 'https://github.com/constructive-io/pgpm-boilerplates/';
 const OUTPUT_DIR = './test-output';
@@ -70,7 +70,7 @@ async function main() {
         );
       }
     } else {
-      const inquirerer = new Inquirerer();
+      const prompter = new Prompter();
       const question: ListQuestion = {
         type: 'list',
         name: 'template',
@@ -80,12 +80,12 @@ async function main() {
       };
 
       try {
-        const answers = (await inquirerer.prompt({}, [question])) as {
+        const answers = (await prompter.prompt({}, [question])) as {
           template: string;
         };
         selectedFolder = answers.template;
       } finally {
-        inquirerer.close();
+        prompter.close();
       }
     }
 

@@ -3,10 +3,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Inquirerer, ListQuestion } from 'inquirerer';
+import { Prompter, ListQuestion } from 'genomic';
 import minimist, { ParsedArgs } from 'minimist';
 
-import { CacheManager, GitCloner, checkNpmVersion } from 'create-gen-app';
+import { CacheManager, GitCloner, checkNpmVersion } from '@genomic/scaffolds';
 import { createFromTemplate } from './index';
 
 const DEFAULT_REPO = 'https://github.com/constructive-io/pgpm-boilerplates.git';
@@ -15,10 +15,9 @@ const DEFAULT_TOOL_NAME = 'create-gen-app-test';
 const DEFAULT_TTL = 604800000; // 1 week
 const DEFAULT_TTL_DAYS = DEFAULT_TTL / (24 * 60 * 60 * 1000);
 
-// Import package.json for version
-import * as createGenPackageJson from 'create-gen-app/package.json';
-const PACKAGE_NAME = createGenPackageJson.name ?? '@launchql/cli';
-const PACKAGE_VERSION = createGenPackageJson.version ?? '0.0.0';
+// Package info - using the scaffolds package name and version
+const PACKAGE_NAME = '@genomic/scaffolds';
+const PACKAGE_VERSION = '1.0.0';
 
 const RESERVED_ARG_KEYS = new Set([
   '_',
@@ -280,7 +279,7 @@ function printVersion(): void {
 }
 
 async function promptForTemplate(templates: string[]): Promise<string> {
-  const prompter = new Inquirerer();
+  const prompter = new Prompter();
   const question: ListQuestion = {
     type: 'list',
     name: 'template',
