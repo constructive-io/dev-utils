@@ -1,16 +1,27 @@
 {
-  "name": "create-gen-app-test",
-  "version": "0.2.11",
+  "name": "commodore",
+  "version": "3.0.0",
   "author": "Constructive <developers@constructive.io>",
-  "description": "Integration tests for create-gen-app with cache leveraging",
+  "description": "TypeScript-first library for building beautiful CLI interfaces with interactive prompts",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./index.js"
+    },
+    "./test-utils": {
+      "types": "./test-utils/setup.d.ts",
+      "import": "./esm/test-utils/setup.js",
+      "require": "./test-utils/setup.js"
+    }
+  },
   "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
-  "private": true,
   "publishConfig": {
-    "access": "restricted",
+    "access": "public",
     "directory": "dist"
   },
   "repository": {
@@ -25,19 +36,21 @@
     "clean": "makage clean",
     "prepublishOnly": "npm run build",
     "build": "makage build",
-    "dev": "node -r ts-node/register dev/index.ts",
+    "dev": "ts-node dev/index",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "appstash": "workspace:*",
-    "@commodore/scaffolds": "workspace:*",
-    "commodore": "workspace:*",
-    "minimist": "^1.2.8"
+    "deepmerge": "^4.3.1",
+    "find-and-require-package-json": "workspace:*",
+    "js-yaml": "^4.1.0",
+    "minimist": "^1.2.8",
+    "yanse": "workspace:*"
   },
+  "keywords": [],
   "devDependencies": {
     "@types/minimist": "^1.2.5",
+    "clean-ansi": "workspace:*",
     "makage": "0.1.8"
-  },
-  "keywords": []
+  }
 }

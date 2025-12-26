@@ -1,16 +1,15 @@
 {
-  "name": "create-gen-app-test",
-  "version": "0.2.11",
+  "name": "@commodore/utils",
+  "version": "1.0.0",
   "author": "Constructive <developers@constructive.io>",
-  "description": "Integration tests for create-gen-app with cache leveraging",
+  "description": "CLI lifecycle utilities for building command-line applications",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
   "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
-  "private": true,
   "publishConfig": {
-    "access": "restricted",
+    "access": "public",
     "directory": "dist"
   },
   "repository": {
@@ -25,14 +24,12 @@
     "clean": "makage clean",
     "prepublishOnly": "npm run build",
     "build": "makage build",
-    "dev": "node -r ts-node/register dev/index.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
     "appstash": "workspace:*",
-    "@commodore/scaffolds": "workspace:*",
-    "commodore": "workspace:*",
+    "find-and-require-package-json": "workspace:*",
     "minimist": "^1.2.8"
   },
   "devDependencies": {

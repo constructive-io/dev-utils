@@ -27,7 +27,7 @@ pnpm dev --output ./my-generated-template
 
 1. **Clones the default repository**: `https://github.com/constructive-io/pgpm-boilerplates/` (override via `--repo`, select branch via `--branch`)
 2. **Lists available templates**: looks for subdirectories inside `--path` (auto: uses `.boilerplates.json` `dir` when present, otherwise `.`; typically contains `module`, `workspace`)
-3. **Prompts for selection**: Uses `inquirerer` to display an interactive list of templates
+3. **Prompts for selection**: Uses `commodore` to display an interactive list of templates
 4. **Processes the template**:
    - Extracts variables from the selected folder
    - Discovers the `.questions.json` file if present

@@ -1,7 +1,7 @@
 import * as path from 'path';
-import { CacheManager } from 'create-gen-app';
-import { GitCloner } from 'create-gen-app';
-import { Templatizer } from 'create-gen-app';
+import { CacheManager } from '@commodore/scaffolds';
+import { GitCloner } from '@commodore/scaffolds';
+import { Templatizer } from '@commodore/scaffolds';
 
 // Configuration constants (top-most layer owns defaults)
 const DEFAULT_TOOL_NAME = 'pgpm';
@@ -102,4 +102,4 @@ export async function createFromTemplate(
 }
 
 // Re-export components for external use
-export { CacheManager, GitCloner, Templatizer } from 'create-gen-app';
+export { CacheManager, GitCloner, Templatizer } from '@commodore/scaffolds';

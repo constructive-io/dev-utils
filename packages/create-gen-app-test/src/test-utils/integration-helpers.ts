@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
-import { CacheManager, GitCloner } from 'create-gen-app';
+import { CacheManager, GitCloner } from '@commodore/scaffolds';
 
 export const TEST_REPO =
   process.env.CREATE_GEN_TEST_REPO ??
