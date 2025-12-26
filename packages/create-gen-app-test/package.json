@@ -1,6 +1,6 @@
 {
   "name": "create-gen-app-test",
-  "version": "0.2.11",
+  "version": "0.3.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "Integration tests for create-gen-app with cache leveraging",
   "main": "index.js",
@@ -30,8 +30,8 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "appstash": "workspace:*",
     "@genomic/scaffolds": "workspace:*",
+    "appstash": "workspace:*",
     "genomic": "workspace:*",
     "minimist": "^1.2.8"
   },

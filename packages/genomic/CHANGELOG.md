@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.0.0 (2025-12-26)
+
+### Bug Fixes
+
+- remove exports field from genomic package.json ([41f82f2](https://github.com/constructive-io/dev-utils/commit/41f82f2003a79befb28cbe5cfaeb3a5c4a1b0411))
+- update test snapshots and utils package test script ([8910308](https://github.com/constructive-io/dev-utils/commit/8910308a8566f0cff6731ff0ce68819c3806e8bf))
+
+### Features
+
+- rename inquirerer to genomic and create [@genomic](https://github.com/genomic) packages ([369f728](https://github.com/constructive-io/dev-utils/commit/369f728f26535956bb1d8ba6ef633e727a5bcf08))
+
+### BREAKING CHANGES
+
+- Package names have changed:
+
+* inquirerer -> genomic
+* create-gen-app -> @genomic/scaffolds
+
 # [2.4.0](https://github.com/constructive-io/dev-utils/compare/genomic@2.3.2...genomic@2.4.0) (2025-12-25)
 
 ### Bug Fixes

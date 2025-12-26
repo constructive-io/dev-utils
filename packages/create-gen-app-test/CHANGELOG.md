@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app-test@0.2.11...create-gen-app-test@0.3.0) (2025-12-26)
+
+### Bug Fixes
+
+- update create-gen-app-test package to use Prompter class name ([8063a70](https://github.com/constructive-io/dev-utils/commit/8063a70bb258159a22b7c21f2582b9afef9e20cf))
+- use 'prompter' as variable name instead of 'genomic' ([5f7dc5c](https://github.com/constructive-io/dev-utils/commit/5f7dc5c752372a8c51d992d9b90751829210b796))
+
+### Features
+
+- rename inquirerer to genomic and create [@genomic](https://github.com/genomic) packages ([369f728](https://github.com/constructive-io/dev-utils/commit/369f728f26535956bb1d8ba6ef633e727a5bcf08))
+
+### BREAKING CHANGES
+
+- Package names have changed:
+
+* inquirerer -> genomic
+* create-gen-app -> @genomic/scaffolds
+
 ## [0.2.11](https://github.com/constructive-io/dev-utils/compare/create-gen-app-test@0.2.10...create-gen-app-test@0.2.11) (2025-12-26)
 
 **Note:** Version bump only for package create-gen-app-test
