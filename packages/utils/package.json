@@ -24,7 +24,7 @@
     "clean": "makage clean",
     "prepublishOnly": "npm run build",
     "build": "makage build",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch"
   },
   "dependencies": {

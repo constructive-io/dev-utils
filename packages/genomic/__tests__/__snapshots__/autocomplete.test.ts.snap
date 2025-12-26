@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Inquirerer prompts user and correctly processes delayed input 1`] = `
+exports[`Genomic prompts user and correctly processes delayed input 1`] = `
 {
   "autocompleteField": "firry third option",
 }
 `;
 
-exports[`Inquirerer prompts user and correctly processes delayed input 2`] = `
+exports[`Genomic prompts user and correctly processes delayed input 2`] = `
 {
   "autocompleteField": "firry third option",
 }
 `;
 
-exports[`Inquirerer prompts user and correctly processes delayed input 3`] = `
+exports[`Genomic prompts user and correctly processes delayed input 3`] = `
 [
   "",
   "autocompleteField?<SPACE>(--autocompleteField)
@@ -47,7 +47,7 @@ exports[`Inquirerer prompts user and correctly processes delayed input 3`] = `
 ]
 `;
 
-exports[`Inquirerer prompts user and correctly processes delayed input 4`] = `
+exports[`Genomic prompts user and correctly processes delayed input 4`] = `
 [
   "",
   "",
