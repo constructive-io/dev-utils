@@ -1,4 +1,4 @@
-import { Genomic, Question } from 'genomic';
+import { Prompter, Question } from 'genomic';
 
 import { ExtractedVariables } from '../types';
 
@@ -71,7 +71,7 @@ function normalizeQuestionName(name: string): string {
  * Prompt the user for variable values
  * @param extractedVariables - Variables extracted from the template
  * @param argv - Command-line arguments to pre-populate answers
- * @param existingPrompter - Optional existing Genomic instance to reuse.
+ * @param existingPrompter - Optional existing Prompter instance to reuse.
  *   If provided, the caller retains ownership and must close it themselves.
  *   If not provided, a new instance is created and closed automatically.
  * @param noTty - Whether to disable TTY mode (only used when creating a new prompter)
@@ -80,7 +80,7 @@ function normalizeQuestionName(name: string): string {
 export async function promptUser(
   extractedVariables: ExtractedVariables,
   argv: Record<string, any> = {},
-  existingPrompter?: Genomic,
+  existingPrompter?: Prompter,
   noTty: boolean = false
 ): Promise<Record<string, any>> {
   const questions = generateQuestions(extractedVariables);
@@ -93,7 +93,7 @@ export async function promptUser(
   
   // If an existing prompter is provided, use it (caller owns lifecycle)
   // Otherwise, create a new one and close it when done
-  const prompter = existingPrompter ?? new Genomic({ noTty });
+  const prompter = existingPrompter ?? new Prompter({ noTty });
   const shouldClose = !existingPrompter;
 
   try {

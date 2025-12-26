@@ -1,4 +1,4 @@
-import { Genomic } from 'genomic';
+import { Prompter } from 'genomic';
 
 import { ExtractedVariables } from '../types';
 
@@ -7,11 +7,11 @@ export interface ProcessOptions {
   noTty?: boolean;
   fromPath?: string;
   /**
-   * Optional Genomic instance to reuse for prompting.
+   * Optional Prompter instance to reuse for prompting.
    * If provided, the caller retains ownership and is responsible for closing it.
    * If not provided, a new instance will be created and closed automatically.
    */
-  prompter?: Genomic;
+  prompter?: Prompter;
 }
 
 export interface TemplatizerResult {

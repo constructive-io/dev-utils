@@ -13,7 +13,7 @@ jest.mock('child_process', () => {
 
 jest.mock('genomic', () => {
   return {
-    Genomic: jest.fn().mockImplementation(() => {
+    Prompter: jest.fn().mockImplementation(() => {
       return {
         prompt: jest.fn().mockResolvedValue({}),
         close: jest.fn(),
@@ -199,13 +199,13 @@ module.exports = {
 
   describe('promptUser', () => {
     it('should generate questions for file and content replacers', async () => {
-      const { Genomic } = require('genomic');
+      const { Prompter } = require('genomic');
       const mockPrompt = jest.fn().mockResolvedValue({
         projectName: 'my-project',
         author: 'John Doe',
       });
 
-      Genomic.mockImplementation(() => ({
+      Prompter.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -228,12 +228,12 @@ module.exports = {
     });
 
     it('should prioritize project questions over auto-generated ones', async () => {
-      const { Genomic } = require('genomic');
+      const { Prompter } = require('genomic');
       const mockPrompt = jest.fn().mockResolvedValue({
         projectName: 'my-project',
       });
 
-      Genomic.mockImplementation(() => ({
+      Prompter.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -263,13 +263,13 @@ module.exports = {
     });
 
     it('should use argv to pre-populate answers', async () => {
-      const { Genomic } = require('genomic');
+      const { Prompter } = require('genomic');
       const mockPrompt = jest.fn().mockResolvedValue({
         projectName: 'my-project',
         author: 'John Doe',
       });
 
-      Genomic.mockImplementation(() => ({
+      Prompter.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -292,10 +292,10 @@ module.exports = {
     });
 
     it('should require exact CLI override names', async () => {
-      const { Genomic } = require('genomic');
+      const { Prompter } = require('genomic');
       const mockPrompt = jest.fn().mockResolvedValue({});
 
-      Genomic.mockImplementation(() => ({
+      Prompter.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -325,10 +325,10 @@ module.exports = {
     });
 
     it('should not map CLI overrides sharing substrings', async () => {
-      const { Genomic } = require('genomic');
+      const { Prompter } = require('genomic');
       const mockPrompt = jest.fn().mockResolvedValue({});
 
-      Genomic.mockImplementation(() => ({
+      Prompter.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -358,12 +358,12 @@ module.exports = {
     });
 
     it('should hydrate template variables from alias answers', async () => {
-      const { Genomic } = require('genomic');
+      const { Prompter } = require('genomic');
       const mockPrompt = jest.fn().mockResolvedValue({
         fullName: 'Prompted User',
       });
 
-      Genomic.mockImplementation(() => ({
+      Prompter.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -389,12 +389,12 @@ module.exports = {
     });
 
     it('should not hydrate overlapping template variables implicitly', async () => {
-      const { Genomic } = require('genomic');
+      const { Prompter } = require('genomic');
       const mockPrompt = jest.fn().mockResolvedValue({
         description: 'Prompted description',
       });
 
-      Genomic.mockImplementation(() => ({
+      Prompter.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));

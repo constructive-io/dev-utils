@@ -64,13 +64,13 @@ export class Templatizer {
    * Prompt user for variables
    * @param extracted - Extracted variables from template
    * @param argv - Pre-populated answers
-   * @param prompter - Optional existing Genomic instance to reuse
+   * @param prompter - Optional existing Prompter instance to reuse
    * @param noTty - Whether to disable TTY mode (only used when creating a new prompter)
    */
   async prompt(
     extracted: ExtractedVariables,
     argv?: Record<string, any>,
-    prompter?: import('genomic').Genomic,
+    prompter?: import('genomic').Prompter,
     noTty?: boolean
   ): Promise<Record<string, any>> {
     return promptUser(extracted, argv ?? {}, prompter, noTty ?? false);
