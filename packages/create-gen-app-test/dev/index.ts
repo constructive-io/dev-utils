@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { Genomic, ListQuestion } from 'genomic';
+import { Prompter, ListQuestion } from 'genomic';
 import minimist from 'minimist';
 import * as path from 'path';
 
@@ -70,7 +70,7 @@ async function main() {
         );
       }
     } else {
-      const genomic = new Genomic();
+      const genomic = new Prompter();
       const question: ListQuestion = {
         type: 'list',
         name: 'template',

@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Genomic, ListQuestion } from 'genomic';
+import { Prompter, ListQuestion } from 'genomic';
 import minimist, { ParsedArgs } from 'minimist';
 
 import { CacheManager, GitCloner, checkNpmVersion } from '@genomic/scaffolds';
@@ -279,7 +279,7 @@ function printVersion(): void {
 }
 
 async function promptForTemplate(templates: string[]): Promise<string> {
-  const prompter = new Genomic();
+  const prompter = new Prompter();
   const question: ListQuestion = {
     type: 'list',
     name: 'template',
