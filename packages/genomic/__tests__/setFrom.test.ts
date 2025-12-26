@@ -1,7 +1,7 @@
 import readline from 'readline';
 import { Readable, Transform, Writable } from 'stream';
 import { stripAnsi } from 'clean-ansi';
-import { Genomic, DefaultResolverRegistry } from '../src';
+import { Prompter, DefaultResolverRegistry } from '../src';
 import { Question } from '../src/question';
 
 jest.mock('readline');
@@ -12,7 +12,7 @@ jest.mock('child_process', () => ({
 import { execSync } from 'child_process';
 const mockedExecSync = execSync as jest.MockedFunction<typeof execSync>;
 
-describe('Genomic - setFrom feature', () => {
+describe('Prompter - setFrom feature', () => {
   let mockWrite: jest.Mock;
   let mockInput: Readable;
   let mockOutput: Writable;
@@ -84,7 +84,7 @@ describe('Genomic - setFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.value', () => 'auto-set-value');
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -107,7 +107,7 @@ describe('Genomic - setFrom feature', () => {
     it('should use git.user.name with setFrom', async () => {
       mockedExecSync.mockReturnValue('John Doe\n' as any);
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -131,7 +131,7 @@ describe('Genomic - setFrom feature', () => {
     });
 
     it('should use date.year with setFrom', async () => {
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -151,7 +151,7 @@ describe('Genomic - setFrom feature', () => {
     });
 
     it('should use workspace resolvers with setFrom', async () => {
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -185,7 +185,7 @@ describe('Genomic - setFrom feature', () => {
       customRegistry.register('resolver.a', () => 'value-a');
       customRegistry.register('resolver.b', () => 'value-b');
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -217,7 +217,7 @@ describe('Genomic - setFrom feature', () => {
     it('should allow both setFrom and defaultFrom on different questions', async () => {
       mockedExecSync.mockReturnValue('Git User\n' as any);
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -250,7 +250,7 @@ describe('Genomic - setFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.value', () => 'resolver-value');
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -274,7 +274,7 @@ describe('Genomic - setFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.undefined', () => undefined);
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -302,7 +302,7 @@ describe('Genomic - setFrom feature', () => {
         throw new Error('Resolver error');
       });
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -331,7 +331,7 @@ describe('Genomic - setFrom feature', () => {
         return Promise.resolve('async-value');
       });
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -354,7 +354,7 @@ describe('Genomic - setFrom feature', () => {
 
   describe('multiple setFrom fields', () => {
     it('should resolve multiple setFrom fields', async () => {
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -393,7 +393,7 @@ describe('Genomic - setFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.number', () => 42);
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -417,7 +417,7 @@ describe('Genomic - setFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.bool', () => true);
 
-      const prompter = new Genomic({
+      const prompter = new Prompter({
         input: mockInput,
         output: mockOutput,
         noTty: true,

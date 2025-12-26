@@ -1,9 +1,9 @@
-import { Genomic, Question } from '../src';
+import { Prompter, Question } from '../src';
 import { KEY_SEQUENCES, setupTests, TestEnvironment } from '../test-utils/setup';
 
 const beforeEachSetup = setupTests();
 
-describe('Genomic', () => {
+describe('Prompter', () => {
   let environment: TestEnvironment;
 
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('Genomic', () => {
   it('prompts user and correctly processes delayed input', async () => {
    const { mockInput, mockOutput, writeResults, transformResults, enqueueInputResponse } = environment;
 
-    const prompter = new Genomic({
+    const prompter = new Prompter({
       input: mockInput,
       output: mockOutput,
       noTty: false

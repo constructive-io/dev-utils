@@ -15,7 +15,9 @@
   <a href="https://www.npmjs.com/package/genomic"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/dev-utils?filename=packages%2Fgenomic%2Fpackage.json"></a>
 </p>
 
-A powerful, TypeScript-first library for building beautiful command-line interfaces. Create interactive CLI tools with ease using intuitive prompts, validation, and rich user experiences.
+> Formerly [`inquirerer`](https://www.npmjs.com/package/inquirerer)
+
+A powerful, TypeScript-first library for building beautiful command-line interfaces.Create interactive CLI tools with ease using intuitive prompts, validation, and rich user experiences.
 
 ## Installation
 
@@ -41,7 +43,7 @@ npm install genomic
   - [Question Types](#question-types)
   - [Non-Interactive Mode](#non-interactive-mode)
 - [API Reference](#api-reference)
-  - [Genomic Class](#genomic-class)
+  - [Prompter Class](#genomic-class)
   - [Question Types](#question-types-1)
     - [Text Question](#text-question)
     - [Number Question](#number-question)
@@ -67,9 +69,9 @@ npm install genomic
 ## Quick Start
 
 ```typescript
-import { Genomic } from 'genomic';
+import { Prompter } from 'genomic';
 
-const prompter = new Genomic();
+const prompter = new Prompter();
 
 const answers = await prompter.prompt({}, [
   {
@@ -98,7 +100,7 @@ Import types for full type safety:
 
 ```typescript
 import {
-  Genomic,
+  Prompter,
   Question,
   TextQuestion,
   NumberQuestion,
@@ -106,7 +108,7 @@ import {
   ListQuestion,
   AutocompleteQuestion,
   CheckboxQuestion,
-  GenomicOptions,
+  PrompterOptions,
   DefaultResolverRegistry,
   registerDefaultResolver,
   resolveDefault
@@ -151,7 +153,7 @@ interface BaseQuestion {
 When running in CI/CD or without a TTY, genomic automatically falls back to default values:
 
 ```typescript
-const prompter = new Genomic({
+const prompter = new Prompter({
   noTty: true,  // Force non-interactive mode
   useDefaults: true  // Use defaults without prompting
 });
@@ -159,12 +161,12 @@ const prompter = new Genomic({
 
 ## API Reference
 
-### Genomic Class
+### Prompter Class
 
 #### Constructor Options
 
 ```typescript
-interface GenomicOptions {
+interface PrompterOptions {
   noTty?: boolean;                     // Disable interactive mode
   input?: Readable;                    // Input stream (default: process.stdin)
   output?: Writable;                   // Output stream (default: process.stdout)
@@ -174,7 +176,7 @@ interface GenomicOptions {
   resolverRegistry?: DefaultResolverRegistry;  // Custom resolver registry
 }
 
-const prompter = new Genomic(options);
+const prompter = new Prompter(options);
 ```
 
 #### Methods
@@ -193,13 +195,13 @@ exit(): void
 
 #### Managing Multiple Instances
 
-When working with multiple `Genomic` instances that share the same input stream (typically `process.stdin`), only one instance should be actively prompting at a time. Each instance attaches its own keyboard listener, so having multiple active instances will cause duplicate or unexpected keypress behavior.
+When working with multiple `Prompter` instances that share the same input stream (typically `process.stdin`), only one instance should be actively prompting at a time. Each instance attaches its own keyboard listener, so having multiple active instances will cause duplicate or unexpected keypress behavior.
 
 **Best practices:**
 
-1. **Reuse a single instance** - Create one `Genomic` instance and reuse it for all prompts:
+1. **Reuse a single instance** - Create one `Prompter` instance and reuse it for all prompts:
    ```typescript
-   const prompter = new Genomic();
+   const prompter = new Prompter();
    
    // Use the same instance for multiple prompt sessions
    const answers1 = await prompter.prompt({}, questions1);
@@ -210,11 +212,11 @@ When working with multiple `Genomic` instances that share the same input stream 
 
 2. **Close before creating another** - If you need separate instances, close the first before using the second:
    ```typescript
-   const prompter1 = new Genomic();
+   const prompter1 = new Prompter();
    const answers1 = await prompter1.prompt({}, questions1);
    prompter1.close(); // Important: close before creating another
    
-   const prompter2 = new Genomic();
+   const prompter2 = new Prompter();
    const answers2 = await prompter2.prompt({}, questions2);
    prompter2.close();
    ```
@@ -508,11 +510,11 @@ const questions: Question[] = [
 ### Project Setup Wizard
 
 ```typescript
-import { Genomic, Question } from 'genomic';
+import { Prompter, Question } from 'genomic';
 import minimist from 'minimist';
 
 const argv = minimist(process.argv.slice(2));
-const prompter = new Genomic();
+const prompter = new Prompter();
 
 const questions: Question[] = [
   {
@@ -797,7 +799,7 @@ The `defaultFrom` feature allows you to automatically populate question defaults
 ### Quick Example
 
 ```typescript
-import { Genomic } from 'genomic';
+import { Prompter } from 'genomic';
 
 const questions = [
   {
@@ -826,13 +828,13 @@ const questions = [
   }
 ];
 
-const prompter = new Genomic();
+const prompter = new Prompter();
 const answers = await prompter.prompt({}, questions);
 ```
 
 ### Built-in Resolvers
 
-Genomic comes with several built-in resolvers ready to use:
+Prompter comes with several built-in resolvers ready to use:
 
 #### Git Configuration
 
@@ -996,10 +998,10 @@ const questions = [
 
 ### Instance-Specific Resolvers
 
-For isolated resolver registries, use a custom resolver registry per Genomic instance:
+For isolated resolver registries, use a custom resolver registry per Prompter instance:
 
 ```typescript
-import { DefaultResolverRegistry, Genomic } from 'genomic';
+import { DefaultResolverRegistry, Prompter } from 'genomic';
 
 const customRegistry = new DefaultResolverRegistry();
 
@@ -1007,7 +1009,7 @@ const customRegistry = new DefaultResolverRegistry();
 customRegistry.register('app.name', () => 'my-app');
 customRegistry.register('app.port', () => 3000);
 
-const prompter = new Genomic({
+const prompter = new Prompter({
   resolverRegistry: customRegistry  // Use custom registry
 });
 
@@ -1088,7 +1090,7 @@ DEBUG=genomic node your-cli.js
 ### Real-World Use Case
 
 ```typescript
-import { Genomic, registerDefaultResolver } from 'genomic';
+import { Prompter, registerDefaultResolver } from 'genomic';
 
 // Register a resolver for current directory name
 registerDefaultResolver('cwd.name', () => {
@@ -1125,7 +1127,7 @@ const questions = [
   }
 ];
 
-const prompter = new Genomic();
+const prompter = new Prompter();
 const config = await prompter.prompt({}, questions);
 ```
 

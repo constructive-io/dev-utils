@@ -171,7 +171,7 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
   return lines.join('\n') + '\n';
 }
 
-export interface GenomicOptions {
+export interface PrompterOptions {
   noTty?: boolean;
   input?: Readable;
   output?: Writable;
@@ -180,7 +180,7 @@ export interface GenomicOptions {
   mutateArgs?: boolean;
   resolverRegistry?: DefaultResolverRegistry;
 }
-export class Genomic {
+export class Prompter {
   private rl: readline.Interface | null;
   private keypress: TerminalKeypress | null;
   private noTty: boolean;
@@ -194,7 +194,7 @@ export class Genomic {
   private handledKeys: Set<string> = new Set();
 
   constructor(
-    options?: GenomicOptions
+    options?: PrompterOptions
   ) {
     const {
       noTty = false,

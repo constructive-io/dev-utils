@@ -2,11 +2,11 @@ import deepmerge from 'deepmerge';
 import minimist, { Opts, ParsedArgs } from 'minimist';
 import { Readable, Writable } from 'stream';
 
-import { Genomic } from './prompt';
+import { Prompter } from './prompt';
 import { getVersion } from './utils';
 
 // Define the type for the command handler function
-export type CommandHandler = (argv: ParsedArgs, prompter: Genomic, options: CLIOptions) => void;
+export type CommandHandler = (argv: ParsedArgs, prompter: Prompter, options: CLIOptions) => void;
 
 export interface CLIOptions {
   noTty: boolean;
@@ -30,7 +30,7 @@ export const defaultCLIOptions: CLIOptions = {
 
 export class CLI {
   private argv: ParsedArgs;
-  private prompter: Genomic;
+  private prompter: Prompter;
   private commandHandler: CommandHandler;
   private options: CLIOptions;
 
@@ -48,7 +48,7 @@ export class CLI {
 
     this.argv = argv ? argv : minimist(process.argv.slice(2), this.options.minimistOpts);
 
-    this.prompter = new Genomic({
+    this.prompter = new Prompter({
       noTty: this.options.noTty,
       input: this.options.input,
       output: this.options.output

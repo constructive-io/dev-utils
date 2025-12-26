@@ -1,7 +1,7 @@
 import readline from 'readline';
 import { Readable, Transform, Writable } from 'stream';
 import { stripAnsi } from 'clean-ansi';
-import { Genomic } from '../src';
+import { Prompter } from '../src';
 import { Question } from '../src/question';
   
 jest.mock('readline');
@@ -12,7 +12,7 @@ function sleep(ms: number): Promise<void> {
 
 const snap = (str: any) => expect(str).toMatchSnapshot();
 
-describe('Genomic', () => {
+describe('Prompter', () => {
   let mockWrite: jest.Mock;
   let mockInput: Readable;
   let mockOutput: Writable;
@@ -100,7 +100,7 @@ describe('Genomic', () => {
   it('prompts user and correctly processes delayed input', async () => {
     enqueueInputResponse({ type: 'read', value: 'user input' });
 
-    const prompter = new Genomic({
+    const prompter = new Prompter({
       input: mockInput,
       output: mockOutput,
       noTty: false
@@ -122,7 +122,7 @@ describe('Genomic', () => {
     enqueueInputResponse({ type: 'read', value: 'first question answer' });
     enqueueInputResponse({ type: 'read', value: 'second question answer' });
 
-    const prompter = new Genomic({
+    const prompter = new Prompter({
       input: mockInput,
       output: mockOutput,
       noTty: false
@@ -145,7 +145,7 @@ describe('Genomic', () => {
 
   it('handles combined key events and readline inputs', async () => {
 
-    const prompter = new Genomic({
+    const prompter = new Prompter({
       input: mockInput,
       output: mockOutput,
       noTty: false
@@ -173,7 +173,7 @@ describe('Genomic', () => {
 
   it('checkbox', async () => {
 
-    const prompter = new Genomic({
+    const prompter = new Prompter({
       input: mockInput,
       output: mockOutput,
       noTty: false
@@ -202,7 +202,7 @@ describe('Genomic', () => {
 
   it('checkbox w/options', async () => {
 
-    const prompter = new Genomic({
+    const prompter = new Prompter({
       input: mockInput,
       output: mockOutput,
       noTty: false
@@ -234,7 +234,7 @@ describe('Genomic', () => {
 
   it('handles readline inputs', async () => {
 
-    const prompter = new Genomic({
+    const prompter = new Prompter({
       input: mockInput,
       output: mockOutput,
       noTty: false

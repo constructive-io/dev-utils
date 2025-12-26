@@ -1,4 +1,4 @@
-import { Genomic, registerDefaultResolver } from '../src';
+import { Prompter, registerDefaultResolver } from '../src';
 
 /**
  * Example demonstrating the new defaultFrom feature
@@ -33,7 +33,7 @@ async function basicExample() {
         }
     ];
 
-    const prompter = new Genomic();
+    const prompter = new Prompter();
     const answers = await prompter.prompt({}, questions);
 
     console.log('\nAnswers:', answers);
@@ -68,7 +68,7 @@ async function customResolverExample() {
         }
     ];
 
-    const prompter = new Genomic();
+    const prompter = new Prompter();
     const answers = await prompter.prompt({}, questions);
 
     console.log('\nAnswers:', answers);

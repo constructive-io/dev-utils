@@ -85,7 +85,7 @@ export class DefaultResolverRegistry {
 
 /**
  * Global resolver registry instance with built-in resolvers.
- * This is the default registry used by Genomic unless a custom one is provided.
+ * This is the default registry used by Prompter unless a custom one is provided.
  */
 export const globalResolverRegistry = new DefaultResolverRegistry({
     ...gitResolvers,

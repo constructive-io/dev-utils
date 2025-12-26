@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import minimist from 'minimist';
 
-import { Genomic } from '../src';
+import { Prompter } from '../src';
 import { AutocompleteQuestion, ConfirmQuestion, Question } from '../src/question';
 import { displayVersion } from '../src/utils';
 
@@ -22,7 +22,7 @@ if (argv.version) {
   process.exit(0);
 }
 
-const prompter = new Genomic({
+const prompter = new Prompter({
   noTty: !argv.tty
 });
 

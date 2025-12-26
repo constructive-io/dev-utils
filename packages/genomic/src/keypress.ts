@@ -26,7 +26,7 @@ export const KEY_CODES = {
  * Handles keyboard input for interactive prompts.
  * 
  * **Important**: Only one TerminalKeypress instance should be actively listening
- * on a given input stream at a time. If you need multiple Genomic instances,
+ * on a given input stream at a time. If you need multiple Prompter instances,
  * call `close()` on the first instance before using the second, or reuse a single
  * instance for all prompts.
  * 
