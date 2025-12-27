@@ -1,6 +1,6 @@
 {
   "name": "inquirerer",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "TypeScript-first library for building beautiful CLI interfaces with interactive prompts",
   "main": "index.js",

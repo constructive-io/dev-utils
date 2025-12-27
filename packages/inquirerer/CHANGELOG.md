@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.0.0...inquirerer@4.1.0) (2025-12-27)
+
+### Features
+
+- **inquirerer:** add alias support for questions ([29444f2](https://github.com/constructive-io/dev-utils/commit/29444f229a37f02a4501d3af48208d1ce015f376))
+
 # [4.0.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@3.0.1...inquirerer@4.0.0) (2025-12-27)
 
 ### Bug Fixes
