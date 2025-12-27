@@ -12,9 +12,54 @@
  */
 
 import { Readable, Writable } from 'stream';
-import { cyan, dim, green, white, yellow, blue, inverse } from 'yanse';
+import { cyan, dim, green, white, yellow, blue, inverse, magenta } from 'yanse';
 import { TerminalKeypress, KEY_CODES } from '../keypress';
 import { ViewportRenderer, createViewport } from './viewport';
+import stringWidth from 'string-width';
+import { cleanAnsi } from 'clean-ansi';
+
+// Box drawing characters
+const BOX = {
+  topLeft: '╭',
+  topRight: '╮',
+  bottomLeft: '╰',
+  bottomRight: '╯',
+  horizontal: '─',
+  vertical: '│',
+  verticalRight: '├',
+  verticalLeft: '┤',
+};
+
+// Spinner frames for streaming indicator
+const SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
+// Display width helper (strips ANSI and calculates visual width)
+function displayWidth(str: string): number {
+  return stringWidth(cleanAnsi(str));
+}
+
+// Pad string to target display width
+function padRight(str: string, targetWidth: number): string {
+  const currentWidth = displayWidth(str);
+  if (currentWidth >= targetWidth) return str;
+  return str + ' '.repeat(targetWidth - currentWidth);
+}
+
+// Truncate string to target display width
+function truncate(str: string, maxWidth: number): string {
+  const clean = cleanAnsi(str);
+  if (stringWidth(clean) <= maxWidth) return str;
+  
+  let result = '';
+  let width = 0;
+  for (const char of clean) {
+    const charWidth = stringWidth(char);
+    if (width + charWidth > maxWidth - 1) break;
+    result += char;
+    width += charWidth;
+  }
+  return result + '…';
+}
 
 /**
  * Message types in the chat
@@ -114,6 +159,12 @@ export class AICodeUI {
   // Kill ring (for Ctrl+K/U)
   private killRing: string = '';
   
+  // Preferred column for vertical navigation
+  private preferredCol: number = 0;
+  
+  // Spinner frame for streaming indicator
+  private spinnerFrame: number = 0;
+  
   // Keybindings
   private bindings: Map<string, KeyAction> = new Map();
   private customBindings: KeyBinding[];
@@ -164,11 +215,12 @@ export class AICodeUI {
     this.registerKeyHandlers();
     this.keypress.resume();
     
-    // Start cursor blink
+    // Start cursor blink and spinner animation
     this.cursorTimer = setInterval(() => {
       this.cursorVisible = !this.cursorVisible;
+      this.spinnerFrame = (this.spinnerFrame + 1) % SPINNER_FRAMES.length;
       this.render();
-    }, 530);
+    }, 100); // Faster for smooth spinner animation
     
     // Initial render
     this.render();
@@ -406,8 +458,8 @@ export class AICodeUI {
       { keys: [KEY_CODES.CTRL_E, KEY_CODES.END, KEY_CODES.END_ALT, KEY_CODES.END_ALT2], action: () => this.moveCursorToEnd(), description: 'Move cursor to end of line' },
       { keys: [KEY_CODES.ALT_B, KEY_CODES.ALT_LEFT, KEY_CODES.CTRL_LEFT], action: () => this.moveCursorWordLeft(), description: 'Move cursor word left' },
       { keys: [KEY_CODES.ALT_F, KEY_CODES.ALT_RIGHT, KEY_CODES.CTRL_RIGHT], action: () => this.moveCursorWordRight(), description: 'Move cursor word right' },
-      { keys: [KEY_CODES.UP_ARROW, KEY_CODES.CTRL_P], action: () => this.historyPrevious(), description: 'Previous history entry' },
-      { keys: [KEY_CODES.DOWN_ARROW, KEY_CODES.CTRL_N], action: () => this.historyNext(), description: 'Next history entry' },
+      { keys: [KEY_CODES.UP_ARROW, KEY_CODES.CTRL_P], action: () => this.handleUpArrow(), description: 'Move up or previous history' },
+      { keys: [KEY_CODES.DOWN_ARROW, KEY_CODES.CTRL_N], action: () => this.handleDownArrow(), description: 'Move down or next history' },
       { keys: [KEY_CODES.PAGE_UP], action: () => this.scrollMessagesUp(), description: 'Scroll messages up' },
       { keys: [KEY_CODES.PAGE_DOWN], action: () => this.scrollMessagesDown(), description: 'Scroll messages down' },
       { keys: [KEY_CODES.BACKSPACE, KEY_CODES.BACKSPACE_LEGACY], action: () => this.deleteCharLeft(), description: 'Delete character left' },
@@ -453,33 +505,39 @@ export class AICodeUI {
   private moveCursorLeft(): void {
     if (this.lineEditor.cursorPos > 0) {
       this.lineEditor.cursorPos--;
+      this.preferredCol = this.lineEditor.cursorPos;
       this.render();
     } else if (this.lineEditor.lineIndex > 0) {
       this.lineEditor.lineIndex--;
       this.lineEditor.cursorPos = this.getCurrentLine().length;
+      this.preferredCol = this.lineEditor.cursorPos;
       this.render();
     }
   }
-  
+
   private moveCursorRight(): void {
     const line = this.getCurrentLine();
     if (this.lineEditor.cursorPos < line.length) {
       this.lineEditor.cursorPos++;
+      this.preferredCol = this.lineEditor.cursorPos;
       this.render();
     } else if (this.lineEditor.lineIndex < this.lineEditor.lines.length - 1) {
       this.lineEditor.lineIndex++;
       this.lineEditor.cursorPos = 0;
+      this.preferredCol = 0;
       this.render();
     }
   }
-  
+
   private moveCursorToStart(): void {
     this.lineEditor.cursorPos = 0;
+    this.preferredCol = 0;
     this.render();
   }
-  
+
   private moveCursorToEnd(): void {
     this.lineEditor.cursorPos = this.getCurrentLine().length;
+    this.preferredCol = this.lineEditor.cursorPos;
     this.render();
   }
   
@@ -489,6 +547,7 @@ export class AICodeUI {
     while (pos > 0 && /\s/.test(line[pos - 1])) pos--;
     while (pos > 0 && !/\s/.test(line[pos - 1])) pos--;
     this.lineEditor.cursorPos = pos;
+    this.preferredCol = pos;
     this.render();
   }
   
@@ -498,6 +557,7 @@ export class AICodeUI {
     while (pos < line.length && !/\s/.test(line[pos])) pos++;
     while (pos < line.length && /\s/.test(line[pos])) pos++;
     this.lineEditor.cursorPos = pos;
+    this.preferredCol = pos;
     this.render();
   }
   
@@ -521,7 +581,33 @@ export class AICodeUI {
       this.setInput(this.savedInput);
     }
   }
-  
+
+  private handleUpArrow(): void {
+    // If on first line, navigate history
+    if (this.lineEditor.lineIndex === 0) {
+      this.historyPrevious();
+      return;
+    }
+    // Otherwise, move to previous line
+    this.lineEditor.lineIndex--;
+    const newLine = this.getCurrentLine();
+    this.lineEditor.cursorPos = Math.min(this.preferredCol, newLine.length);
+    this.render();
+  }
+
+  private handleDownArrow(): void {
+    // If on last line, navigate history
+    if (this.lineEditor.lineIndex >= this.lineEditor.lines.length - 1) {
+      this.historyNext();
+      return;
+    }
+    // Otherwise, move to next line
+    this.lineEditor.lineIndex++;
+    const newLine = this.getCurrentLine();
+    this.lineEditor.cursorPos = Math.min(this.preferredCol, newLine.length);
+    this.render();
+  }
+
   private scrollMessagesUp(): void {
     if (this.scrollOffset < this.messages.length - 1) {
       this.scrollOffset++;
@@ -608,6 +694,7 @@ export class AICodeUI {
     const line = this.getCurrentLine();
     this.setCurrentLine(line.slice(0, this.lineEditor.cursorPos) + char + line.slice(this.lineEditor.cursorPos));
     this.lineEditor.cursorPos++;
+    this.preferredCol = this.lineEditor.cursorPos;
     this.render();
   }
   
@@ -659,132 +746,210 @@ export class AICodeUI {
     const lines: string[] = [];
     const { width } = this.viewport.getTerminalSize();
     
-    // Status bar (top of viewport)
-    const statusBar = this.renderStatusBar(width);
-    lines.push(statusBar);
-    
-    // Separator
-    lines.push(dim('─'.repeat(Math.min(width, 60))));
-    
-    // Streaming content area (if streaming)
-    if (this.isStreaming && this.streamingContent) {
-      const streamLines = this.renderStreamingContent();
-      lines.push(...streamLines);
+    // Show welcome box if no messages, otherwise show conversation
+    if (this.messages.length === 0 && !this.isStreaming) {
+      const welcomeLines = this.renderWelcomeBox(width);
+      lines.push(...welcomeLines);
     } else {
-      // Show recent message preview or empty space
-      const previewLines = this.renderMessagePreview();
-      lines.push(...previewLines);
+      // Render conversation history
+      const conversationLines = this.renderConversation(width);
+      lines.push(...conversationLines);
     }
     
     // Fill remaining space (account for multiline input)
     const inputLineCount = this.lineEditor.lines.length;
-    const contentLines = this.viewportHeight - 3 - Math.max(0, inputLineCount - 1);
-    while (lines.length < contentLines) {
+    const reservedLines = 3 + inputLineCount; // separator + input lines + status
+    while (lines.length < this.viewportHeight - reservedLines) {
       lines.push('');
     }
     
-    // Input prompt (bottom of viewport)
-    lines.push(dim('─'.repeat(Math.min(width, 60))));
-    const inputLines = this.renderInputLines();
+    // Full-width separator before input
+    lines.push(dim(BOX.horizontal.repeat(width)));
+    
+    // Input prompt
+    const inputLines = this.renderInputLines(width);
     lines.push(...inputLines);
     
-    // Calculate cursor position
-    const cursorRow = this.viewportHeight - 1 - (this.lineEditor.lines.length - 1 - this.lineEditor.lineIndex);
-    const cursorCol = (this.lineEditor.lineIndex === 0 ? this.promptPrefix.length : 2) + this.lineEditor.cursorPos;
+    // Full-width separator after input
+    lines.push(dim(BOX.horizontal.repeat(width)));
     
-    this.viewport.render({
-      lines,
-      cursorRow: this.cursorVisible ? cursorRow : undefined,
-      cursorCol: this.cursorVisible ? cursorCol : undefined,
-    });
+    // Status bar at bottom
+    const statusBar = this.renderStatusBar(width);
+    lines.push(statusBar);
+    
+    this.viewport.render({ lines });
+  }
+  
+  /**
+   * Render the welcome box (Claude Code style)
+   */
+  private renderWelcomeBox(width: number): string[] {
+    const lines: string[] = [];
+    const boxWidth = Math.min(width, 80);
+    const innerWidth = boxWidth - 2;
+    
+    // Title bar
+    const titleText = ` ${this.title} `;
+    const titlePadding = BOX.horizontal.repeat(3);
+    const remainingWidth = innerWidth - displayWidth(titlePadding + titleText);
+    const titleLine = BOX.topLeft + titlePadding + cyan(titleText) + BOX.horizontal.repeat(Math.max(0, remainingWidth)) + BOX.topRight;
+    lines.push(titleLine);
+    
+    // Two-column layout
+    const leftWidth = Math.floor(innerWidth * 0.55);
+    const rightWidth = innerWidth - leftWidth - 1; // -1 for divider
+    
+    // Welcome content (left side)
+    const leftContent = [
+      '',
+      '           Welcome!',
+      '',
+      '        * ▐▛███▜▌ *',
+      '       * ▝▜█████▛▘ *',
+      '        *  ▘▘ ▝▝  *',
+      '',
+      dim('  Ctrl+J: newline, Enter: send'),
+    ];
+    
+    // Tips content (right side)
+    const rightContent = [
+      cyan('Tips for getting started'),
+      dim('Type a message to begin...'),
+      BOX.horizontal.repeat(rightWidth),
+      cyan('Keybindings'),
+      dim('UP/DOWN: history/navigate'),
+      dim('PageUp/Down: scroll'),
+      dim('Ctrl+C: exit'),
+      '',
+    ];
+    
+    // Render rows
+    const maxRows = Math.max(leftContent.length, rightContent.length);
+    for (let i = 0; i < maxRows; i++) {
+      const leftText = leftContent[i] || '';
+      const rightText = rightContent[i] || '';
+      const leftPadded = padRight(leftText, leftWidth);
+      const rightPadded = padRight(rightText, rightWidth);
+      lines.push(BOX.vertical + leftPadded + dim(BOX.vertical) + rightPadded + BOX.vertical);
+    }
+    
+    // Bottom border
+    lines.push(BOX.bottomLeft + BOX.horizontal.repeat(innerWidth) + BOX.bottomRight);
+    
+    return lines;
+  }
+  
+  /**
+   * Render conversation history
+   */
+  private renderConversation(width: number): string[] {
+    const lines: string[] = [];
+    const maxLines = this.viewportHeight - 5; // Reserve space for input area
+    
+    // Collect all message lines
+    const allLines: string[] = [];
+    
+    for (const message of this.messages) {
+      if (message.role === 'user') {
+        // User messages with > prefix
+        const contentLines = message.content.split('\n');
+        contentLines.forEach((line, idx) => {
+          const prefix = idx === 0 ? cyan('> ') : '  ';
+          allLines.push(prefix + line);
+        });
+      } else if (message.role === 'assistant') {
+        // Assistant messages with bullet prefix
+        allLines.push('');
+        const contentLines = message.content.split('\n');
+        contentLines.forEach((line, idx) => {
+          const prefix = idx === 0 ? green('⏺ ') : '  ';
+          allLines.push(prefix + line);
+        });
+      } else {
+        // System messages
+        allLines.push(yellow('! ') + message.content);
+      }
+      allLines.push(''); // Empty line between messages
+    }
+    
+    // Add streaming content if active
+    if (this.isStreaming) {
+      const spinner = SPINNER_FRAMES[this.spinnerFrame];
+      if (this.streamingContent) {
+        const contentLines = this.streamingContent.split('\n');
+        contentLines.forEach((line, idx) => {
+          const prefix = idx === 0 ? green('⏺ ') : '  ';
+          allLines.push(prefix + line);
+        });
+      } else {
+        allLines.push(magenta(spinner) + dim(' Thinking... (esc to interrupt)'));
+      }
+    }
+    
+    // Apply scroll offset and take last N lines
+    const startIdx = Math.max(0, allLines.length - maxLines - this.scrollOffset);
+    const endIdx = allLines.length - this.scrollOffset;
+    const visibleLines = allLines.slice(startIdx, endIdx);
+    
+    lines.push(...visibleLines);
+    
+    // Show scroll indicator if needed
+    if (this.scrollOffset > 0) {
+      lines.push(dim(`  [${this.scrollOffset} more below - PageDown to scroll]`));
+    }
+    
+    return lines;
   }
   
   /**
    * Render the status bar
    */
   private renderStatusBar(width: number): string {
-    const title = white(this.title);
-    const status = this.isStreaming ? yellow(' [streaming...]') : green(' [ready]');
-    const scrollInfo = this.scrollOffset > 0 ? dim(` [scroll: ${this.scrollOffset}]`) : '';
-    const historyInfo = this.historyIndex >= 0 ? dim(` [history: ${this.historyIndex + 1}/${this.history.length}]`) : '';
+    const leftInfo = dim('  Ctrl+C: exit');
+    const rightInfo = this.isStreaming 
+      ? yellow('streaming...') 
+      : (this.historyIndex >= 0 ? dim(`history: ${this.historyIndex + 1}/${this.history.length}`) : '');
     
-    return title + status + scrollInfo + historyInfo;
-  }
-  
-  /**
-   * Render streaming content
-   */
-  private renderStreamingContent(): string[] {
-    const lines: string[] = [];
-    const contentLines = this.streamingContent.split('\n');
-    const maxLines = this.viewportHeight - 4; // Leave room for status, separators, input
-    
-    // Show last N lines of streaming content
-    const visibleLines = contentLines.slice(-maxLines);
-    
-    // Add role prefix to first line
-    if (visibleLines.length > 0) {
-      visibleLines[0] = green('AI: ') + visibleLines[0];
-    }
-    
-    // Add cursor indicator if streaming (inverse video on space at end)
-    if (this.cursorVisible) {
-      const lastIdx = visibleLines.length - 1;
-      if (lastIdx >= 0) {
-        visibleLines[lastIdx] += inverse(' ');
-      }
-    }
-    
-    lines.push(...visibleLines);
-    return lines;
-  }
-  
-  /**
-   * Render message preview (when not streaming)
-   */
-  private renderMessagePreview(): string[] {
-    const lines: string[] = [];
-    const maxLines = this.viewportHeight - 4;
-    
-    if (this.messages.length === 0) {
-      lines.push(dim('No messages yet. Type a message and press Enter.'));
-      lines.push(dim('Ctrl+J for newline, UP/DOWN for history, PageUp/PageDown to scroll.'));
-      return lines;
-    }
-    
-    // Show the last message (or scroll offset)
-    const messageIdx = Math.max(0, this.messages.length - 1 - this.scrollOffset);
-    const message = this.messages[messageIdx];
-    
-    if (message) {
-      const formatted = this.formatMessage(message);
-      const messageLines = formatted.split('\n').slice(0, maxLines);
-      lines.push(...messageLines);
-      
-      if (this.scrollOffset > 0) {
-        lines.push(dim(`[${this.scrollOffset} more messages above - use PageUp/PageDown to scroll]`));
-      }
-    }
-    
-    return lines;
+    const padding = width - displayWidth(leftInfo) - displayWidth(rightInfo);
+    return leftInfo + ' '.repeat(Math.max(0, padding)) + rightInfo;
   }
   
   /**
    * Render the input lines (supports multiline)
    */
-  private renderInputLines(): string[] {
+  private renderInputLines(width: number): string[] {
     const lines: string[] = [];
+    const inputText = this.getInput();
+    const hasContent = inputText.length > 0;
     
     this.lineEditor.lines.forEach((line, idx) => {
-      const prefix = idx === 0 ? blue(this.promptPrefix) : blue('  ');
-      if (idx === this.lineEditor.lineIndex && this.cursorVisible && !this.isStreaming) {
+      const prefix = idx === 0 ? cyan('> ') : '  ';
+      let lineContent: string;
+      
+      if (idx === this.lineEditor.lineIndex && !this.isStreaming) {
+        // Show cursor on current line
         const before = line.slice(0, this.lineEditor.cursorPos);
         const cursorChar = line[this.lineEditor.cursorPos] || ' ';
         const after = line.slice(this.lineEditor.cursorPos + 1);
-        lines.push(prefix + before + inverse(cursorChar) + after);
+        // Only show inverse cursor every other frame for blink effect
+        const showCursor = Math.floor(this.spinnerFrame / 2) % 2 === 0;
+        lineContent = before + (showCursor ? inverse(cursorChar) : cursorChar) + after;
       } else {
-        lines.push(prefix + line);
+        lineContent = line;
       }
+      
+      // Add send hint on last line if there's content
+      if (idx === this.lineEditor.lines.length - 1 && hasContent) {
+        const hint = dim(' ↵ send');
+        const lineWidth = displayWidth(prefix + lineContent);
+        const hintWidth = displayWidth(hint);
+        if (lineWidth + hintWidth < width - 2) {
+          const padding = width - lineWidth - hintWidth - 2;
+          lineContent = lineContent + ' '.repeat(Math.max(0, padding)) + hint;
+        }
+      }
+      
+      lines.push(prefix + lineContent);
     });
     
     return lines;
