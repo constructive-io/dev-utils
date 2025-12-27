@@ -46,6 +46,12 @@ export interface UIEngineOptions {
   input?: Readable;
   output?: Writable;
   noTty?: boolean;
+  /** Existing keypress instance to reuse (avoids multiple listeners on stdin) */
+  keypress?: TerminalKeypress;
+  /** If true, engine owns the keypress and will destroy it on cleanup. Default: true if keypress not provided */
+  ownsKeypress?: boolean;
+  /** If true, clear the entire screen on start instead of just overwriting lines */
+  clearScreenOnStart?: boolean;
 }
 
 export class UIEngine {
@@ -53,6 +59,8 @@ export class UIEngine {
   private output: Writable;
   private noTty: boolean;
   private keypress: TerminalKeypress | null = null;
+  private ownsKeypress: boolean;
+  private clearScreenOnStart: boolean;
   private tickTimer: NodeJS.Timeout | null = null;
   private lastLineCount: number = 0;
 
@@ -60,6 +68,9 @@ export class UIEngine {
     this.input = options.input ?? process.stdin;
     this.output = options.output ?? process.stdout;
     this.noTty = options.noTty ?? false;
+    this.keypress = options.keypress ?? null;
+    this.ownsKeypress = options.ownsKeypress ?? (options.keypress === undefined);
+    this.clearScreenOnStart = options.clearScreenOnStart ?? false;
   }
 
   /**
@@ -130,10 +141,18 @@ export class UIEngine {
     let state = config.initialState;
     let resolved = false;
     let result: V | undefined;
+    const createdKeypress = !this.keypress;
 
-    // Setup keypress handler
-    this.keypress = new TerminalKeypress(this.noTty, this.input);
+    // Setup keypress handler - reuse existing or create new
+    if (!this.keypress) {
+      this.keypress = new TerminalKeypress(this.noTty, this.input);
+    }
     this.keypress.resume();
+
+    // Clear screen on start if requested (matches legacy prompt behavior)
+    if (this.clearScreenOnStart) {
+      this.clearScreen();
+    }
 
     // Hide cursor if requested
     if (config.hideCursor) {
@@ -186,9 +205,14 @@ export class UIEngine {
           this.tickTimer = null;
         }
         
-        // Cleanup keypress
+        // Cleanup keypress - pause clears handlers, which is what we want
+        // Only destroy if we created it and own it
         if (this.keypress) {
           this.keypress.pause();
+          if (createdKeypress && this.ownsKeypress) {
+            this.keypress.destroy();
+            this.keypress = null;
+          }
         }
         
         // Show cursor
@@ -201,19 +225,20 @@ export class UIEngine {
       };
 
       // Register key handlers
-      // Handle special keys
+      // Handle special keys - but let TerminalKeypress handle CTRL+C exit
       Object.entries(KEY_MAP).forEach(([code, key]) => {
         this.keypress!.on(code, () => {
+          // For CTRL+C, just cleanup - TerminalKeypress will call process.exit
           if (key === Key.CTRL_C) {
             cleanup();
-            process.exit(0);
+            return;
           }
           handleEvent({ type: 'key', key });
         });
       });
 
-      // Handle alphanumeric characters
-      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('').forEach(char => {
+      // Handle alphanumeric characters (lowercase only to match legacy behavior)
+      'abcdefghijklmnopqrstuvwxyz0123456789'.split('').forEach(char => {
         this.keypress!.on(char, () => {
           handleEvent({ type: 'char', char });
         });

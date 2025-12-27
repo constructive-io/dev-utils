@@ -20,6 +20,14 @@ jest.mock('inquirerer', () => {
       };
     }),
     registerDefaultResolver: jest.fn(),
+    createSpinner: jest.fn().mockImplementation(() => {
+      return {
+        start: jest.fn(),
+        succeed: jest.fn(),
+        fail: jest.fn(),
+        text: jest.fn(),
+      };
+    }),
   };
 });
 

@@ -2,6 +2,7 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
+import { createSpinner } from 'inquirerer';
 import { GitCloneOptions, GitCloneResult } from './types';
 
 export class GitCloner {
@@ -97,6 +98,7 @@ export class GitCloner {
     const branch = options?.branch;
     const depth = options?.depth ?? 1;
     const singleBranch = options?.singleBranch ?? true;
+    const silent = options?.silent ?? true;
 
     const branchArgs = branch ? ` --branch ${branch}` : '';
     const singleBranchArgs = singleBranch ? ' --single-branch' : '';
@@ -104,9 +106,26 @@ export class GitCloner {
 
     const command = `git clone${branchArgs}${singleBranchArgs}${depthArgs} ${url} ${destination}`;
 
+    const spinner = silent ? createSpinner(`Cloning ${url}...`) : null;
+    
     try {
-      execSync(command, { stdio: 'inherit' });
+      if (spinner) {
+        spinner.start();
+      }
+      
+      execSync(command, { 
+        stdio: silent ? 'pipe' : 'inherit',
+        encoding: 'utf-8'
+      });
+      
+      if (spinner) {
+        spinner.succeed('Repository cloned');
+      }
     } catch (error) {
+      if (spinner) {
+        spinner.fail('Failed to clone repository');
+      }
+      
       // Clean up on failure
       if (fs.existsSync(destination)) {
         fs.rmSync(destination, { recursive: true, force: true });

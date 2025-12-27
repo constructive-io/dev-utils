@@ -62,6 +62,11 @@ npm install inquirerer
   - [Custom Resolvers](#custom-resolvers)
   - [Resolver Examples](#resolver-examples)
 - [CLI Helper](#cli-helper)
+- [UI Components](#ui-components)
+  - [Spinner](#spinner)
+  - [Progress Bar](#progress-bar)
+  - [Streaming Text](#streaming-text)
+  - [Custom UI with UIEngine](#custom-ui-with-uiengine)
 - [Developing](#developing)
 
 ## Quick Start
@@ -1241,4 +1246,204 @@ const handler: CommandHandler = async (argv, prompter) => {
 
 const cli = new CLI(handler, options);
 await cli.run();
+```
+
+## UI Components
+
+inquirerer includes a set of UI components for building rich terminal interfaces beyond simple prompts. These are useful for showing progress, loading states, and streaming output.
+
+### Spinner
+
+Show an animated spinner while performing async operations:
+
+```typescript
+import { createSpinner } from 'inquirerer';
+
+const spinner = createSpinner('Loading packages...');
+spinner.start();
+
+const data = await fetchPackages();
+
+spinner.succeed('Loaded 42 packages');
+// Or: spinner.fail('Failed to load'), spinner.warn('Warning'), spinner.info('Info')
+```
+
+**Spinner styles:**
+
+```typescript
+import { createSpinner, SPINNER_STYLES } from 'inquirerer';
+
+// Use different spinner styles
+const spinner = createSpinner('Processing...', {
+  frames: SPINNER_STYLES.dots,    // ⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏
+  // frames: SPINNER_STYLES.line,  // - \ | /
+  // frames: SPINNER_STYLES.arc,   // ◜ ◠ ◝ ◞ ◡ ◟
+  // frames: SPINNER_STYLES.circle // ◐ ◓ ◑ ◒
+});
+```
+
+**Update text while spinning:**
+
+```typescript
+spinner.start();
+spinner.text('Step 1: Downloading...');
+await download();
+spinner.text('Step 2: Installing...');
+await install();
+spinner.succeed('Done!');
+```
+
+### Progress Bar
+
+Show progress for operations with known completion:
+
+```typescript
+import { createProgress } from 'inquirerer';
+
+const progress = createProgress('Installing dependencies');
+progress.start();
+
+for (let i = 0; i < packages.length; i++) {
+  await installPackage(packages[i]);
+  progress.update((i + 1) / packages.length);
+}
+
+progress.complete('All packages installed');
+// Or: progress.error('Installation failed')
+```
+
+**Increment progress:**
+
+```typescript
+const progress = createProgress('Processing files');
+progress.start();
+
+for (const file of files) {
+  await processFile(file);
+  progress.increment(1 / files.length);
+}
+
+progress.complete();
+```
+
+### Streaming Text
+
+Display streaming output like AI chat responses:
+
+```typescript
+import { createStream } from 'inquirerer';
+
+const stream = createStream({ showCursor: true });
+stream.start();
+
+for await (const token of llmResponse) {
+  stream.append(token);
+}
+
+stream.done();
+```
+
+**With line prefix:**
+
+```typescript
+const stream = createStream({ prefix: '> ' });
+stream.start();
+stream.appendLine('First line of response');
+stream.appendLine('Second line of response');
+stream.done();
+```
+
+### Custom UI with UIEngine
+
+For fully custom interactive UIs, use the `UIEngine` directly:
+
+```typescript
+import { UIEngine, Key } from 'inquirerer';
+
+interface MyState {
+  items: string[];
+  selectedIndex: number;
+}
+
+const engine = new UIEngine();
+
+const result = await engine.run<MyState, string>({
+  initialState: {
+    items: ['Option A', 'Option B', 'Option C'],
+    selectedIndex: 0
+  },
+  
+  render: (state) => [
+    'Select an option:',
+    ...state.items.map((item, i) => 
+      i === state.selectedIndex ? `> ${item}` : `  ${item}`
+    )
+  ],
+  
+  onEvent: (event, state) => {
+    if (event.type === 'key') {
+      switch (event.key) {
+        case Key.UP:
+          return { 
+            state: { 
+              ...state, 
+              selectedIndex: Math.max(0, state.selectedIndex - 1) 
+            } 
+          };
+        case Key.DOWN:
+          return { 
+            state: { 
+              ...state, 
+              selectedIndex: Math.min(state.items.length - 1, state.selectedIndex + 1) 
+            } 
+          };
+        case Key.ENTER:
+          return { 
+            state, 
+            done: true, 
+            value: state.items[state.selectedIndex] 
+          };
+      }
+    }
+    return { state };
+  }
+});
+
+console.log('You selected:', result);
+```
+
+**With animations (tick events):**
+
+```typescript
+const engine = new UIEngine();
+
+await engine.run({
+  initialState: { frame: 0, message: 'Loading' },
+  tickInterval: 100, // Trigger tick event every 100ms
+  
+  render: (state) => {
+    const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+    return [`${frames[state.frame % frames.length]} ${state.message}...`];
+  },
+  
+  onEvent: (event, state) => {
+    if (event.type === 'tick') {
+      return { state: { ...state, frame: state.frame + 1 } };
+    }
+    if (event.type === 'key' && event.key === Key.ENTER) {
+      return { state, done: true };
+    }
+    return { state };
+  }
+});
+```
+
+**Run the demos:**
+
+```bash
+cd packages/inquirerer
+pnpm dev:spinner   # Spinner styles demo
+pnpm dev:chat      # Streaming text demo  
+pnpm dev:upgrade   # Interactive upgrade UI demo
+pnpm dev:prompts   # All prompt types demo
 ```
