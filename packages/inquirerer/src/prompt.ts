@@ -923,6 +923,18 @@ export class Inquirerer {
 
     const updateFilteredOptions = (): void => {
       filteredOptions = this.filterOptions(options, input);
+      // Clamp selectedIndex and startIndex when filtered results change
+      if (filteredOptions.length === 0) {
+        selectedIndex = 0;
+        startIndex = 0;
+      } else {
+        if (selectedIndex >= filteredOptions.length) {
+          selectedIndex = filteredOptions.length - 1;
+        }
+        if (startIndex > Math.max(0, filteredOptions.length - maxLines)) {
+          startIndex = Math.max(0, filteredOptions.length - maxLines);
+        }
+      }
     };
 
     const display = (): void => {
@@ -963,6 +975,10 @@ export class Inquirerer {
     });
 
     this.keypress.on(KEY_CODES.UP_ARROW, () => {
+      if (filteredOptions.length === 0) {
+        display();
+        return;
+      }
       selectedIndex = selectedIndex > 0 ? selectedIndex - 1 : filteredOptions.length - 1;
       if (selectedIndex < startIndex) {
         startIndex = selectedIndex; // Scroll up
@@ -973,6 +989,10 @@ export class Inquirerer {
     });
 
     this.keypress.on(KEY_CODES.DOWN_ARROW, () => {
+      if (filteredOptions.length === 0) {
+        display();
+        return;
+      }
       selectedIndex = (selectedIndex + 1) % filteredOptions.length;
       if (selectedIndex >= startIndex + maxLines) {
         startIndex = selectedIndex - maxLines + 1; // Scroll down
@@ -983,6 +1003,10 @@ export class Inquirerer {
     });
 
     this.keypress.on(KEY_CODES.SPACE, () => {
+      if (filteredOptions.length === 0 || !filteredOptions[selectedIndex]) {
+        display();
+        return;
+      }
       // Map filtered index back to the original index in options
       selections[options.indexOf(filteredOptions[selectedIndex])] = !selections[options.indexOf(filteredOptions[selectedIndex])];
       display();
@@ -1089,6 +1113,10 @@ export class Inquirerer {
 
     // Navigation
     this.keypress.on(KEY_CODES.UP_ARROW, () => {
+      if (filteredOptions.length === 0) {
+        display();
+        return;
+      }
       selectedIndex = selectedIndex - 1 >= 0 ? selectedIndex - 1 : filteredOptions.length - 1;
       if (selectedIndex < startIndex) {
         startIndex = selectedIndex;  // Scroll up
@@ -1098,6 +1126,10 @@ export class Inquirerer {
       display();
     });
     this.keypress.on(KEY_CODES.DOWN_ARROW, () => {
+      if (filteredOptions.length === 0) {
+        display();
+        return;
+      }
       selectedIndex = (selectedIndex + 1) % filteredOptions.length;
       if (selectedIndex >= startIndex + maxLines) {
         startIndex = selectedIndex - maxLines + 1;  // Scroll down
