@@ -918,14 +918,42 @@ export class AICodeUI {
   }
   
   /**
-   * Render the input lines (supports multiline)
+   * Render the input lines (supports multiline with scrolling)
    */
   private renderInputLines(width: number): string[] {
     const lines: string[] = [];
     const inputText = this.getInput();
     const hasContent = inputText.length > 0;
     
-    this.lineEditor.lines.forEach((line, idx) => {
+    // Limit visible input lines to prevent overflow
+    // Reserve space for: welcome/conversation, separator, status bar
+    const maxInputLines = Math.min(this.lineEditor.lines.length, Math.max(3, this.viewportHeight - 10));
+    
+    // Calculate which lines to show (keep cursor line visible)
+    const cursorLine = this.lineEditor.lineIndex;
+    let startLine = 0;
+    let endLine = this.lineEditor.lines.length;
+    
+    if (this.lineEditor.lines.length > maxInputLines) {
+      // Center the view around the cursor line
+      const halfVisible = Math.floor(maxInputLines / 2);
+      startLine = Math.max(0, cursorLine - halfVisible);
+      endLine = startLine + maxInputLines;
+      
+      // Adjust if we're near the end
+      if (endLine > this.lineEditor.lines.length) {
+        endLine = this.lineEditor.lines.length;
+        startLine = Math.max(0, endLine - maxInputLines);
+      }
+    }
+    
+    // Show scroll indicator at top if there are hidden lines above
+    if (startLine > 0) {
+      lines.push(dim(`  [${startLine} more lines above]`));
+    }
+    
+    for (let idx = startLine; idx < endLine; idx++) {
+      const line = this.lineEditor.lines[idx];
       const prefix = idx === 0 ? cyan('> ') : '  ';
       let lineContent: string;
       
@@ -941,7 +969,7 @@ export class AICodeUI {
         lineContent = line;
       }
       
-      // Add send hint on last line if there's content
+      // Add send hint on last visible line if there's content and it's the actual last line
       if (idx === this.lineEditor.lines.length - 1 && hasContent) {
         const hint = dim(' ↵ send');
         const lineWidth = displayWidth(prefix + lineContent);
@@ -953,7 +981,12 @@ export class AICodeUI {
       }
       
       lines.push(prefix + lineContent);
-    });
+    }
+    
+    // Show scroll indicator at bottom if there are hidden lines below
+    if (endLine < this.lineEditor.lines.length) {
+      lines.push(dim(`  [${this.lineEditor.lines.length - endLine} more lines below]`));
+    }
     
     return lines;
   }
