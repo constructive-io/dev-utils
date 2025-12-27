@@ -6,6 +6,10 @@ export type { KeySequence } from './keys';
 export { setupTests, createTestEnvironment } from './harness';
 export type { TestEnvironment, InputResponse } from './harness';
 
+// Test fixture for CLI testing
+export { createTestFixture } from './fixture';
+export type { TestFixture, TestFixtureOptions, RunCmdResult } from './fixture';
+
 // Snapshot utilities
 export { normalizePackageJsonForSnapshot } from './snapshot';
 export type { NormalizeOptions } from './snapshot';
