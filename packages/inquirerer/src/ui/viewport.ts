@@ -1,9 +1,9 @@
 /**
- * ViewportRenderer - Diff-based terminal rendering with scrollback preservation
+ * ViewportRenderer - Terminal rendering with scrollback preservation
  * 
  * This module implements a terminal UI renderer that:
  * - Renders to a fixed "viewport" region at the bottom of the terminal
- * - Uses diff-based updates to minimize flicker and escape sequences
+ * - Uses cursor positioning to update content in-place
  * - Preserves native terminal scrollback for committed output
  * - Supports terminal resize handling
  * 
@@ -11,10 +11,6 @@
  */
 
 import { Writable } from 'stream';
-
-// ansi-diff for minimal diff-based rendering
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const ansiDiff = require('ansi-diff');
 
 /**
  * ANSI escape codes for terminal control
@@ -28,9 +24,10 @@ const ANSI = {
   saveCursor: '\x1B7',
   restoreCursor: '\x1B8',
   cursorTo: (row: number, col: number) => `\x1B[${row};${col}H`,
-  cursorUp: (n: number) => `\x1B[${n}A`,
-  cursorDown: (n: number) => `\x1B[${n}B`,
+  cursorUp: (n: number) => n > 0 ? `\x1B[${n}A` : '',
+  cursorDown: (n: number) => n > 0 ? `\x1B[${n}B` : '',
   cursorToColumn: (col: number) => `\x1B[${col}G`,
+  cursorToStart: '\r',
   
   // Line clearing (does NOT affect scrollback)
   clearLine: '\x1B[2K',
@@ -66,17 +63,17 @@ export interface ViewportState {
  * Key concepts:
  * - "Committed output" is written normally and becomes part of scrollback
  * - "Live viewport" is a reserved region that gets updated in-place
- * - Uses ansi-diff for minimal escape sequence output
+ * - Uses cursor positioning to redraw content efficiently
  */
 export class ViewportRenderer {
   private output: Writable;
   private viewportHeight: number;
   private hideCursorEnabled: boolean;
-  private diff: ReturnType<typeof ansiDiff>;
   private isRunning: boolean = false;
   private terminalWidth: number;
   private terminalHeight: number;
   private resizeHandler: (() => void) | null = null;
+  private hasRenderedOnce: boolean = false;
   
   constructor(options: ViewportRendererOptions = {}) {
     this.output = options.output ?? process.stdout;
@@ -87,12 +84,6 @@ export class ViewportRenderer {
     const tty = this.output as NodeJS.WriteStream;
     this.terminalWidth = tty.columns ?? 80;
     this.terminalHeight = tty.rows ?? 24;
-    
-    // Initialize ansi-diff with terminal dimensions
-    this.diff = ansiDiff({
-      width: this.terminalWidth,
-      height: this.viewportHeight,
-    });
   }
   
   /**
@@ -117,13 +108,11 @@ export class ViewportRenderer {
    */
   setViewportHeight(height: number): void {
     this.viewportHeight = height;
-    this.diff.resize({ height });
   }
   
   /**
    * Start the viewport renderer
    * - Sets up resize handling
-   * - Reserves space for the viewport
    * - Hides cursor if configured
    */
   start(): this {
@@ -135,10 +124,6 @@ export class ViewportRenderer {
       const tty = this.output as NodeJS.WriteStream;
       this.terminalWidth = tty.columns ?? 80;
       this.terminalHeight = tty.rows ?? 24;
-      this.diff.resize({
-        width: this.terminalWidth,
-        height: this.viewportHeight,
-      });
     };
     
     if (typeof (this.output as NodeJS.WriteStream).on === 'function') {
@@ -150,23 +135,7 @@ export class ViewportRenderer {
       this.write(ANSI.hideCursor);
     }
     
-    // Reserve space for viewport by printing empty lines
-    // This ensures we have room to render without scrolling
-    this.reserveViewportSpace();
-    
     return this;
-  }
-  
-  /**
-   * Reserve space for the viewport at the bottom of the terminal
-   */
-  private reserveViewportSpace(): void {
-    // Print empty lines to ensure viewport space exists
-    for (let i = 0; i < this.viewportHeight; i++) {
-      this.write('\n');
-    }
-    // Move cursor back up to the start of viewport
-    this.write(ANSI.cursorUp(this.viewportHeight));
   }
   
   /**
@@ -174,39 +143,29 @@ export class ViewportRenderer {
    * This should be used for completed messages, not live updates
    */
   commit(text: string): this {
-    if (!this.isRunning) {
-      this.write(text);
-      return this;
+    // First, clear the current viewport by moving up and clearing lines
+    if (this.hasRenderedOnce) {
+      this.write(ANSI.cursorUp(this.viewportHeight));
+      for (let i = 0; i < this.viewportHeight; i++) {
+        this.write(ANSI.clearLine + '\n');
+      }
+      this.write(ANSI.cursorUp(this.viewportHeight));
     }
     
-    // Save cursor position
-    this.write(ANSI.saveCursor);
-    
-    // Move to the line above the viewport
-    // We need to scroll the viewport content up first
-    this.write(ANSI.cursorUp(this.viewportHeight));
-    
-    // Write the committed text (this will scroll naturally)
+    // Write the committed text (this becomes scrollback)
     this.write(text);
     if (!text.endsWith('\n')) {
       this.write('\n');
     }
     
-    // Re-reserve viewport space
-    this.reserveViewportSpace();
-    
-    // Force a full redraw of the viewport
-    this.diff = ansiDiff({
-      width: this.terminalWidth,
-      height: this.viewportHeight,
-    });
+    this.hasRenderedOnce = false;
     
     return this;
   }
   
   /**
    * Render the viewport with the given state
-   * Uses diff-based rendering to minimize escape sequences
+   * Uses cursor positioning to redraw content in-place
    */
   render(state: ViewportState): this {
     if (!this.isRunning) {
@@ -221,24 +180,30 @@ export class ViewportRenderer {
       lines.push('');
     }
     
-    // Join lines and compute diff
-    const content = lines.join('\n');
-    const diffOutput = this.diff.update(content);
-    
-    // Save cursor, move to viewport start, apply diff, restore cursor
-    this.write(ANSI.saveCursor);
-    this.write(diffOutput);
-    
-    // Position cursor if specified
-    if (state.cursorRow !== undefined && state.cursorCol !== undefined) {
-      // Calculate absolute position within viewport
-      const row = Math.min(state.cursorRow, this.viewportHeight - 1);
-      const col = state.cursorCol;
-      this.write(ANSI.cursorUp(this.viewportHeight - 1 - row));
-      this.write(ANSI.cursorToColumn(col + 1)); // ANSI columns are 1-indexed
-    } else {
-      this.write(ANSI.restoreCursor);
+    // On first render, reserve space by printing empty lines
+    // This establishes the viewport region
+    if (!this.hasRenderedOnce) {
+      for (let i = 0; i < this.viewportHeight; i++) {
+        this.write('\n');
+      }
+      this.hasRenderedOnce = true;
     }
+    
+    // Move cursor back to start of viewport
+    this.write(ANSI.cursorUp(this.viewportHeight));
+    this.write(ANSI.cursorToStart);
+    
+    // Clear and redraw each line
+    for (let i = 0; i < lines.length; i++) {
+      this.write(ANSI.clearLine);
+      this.write(lines[i]);
+      if (i < lines.length - 1) {
+        this.write('\n');
+      }
+    }
+    
+    // Move cursor to end of viewport (for next render)
+    this.write('\n');
     
     return this;
   }
@@ -255,7 +220,6 @@ export class ViewportRenderer {
    * Stop the viewport renderer
    * - Removes resize handler
    * - Shows cursor
-   * - Clears viewport
    */
   stop(): this {
     if (!this.isRunning) return this;
@@ -266,10 +230,6 @@ export class ViewportRenderer {
       (this.output as NodeJS.WriteStream).off('resize', this.resizeHandler);
       this.resizeHandler = null;
     }
-    
-    // Clear viewport and move cursor to end
-    this.clear();
-    this.write(ANSI.cursorDown(this.viewportHeight));
     
     // Show cursor
     if (this.hideCursorEnabled) {

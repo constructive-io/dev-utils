@@ -166,7 +166,7 @@ export class AICodeUI {
    * Add a message to the chat
    */
   addMessage(role: MessageRole, content: string): this {
-    // If there's a streaming message, commit it first
+    // If there's a streaming message, end it first
     if (this.isStreaming) {
       this.endStream();
     }
@@ -177,8 +177,8 @@ export class AICodeUI {
       timestamp: new Date(),
     });
     
-    // Commit the message to scrollback
-    this.commitMessage(this.messages[this.messages.length - 1]);
+    // Scroll to show the latest message
+    this.scrollOffset = 0;
     
     this.render();
     return this;
@@ -229,12 +229,10 @@ export class AICodeUI {
     if (lastMessage && lastMessage.isStreaming) {
       lastMessage.isStreaming = false;
       lastMessage.content = this.streamingContent;
-      
-      // Commit the completed message to scrollback
-      this.commitMessage(lastMessage);
     }
     
     this.streamingContent = '';
+    this.scrollOffset = 0;
     this.render();
     return this;
   }
@@ -262,14 +260,6 @@ export class AICodeUI {
    */
   getInput(): string {
     return this.lineEditor.text;
-  }
-  
-  /**
-   * Commit a message to scrollback (above the viewport)
-   */
-  private commitMessage(message: ChatMessage): void {
-    const formatted = this.formatMessage(message);
-    this.viewport.commit(formatted + '\n');
   }
   
   /**
