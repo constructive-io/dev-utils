@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/constructive-io/dev-utils/compare/@inquirerer/test@1.1.2...@inquirerer/test@1.2.0) (2025-12-27)
+
+### Features
+
+- **@inquirerer/test:** add createTestFixture for CLI testing ([7dcc812](https://github.com/constructive-io/dev-utils/commit/7dcc81255112d455f4ea3ef10709fe79b1187d21))
+
 ## [1.1.2](https://github.com/constructive-io/dev-utils/compare/@inquirerer/test@1.1.1...@inquirerer/test@1.1.2) (2025-12-27)
 
 ### Bug Fixes
