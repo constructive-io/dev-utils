@@ -18,6 +18,7 @@ export interface BaseQuestion {
     name: string;
     type: string;
     _?: boolean;
+    alias?: string | string[];
     default?: any;
     defaultFrom?: string;
     setFrom?: string;

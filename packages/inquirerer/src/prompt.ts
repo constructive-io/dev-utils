@@ -125,8 +125,13 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
 
   const lines: string[] = [];
 
-  // 1. Main prompt label with --name inline
-  let promptLine = whiteBright.bold(message || `${name}?`) + ' ' + dim(`(--${name})`);
+  // 1. Main prompt label with --name inline (and aliases if present)
+  const aliasInfo = question.alias
+    ? `, ${(Array.isArray(question.alias) ? question.alias : [question.alias])
+        .map(a => a.length === 1 ? `-${a}` : `--${a}`)
+        .join(', ')}`
+    : '';
+  let promptLine = whiteBright.bold(message || `${name}?`) + ' ' + dim(`(--${name}${aliasInfo})`);
 
   // 2. Append default inline (only if present)
   switch (type) {
@@ -273,6 +278,11 @@ export class Inquirerer {
     opts.questions.forEach(question => {
       manPage += `${white(question.name.toUpperCase())}\n`;
       manPage += `\t${white('Type:')} ${gray(question.type)}\n`;
+      if (question.alias) {
+        const aliases = Array.isArray(question.alias) ? question.alias : [question.alias];
+        const aliasStr = aliases.map(a => a.length === 1 ? `-${a}` : `--${a}`).join(', ');
+        manPage += `\t${white('Alias:')} ${gray(aliasStr)}\n`;
+      }
       if (question.message) {
         manPage += `\t${white('Summary:')} ${gray(question.message)}\n`;
       }
@@ -397,6 +407,10 @@ export class Inquirerer {
     if (!shouldMutate && Array.isArray(argvAny._)) {
       obj._ = [...argvAny._];
     }
+
+    // Expand aliases before any other processing
+    // This allows users to use short flags like -w instead of --workspace
+    this.expandAliases(questions, obj);
 
     // Resolve dynamic defaults before processing questions
     await this.resolveDynamicDefaults(questions);
@@ -552,6 +566,35 @@ export class Inquirerer {
           const resolved = await this.resolverRegistry.resolve(question.setFrom);
           if (resolved !== undefined) {
             obj[question.name] = resolved;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Expands aliases for all questions that have alias specified.
+   * If an alias key exists in obj but the main name doesn't, copies the value to the main name.
+   * This allows users to use short flags like -w instead of --workspace.
+   */
+  private expandAliases(questions: Question[], obj: any): void {
+    for (const question of questions) {
+      if ('alias' in question && question.alias) {
+        // Skip if the main name already has a value
+        if (question.name in obj) {
+          continue;
+        }
+
+        // Normalize alias to array
+        const aliases = Array.isArray(question.alias) ? question.alias : [question.alias];
+
+        // Check each alias and use the first one found
+        for (const alias of aliases) {
+          if (alias in obj) {
+            obj[question.name] = obj[alias];
+            // Optionally clean up the alias key to avoid confusion
+            delete obj[alias];
+            break;
           }
         }
       }
