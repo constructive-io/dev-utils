@@ -1,7 +1,7 @@
 # inquirerer
 
 <p align="center" width="100%">
-    <img height="90" src="https://raw.githubusercontent.com/hyperweb-io/dev-utils/refs/heads/main/docs/img/genomic.svg" />
+    <img height="90" src="https://raw.githubusercontent.com/constructive-io/dev-utils/refs/heads/main/docs/img/genomic.svg" />
 </p>
 
 <p align="center" width="100%">
@@ -12,7 +12,7 @@
     <img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"/>
   </a>
   <a href="https://www.npmjs.com/package/inquirerer"><img height="20" src="https://img.shields.io/npm/dt/inquirerer"></a>
-  <a href="https://www.npmjs.com/package/inquirerer"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/dev-utils?filename=packages%2Finquirerer%2Fpackage.json"></a>
+  <a href="https://www.npmjs.com/package/inquirerer"><img height="20" src="https://img.shields.io/github/package-json/v/constructive-io/dev-utils?filename=packages%2Finquirerer%2Fpackage.json"></a>
 </p>
 
 > **Note:** This package has been renamed to [`genomic`](https://www.npmjs.com/package/genomic). Please migrate to `genomic` for the latest features and updates.

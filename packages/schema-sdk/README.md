@@ -1,7 +1,7 @@
 # schema-sdk 
 
 <p align="center" width="100%">
-  <img src="https://raw.githubusercontent.com/hyperweb-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80">
+  <img src="https://raw.githubusercontent.com/constructive-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80">
   <br/>
   OpenAPI Schema TypeScript utilities for the Interweb
   <br />

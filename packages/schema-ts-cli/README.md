@@ -1,7 +1,7 @@
 # @schema-typescript/cli
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/hyperweb-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80"><br />
+  <img src="https://raw.githubusercontent.com/constructive-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80"><br />
     `schema-typescript` CLI
   <br />
   <a href="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml">

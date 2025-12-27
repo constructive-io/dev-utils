@@ -1,7 +1,7 @@
 # genomic
 
 <p align="center" width="100%">
-    <img height="90" src="https://raw.githubusercontent.com/hyperweb-io/dev-utils/refs/heads/main/docs/img/genomic.svg" />
+    <img height="90" src="https://raw.githubusercontent.com/constructive-io/dev-utils/refs/heads/main/docs/img/genomic.svg" />
 </p>
 
 <p align="center" width="100%">
@@ -12,7 +12,7 @@
     <img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"/>
   </a>
   <a href="https://www.npmjs.com/package/genomic"><img height="20" src="https://img.shields.io/npm/dt/genomic"></a>
-  <a href="https://www.npmjs.com/package/genomic"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/dev-utils?filename=packages%2Fgenomic%2Fpackage.json"></a>
+  <a href="https://www.npmjs.com/package/genomic"><img height="20" src="https://img.shields.io/github/package-json/v/constructive-io/dev-utils?filename=packages%2Fgenomic%2Fpackage.json"></a>
 </p>
 
 > Formerly [`inquirerer`](https://www.npmjs.com/package/inquirerer)

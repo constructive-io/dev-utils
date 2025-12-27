@@ -1,7 +1,7 @@
 # clean-ansi 🧹
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/hyperweb-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80">
+  <img src="https://raw.githubusercontent.com/constructive-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80">
   <br />
     <strong>strip ANSI escape codes from strings</strong>
   <br />
