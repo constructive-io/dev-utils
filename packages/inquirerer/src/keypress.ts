@@ -11,15 +11,68 @@ const defaultProcessWrapper: ProcessWrapper = {
 };
 
 export const KEY_CODES = {
+  // Arrow keys
   UP_ARROW: '\u001b[A',
   DOWN_ARROW: '\u001b[B',
   RIGHT_ARROW: '\u001b[C',
   LEFT_ARROW: '\u001b[D',
+  
+  // Basic keys
   ENTER: '\r',
   SPACE: ' ',
-  CTRL_C: '\u0003',
+  TAB: '\t',
   BACKSPACE: '\x7f',  // Commonly used BACKSPACE key in Unix-like systems
-  BACKSPACE_LEGACY: '\x08'  // For compatibility with some systems
+  BACKSPACE_LEGACY: '\x08',  // For compatibility with some systems
+  DELETE: '\u001b[3~',
+  
+  // Control keys
+  CTRL_C: '\u0003',
+  CTRL_D: '\u0004',
+  CTRL_A: '\u0001',  // Start of line
+  CTRL_E: '\u0005',  // End of line
+  CTRL_K: '\u000b',  // Kill to end of line
+  CTRL_U: '\u0015',  // Kill to start of line
+  CTRL_W: '\u0017',  // Delete previous word
+  CTRL_L: '\u000c',  // Clear screen
+  CTRL_N: '\u000e',  // Next (down)
+  CTRL_P: '\u0010',  // Previous (up)
+  CTRL_F: '\u0006',  // Forward (right)
+  CTRL_B: '\u0002',  // Back (left)
+  
+  // Alt/Meta key combinations (escape sequences)
+  // Note: Alt key sends ESC followed by the character
+  ALT_B: '\u001bb',  // Word back
+  ALT_F: '\u001bf',  // Word forward
+  ALT_D: '\u001bd',  // Delete word forward
+  ALT_BACKSPACE: '\u001b\x7f',  // Delete word backward
+  
+  // Shift+Enter (varies by terminal, common sequences)
+  SHIFT_ENTER: '\u001b[13;2u',  // CSI u encoding
+  SHIFT_ENTER_ALT: '\u001bOM',  // Some terminals
+  
+  // Home/End keys
+  HOME: '\u001b[H',
+  HOME_ALT: '\u001bOH',
+  HOME_ALT2: '\u001b[1~',
+  END: '\u001b[F',
+  END_ALT: '\u001bOF',
+  END_ALT2: '\u001b[4~',
+  
+  // Page Up/Down
+  PAGE_UP: '\u001b[5~',
+  PAGE_DOWN: '\u001b[6~',
+  
+  // Ctrl+Arrow (word navigation in some terminals)
+  CTRL_LEFT: '\u001b[1;5D',
+  CTRL_RIGHT: '\u001b[1;5C',
+  CTRL_UP: '\u001b[1;5A',
+  CTRL_DOWN: '\u001b[1;5B',
+  
+  // Alt+Arrow (word navigation in some terminals)
+  ALT_LEFT: '\u001b[1;3D',
+  ALT_RIGHT: '\u001b[1;3C',
+  ALT_UP: '\u001b[1;3A',
+  ALT_DOWN: '\u001b[1;3B',
 };
 
 /**

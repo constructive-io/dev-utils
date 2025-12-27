@@ -30,10 +30,26 @@ export interface ChatMessage {
 
 /**
  * Line editor state for user input
+ * Supports multiline input with logical lines (hard returns)
  */
 interface LineEditorState {
-  text: string;
-  cursorPos: number;
+  lines: string[];      // Array of logical lines (hard returns)
+  lineIndex: number;    // Current line index
+  cursorPos: number;    // Cursor position within current line
+}
+
+/**
+ * Keybinding action type
+ */
+type KeyAction = () => void;
+
+/**
+ * Keybinding configuration for extensibility
+ */
+export interface KeyBinding {
+  keys: string[];       // Key codes that trigger this action
+  action: KeyAction;    // Action to perform
+  description?: string; // Optional description for help
 }
 
 /**
@@ -56,10 +72,19 @@ export interface AICodeUIOptions {
   onSubmit?: (input: string) => void | Promise<void>;
   /** Callback when user presses Ctrl+C */
   onExit?: () => void;
+  /** Custom keybindings to add or override */
+  customBindings?: KeyBinding[];
 }
 
 /**
  * AICodeUI - Main class for the AI coding assistant interface
+ * 
+ * Features:
+ * - Readline-style editing (Ctrl+A/E, Alt+B/F, Ctrl+W/K/U)
+ * - Prompt history (UP/DOWN arrows)
+ * - Multiline input (Shift+Enter for newline, Enter to submit)
+ * - Message scrolling (PageUp/PageDown)
+ * - Extensible keybinding system
  */
 export class AICodeUI {
   private input: Readable;
@@ -74,12 +99,24 @@ export class AICodeUI {
   // State
   private isRunning: boolean = false;
   private messages: ChatMessage[] = [];
-  private lineEditor: LineEditorState = { text: '', cursorPos: 0 };
+  private lineEditor: LineEditorState = { lines: [''], lineIndex: 0, cursorPos: 0 };
   private streamingContent: string = '';
   private isStreaming: boolean = false;
-  private scrollOffset: number = 0; // For in-app scrolling
+  private scrollOffset: number = 0; // For message scrolling
   private cursorVisible: boolean = true;
   private cursorTimer: NodeJS.Timeout | null = null;
+  
+  // Prompt history
+  private history: string[] = [];
+  private historyIndex: number = -1;
+  private savedInput: string = ''; // Save current input when navigating history
+  
+  // Kill ring (for Ctrl+K/U)
+  private killRing: string = '';
+  
+  // Keybindings
+  private bindings: Map<string, KeyAction> = new Map();
+  private customBindings: KeyBinding[];
   
   // Callbacks
   private onSubmit?: (input: string) => void | Promise<void>;
@@ -93,6 +130,7 @@ export class AICodeUI {
     this.title = options.title ?? 'AI Code Assistant';
     this.onSubmit = options.onSubmit;
     this.onExit = options.onExit;
+    this.customBindings = options.customBindings ?? [];
     
     // Setup keypress handler
     if (options.keypress) {
@@ -122,7 +160,8 @@ export class AICodeUI {
     this.viewport.start();
     
     // Setup keypress handlers
-    this.setupKeyHandlers();
+    this.setupKeyBindings();
+    this.registerKeyHandlers();
     this.keypress.resume();
     
     // Start cursor blink
@@ -241,7 +280,8 @@ export class AICodeUI {
    * Clear the input
    */
   clearInput(): this {
-    this.lineEditor = { text: '', cursorPos: 0 };
+    this.lineEditor = { lines: [''], lineIndex: 0, cursorPos: 0 };
+    this.historyIndex = -1;
     this.render();
     return this;
   }
@@ -250,16 +290,58 @@ export class AICodeUI {
    * Set the input text
    */
   setInput(text: string): this {
-    this.lineEditor = { text, cursorPos: text.length };
+    const lines = text.split('\n');
+    this.lineEditor = { 
+      lines, 
+      lineIndex: lines.length - 1, 
+      cursorPos: lines[lines.length - 1].length 
+    };
     this.render();
     return this;
   }
   
   /**
-   * Get the current input text
+   * Get the current input text (joins all lines with newlines)
    */
   getInput(): string {
-    return this.lineEditor.text;
+    return this.lineEditor.lines.join('\n');
+  }
+  
+  /**
+   * Get the current line text
+   */
+  private getCurrentLine(): string {
+    return this.lineEditor.lines[this.lineEditor.lineIndex] || '';
+  }
+  
+  /**
+   * Set the current line text
+   */
+  private setCurrentLine(text: string): void {
+    this.lineEditor.lines[this.lineEditor.lineIndex] = text;
+  }
+  
+  /**
+   * Add a custom keybinding
+   */
+  addBinding(binding: KeyBinding): this {
+    binding.keys.forEach(key => {
+      this.bindings.set(key, binding.action);
+      this.keypress.on(key, binding.action);
+    });
+    return this;
+  }
+  
+  /**
+   * Remove a keybinding
+   */
+  removeBinding(key: string): this {
+    const action = this.bindings.get(key);
+    if (action) {
+      this.keypress.off(key, action);
+      this.bindings.delete(key);
+    }
+    return this;
   }
   
   /**
@@ -312,104 +394,259 @@ export class AICodeUI {
   }
   
   /**
-   * Setup keypress handlers
+   * Setup all keybindings
    */
-  private setupKeyHandlers(): void {
-    // Arrow keys for cursor movement
-    this.keypress.on(KEY_CODES.LEFT_ARROW, () => {
-      if (this.lineEditor.cursorPos > 0) {
-        this.lineEditor.cursorPos--;
-        this.render();
-      }
+  private setupKeyBindings(): void {
+    this.bindings.clear();
+    
+    const defaultBindings: KeyBinding[] = [
+      { keys: [KEY_CODES.LEFT_ARROW, KEY_CODES.CTRL_B], action: () => this.moveCursorLeft(), description: 'Move cursor left' },
+      { keys: [KEY_CODES.RIGHT_ARROW, KEY_CODES.CTRL_F], action: () => this.moveCursorRight(), description: 'Move cursor right' },
+      { keys: [KEY_CODES.CTRL_A, KEY_CODES.HOME, KEY_CODES.HOME_ALT, KEY_CODES.HOME_ALT2], action: () => this.moveCursorToStart(), description: 'Move cursor to start of line' },
+      { keys: [KEY_CODES.CTRL_E, KEY_CODES.END, KEY_CODES.END_ALT, KEY_CODES.END_ALT2], action: () => this.moveCursorToEnd(), description: 'Move cursor to end of line' },
+      { keys: [KEY_CODES.ALT_B, KEY_CODES.ALT_LEFT, KEY_CODES.CTRL_LEFT], action: () => this.moveCursorWordLeft(), description: 'Move cursor word left' },
+      { keys: [KEY_CODES.ALT_F, KEY_CODES.ALT_RIGHT, KEY_CODES.CTRL_RIGHT], action: () => this.moveCursorWordRight(), description: 'Move cursor word right' },
+      { keys: [KEY_CODES.UP_ARROW, KEY_CODES.CTRL_P], action: () => this.historyPrevious(), description: 'Previous history entry' },
+      { keys: [KEY_CODES.DOWN_ARROW, KEY_CODES.CTRL_N], action: () => this.historyNext(), description: 'Next history entry' },
+      { keys: [KEY_CODES.PAGE_UP], action: () => this.scrollMessagesUp(), description: 'Scroll messages up' },
+      { keys: [KEY_CODES.PAGE_DOWN], action: () => this.scrollMessagesDown(), description: 'Scroll messages down' },
+      { keys: [KEY_CODES.BACKSPACE, KEY_CODES.BACKSPACE_LEGACY], action: () => this.deleteCharLeft(), description: 'Delete character left' },
+      { keys: [KEY_CODES.DELETE], action: () => this.deleteCharRight(), description: 'Delete character right' },
+      { keys: [KEY_CODES.CTRL_W, KEY_CODES.ALT_BACKSPACE], action: () => this.deleteWordLeft(), description: 'Delete word left' },
+      { keys: [KEY_CODES.ALT_D], action: () => this.deleteWordRight(), description: 'Delete word right' },
+      { keys: [KEY_CODES.CTRL_K], action: () => this.killToEnd(), description: 'Kill to end of line' },
+      { keys: [KEY_CODES.CTRL_U], action: () => this.killToStart(), description: 'Kill to start of line' },
+      { keys: [KEY_CODES.ENTER], action: () => this.submit(), description: 'Submit input' },
+      { keys: [KEY_CODES.SHIFT_ENTER, KEY_CODES.SHIFT_ENTER_ALT], action: () => this.insertNewline(), description: 'Insert newline' },
+      { keys: [KEY_CODES.CTRL_C], action: () => this.exit(), description: 'Exit' },
+      { keys: [KEY_CODES.CTRL_L], action: () => this.clearScreen(), description: 'Clear screen' },
+    ];
+    
+    defaultBindings.forEach(binding => {
+      binding.keys.forEach(key => {
+        this.bindings.set(key, binding.action);
+      });
     });
     
-    this.keypress.on(KEY_CODES.RIGHT_ARROW, () => {
-      if (this.lineEditor.cursorPos < this.lineEditor.text.length) {
-        this.lineEditor.cursorPos++;
-        this.render();
-      }
-    });
-    
-    // Up/Down for scrolling through history (future: command history)
-    this.keypress.on(KEY_CODES.UP_ARROW, () => {
-      // Scroll up in chat history
-      if (this.scrollOffset < this.messages.length - 1) {
-        this.scrollOffset++;
-        this.render();
-      }
-    });
-    
-    this.keypress.on(KEY_CODES.DOWN_ARROW, () => {
-      // Scroll down in chat history
-      if (this.scrollOffset > 0) {
-        this.scrollOffset--;
-        this.render();
-      }
-    });
-    
-    // Enter to submit
-    this.keypress.on(KEY_CODES.ENTER, () => {
-      const input = this.lineEditor.text.trim();
-      if (input) {
-        // Add user message
-        this.addMessage('user', input);
-        this.clearInput();
-        
-        // Call submit handler
-        if (this.onSubmit) {
-          Promise.resolve(this.onSubmit(input)).catch(err => {
-            this.addMessage('system', `Error: ${err.message}`);
-          });
-        }
-      }
-    });
-    
-    // Backspace
-    this.keypress.on(KEY_CODES.BACKSPACE, () => {
-      if (this.lineEditor.cursorPos > 0) {
-        const { text, cursorPos } = this.lineEditor;
-        this.lineEditor.text = text.slice(0, cursorPos - 1) + text.slice(cursorPos);
-        this.lineEditor.cursorPos--;
-        this.render();
-      }
-    });
-    
-    // Legacy backspace
-    this.keypress.on(KEY_CODES.BACKSPACE_LEGACY, () => {
-      if (this.lineEditor.cursorPos > 0) {
-        const { text, cursorPos } = this.lineEditor;
-        this.lineEditor.text = text.slice(0, cursorPos - 1) + text.slice(cursorPos);
-        this.lineEditor.cursorPos--;
-        this.render();
-      }
-    });
-    
-    // Ctrl+C to exit
-    this.keypress.on(KEY_CODES.CTRL_C, () => {
-      this.stop();
-      if (this.onExit) {
-        this.onExit();
-      }
-    });
-    
-    // Character input
-    const printableChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const punctuation = '!@#$%^&*()_+-=[]{}|;:\'",.<>?/`~ ';
-    
-    (printableChars + punctuation).split('').forEach(char => {
-      this.keypress.on(char, () => {
-        this.insertChar(char);
+    this.customBindings.forEach(binding => {
+      binding.keys.forEach(key => {
+        this.bindings.set(key, binding.action);
       });
     });
   }
   
-  /**
-   * Insert a character at the cursor position
-   */
+  private registerKeyHandlers(): void {
+    this.bindings.forEach((action, key) => {
+      this.keypress.on(key, action);
+    });
+    
+    const printableChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const punctuation = '!@#$%^&*()_+-=[]{}|;:\'",.<>?/`~ ';
+    
+    (printableChars + punctuation).split('').forEach(char => {
+      if (!this.bindings.has(char)) {
+        this.keypress.on(char, () => this.insertChar(char));
+      }
+    });
+  }
+  
+  private moveCursorLeft(): void {
+    if (this.lineEditor.cursorPos > 0) {
+      this.lineEditor.cursorPos--;
+      this.render();
+    } else if (this.lineEditor.lineIndex > 0) {
+      this.lineEditor.lineIndex--;
+      this.lineEditor.cursorPos = this.getCurrentLine().length;
+      this.render();
+    }
+  }
+  
+  private moveCursorRight(): void {
+    const line = this.getCurrentLine();
+    if (this.lineEditor.cursorPos < line.length) {
+      this.lineEditor.cursorPos++;
+      this.render();
+    } else if (this.lineEditor.lineIndex < this.lineEditor.lines.length - 1) {
+      this.lineEditor.lineIndex++;
+      this.lineEditor.cursorPos = 0;
+      this.render();
+    }
+  }
+  
+  private moveCursorToStart(): void {
+    this.lineEditor.cursorPos = 0;
+    this.render();
+  }
+  
+  private moveCursorToEnd(): void {
+    this.lineEditor.cursorPos = this.getCurrentLine().length;
+    this.render();
+  }
+  
+  private moveCursorWordLeft(): void {
+    const line = this.getCurrentLine();
+    let pos = this.lineEditor.cursorPos;
+    while (pos > 0 && /\s/.test(line[pos - 1])) pos--;
+    while (pos > 0 && !/\s/.test(line[pos - 1])) pos--;
+    this.lineEditor.cursorPos = pos;
+    this.render();
+  }
+  
+  private moveCursorWordRight(): void {
+    const line = this.getCurrentLine();
+    let pos = this.lineEditor.cursorPos;
+    while (pos < line.length && !/\s/.test(line[pos])) pos++;
+    while (pos < line.length && /\s/.test(line[pos])) pos++;
+    this.lineEditor.cursorPos = pos;
+    this.render();
+  }
+  
+  private historyPrevious(): void {
+    if (this.history.length === 0) return;
+    if (this.historyIndex === -1) {
+      this.savedInput = this.getInput();
+    }
+    if (this.historyIndex < this.history.length - 1) {
+      this.historyIndex++;
+      this.setInput(this.history[this.history.length - 1 - this.historyIndex]);
+    }
+  }
+  
+  private historyNext(): void {
+    if (this.historyIndex > 0) {
+      this.historyIndex--;
+      this.setInput(this.history[this.history.length - 1 - this.historyIndex]);
+    } else if (this.historyIndex === 0) {
+      this.historyIndex = -1;
+      this.setInput(this.savedInput);
+    }
+  }
+  
+  private scrollMessagesUp(): void {
+    if (this.scrollOffset < this.messages.length - 1) {
+      this.scrollOffset++;
+      this.render();
+    }
+  }
+  
+  private scrollMessagesDown(): void {
+    if (this.scrollOffset > 0) {
+      this.scrollOffset--;
+      this.render();
+    }
+  }
+  
+  private deleteCharLeft(): void {
+    if (this.lineEditor.cursorPos > 0) {
+      const line = this.getCurrentLine();
+      this.setCurrentLine(line.slice(0, this.lineEditor.cursorPos - 1) + line.slice(this.lineEditor.cursorPos));
+      this.lineEditor.cursorPos--;
+      this.render();
+    } else if (this.lineEditor.lineIndex > 0) {
+      const currentLine = this.getCurrentLine();
+      this.lineEditor.lines.splice(this.lineEditor.lineIndex, 1);
+      this.lineEditor.lineIndex--;
+      const prevLine = this.getCurrentLine();
+      this.lineEditor.cursorPos = prevLine.length;
+      this.setCurrentLine(prevLine + currentLine);
+      this.render();
+    }
+  }
+  
+  private deleteCharRight(): void {
+    const line = this.getCurrentLine();
+    if (this.lineEditor.cursorPos < line.length) {
+      this.setCurrentLine(line.slice(0, this.lineEditor.cursorPos) + line.slice(this.lineEditor.cursorPos + 1));
+      this.render();
+    } else if (this.lineEditor.lineIndex < this.lineEditor.lines.length - 1) {
+      const nextLine = this.lineEditor.lines[this.lineEditor.lineIndex + 1];
+      this.setCurrentLine(line + nextLine);
+      this.lineEditor.lines.splice(this.lineEditor.lineIndex + 1, 1);
+      this.render();
+    }
+  }
+  
+  private deleteWordLeft(): void {
+    const line = this.getCurrentLine();
+    let pos = this.lineEditor.cursorPos;
+    const startPos = pos;
+    while (pos > 0 && /\s/.test(line[pos - 1])) pos--;
+    while (pos > 0 && !/\s/.test(line[pos - 1])) pos--;
+    this.killRing = line.slice(pos, startPos);
+    this.setCurrentLine(line.slice(0, pos) + line.slice(startPos));
+    this.lineEditor.cursorPos = pos;
+    this.render();
+  }
+  
+  private deleteWordRight(): void {
+    const line = this.getCurrentLine();
+    let pos = this.lineEditor.cursorPos;
+    const startPos = pos;
+    while (pos < line.length && !/\s/.test(line[pos])) pos++;
+    while (pos < line.length && /\s/.test(line[pos])) pos++;
+    this.killRing = line.slice(startPos, pos);
+    this.setCurrentLine(line.slice(0, startPos) + line.slice(pos));
+    this.render();
+  }
+  
+  private killToEnd(): void {
+    const line = this.getCurrentLine();
+    this.killRing = line.slice(this.lineEditor.cursorPos);
+    this.setCurrentLine(line.slice(0, this.lineEditor.cursorPos));
+    this.render();
+  }
+  
+  private killToStart(): void {
+    const line = this.getCurrentLine();
+    this.killRing = line.slice(0, this.lineEditor.cursorPos);
+    this.setCurrentLine(line.slice(this.lineEditor.cursorPos));
+    this.lineEditor.cursorPos = 0;
+    this.render();
+  }
+  
   private insertChar(char: string): void {
-    const { text, cursorPos } = this.lineEditor;
-    this.lineEditor.text = text.slice(0, cursorPos) + char + text.slice(cursorPos);
+    const line = this.getCurrentLine();
+    this.setCurrentLine(line.slice(0, this.lineEditor.cursorPos) + char + line.slice(this.lineEditor.cursorPos));
     this.lineEditor.cursorPos++;
+    this.render();
+  }
+  
+  private insertNewline(): void {
+    const line = this.getCurrentLine();
+    const before = line.slice(0, this.lineEditor.cursorPos);
+    const after = line.slice(this.lineEditor.cursorPos);
+    this.setCurrentLine(before);
+    this.lineEditor.lines.splice(this.lineEditor.lineIndex + 1, 0, after);
+    this.lineEditor.lineIndex++;
+    this.lineEditor.cursorPos = 0;
+    this.render();
+  }
+  
+  private submit(): void {
+    const input = this.getInput().trim();
+    if (input) {
+      if (this.history.length === 0 || this.history[this.history.length - 1] !== input) {
+        this.history.push(input);
+      }
+      this.addMessage('user', input);
+      this.clearInput();
+      if (this.onSubmit) {
+        Promise.resolve(this.onSubmit(input)).catch(err => {
+          this.addMessage('system', `Error: ${err.message}`);
+        });
+      }
+    }
+  }
+  
+  private exit(): void {
+    this.stop();
+    if (this.onExit) {
+      this.onExit();
+    }
+  }
+  
+  private clearScreen(): void {
+    this.scrollOffset = 0;
     this.render();
   }
   
@@ -439,20 +676,21 @@ export class AICodeUI {
       lines.push(...previewLines);
     }
     
-    // Fill remaining space
-    const contentLines = this.viewportHeight - 3; // status + separator + input
+    // Fill remaining space (account for multiline input)
+    const inputLineCount = this.lineEditor.lines.length;
+    const contentLines = this.viewportHeight - 3 - Math.max(0, inputLineCount - 1);
     while (lines.length < contentLines) {
       lines.push('');
     }
     
     // Input prompt (bottom of viewport)
     lines.push(dim('─'.repeat(Math.min(width, 60))));
-    const inputLine = this.renderInputLine();
-    lines.push(inputLine);
+    const inputLines = this.renderInputLines();
+    lines.push(...inputLines);
     
     // Calculate cursor position
-    const cursorRow = this.viewportHeight - 1;
-    const cursorCol = this.promptPrefix.length + this.lineEditor.cursorPos;
+    const cursorRow = this.viewportHeight - 1 - (this.lineEditor.lines.length - 1 - this.lineEditor.lineIndex);
+    const cursorCol = (this.lineEditor.lineIndex === 0 ? this.promptPrefix.length : 2) + this.lineEditor.cursorPos;
     
     this.viewport.render({
       lines,
@@ -468,8 +706,9 @@ export class AICodeUI {
     const title = white(this.title);
     const status = this.isStreaming ? yellow(' [streaming...]') : green(' [ready]');
     const scrollInfo = this.scrollOffset > 0 ? dim(` [scroll: ${this.scrollOffset}]`) : '';
+    const historyInfo = this.historyIndex >= 0 ? dim(` [history: ${this.historyIndex + 1}/${this.history.length}]`) : '';
     
-    return title + status + scrollInfo;
+    return title + status + scrollInfo + historyInfo;
   }
   
   /**
@@ -509,6 +748,7 @@ export class AICodeUI {
     
     if (this.messages.length === 0) {
       lines.push(dim('No messages yet. Type a message and press Enter.'));
+      lines.push(dim('Shift+Enter for newline, UP/DOWN for history, PageUp/PageDown to scroll.'));
       return lines;
     }
     
@@ -522,7 +762,7 @@ export class AICodeUI {
       lines.push(...messageLines);
       
       if (this.scrollOffset > 0) {
-        lines.push(dim(`[${this.scrollOffset} more messages above - use UP/DOWN to scroll]`));
+        lines.push(dim(`[${this.scrollOffset} more messages above - use PageUp/PageDown to scroll]`));
       }
     }
     
@@ -530,20 +770,23 @@ export class AICodeUI {
   }
   
   /**
-   * Render the input line
+   * Render the input lines (supports multiline)
    */
-  private renderInputLine(): string {
-    const prefix = blue(this.promptPrefix);
-    const text = this.lineEditor.text;
+  private renderInputLines(): string[] {
+    const lines: string[] = [];
     
-    // Show cursor position indicator
-    if (this.cursorVisible && !this.isStreaming) {
-      const before = text.slice(0, this.lineEditor.cursorPos);
-      const after = text.slice(this.lineEditor.cursorPos);
-      return prefix + before + cyan('▋') + after;
-    }
+    this.lineEditor.lines.forEach((line, idx) => {
+      const prefix = idx === 0 ? blue(this.promptPrefix) : blue('  ');
+      if (idx === this.lineEditor.lineIndex && this.cursorVisible && !this.isStreaming) {
+        const before = line.slice(0, this.lineEditor.cursorPos);
+        const after = line.slice(this.lineEditor.cursorPos);
+        lines.push(prefix + before + cyan('▋') + after);
+      } else {
+        lines.push(prefix + line);
+      }
+    });
     
-    return prefix + text;
+    return lines;
   }
 }
 
