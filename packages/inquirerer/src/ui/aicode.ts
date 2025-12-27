@@ -850,6 +850,9 @@ export class AICodeUI {
     const allLines: string[] = [];
     
     for (const message of this.messages) {
+      // Skip messages that are currently streaming (they're rendered separately below)
+      if (message.isStreaming) continue;
+      
       if (message.role === 'user') {
         // User messages with > prefix
         const contentLines = message.content.split('\n');
