@@ -1,9 +1,9 @@
-import { Prompter, Question } from '../src';
+import { Inquirerer, Question } from '../src';
 import { KEY_SEQUENCES, setupTests, TestEnvironment } from '../test-utils/setup';
 
 const beforeEachSetup = setupTests();
 
-describe('Prompter', () => {
+describe('Inquirerer', () => {
   let environment: TestEnvironment;
 
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('Prompter', () => {
   it('prompts user and correctly processes delayed input', async () => {
    const { mockInput, mockOutput, writeResults, transformResults, enqueueInputResponse } = environment;
 
-    const prompter = new Prompter({
+    const prompter = new Inquirerer({
       input: mockInput,
       output: mockOutput,
       noTty: false
