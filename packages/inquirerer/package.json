@@ -29,6 +29,7 @@
     "dev:chat": "ts-node dev/demo-chat",
     "dev:upgrade": "ts-node dev/demo-upgrade",
     "dev:prompts": "ts-node dev/demo-prompts-engine",
+    "dev:constructive": "ts-node dev/demo-constructive",
     "test": "jest",
     "test:watch": "jest --watch"
   },
