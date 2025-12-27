@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.13](https://github.com/constructive-io/dev-utils/compare/schema-sdk@0.15.12...schema-sdk@0.15.13) (2025-12-27)
+
+**Note:** Version bump only for package schema-sdk
+
 ## [0.15.12](https://github.com/constructive-io/dev-utils/compare/schema-sdk@0.15.11...schema-sdk@0.15.12) (2025-12-27)
 
 **Note:** Version bump only for package schema-sdk

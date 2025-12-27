@@ -1,6 +1,6 @@
 {
   "name": "komoji",
-  "version": "0.7.12",
+  "version": "0.7.13",
   "author": "Constructive <developers@constructive.io>",
   "description": "the tiny case transformer — effortlessly transform strings between naming conventions",
   "main": "index.js",
