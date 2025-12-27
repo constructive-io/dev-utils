@@ -2,7 +2,7 @@
   "name": "genomic",
   "version": "4.0.2",
   "author": "Constructive <developers@constructive.io>",
-  "description": "TypeScript-first library for building beautiful CLI interfaces with interactive prompts",
+  "description": "Clone and customize template repositories with variable replacement",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
@@ -20,25 +20,20 @@
     "url": "https://github.com/constructive-io/dev-utils/issues"
   },
   "scripts": {
-    "copy": "makage assets",
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist && copyfiles -f \"licenses-templates/**/*\" dist/licenses-templates",
     "clean": "makage clean",
     "prepublishOnly": "npm run build",
-    "build": "makage build",
-    "dev": "ts-node dev/index",
+    "build": "npm run clean && tsc && tsc -p tsconfig.esm.json && npm run copy",
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "dependencies": {
-    "deepmerge": "^4.3.1",
-    "find-and-require-package-json": "workspace:*",
-    "js-yaml": "^4.1.0",
-    "minimist": "^1.2.8",
-    "yanse": "workspace:*"
-  },
-  "keywords": [],
+    "dependencies": {
+      "appstash": "workspace:*",
+      "inquirerer": "workspace:*"
+    },
   "devDependencies": {
-    "@types/minimist": "^1.2.5",
-    "clean-ansi": "workspace:*",
+    "copyfiles": "^2.4.1",
     "makage": "0.1.8"
-  }
+  },
+  "keywords": []
 }

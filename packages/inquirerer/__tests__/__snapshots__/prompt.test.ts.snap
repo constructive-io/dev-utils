@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Prompter checkbox 1`] = `
+exports[`Inquirerer checkbox 1`] = `
 {
   "checkbox": [
     {
@@ -17,7 +17,7 @@ exports[`Prompter checkbox 1`] = `
 }
 `;
 
-exports[`Prompter checkbox w/options 1`] = `
+exports[`Inquirerer checkbox w/options 1`] = `
 {
   "checkbox": [
     {
@@ -39,19 +39,19 @@ exports[`Prompter checkbox w/options 1`] = `
 }
 `;
 
-exports[`Prompter handles multiple questions 1`] = `
+exports[`Inquirerer handles multiple questions 1`] = `
 [
   "",
   "",
 ]
 `;
 
-exports[`Prompter handles multiple questions 2`] = `[]`;
+exports[`Inquirerer handles multiple questions 2`] = `[]`;
 
-exports[`Prompter prompts user and correctly processes delayed input 1`] = `
+exports[`Inquirerer prompts user and correctly processes delayed input 1`] = `
 [
   "",
 ]
 `;
 
-exports[`Prompter prompts user and correctly processes delayed input 2`] = `[]`;
+exports[`Inquirerer prompts user and correctly processes delayed input 2`] = `[]`;

@@ -1,7 +1,7 @@
 import readline from 'readline';
 import { Readable, Transform, Writable } from 'stream';
 import { stripAnsi } from 'clean-ansi';
-import { Prompter, DefaultResolverRegistry } from '../src';
+import { Inquirerer, DefaultResolverRegistry } from '../src';
 import { Question } from '../src/question';
 
 jest.mock('readline');
@@ -16,7 +16,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-describe('Prompter - defaultFrom feature', () => {
+describe('Inquirerer - defaultFrom feature', () => {
   let mockWrite: jest.Mock;
   let mockInput: Readable;
   let mockOutput: Writable;
@@ -100,7 +100,7 @@ describe('Prompter - defaultFrom feature', () => {
     it('should use git.user.name as default', async () => {
       mockedExecSync.mockReturnValue('John Doe\n' as any);
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true  // Non-interactive mode to use defaults
@@ -126,7 +126,7 @@ describe('Prompter - defaultFrom feature', () => {
     it('should use git.user.email as default', async () => {
       mockedExecSync.mockReturnValue('john@example.com\n' as any);
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -154,7 +154,7 @@ describe('Prompter - defaultFrom feature', () => {
         throw new Error('Git not configured');
       });
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -179,7 +179,7 @@ describe('Prompter - defaultFrom feature', () => {
         .mockReturnValueOnce('Jane Smith\n' as any)
         .mockReturnValueOnce('jane@example.com\n' as any);
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -209,7 +209,7 @@ describe('Prompter - defaultFrom feature', () => {
 
   describe('date resolvers', () => {
     it('should use date.year as default', async () => {
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -229,7 +229,7 @@ describe('Prompter - defaultFrom feature', () => {
     });
 
     it('should use date.iso as default', async () => {
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -249,7 +249,7 @@ describe('Prompter - defaultFrom feature', () => {
     });
 
     it('should resolve multiple date fields', async () => {
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -288,7 +288,7 @@ describe('Prompter - defaultFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.value', () => 'custom-result');
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -315,7 +315,7 @@ describe('Prompter - defaultFrom feature', () => {
         return Promise.resolve('async-result');
       });
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -340,7 +340,7 @@ describe('Prompter - defaultFrom feature', () => {
     it('should prioritize argv over defaultFrom', async () => {
       mockedExecSync.mockReturnValue('Git User\n' as any);
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -365,7 +365,7 @@ describe('Prompter - defaultFrom feature', () => {
         throw new Error('Git not configured');
       });
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -387,7 +387,7 @@ describe('Prompter - defaultFrom feature', () => {
     it('should handle mixed defaultFrom and static defaults', async () => {
       mockedExecSync.mockReturnValue('Jane Doe\n' as any);
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true
@@ -426,7 +426,7 @@ describe('Prompter - defaultFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.bool', () => true);
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true,  // Non-interactive to avoid readline complexity
@@ -450,7 +450,7 @@ describe('Prompter - defaultFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.number', () => 42);
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -476,7 +476,7 @@ describe('Prompter - defaultFrom feature', () => {
       const customRegistry = new DefaultResolverRegistry();
       customRegistry.register('custom.empty', () => '');
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -504,7 +504,7 @@ describe('Prompter - defaultFrom feature', () => {
         throw new Error('Resolver error');
       });
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true,
@@ -530,7 +530,7 @@ describe('Prompter - defaultFrom feature', () => {
         throw new Error('Git not configured');
       });
 
-      const prompter = new Prompter({
+      const prompter = new Inquirerer({
         input: mockInput,
         output: mockOutput,
         noTty: true

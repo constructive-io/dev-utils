@@ -1,4 +1,4 @@
-import { Question } from 'genomic';
+import { Question } from 'inquirerer';
 
 /**
  * Questions configuration that can be loaded from .boilerplate.json or .boilerplate.js

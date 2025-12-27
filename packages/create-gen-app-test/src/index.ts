@@ -1,7 +1,7 @@
 import * as path from 'path';
-import { CacheManager } from '@genomic/scaffolds';
-import { GitCloner } from '@genomic/scaffolds';
-import { Templatizer } from '@genomic/scaffolds';
+import { CacheManager } from 'genomic';
+import { GitCloner } from 'genomic';
+import { Templatizer } from 'genomic';
 
 // Configuration constants (top-most layer owns defaults)
 const DEFAULT_TOOL_NAME = 'pgpm';
@@ -102,4 +102,4 @@ export async function createFromTemplate(
 }
 
 // Re-export components for external use
-export { CacheManager, GitCloner, Templatizer } from '@genomic/scaffolds';
+export { CacheManager, GitCloner, Templatizer } from 'genomic';

@@ -1,5 +1,5 @@
-import { Prompter } from 'genomic';
-import { Question } from 'genomic';
+import { Inquirerer } from 'inquirerer';
+import { Question } from 'inquirerer';
 
 /**
  * Configuration for TemplateScaffolder instance
@@ -85,7 +85,7 @@ export interface ScaffoldOptions {
    * If provided, the caller retains ownership and is responsible for closing it.
    * If not provided, a new instance will be created and closed automatically.
    */
-  prompter?: Prompter;
+  prompter?: Inquirerer;
 }
 
 /**

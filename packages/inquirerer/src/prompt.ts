@@ -171,7 +171,7 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
   return lines.join('\n') + '\n';
 }
 
-export interface PrompterOptions {
+export interface InquirererOptions {
   noTty?: boolean;
   input?: Readable;
   output?: Writable;
@@ -180,7 +180,7 @@ export interface PrompterOptions {
   mutateArgs?: boolean;
   resolverRegistry?: DefaultResolverRegistry;
 }
-export class Prompter {
+export class Inquirerer {
   private rl: readline.Interface | null;
   private keypress: TerminalKeypress | null;
   private noTty: boolean;
@@ -194,7 +194,7 @@ export class Prompter {
   private handledKeys: Set<string> = new Set();
 
   constructor(
-    options?: PrompterOptions
+    options?: InquirererOptions
   ) {
     const {
       noTty = false,

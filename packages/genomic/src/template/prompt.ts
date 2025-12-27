@@ -1,4 +1,4 @@
-import { Prompter, Question } from 'genomic';
+import { Inquirerer, Question } from 'inquirerer';
 
 import { ExtractedVariables } from '../types';
 
@@ -80,7 +80,7 @@ function normalizeQuestionName(name: string): string {
 export async function promptUser(
   extractedVariables: ExtractedVariables,
   argv: Record<string, any> = {},
-  existingPrompter?: Prompter,
+  existingPrompter?: Inquirerer,
   noTty: boolean = false
 ): Promise<Record<string, any>> {
   const questions = generateQuestions(extractedVariables);
@@ -93,7 +93,7 @@ export async function promptUser(
   
   // If an existing prompter is provided, use it (caller owns lifecycle)
   // Otherwise, create a new one and close it when done
-  const prompter = existingPrompter ?? new Prompter({ noTty });
+  const prompter = existingPrompter ?? new Inquirerer({ noTty });
   const shouldClose = !existingPrompter;
 
   try {

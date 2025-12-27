@@ -3,10 +3,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Prompter, ListQuestion } from 'genomic';
+import { Inquirerer, ListQuestion } from 'inquirerer';
 import minimist, { ParsedArgs } from 'minimist';
 
-import { CacheManager, GitCloner, checkNpmVersion } from '@genomic/scaffolds';
+import { CacheManager, GitCloner, checkNpmVersion } from 'genomic';
 import { createFromTemplate } from './index';
 
 const DEFAULT_REPO = 'https://github.com/constructive-io/pgpm-boilerplates.git';
@@ -16,7 +16,7 @@ const DEFAULT_TTL = 604800000; // 1 week
 const DEFAULT_TTL_DAYS = DEFAULT_TTL / (24 * 60 * 60 * 1000);
 
 // Package info - using the scaffolds package name and version
-const PACKAGE_NAME = '@genomic/scaffolds';
+const PACKAGE_NAME = 'genomic';
 const PACKAGE_VERSION = '1.0.0';
 
 const RESERVED_ARG_KEYS = new Set([
@@ -279,7 +279,7 @@ function printVersion(): void {
 }
 
 async function promptForTemplate(templates: string[]): Promise<string> {
-  const prompter = new Prompter();
+  const prompter = new Inquirerer();
   const question: ListQuestion = {
     type: 'list',
     name: 'template',

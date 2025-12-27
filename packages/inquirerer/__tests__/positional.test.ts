@@ -1,4 +1,4 @@
-import { Prompter } from '../src';
+import { Inquirerer } from '../src';
 import { Question } from '../src/question';
 
 interface TestResult {
@@ -7,10 +7,10 @@ interface TestResult {
 }
 
 describe('Positional Arguments (_: true)', () => {
-  let prompter: Prompter;
+  let prompter: Inquirerer;
 
   beforeEach(() => {
-    prompter = new Prompter({ noTty: true });
+    prompter = new Inquirerer({ noTty: true });
   });
 
   afterEach(() => {
@@ -319,7 +319,7 @@ describe('Positional Arguments (_: true)', () => {
     });
 
     it('does not mutate original argv when mutateArgs is false', async () => {
-      const nonMutatingPrompter = new Prompter({ noTty: true, mutateArgs: false });
+      const nonMutatingPrompter = new Inquirerer({ noTty: true, mutateArgs: false });
       const questions: Question[] = [
         { _: true, name: 'foo', type: 'text' }
       ];

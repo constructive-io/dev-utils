@@ -3,20 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [4.0.2](https://github.com/constructive-io/dev-utils/compare/genomic@4.0.1...genomic@4.0.2) (2025-12-27)
+## [2.0.2](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@2.0.1...@genomic/scaffolds@2.0.2) (2025-12-27)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-## [4.0.1](https://github.com/constructive-io/dev-utils/compare/genomic@4.0.0...genomic@4.0.1) (2025-12-27)
+## [2.0.1](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@2.0.0...@genomic/scaffolds@2.0.1) (2025-12-27)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-# 4.0.0 (2025-12-26)
+# 2.0.0 (2025-12-26)
 
 ### Bug Fixes
 
-- remove exports field from genomic package.json ([41f82f2](https://github.com/constructive-io/dev-utils/commit/41f82f2003a79befb28cbe5cfaeb3a5c4a1b0411))
-- update test snapshots and utils package test script ([8910308](https://github.com/constructive-io/dev-utils/commit/8910308a8566f0cff6731ff0ce68819c3806e8bf))
+- update scaffolds package to use Prompter class name ([65f21fe](https://github.com/constructive-io/dev-utils/commit/65f21fe7e2b8ce1a4deca7a4472582d167775f9d))
 
 ### Features
 
@@ -29,244 +28,157 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * inquirerer -> genomic
 * create-gen-app -> @genomic/scaffolds
 
-# [2.4.0](https://github.com/constructive-io/dev-utils/compare/genomic@2.3.2...genomic@2.4.0) (2025-12-25)
-
-### Bug Fixes
-
-- **genomic:** strip consumed positionals from argv.\_ and respect mutateArgs ([9341f86](https://github.com/constructive-io/dev-utils/commit/9341f860479b473f95af7daa482340b868774859))
+# [0.10.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.9.0...@genomic/scaffolds@0.10.0) (2025-12-26)
 
 ### Features
 
-- **genomic:** add positional arguments support with \_ property ([227409d](https://github.com/constructive-io/dev-utils/commit/227409df232f7efc520dfc761e901bb5e2eb5979))
+- **@genomic/scaffolds:** make MIT the default license ([4834848](https://github.com/constructive-io/dev-utils/commit/4834848fe990ef4d841c5041401eb9fecc78d885))
+- **@genomic/scaffolds:** put CLOSED license last in the list ([d5ab753](https://github.com/constructive-io/dev-utils/commit/d5ab7530510a8f40473962d3ca1c3acb1fe1f6f6))
 
-## [2.3.2](https://github.com/constructive-io/dev-utils/compare/genomic@2.3.1...genomic@2.3.2) (2025-12-25)
+# [0.9.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.8.1...@genomic/scaffolds@0.9.0) (2025-12-25)
 
-### Reverts
+### Features
 
-- **genomic:** simplify keypress to per-instance model ([36a4697](https://github.com/constructive-io/dev-utils/commit/36a469754329e8fbc2adbd86915fd73e1c4284f7))
+- **@genomic/scaffolds:** add useBoilerplatesConfig option to control .boilerplates.json resolution ([f700cfe](https://github.com/constructive-io/dev-utils/commit/f700cfe35b0886de80946648cbdb8dc49154ffd3))
 
-## [2.3.1](https://github.com/constructive-io/dev-utils/compare/genomic@2.3.0...genomic@2.3.1) (2025-12-25)
+## [0.8.1](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.8.0...@genomic/scaffolds@0.8.1) (2025-12-25)
+
+**Note:** Version bump only for package @genomic/scaffolds
+
+# [0.8.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.7.0...@genomic/scaffolds@0.8.0) (2025-12-25)
+
+### Features
+
+- **@genomic/scaffolds:** add inspect() method to TemplateScaffolder ([8cf8c4f](https://github.com/constructive-io/dev-utils/commit/8cf8c4fc04ed9fe7f8b0beb3a98fc268c01f336c))
+
+# [0.7.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.6.4...@genomic/scaffolds@0.7.0) (2025-12-25)
+
+### Features
+
+- **@genomic/scaffolds:** add optional prompter parameter for reuse ([c54e01d](https://github.com/constructive-io/dev-utils/commit/c54e01d7f2efd639e0545ba438ba713bf1377c7a))
+- **@genomic/scaffolds:** add TemplateScaffolder orchestrator class ([0a62e36](https://github.com/constructive-io/dev-utils/commit/0a62e362f2e42a3cdc7727731f104afab76c7c07))
+
+## [0.6.4](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.6.3...@genomic/scaffolds@0.6.4) (2025-12-25)
+
+**Note:** Version bump only for package @genomic/scaffolds
+
+## [0.6.3](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.6.2...@genomic/scaffolds@0.6.3) (2025-12-25)
 
 ### Bug Fixes
 
 - **genomic:** implement stack-based ownership for keypress handling ([1c57b2f](https://github.com/constructive-io/dev-utils/commit/1c57b2fa2a794af7f3f86dc713904c5a6a4970da))
 
-# [2.3.0](https://github.com/constructive-io/dev-utils/compare/genomic@2.2.1...genomic@2.3.0) (2025-12-25)
+## [0.6.2](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.6.1...@genomic/scaffolds@0.6.2) (2025-12-25)
 
-### Bug Fixes
+**Note:** Version bump only for package @genomic/scaffolds
 
-- **genomic:** remove redundant $ input indicator, keep only > ([4b1b739](https://github.com/constructive-io/dev-utils/commit/4b1b7394b60ef2fea3cc67b885b92ddd52f01270))
+## [0.6.1](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.6.0...@genomic/scaffolds@0.6.1) (2025-12-25)
 
-### Features
+**Note:** Version bump only for package @genomic/scaffolds
 
-- **genomic:** add compact prompt style as default ([b757265](https://github.com/constructive-io/dev-utils/commit/b757265365b5f5e2541b49cec31f8d141abbe044))
-
-## [2.2.1](https://github.com/constructive-io/dev-utils/compare/genomic@2.2.0...genomic@2.2.1) (2025-12-25)
-
-### Bug Fixes
-
-- **genomic:** prevent keypress event duplication with multiple instances ([d15a82a](https://github.com/constructive-io/dev-utils/commit/d15a82aac897e08c45ac1a350d746290d2360319))
-
-# [2.2.0](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.14...genomic@2.2.0) (2025-12-21)
+# [0.6.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.5.0...@genomic/scaffolds@0.6.0) (2025-12-21)
 
 ### Features
 
-- **genomic:** add optionsFrom resolver support for dynamic options ([5eaf31c](https://github.com/constructive-io/dev-utils/commit/5eaf31c7ab33400195bda83c94e434e6a0f9af1c))
+- **@genomic/scaffolds:** register licenses resolver for optionsFrom support ([0818c77](https://github.com/constructive-io/dev-utils/commit/0818c773ad71aaeee2bd79bfe56e6ed6d69573ff))
 
-## [2.1.14](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.13...genomic@2.1.14) (2025-12-17)
+# [0.5.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.4.0...@genomic/scaffolds@0.5.0) (2025-12-21)
 
-**Note:** Version bump only for package genomic
+### Features
 
-## [2.1.13](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.12...genomic@2.1.13) (2025-12-14)
+- **@genomic/scaffolds:** add CLOSED license option for all rights reserved ([b589212](https://github.com/constructive-io/dev-utils/commit/b589212f53aa0fc937d89e0e1fc914fb4491d23e))
 
-**Note:** Version bump only for package genomic
+# [0.4.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.3.6...@genomic/scaffolds@0.4.0) (2025-12-21)
 
-## [2.1.12](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.11...genomic@2.1.12) (2025-12-14)
+### Features
 
-**Note:** Version bump only for package genomic
+- **@genomic/scaffolds:** replace .questions.json with .boilerplate.json format ([dc2bf1d](https://github.com/constructive-io/dev-utils/commit/dc2bf1d3ed77c7c63acc67b996926fc4a225599e))
 
-## [2.1.11](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.10...genomic@2.1.11) (2025-12-13)
+### BREAKING CHANGES
+
+- **@genomic/scaffolds:** .questions.json/.js files are no longer supported.
+  Use .boilerplate.json/.js instead.
+
+Co-Authored-By: Dan Lynch <pyramation@gmail.com>
+
+## [0.3.6](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.3.5...@genomic/scaffolds@0.3.6) (2025-12-17)
+
+**Note:** Version bump only for package @genomic/scaffolds
+
+## [0.3.5](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.3.4...@genomic/scaffolds@0.3.5) (2025-12-14)
+
+**Note:** Version bump only for package @genomic/scaffolds
+
+## [0.3.4](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.3.3...@genomic/scaffolds@0.3.4) (2025-12-14)
+
+**Note:** Version bump only for package @genomic/scaffolds
+
+## [0.3.3](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.3.2...@genomic/scaffolds@0.3.3) (2025-12-13)
+
+**Note:** Version bump only for package @genomic/scaffolds
+
+## [0.3.2](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.3.1...@genomic/scaffolds@0.3.2) (2025-12-13)
+
+**Note:** Version bump only for package @genomic/scaffolds
+
+## [0.3.1](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.3.0...@genomic/scaffolds@0.3.1) (2025-12-08)
 
 ### Bug Fixes
 
-- **genomic:** pass \_\_dirname to findAndRequirePackageJson ([21d32d1](https://github.com/constructive-io/dev-utils/commit/21d32d1ed58474bca3ce55ab098bf47340bae14d))
+- update copy script in package.json to separate license templates into their own directory ([eb91513](https://github.com/constructive-io/dev-utils/commit/eb91513d260a85a8996a140f0a8bfc7876677cf7))
 
-## [2.1.10](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.9...genomic@2.1.10) (2025-12-13)
+# [0.3.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.2.2...@genomic/scaffolds@0.3.0) (2025-12-01)
 
-**Note:** Version bump only for package genomic
+### Features
 
-## [2.1.9](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.8...genomic@2.1.9) (2025-11-28)
+- enhance license handling with new utility functions ([72d78b4](https://github.com/constructive-io/dev-utils/commit/72d78b4ba3cc5c13560058ae0610ea53194de721))
 
-**Note:** Version bump only for package genomic
+## [0.2.2](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.2.1...@genomic/scaffolds@0.2.2) (2025-11-28)
 
-## [2.1.8](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.7...genomic@2.1.8) (2025-11-26)
+**Note:** Version bump only for package @genomic/scaffolds
 
-**Note:** Version bump only for package genomic
+## [0.2.1](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.2.0...@genomic/scaffolds@0.2.1) (2025-11-26)
 
-## [2.1.7](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.6...genomic@2.1.7) (2025-11-24)
+**Note:** Version bump only for package @genomic/scaffolds
 
-**Note:** Version bump only for package genomic
+# [0.2.0](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.1.7...@genomic/scaffolds@0.2.0) (2025-11-25)
 
-## [2.1.6](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.5...genomic@2.1.6) (2025-11-24)
+### Bug Fixes
 
-**Note:** Version bump only for package genomic
+- **@genomic/scaffolds:** update tests to match camelCase variable naming ([5fe54b5](https://github.com/constructive-io/dev-utils/commit/5fe54b5bc2e1dadeb4c349b8c0f0bc7e83eee322))
 
-## [2.1.5](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.4...genomic@2.1.5) (2025-11-24)
+### Features
 
-**Note:** Version bump only for package genomic
+- **@genomic/scaffolds:** add template caching with appstash ([8118699](https://github.com/constructive-io/dev-utils/commit/8118699f6322d1800cf27b969303e11b2195725c))
 
-## [2.1.4](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.3...genomic@2.1.4) (2025-11-24)
+## [0.1.7](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.1.6...@genomic/scaffolds@0.1.7) (2025-11-24)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-## [2.1.3](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.2...genomic@2.1.3) (2025-11-24)
+## [0.1.6](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.1.5...@genomic/scaffolds@0.1.6) (2025-11-24)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-## [2.1.2](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.1...genomic@2.1.2) (2025-11-24)
+## [0.1.5](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.1.4...@genomic/scaffolds@0.1.5) (2025-11-24)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-## [2.1.1](https://github.com/constructive-io/dev-utils/compare/genomic@2.1.0...genomic@2.1.1) (2025-11-23)
+## [0.1.4](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.1.3...@genomic/scaffolds@0.1.4) (2025-11-24)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-# [2.1.0](https://github.com/pyramation/genomic/compare/genomic@2.0.8...genomic@2.1.0) (2025-11-16)
+## [0.1.3](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.1.2...@genomic/scaffolds@0.1.3) (2025-11-24)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-## [2.0.8](https://github.com/pyramation/genomic/compare/genomic@2.0.7...genomic@2.0.8) (2025-05-25)
+## [0.1.2](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.1.1...@genomic/scaffolds@0.1.2) (2025-11-24)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-## [2.0.7](https://github.com/pyramation/genomic/compare/genomic@2.0.6...genomic@2.0.7) (2025-05-22)
+## [0.1.1](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@0.1.0...@genomic/scaffolds@0.1.1) (2025-11-23)
 
-**Note:** Version bump only for package genomic
+**Note:** Version bump only for package @genomic/scaffolds
 
-## [2.0.6](https://github.com/pyramation/genomic/compare/genomic@2.0.5...genomic@2.0.6) (2025-05-14)
+# 0.1.0 (2025-11-16)
 
-**Note:** Version bump only for package genomic
-
-## [2.0.5](https://github.com/pyramation/genomic/compare/genomic@2.0.4...genomic@2.0.5) (2025-05-14)
-
-**Note:** Version bump only for package genomic
-
-## [2.0.4](https://github.com/pyramation/genomic/compare/genomic@2.0.3...genomic@2.0.4) (2025-05-14)
-
-**Note:** Version bump only for package genomic
-
-## [2.0.3](https://github.com/pyramation/genomic/compare/genomic@2.0.2...genomic@2.0.3) (2025-05-14)
-
-**Note:** Version bump only for package genomic
-
-## [2.0.2](https://github.com/pyramation/genomic/compare/genomic@2.0.1...genomic@2.0.2) (2025-05-13)
-
-**Note:** Version bump only for package genomic
-
-## [2.0.1](https://github.com/pyramation/genomic/compare/genomic@2.0.0...genomic@2.0.1) (2025-05-13)
-
-**Note:** Version bump only for package genomic
-
-# [2.0.0](https://github.com/pyramation/genomic/compare/genomic@1.9.1...genomic@2.0.0) (2025-05-13)
-
-**Note:** Version bump only for package genomic
-
-## [1.9.1](https://github.com/pyramation/genomic/compare/genomic@1.9.0...genomic@1.9.1) (2025-05-09)
-
-**Note:** Version bump only for package genomic
-
-# [1.9.0](https://github.com/pyramation/genomic/compare/genomic@1.8.0...genomic@1.9.0) (2024-04-30)
-
-**Note:** Version bump only for package genomic
-
-# [1.8.0](https://github.com/pyramation/genomic/compare/genomic@1.7.0...genomic@1.8.0) (2024-04-24)
-
-**Note:** Version bump only for package genomic
-
-# [1.7.0](https://github.com/pyramation/genomic/compare/genomic@1.6.1...genomic@1.7.0) (2024-04-24)
-
-**Note:** Version bump only for package genomic
-
-## [1.6.1](https://github.com/pyramation/genomic/compare/genomic@1.6.0...genomic@1.6.1) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [1.6.0](https://github.com/pyramation/genomic/compare/genomic@1.5.0...genomic@1.6.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [1.5.0](https://github.com/pyramation/genomic/compare/genomic@1.4.0...genomic@1.5.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [1.4.0](https://github.com/pyramation/genomic/compare/genomic@1.3.0...genomic@1.4.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [1.3.0](https://github.com/pyramation/genomic/compare/genomic@1.2.0...genomic@1.3.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [1.2.0](https://github.com/pyramation/genomic/compare/genomic@1.1.0...genomic@1.2.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [1.1.0](https://github.com/pyramation/genomic/compare/genomic@1.0.0...genomic@1.1.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [1.0.0](https://github.com/pyramation/genomic/compare/genomic@0.12.0...genomic@1.0.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.12.0](https://github.com/pyramation/genomic/compare/genomic@0.11.0...genomic@0.12.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.11.0](https://github.com/pyramation/genomic/compare/genomic@0.10.1...genomic@0.11.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-## [0.10.1](https://github.com/pyramation/genomic/compare/genomic@0.10.0...genomic@0.10.1) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.10.0](https://github.com/pyramation/genomic/compare/genomic@0.9.0...genomic@0.10.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.9.0](https://github.com/pyramation/genomic/compare/genomic@0.8.1...genomic@0.9.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-## [0.8.1](https://github.com/pyramation/genomic/compare/genomic@0.8.0...genomic@0.8.1) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.8.0](https://github.com/pyramation/genomic/compare/genomic@0.7.0...genomic@0.8.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.7.0](https://github.com/pyramation/genomic/compare/genomic@0.6.0...genomic@0.7.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.6.0](https://github.com/pyramation/genomic/compare/genomic@0.5.0...genomic@0.6.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.5.0](https://github.com/pyramation/genomic/compare/genomic@0.4.0...genomic@0.5.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# [0.4.0](https://github.com/pyramation/genomic/compare/genomic@0.3.0...genomic@0.4.0) (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-# 0.3.0 (2024-04-22)
-
-**Note:** Version bump only for package genomic
-
-## 0.0.2 (2024-04-21)
-
-**Note:** Version bump only for package @pyramation/genomic
+**Note:** Version bump only for package @genomic/scaffolds

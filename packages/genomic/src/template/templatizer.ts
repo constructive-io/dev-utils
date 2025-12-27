@@ -70,7 +70,7 @@ export class Templatizer {
   async prompt(
     extracted: ExtractedVariables,
     argv?: Record<string, any>,
-    prompter?: import('genomic').Prompter,
+    prompter?: import('inquirerer').Inquirerer,
     noTty?: boolean
   ): Promise<Record<string, any>> {
     return promptUser(extracted, argv ?? {}, prompter, noTty ?? false);

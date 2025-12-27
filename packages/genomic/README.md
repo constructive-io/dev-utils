@@ -11,10 +11,19 @@
   <a href="https://github.com/constructive-io/dev-utils/blob/main/LICENSE">
     <img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"/>
   </a>
-  <a href="https://www.npmjs.com/package/genomic"><img height="20" src="https://img.shields.io/github/package-json/v/constructive-io/dev-utils?filename=packages%2Fgenomic%2Fpackage.json"></a>
+  <a href="https://www.npmjs.com/package/genomic"><img height="20" src="https://img.shields.io/github/package-json/v/constructive-io/dev-utils?filename=packages%2Fscaffolds%2Fpackage.json"></a>
 </p>
 
-A powerful, TypeScript-first library for building beautiful command-line interfaces.Create interactive CLI tools with ease using intuitive prompts, validation, and rich user experiences.
+A TypeScript-first library for cloning template repositories, asking the user for variables, and generating a new project with sensible defaults.
+
+## Features
+
+- Clone any Git repo (or GitHub `org/repo` shorthand) and optionally select a branch + subdirectory
+- Extract template variables from filenames and file contents using the safer `____variable____` convention
+- Merge auto-discovered variables with `.questions.{json,js}` (questions win)
+- Interactive prompts powered by `genomic`, with flexible override mapping (`argv` support) and non-TTY mode for CI
+- License scaffolding: choose from MIT, Apache-2.0, ISC, GPL-3.0, BSD-3-Clause, Unlicense, or MPL-2.0 and generate a populated `LICENSE`
+- Built-in template caching powered by `appstash`, so repeat runs skip `git clone` (configurable via `cache` options; TTL is opt-in)
 
 ## Installation
 
@@ -22,1152 +31,210 @@ A powerful, TypeScript-first library for building beautiful command-line interfa
 npm install genomic
 ```
 
-## Features
+> **Note:** The published package is API-only. An internal CLI harness used for integration testing now lives in `packages/genomic-test/`.
 
-- 🔌 **CLI Builder** - Build command-line utilties fast
-- 🖊 **Multiple Question Types** - Support for text, autocomplete, checkbox, and confirm questions
-- 🤖 **Non-Interactive Mode** - Fallback to defaults for CI/CD environments, great for testing
-- ✅ **Smart Validation** - Built-in pattern matching, custom validators, and sanitizers
-- 🔀 **Conditional Logic** - Show/hide questions based on previous answers
-- 🎨 **Interactive UX** - Fuzzy search, keyboard navigation, and visual feedback
-- 🔄 **Dynamic Defaults** - Auto-populate defaults from git config, date/time, or custom resolvers
+## Library Usage
 
-## Table of Contents
+`genomic` provides both a high-level orchestrator and modular building blocks for template scaffolding.
 
-- [Quick Start](#quick-start)
-- [Core Concepts](#core-concepts)
-  - [TypeScript Support](#typescript-support)
-  - [Question Types](#question-types)
-  - [Non-Interactive Mode](#non-interactive-mode)
-- [API Reference](#api-reference)
-  - [Prompter Class](#genomic-class)
-  - [Question Types](#question-types-1)
-    - [Text Question](#text-question)
-    - [Number Question](#number-question)
-    - [Confirm Question](#confirm-question)
-    - [List Question](#list-question)
-    - [Autocomplete Question](#autocomplete-question)
-    - [Checkbox Question](#checkbox-question)
-  - [Advanced Question Options](#advanced-question-options)
-  - [Positional Arguments](#positional-arguments)
-- [Real-World Examples](#real-world-examples)
-  - [Project Setup Wizard](#project-setup-wizard)
-  - [Configuration Builder](#configuration-builder)
-  - [CLI with Commander Integration](#cli-with-commander-integration)
-  - [Dynamic Dependencies](#dynamic-dependencies)
-  - [Custom Validation](#custom-validation)
-- [Dynamic Defaults with Resolvers](#dynamic-defaults-with-resolvers)
-  - [Built-in Resolvers](#built-in-resolvers)
-  - [Custom Resolvers](#custom-resolvers)
-  - [Resolver Examples](#resolver-examples)
-- [CLI Helper](#cli-helper)
-- [Developing](#developing)
+### Quick Start with TemplateScaffolder
 
-## Quick Start
+The easiest way to use `genomic` is with the `TemplateScaffolder` class, which combines caching, cloning, and template processing into a single API:
 
 ```typescript
-import { Prompter } from 'genomic';
+import { TemplateScaffolder } from 'genomic';
 
-const prompter = new Prompter();
+const scaffolder = new TemplateScaffolder({
+  toolName: 'my-cli',                    // Cache directory: ~/.my-cli/cache
+  defaultRepo: 'org/my-templates',       // Default template repository
+  ttlMs: 7 * 24 * 60 * 60 * 1000,       // Cache TTL: 1 week
+});
 
-const answers = await prompter.prompt({}, [
-  {
-    type: 'text',
-    name: 'username',
-    message: 'What is your username?',
-    required: true
-  },
-  {
-    type: 'confirm',
-    name: 'newsletter',
-    message: 'Subscribe to our newsletter?',
-    default: true
-  }
-]);
+// Scaffold a project from the default repo
+await scaffolder.scaffold({
+  outputDir: './my-project',
+  fromPath: 'starter',                   // Use the "starter" template variant
+  answers: { projectName: 'my-app' },    // Pre-populate answers
+});
 
-console.log(answers);
-// { username: 'john_doe', newsletter: true }
-```
-
-## Core Concepts
-
-### TypeScript Support
-
-Import types for full type safety:
-
-```typescript
-import {
-  Prompter,
-  Question,
-  TextQuestion,
-  NumberQuestion,
-  ConfirmQuestion,
-  ListQuestion,
-  AutocompleteQuestion,
-  CheckboxQuestion,
-  PrompterOptions,
-  DefaultResolverRegistry,
-  registerDefaultResolver,
-  resolveDefault
-} from 'genomic';
-
-interface UserConfig {
-  name: string;
-  age: number;
-  newsletter: boolean;
-}
-
-const answers = await prompter.prompt<UserConfig>({}, questions);
-// answers is typed as UserConfig
-```
-
-### Question Types
-
-All questions support these base properties:
-
-```typescript
-interface BaseQuestion {
-  name: string;           // Property name in result object
-  type: string;           // Question type
-  _?: boolean;            // Mark as positional argument (can be passed without --name flag)
-  message?: string;       // Prompt message to display
-  description?: string;   // Additional context
-  default?: any;          // Default value
-  defaultFrom?: string;   // Dynamic default from resolver (e.g., 'git.user.name')
-  setFrom?: string;       // Auto-set value from resolver, bypassing prompt entirely
-  useDefault?: boolean;   // Skip prompt and use default
-  required?: boolean;     // Validation requirement
-  validate?: (input: any, answers: any) => boolean | Validation;
-  sanitize?: (input: any, answers: any) => any;
-  pattern?: string;       // Regex pattern for validation
-  dependsOn?: string[];   // Question dependencies
-  when?: (answers: any) => boolean;  // Conditional display
-}
-```
-
-### Non-Interactive Mode
-
-When running in CI/CD or without a TTY, genomic automatically falls back to default values:
-
-```typescript
-const prompter = new Prompter({
-  noTty: true,  // Force non-interactive mode
-  useDefaults: true  // Use defaults without prompting
+// Or scaffold from a specific repo
+await scaffolder.scaffold({
+  template: 'https://github.com/other/templates.git',
+  outputDir: './another-project',
+  branch: 'v2',
 });
 ```
 
-## API Reference
+### Template Repository Conventions
 
-### Prompter Class
+`TemplateScaffolder` supports the `.boilerplates.json` convention for organizing multiple templates in a single repository:
 
-#### Constructor Options
-
-```typescript
-interface PrompterOptions {
-  noTty?: boolean;                     // Disable interactive mode
-  input?: Readable;                    // Input stream (default: process.stdin)
-  output?: Writable;                   // Output stream (default: process.stdout)
-  useDefaults?: boolean;               // Skip prompts and use defaults
-  globalMaxLines?: number;             // Max lines for list displays (default: 10)
-  mutateArgs?: boolean;                // Mutate argv object (default: true)
-  resolverRegistry?: DefaultResolverRegistry;  // Custom resolver registry
-}
-
-const prompter = new Prompter(options);
+```
+my-templates/
+├── .boilerplates.json    # { "dir": "templates" }
+└── templates/
+    ├── starter/
+    │   ├── .boilerplate.json
+    │   └── ...template files...
+    └── advanced/
+        ├── .boilerplate.json
+        └── ...template files...
 ```
 
-#### Methods
+When you call `scaffold({ fromPath: 'starter' })`, the scaffolder will:
+1. Check if `starter/` exists directly in the repo root
+2. If not, read `.boilerplates.json` and look for `templates/starter/`
+
+### Core Components (Building Blocks)
+
+For more control, you can use the individual components directly:
+
+- **CacheManager**: Handles local caching of git repositories with TTL support
+- **GitCloner**: Handles cloning git repositories
+- **Templatizer**: Handles variable extraction, user prompting, and template generation
+
+### Example: Manual Orchestration
+
+Here is how you can combine these components to create a full CLI pipeline (similar to `genomic-test`):
 
 ```typescript
-// Main prompt method
-prompt<T>(argv: T, questions: Question[], options?: PromptOptions): Promise<T>
+import * as path from "path";
+import { CacheManager, GitCloner, Templatizer } from "genomic";
 
-// Generate man page documentation
-generateManPage(info: ManPageInfo): string
+async function main() {
+  const repoUrl = "https://github.com/user/template-repo";
+  const outputDir = "./my-new-project";
 
-// Clean up resources
-close(): void
-exit(): void
-```
+  // 1. Initialize components
+  const cacheManager = new CacheManager({
+    toolName: "my-cli", // ~/.my-cli/cache
+    // ttl is optional; omit to keep cache forever, or set (e.g., 1 week) to enable expiration
+    // ttl: 604800000,
+  });
+  const gitCloner = new GitCloner();
+  const templatizer = new Templatizer();
 
-#### Managing Multiple Instances
+  // 2. Resolve template path (Cache or Clone)
+  const normalizedUrl = gitCloner.normalizeUrl(repoUrl);
+  const cacheKey = cacheManager.createKey(normalizedUrl);
+  
+  // Check cache
+  let templateDir = cacheManager.get(cacheKey);
+  const isExpired = cacheManager.checkExpiration(cacheKey);
 
-When working with multiple `Prompter` instances that share the same input stream (typically `process.stdin`), only one instance should be actively prompting at a time. Each instance attaches its own keyboard listener, so having multiple active instances will cause duplicate or unexpected keypress behavior.
+  if (!templateDir || isExpired) {
+    console.log("Cloning template...");
+    if (isExpired) cacheManager.clear(cacheKey);
+    
+    // Clone to a temporary location managed by CacheManager
+    const tempDest = path.join(cacheManager.getReposDir(), cacheKey);
+    await gitCloner.clone(normalizedUrl, tempDest, { depth: 1 });
+    
+    // Register and update cache
+    cacheManager.set(cacheKey, tempDest);
+    templateDir = tempDest;
+  }
 
-**Best practices:**
-
-1. **Reuse a single instance** - Create one `Prompter` instance and reuse it for all prompts:
-   ```typescript
-   const prompter = new Prompter();
-   
-   // Use the same instance for multiple prompt sessions
-   const answers1 = await prompter.prompt({}, questions1);
-   const answers2 = await prompter.prompt({}, questions2);
-   
-   prompter.close(); // Clean up when done
-   ```
-
-2. **Close before creating another** - If you need separate instances, close the first before using the second:
-   ```typescript
-   const prompter1 = new Prompter();
-   const answers1 = await prompter1.prompt({}, questions1);
-   prompter1.close(); // Important: close before creating another
-   
-   const prompter2 = new Prompter();
-   const answers2 = await prompter2.prompt({}, questions2);
-   prompter2.close();
-   ```
-
-### Question Types
-
-#### Text Question
-
-Collect string input from users.
-
-```typescript
-{
-  type: 'text',
-  name: 'projectName',
-  message: 'What is your project name?',
-  default: 'my-app',
-  required: true,
-  pattern: '^[a-z0-9-]+$',  // Regex validation
-  validate: (input) => {
-    if (input.length < 3) {
-      return { success: false, reason: 'Name must be at least 3 characters' };
+  // 3. Process Template
+  await templatizer.process(templateDir, outputDir, {
+    argv: {
+      PROJECT_NAME: "my-app",
+      LICENSE: "MIT"
     }
-    return true;
-  }
+  });
 }
 ```
 
-#### Number Question
+### Template Variables
 
-Collect numeric input.
+Variables should be wrapped in four underscores on each side:
+
+```
+____projectName____/
+  src/____moduleName____.ts
+```
 
 ```typescript
+// ____moduleName____.ts
+export const projectName = "____projectName____";
+export const author = "____fullName____";
+```
+
+### Custom Questions
+
+Create a `.boilerplate.json`:
+
+```json
 {
-  type: 'number',
-  name: 'port',
-  message: 'Which port to use?',
-  default: 3000,
-  validate: (input) => {
-    if (input < 1 || input > 65535) {
-      return { success: false, reason: 'Port must be between 1 and 65535' };
-    }
-    return true;
-  }
-}
-```
-
-#### Confirm Question
-
-Yes/no questions.
-
-```typescript
-{
-  type: 'confirm',
-  name: 'useTypeScript',
-  message: 'Use TypeScript?',
-  default: true  // Default to 'yes'
-}
-```
-
-#### List Question
-
-Select one option from a list (no search).
-
-```typescript
-{
-  type: 'list',
-  name: 'license',
-  message: 'Choose a license',
-  options: ['MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3-Clause'],
-  default: 'MIT',
-  maxDisplayLines: 5
-}
-```
-
-#### Autocomplete Question
-
-Select with fuzzy search capabilities.
-
-```typescript
-{
-  type: 'autocomplete',
-  name: 'framework',
-  message: 'Choose your framework',
-  options: [
-    { name: 'React', value: 'react' },
-    { name: 'Vue.js', value: 'vue' },
-    { name: 'Angular', value: 'angular' },
-    { name: 'Svelte', value: 'svelte' }
-  ],
-  allowCustomOptions: true,  // Allow user to enter custom value
-  maxDisplayLines: 8
-}
-```
-
-#### Checkbox Question
-
-Multi-select with search.
-
-```typescript
-{
-  type: 'checkbox',
-  name: 'features',
-  message: 'Select features to include',
-  options: [
-    'Authentication',
-    'Database',
-    'API Routes',
-    'Testing',
-    'Documentation'
-  ],
-  default: ['Authentication', 'API Routes'],
-  returnFullResults: false,  // Only return selected items
-  required: true
-}
-```
-
-With `returnFullResults: true`, returns all options with selection status:
-
-```typescript
-[
-  { name: 'Authentication', value: 'Authentication', selected: true },
-  { name: 'Database', value: 'Database', selected: false },
-  // ...
-]
-```
-
-### Advanced Question Options
-
-#### Custom Validation
-
-```typescript
-{
-  type: 'text',
-  name: 'email',
-  message: 'Enter your email',
-  pattern: '^[^@]+@[^@]+\\.[^@]+$',
-  validate: (email, answers) => {
-    // Custom async validation possible
-    if (email.endsWith('@example.com')) {
-      return {
-        success: false,
-        reason: 'Please use a real email address'
-      };
-    }
-    return { success: true };
-  }
-}
-```
-
-#### Value Sanitization
-
-```typescript
-{
-  type: 'text',
-  name: 'tags',
-  message: 'Enter tags (comma-separated)',
-  sanitize: (input) => {
-    return input.split(',').map(tag => tag.trim());
-  }
-}
-```
-
-#### Conditional Questions
-
-```typescript
-const questions: Question[] = [
-  {
-    type: 'confirm',
-    name: 'useDatabase',
-    message: 'Do you need a database?',
-    default: false
-  },
-  {
-    type: 'list',
-    name: 'database',
-    message: 'Which database?',
-    options: ['PostgreSQL', 'MySQL', 'MongoDB', 'SQLite'],
-    when: (answers) => answers.useDatabase === true  // Only show if useDatabase is true
-  }
-];
-```
-
-#### Question Dependencies
-
-Ensure questions appear in the correct order:
-
-```typescript
-[
-  {
-    type: 'checkbox',
-    name: 'services',
-    message: 'Select services',
-    options: ['Auth', 'Storage', 'Functions']
-  },
-  {
-    type: 'text',
-    name: 'authProvider',
-    message: 'Which auth provider?',
-    dependsOn: ['services'],  // Wait for services question
-    when: (answers) => {
-      const selected = answers.services.find(s => s.name === 'Auth');
-      return selected?.selected === true;
-    }
-  }
-]
-```
-
-### Positional Arguments
-
-The `_` property allows you to name positional parameters, enabling users to pass values without flags. This is useful for CLI tools where the first few arguments have obvious meanings.
-
-#### Basic Usage
-
-```typescript
-const questions: Question[] = [
-  {
-    _: true,
-    name: 'database',
-    type: 'text',
-    message: 'Database name',
-    required: true
-  }
-];
-
-const argv = minimist(process.argv.slice(2));
-const result = await prompter.prompt(argv, questions);
-```
-
-Now users can run either:
-```bash
-node myprogram.js mydb1
-# or equivalently:
-node myprogram.js --database mydb1
-```
-
-#### Multiple Positional Arguments
-
-Positional arguments are assigned in declaration order:
-
-```typescript
-const questions: Question[] = [
-  { _: true, name: 'source', type: 'text', message: 'Source file' },
-  { name: 'verbose', type: 'confirm', default: false },
-  { _: true, name: 'destination', type: 'text', message: 'Destination file' }
-];
-
-// Running: node copy.js input.txt output.txt --verbose
-// Results in: { source: 'input.txt', destination: 'output.txt', verbose: true }
-```
-
-#### Named Arguments Take Precedence
-
-When both positional and named arguments are provided, named arguments win and the positional slot is preserved for the next positional question:
-
-```typescript
-const questions: Question[] = [
-  { _: true, name: 'foo', type: 'text' },
-  { _: true, name: 'bar', type: 'text' },
-  { _: true, name: 'baz', type: 'text' }
-];
-
-// Running: node myprogram.js pos1 pos2 --bar named-bar
-// Results in: { foo: 'pos1', bar: 'named-bar', baz: 'pos2' }
-```
-
-In this example, `bar` gets its value from the named flag, so the two positional values go to `foo` and `baz`.
-
-#### Positional with Options
-
-Positional arguments work with list, autocomplete, and checkbox questions. The value is mapped through the options:
-
-```typescript
-const questions: Question[] = [
-  {
-    _: true,
-    name: 'framework',
-    type: 'list',
-    options: [
-      { name: 'React', value: 'react' },
-      { name: 'Vue', value: 'vue' }
-    ]
-  }
-];
-
-// Running: node setup.js React
-// Results in: { framework: 'react' }
-```
-
-## Real-World Examples
-
-### Project Setup Wizard
-
-```typescript
-import { Prompter, Question } from 'genomic';
-import minimist from 'minimist';
-
-const argv = minimist(process.argv.slice(2));
-const prompter = new Prompter();
-
-const questions: Question[] = [
-  {
-    type: 'text',
-    name: 'projectName',
-    message: 'Project name',
-    required: true,
-    pattern: '^[a-z0-9-]+$'
-  },
-  {
-    type: 'text',
-    name: 'description',
-    message: 'Project description',
-    default: 'My awesome project'
-  },
-  {
-    type: 'confirm',
-    name: 'typescript',
-    message: 'Use TypeScript?',
-    default: true
-  },
-  {
-    type: 'autocomplete',
-    name: 'framework',
-    message: 'Choose a framework',
-    options: ['React', 'Vue', 'Svelte', 'None'],
-    default: 'React'
-  },
-  {
-    type: 'checkbox',
-    name: 'tools',
-    message: 'Additional tools',
-    options: ['ESLint', 'Prettier', 'Jest', 'Husky'],
-    default: ['ESLint', 'Prettier']
-  }
-];
-
-const config = await prompter.prompt(argv, questions);
-console.log('Creating project with:', config);
-```
-
-Run interactively:
-```bash
-node setup.js
-```
-
-Or with CLI args:
-```bash
-node setup.js --projectName=my-app --typescript --framework=React
-```
-
-### Configuration Builder
-
-```typescript
-interface AppConfig {
-  port: number;
-  host: string;
-  ssl: boolean;
-  sslCert?: string;
-  sslKey?: string;
-  database: string;
-  logLevel: string;
-}
-
-const questions: Question[] = [
-  {
-    type: 'number',
-    name: 'port',
-    message: 'Server port',
-    default: 3000,
-    validate: (port) => port > 0 && port < 65536
-  },
-  {
-    type: 'text',
-    name: 'host',
-    message: 'Server host',
-    default: '0.0.0.0'
-  },
-  {
-    type: 'confirm',
-    name: 'ssl',
-    message: 'Enable SSL?',
-    default: false
-  },
-  {
-    type: 'text',
-    name: 'sslCert',
-    message: 'SSL certificate path',
-    when: (answers) => answers.ssl === true,
-    required: true
-  },
-  {
-    type: 'text',
-    name: 'sslKey',
-    message: 'SSL key path',
-    when: (answers) => answers.ssl === true,
-    required: true
-  },
-  {
-    type: 'list',
-    name: 'database',
-    message: 'Database type',
-    options: ['PostgreSQL', 'MySQL', 'SQLite'],
-    default: 'PostgreSQL'
-  },
-  {
-    type: 'list',
-    name: 'logLevel',
-    message: 'Log level',
-    options: ['error', 'warn', 'info', 'debug'],
-    default: 'info'
-  }
-];
-
-const config = await prompter.prompt<AppConfig>(argv, questions);
-
-// Write config to file
-fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-```
-
-### CLI with Commander Integration
-
-```typescript
-import { CLI, CommandHandler } from 'genomic';
-import { Question } from 'genomic';
-
-const handler: CommandHandler = async (argv, prompter, options) => {
-  const questions: Question[] = [
+  "type": "module",
+  "questions": [
     {
-      type: 'text',
-      name: 'name',
-      message: 'What is your name?',
-      required: true
+      "name": "____fullName____",
+      "type": "text",
+      "message": "Enter author full name",
+      "required": true
     },
     {
-      type: 'number',
-      name: 'age',
-      message: 'What is your age?',
-      validate: (age) => age >= 0 && age <= 120
+      "name": "____license____",
+      "type": "list",
+      "message": "Choose a license",
+      "options": ["MIT", "Apache-2.0", "ISC", "GPL-3.0"]
     }
-  ];
-
-  const answers = await prompter.prompt(argv, questions);
-  console.log('Hello,', answers.name);
-};
-
-const cli = new CLI(handler, {
-  version: 'myapp@1.0.0',
-  minimistOpts: {
-    alias: {
-      n: 'name',
-      a: 'age',
-      v: 'version'
-    }
-  }
-});
-
-await cli.run();
-```
-
-### Dynamic Dependencies
-
-```typescript
-const questions: Question[] = [
-  {
-    type: 'checkbox',
-    name: 'cloud',
-    message: 'Select cloud services',
-    options: ['AWS', 'Azure', 'GCP'],
-    returnFullResults: true
-  },
-  {
-    type: 'text',
-    name: 'awsRegion',
-    message: 'AWS Region',
-    dependsOn: ['cloud'],
-    when: (answers) => {
-      const aws = answers.cloud?.find(c => c.name === 'AWS');
-      return aws?.selected === true;
-    },
-    default: 'us-east-1'
-  },
-  {
-    type: 'text',
-    name: 'azureLocation',
-    message: 'Azure Location',
-    dependsOn: ['cloud'],
-    when: (answers) => {
-      const azure = answers.cloud?.find(c => c.name === 'Azure');
-      return azure?.selected === true;
-    },
-    default: 'eastus'
-  },
-  {
-    type: 'text',
-    name: 'gcpZone',
-    message: 'GCP Zone',
-    dependsOn: ['cloud'],
-    when: (answers) => {
-      const gcp = answers.cloud?.find(c => c.name === 'GCP');
-      return gcp?.selected === true;
-    },
-    default: 'us-central1-a'
-  }
-];
-
-const config = await prompter.prompt({}, questions);
-```
-
-### Custom Validation
-
-```typescript
-const questions: Question[] = [
-  {
-    type: 'text',
-    name: 'username',
-    message: 'Choose a username',
-    required: true,
-    pattern: '^[a-zA-Z0-9_]{3,20}$',
-    validate: async (username) => {
-      // Simulate API call to check availability
-      const available = await checkUsernameAvailability(username);
-      if (!available) {
-        return {
-          success: false,
-          reason: 'Username is already taken'
-        };
-      }
-      return { success: true };
-    }
-  },
-  {
-    type: 'text',
-    name: 'password',
-    message: 'Choose a password',
-    required: true,
-    validate: (password) => {
-      if (password.length < 8) {
-        return {
-          success: false,
-          reason: 'Password must be at least 8 characters'
-        };
-      }
-      if (!/[A-Z]/.test(password)) {
-        return {
-          success: false,
-          reason: 'Password must contain an uppercase letter'
-        };
-      }
-      if (!/[0-9]/.test(password)) {
-        return {
-          success: false,
-          reason: 'Password must contain a number'
-        };
-      }
-      return { success: true };
-    }
-  },
-  {
-    type: 'text',
-    name: 'confirmPassword',
-    message: 'Confirm password',
-    required: true,
-    dependsOn: ['password'],
-    validate: (confirm, answers) => {
-      if (confirm !== answers.password) {
-        return {
-          success: false,
-          reason: 'Passwords do not match'
-        };
-      }
-      return { success: true };
-    }
-  }
-];
-```
-
-## Dynamic Defaults with Resolvers
-
-The `defaultFrom` feature allows you to automatically populate question defaults from dynamic sources like git configuration, environment variables, date/time values, or custom resolvers. This eliminates repetitive boilerplate code for common default values.
-
-### Quick Example
-
-```typescript
-import { Prompter } from 'genomic';
-
-const questions = [
-  {
-    type: 'text',
-    name: 'authorName',
-    message: 'Author name?',
-    defaultFrom: 'git.user.name'  // Auto-fills from git config
-  },
-  {
-    type: 'text',
-    name: 'authorEmail',
-    message: 'Author email?',
-    defaultFrom: 'git.user.email'  // Auto-fills from git config
-  },
-  {
-    type: 'text',
-    name: 'npmUser',
-    message: 'NPM username?',
-    defaultFrom: 'npm.whoami'  // Auto-fills from npm whoami
-  },
-  {
-    type: 'text',
-    name: 'copyrightYear',
-    message: 'Copyright year?',
-    defaultFrom: 'date.year'  // Auto-fills current year
-  }
-];
-
-const prompter = new Prompter();
-const answers = await prompter.prompt({}, questions);
-```
-
-### Built-in Resolvers
-
-Prompter comes with several built-in resolvers ready to use:
-
-#### Git Configuration
-
-| Resolver | Description | Example Output |
-|----------|-------------|----------------|
-| `git.user.name` | Git global user name | `"John Doe"` |
-| `git.user.email` | Git global user email | `"john@example.com"` |
-
-#### NPM
-
-| Resolver | Description | Example Output |
-|----------|-------------|----------------|
-| `npm.whoami` | Currently logged in npm user | `"johndoe"` |
-
-#### Date & Time
-
-| Resolver | Description | Example Output |
-|----------|-------------|----------------|
-| `date.year` | Current year | `"2025"` |
-| `date.month` | Current month (zero-padded) | `"11"` |
-| `date.day` | Current day (zero-padded) | `"23"` |
-| `date.iso` | ISO date (YYYY-MM-DD) | `"2025-11-23"` |
-| `date.now` | ISO timestamp | `"2025-11-23T15:30:45.123Z"` |
-| `date.timestamp` | Unix timestamp (ms) | `"1732375845123"` |
-
-#### Workspace (nearest package.json)
-
-| Resolver | Description | Example Output |
-|----------|-------------|----------------|
-| `workspace.name` | Repo slug from `repository` URL (fallback: `package.json` `name`) | `"dev-utils"` |
-| `workspace.repo.name` | Repo name from `repository` URL | `"dev-utils"` |
-| `workspace.repo.organization` | Repo org/owner from `repository` URL | `"constructive-io"` |
-| `workspace.organization.name` | Alias for `workspace.repo.organization` | `"constructive-io"` |
-| `workspace.license` | License field from `package.json` | `"MIT"` |
-| `workspace.author` | Author name from `package.json` | `"Constructive"` |
-| `workspace.author.name` | Author name from `package.json` | `"Constructive"` |
-| `workspace.author.email` | Author email from `package.json` | `"email@example.org"` |
-
-### Priority Order
-
-When resolving default values, genomic follows this priority:
-
-1. **CLI Arguments** - Values passed via command line (highest priority)
-2. **`setFrom`** - Auto-set values (bypasses prompt entirely)
-3. **`defaultFrom`** - Dynamically resolved default values
-4. **`default`** - Static default values
-5. **`undefined`** - No default available
-
-```typescript
-{
-  type: 'text',
-  name: 'author',
-  defaultFrom: 'git.user.name',  // Try git first
-  default: 'Anonymous'            // Fallback if git not configured
+  ]
 }
 ```
 
-### `setFrom` vs `defaultFrom`
+Or `.boilerplate.js` for dynamic logic. Question names can use `____var____` or plain `VAR`; they'll be normalized automatically.
 
-Both `setFrom` and `defaultFrom` use resolvers to get values, but they behave differently:
+Note: `.boilerplate.json`, `.boilerplate.js`, and `.boilerplates.json` files are automatically excluded from the generated output.
 
-| Feature | `defaultFrom` | `setFrom` |
-|---------|---------------|-----------|
-| Sets value as | Default (user can override) | Final value (no prompt) |
-| User prompted? | Yes, with pre-filled default | No, question is skipped |
-| Use case | Suggested values | Auto-computed values |
+### License Templates
 
-**`defaultFrom`** - The resolved value becomes the default, but the user is still prompted and can change it:
+`genomic` ships text templates in `licenses-templates/`. To add another license, drop a `.txt` file matching the desired key (e.g., `BSD-2-CLAUSE.txt`) with placeholders:
 
-```typescript
-{
-  type: 'text',
-  name: 'authorName',
-  message: 'Author name?',
-  defaultFrom: 'git.user.name'  // User sees "Author name? [John Doe]" and can change it
-}
-```
+- `{{YEAR}}`, `{{AUTHOR}}`, `{{EMAIL_LINE}}`
 
-**`setFrom`** - The resolved value is set directly and the question is skipped entirely:
+No code changes are needed; the generator discovers templates at runtime and will warn if a `.questions` option doesn’t have a matching template.
 
-```typescript
-{
-  type: 'text',
-  name: 'year',
-  message: 'Copyright year?',
-  setFrom: 'date.year'  // Automatically set to "2025", no prompt shown
-}
-```
+## API Overview
 
-#### When to use each
+### TemplateScaffolder (Recommended)
 
-Use `defaultFrom` when:
-- The value is a suggestion the user might want to change
-- User confirmation is desired
+The high-level orchestrator that combines caching, cloning, and template processing:
 
-Use `setFrom` when:
-- The value should be computed automatically
-- No user input is needed (e.g., timestamps, computed fields)
-- You want to reduce the number of prompts
+- `new TemplateScaffolder(config)`: Initialize with configuration:
+  - `toolName` (required): Name for cache directory (e.g., `'my-cli'` → `~/.my-cli/cache`)
+  - `defaultRepo`: Default template repository URL or `org/repo` shorthand
+  - `defaultBranch`: Default branch to clone
+  - `ttlMs`: Cache time-to-live in milliseconds
+  - `cacheBaseDir`: Override cache location (useful for tests)
+- `scaffold(options)`: Scaffold a project from a template:
+  - `template`: Repository URL, local path, or `org/repo` shorthand (uses `defaultRepo` if not provided)
+  - `outputDir` (required): Output directory for generated project
+  - `fromPath`: Subdirectory within template to use
+  - `branch`: Branch to clone
+  - `answers`: Pre-populated answers to skip prompting
+  - `noTty`: Disable interactive prompts
+  - `prompter`: Reuse an existing Genomic instance
+- `readBoilerplatesConfig(dir)`: Read `.boilerplates.json` from a template repo
+- `readBoilerplateConfig(dir)`: Read `.boilerplate.json` from a template directory
+- `getCacheManager()`, `getGitCloner()`, `getTemplatizer()`: Access underlying components
 
-#### Combined example
+### CacheManager
+- `new CacheManager(config)`: Initialize with `toolName` and optional `ttl`.
+- `get(key)`: Get path to cached repo if exists.
+- `set(key, path)`: Register a path in the cache.
+- `checkExpiration(key)`: Check if a cache entry is expired.
+- `clear(key)`: Remove a specific cache entry.
+- `clearAll()`: Clear all cached repos.
+- When `ttl` is `undefined`, cache entries never expire. Provide a TTL (ms) only when you want automatic invalidation.
+- Advanced: if you already own an appstash instance, pass `dirs` to reuse it instead of letting CacheManager create its own.
 
-```typescript
-const questions = [
-  {
-    type: 'text',
-    name: 'authorName',
-    message: 'Author name?',
-    defaultFrom: 'git.user.name'  // User can override
-  },
-  {
-    type: 'text',
-    name: 'createdAt',
-    setFrom: 'date.iso'  // Auto-set, no prompt
-  },
-  {
-    type: 'text',
-    name: 'copyrightYear',
-    setFrom: 'date.year'  // Auto-set, no prompt
-  }
-];
+### GitCloner
+- `clone(url, dest, options)`: Clone a repo to a destination.
+- `normalizeUrl(url)`: Normalize a git URL for consistency.
 
-// User only sees prompt for authorName
-// createdAt and copyrightYear are set automatically
-```
+### Templatizer
+- `process(templateDir, outputDir, options)`: Run the full template generation pipeline (extract -> prompt -> replace).
 
-### Custom Resolvers
-
-Register your own custom resolvers for project-specific needs:
-
-```typescript
-import { registerDefaultResolver } from 'genomic';
-
-// Register a resolver for current directory name
-registerDefaultResolver('cwd.name', () => {
-  return process.cwd().split('/').pop();
-});
-
-// Register a resolver for environment variable
-registerDefaultResolver('env.user', () => {
-  return process.env.USER;
-});
-
-// Use in questions
-const questions = [
-  {
-    type: 'text',
-    name: 'projectName',
-    message: 'Project name?',
-    defaultFrom: 'cwd.name',
-    default: 'my-project'
-  },
-  {
-    type: 'text',
-    name: 'author',
-    message: 'Author?',
-    defaultFrom: 'env.user'
-  }
-];
-```
-
-### Instance-Specific Resolvers
-
-For isolated resolver registries, use a custom resolver registry per Prompter instance:
-
-```typescript
-import { DefaultResolverRegistry, Prompter } from 'genomic';
-
-const customRegistry = new DefaultResolverRegistry();
-
-// Register resolvers specific to this instance
-customRegistry.register('app.name', () => 'my-app');
-customRegistry.register('app.port', () => 3000);
-
-const prompter = new Prompter({
-  resolverRegistry: customRegistry  // Use custom registry
-});
-
-const questions = [
-  {
-    type: 'text',
-    name: 'appName',
-    defaultFrom: 'app.name'
-  },
-  {
-    type: 'number',
-    name: 'port',
-    defaultFrom: 'app.port'
-  }
-];
-
-const answers = await prompter.prompt({}, questions);
-```
-
-### Resolver Examples
-
-#### System Information
-
-```typescript
-import os from 'os';
-import { registerDefaultResolver } from 'genomic';
-
-registerDefaultResolver('system.hostname', () => os.hostname());
-registerDefaultResolver('system.username', () => os.userInfo().username);
-
-const questions = [
-  {
-    type: 'text',
-    name: 'hostname',
-    message: 'Hostname?',
-    defaultFrom: 'system.hostname'
-  }
-];
-```
-
-#### Conditional Defaults
-
-```typescript
-registerDefaultResolver('app.port', () => {
-  return process.env.NODE_ENV === 'production' ? 80 : 3000;
-});
-
-const questions = [
-  {
-    type: 'number',
-    name: 'port',
-    message: 'Port?',
-    defaultFrom: 'app.port'
-  }
-];
-```
-
-### Error Handling
-
-Resolvers fail silently by default. If a resolver throws an error or returns `undefined`, genomic falls back to the static `default` value (if provided):
-
-```typescript
-{
-  type: 'text',
-  name: 'author',
-  defaultFrom: 'git.user.name',  // May fail if git not configured
-  default: 'Anonymous',           // Used if resolver fails
-  required: true
-}
-```
-
-For debugging, set `DEBUG=genomic` to see resolver errors:
-
-```bash
-DEBUG=genomic node your-cli.js
-```
-
-### Real-World Use Case
-
-```typescript
-import { Prompter, registerDefaultResolver } from 'genomic';
-
-// Register a resolver for current directory name
-registerDefaultResolver('cwd.name', () => {
-  return process.cwd().split('/').pop();
-});
-
-const questions = [
-  {
-    type: 'text',
-    name: 'projectName',
-    message: 'Project name?',
-    defaultFrom: 'cwd.name',
-    required: true
-  },
-  {
-    type: 'text',
-    name: 'author',
-    message: 'Author?',
-    defaultFrom: 'git.user.name',
-    required: true
-  },
-  {
-    type: 'text',
-    name: 'email',
-    message: 'Email?',
-    defaultFrom: 'git.user.email',
-    required: true
-  },
-  {
-    type: 'text',
-    name: 'year',
-    message: 'Copyright year?',
-    defaultFrom: 'date.year'
-  }
-];
-
-const prompter = new Prompter();
-const config = await prompter.prompt({}, questions);
-```
-
-With git configured, the prompts will show:
-
-```bash
-Project name? (my-project-dir)
-Author? (John Doe)
-Email? (john@example.com)
-Copyright year? (2025)
-```
-
-All defaults automatically populated from git config, directory name, and current date!
-
-## CLI Helper
-
-The `CLI` class provides integration with command-line argument parsing:
-
-```typescript
-import { CLI, CommandHandler, CLIOptions } from 'genomic';
-
-const options: Partial<CLIOptions> = {
-  version: 'myapp@1.0.0',
-  minimistOpts: {
-    alias: {
-      v: 'version',
-      h: 'help'
-    },
-    boolean: ['help', 'version'],
-    string: ['name', 'output']
-  }
-};
-
-const handler: CommandHandler = async (argv, prompter) => {
-  if (argv.help) {
-    console.log('Usage: myapp [options]');
-    process.exit(0);
-  }
-
-  const answers = await prompter.prompt(argv, questions);
-  // Handle answers
-};
-
-const cli = new CLI(handler, options);
-await cli.run();
-```
+See `packages/genomic-test` for a complete reference implementation.
