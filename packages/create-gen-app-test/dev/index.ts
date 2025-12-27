@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { Prompter, ListQuestion } from 'inquirerer';
+import { Inquirerer, ListQuestion } from 'inquirerer';
 import minimist from 'minimist';
 import * as path from 'path';
 
@@ -70,7 +70,7 @@ async function main() {
         );
       }
     } else {
-      const prompter = new Prompter();
+      const prompter = new Inquirerer();
       const question: ListQuestion = {
         type: 'list',
         name: 'template',

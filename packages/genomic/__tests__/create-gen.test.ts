@@ -13,7 +13,7 @@ jest.mock('child_process', () => {
 
 jest.mock('inquirerer', () => {
   return {
-    Prompter: jest.fn().mockImplementation(() => {
+    Inquirerer: jest.fn().mockImplementation(() => {
       return {
         prompt: jest.fn().mockResolvedValue({}),
         close: jest.fn(),
@@ -199,13 +199,13 @@ module.exports = {
 
   describe('promptUser', () => {
     it('should generate questions for file and content replacers', async () => {
-      const { Prompter } = require('inquirerer');
+      const { Inquirerer } = require('inquirerer');
       const mockPrompt = jest.fn().mockResolvedValue({
         projectName: 'my-project',
         author: 'John Doe',
       });
 
-      Prompter.mockImplementation(() => ({
+      Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -228,12 +228,12 @@ module.exports = {
     });
 
     it('should prioritize project questions over auto-generated ones', async () => {
-      const { Prompter } = require('inquirerer');
+      const { Inquirerer } = require('inquirerer');
       const mockPrompt = jest.fn().mockResolvedValue({
         projectName: 'my-project',
       });
 
-      Prompter.mockImplementation(() => ({
+      Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -263,13 +263,13 @@ module.exports = {
     });
 
     it('should use argv to pre-populate answers', async () => {
-      const { Prompter } = require('inquirerer');
+      const { Inquirerer } = require('inquirerer');
       const mockPrompt = jest.fn().mockResolvedValue({
         projectName: 'my-project',
         author: 'John Doe',
       });
 
-      Prompter.mockImplementation(() => ({
+      Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -292,10 +292,10 @@ module.exports = {
     });
 
     it('should require exact CLI override names', async () => {
-      const { Prompter } = require('inquirerer');
+      const { Inquirerer } = require('inquirerer');
       const mockPrompt = jest.fn().mockResolvedValue({});
 
-      Prompter.mockImplementation(() => ({
+      Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -325,10 +325,10 @@ module.exports = {
     });
 
     it('should not map CLI overrides sharing substrings', async () => {
-      const { Prompter } = require('inquirerer');
+      const { Inquirerer } = require('inquirerer');
       const mockPrompt = jest.fn().mockResolvedValue({});
 
-      Prompter.mockImplementation(() => ({
+      Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -358,12 +358,12 @@ module.exports = {
     });
 
     it('should hydrate template variables from alias answers', async () => {
-      const { Prompter } = require('inquirerer');
+      const { Inquirerer } = require('inquirerer');
       const mockPrompt = jest.fn().mockResolvedValue({
         fullName: 'Prompted User',
       });
 
-      Prompter.mockImplementation(() => ({
+      Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));
@@ -389,12 +389,12 @@ module.exports = {
     });
 
     it('should not hydrate overlapping template variables implicitly', async () => {
-      const { Prompter } = require('inquirerer');
+      const { Inquirerer } = require('inquirerer');
       const mockPrompt = jest.fn().mockResolvedValue({
         description: 'Prompted description',
       });
 
-      Prompter.mockImplementation(() => ({
+      Inquirerer.mockImplementation(() => ({
         prompt: mockPrompt,
         close: jest.fn(),
       }));

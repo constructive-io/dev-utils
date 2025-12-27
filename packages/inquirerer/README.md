@@ -40,7 +40,7 @@ npm install inquirerer
   - [Question Types](#question-types)
   - [Non-Interactive Mode](#non-interactive-mode)
 - [API Reference](#api-reference)
-  - [Prompter Class](#inquirerer-class)
+  - [Inquirerer Class](#inquirerer-class)
   - [Question Types](#question-types-1)
     - [Text Question](#text-question)
     - [Number Question](#number-question)
@@ -66,9 +66,9 @@ npm install inquirerer
 ## Quick Start
 
 ```typescript
-import { Prompter } from 'inquirerer';
+import { Inquirerer } from 'inquirerer';
 
-const prompter = new Prompter();
+const prompter = new Inquirerer();
 
 const answers = await prompter.prompt({}, [
   {
@@ -97,7 +97,7 @@ Import types for full type safety:
 
 ```typescript
 import {
-  Prompter,
+  Inquirerer,
   Question,
   TextQuestion,
   NumberQuestion,
@@ -105,7 +105,7 @@ import {
   ListQuestion,
   AutocompleteQuestion,
   CheckboxQuestion,
-  PrompterOptions,
+  InquirererOptions,
   DefaultResolverRegistry,
   registerDefaultResolver,
   resolveDefault
@@ -150,7 +150,7 @@ interface BaseQuestion {
 When running in CI/CD or without a TTY, inquirerer automatically falls back to default values:
 
 ```typescript
-const prompter = new Prompter({
+const prompter = new Inquirerer({
   noTty: true,  // Force non-interactive mode
   useDefaults: true  // Use defaults without prompting
 });
@@ -158,12 +158,12 @@ const prompter = new Prompter({
 
 ## API Reference
 
-### Prompter Class
+### Inquirerer Class
 
 #### Constructor Options
 
 ```typescript
-interface PrompterOptions {
+interface InquirererOptions {
   noTty?: boolean;                     // Disable interactive mode
   input?: Readable;                    // Input stream (default: process.stdin)
   output?: Writable;                   // Output stream (default: process.stdout)
@@ -173,7 +173,7 @@ interface PrompterOptions {
   resolverRegistry?: DefaultResolverRegistry;  // Custom resolver registry
 }
 
-const prompter = new Prompter(options);
+const prompter = new Inquirerer(options);
 ```
 
 #### Methods
@@ -198,7 +198,7 @@ When working with multiple `Prompter` instances that share the same input stream
 
 1. **Reuse a single instance** - Create one `Prompter` instance and reuse it for all prompts:
    ```typescript
-   const prompter = new Prompter();
+   const prompter = new Inquirerer();
    
    // Use the same instance for multiple prompt sessions
    const answers1 = await prompter.prompt({}, questions1);
@@ -507,11 +507,11 @@ const questions: Question[] = [
 ### Project Setup Wizard
 
 ```typescript
-import { Prompter, Question } from 'inquirerer';
+import { Inquirerer, Question } from 'inquirerer';
 import minimist from 'minimist';
 
 const argv = minimist(process.argv.slice(2));
-const prompter = new Prompter();
+const prompter = new Inquirerer();
 
 const questions: Question[] = [
   {
@@ -796,7 +796,7 @@ The `defaultFrom` feature allows you to automatically populate question defaults
 ### Quick Example
 
 ```typescript
-import { Prompter } from 'inquirerer';
+import { Inquirerer } from 'inquirerer';
 
 const questions = [
   {
@@ -825,7 +825,7 @@ const questions = [
   }
 ];
 
-const prompter = new Prompter();
+const prompter = new Inquirerer();
 const answers = await prompter.prompt({}, questions);
 ```
 
@@ -1006,7 +1006,7 @@ const customRegistry = new DefaultResolverRegistry();
 customRegistry.register('app.name', () => 'my-app');
 customRegistry.register('app.port', () => 3000);
 
-const prompter = new Prompter({
+const prompter = new Inquirerer({
   resolverRegistry: customRegistry  // Use custom registry
 });
 
@@ -1087,7 +1087,7 @@ DEBUG=inquirerer node your-cli.js
 ### Real-World Use Case
 
 ```typescript
-import { Prompter, registerDefaultResolver } from 'inquirerer';
+import { Inquirerer, registerDefaultResolver } from 'inquirerer';
 
 // Register a resolver for current directory name
 registerDefaultResolver('cwd.name', () => {
@@ -1124,7 +1124,7 @@ const questions = [
   }
 ];
 
-const prompter = new Prompter();
+const prompter = new Inquirerer();
 const config = await prompter.prompt({}, questions);
 ```
 

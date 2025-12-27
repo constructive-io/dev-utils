@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Prompter, ListQuestion } from 'inquirerer';
+import { Inquirerer, ListQuestion } from 'inquirerer';
 import minimist, { ParsedArgs } from 'minimist';
 
 import { CacheManager, GitCloner, checkNpmVersion } from 'genomic';
@@ -279,7 +279,7 @@ function printVersion(): void {
 }
 
 async function promptForTemplate(templates: string[]): Promise<string> {
-  const prompter = new Prompter();
+  const prompter = new Inquirerer();
   const question: ListQuestion = {
     type: 'list',
     name: 'template',
