@@ -29,10 +29,12 @@
     "dev:chat": "ts-node dev/demo-chat",
     "dev:upgrade": "ts-node dev/demo-upgrade",
     "dev:prompts": "ts-node dev/demo-prompts-engine",
+    "dev:ai-code": "ts-node dev/demo-ai-code",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "ansi-diff": "^1.2.0",
     "deepmerge": "^4.3.1",
     "find-and-require-package-json": "workspace:*",
     "js-yaml": "^4.1.0",
