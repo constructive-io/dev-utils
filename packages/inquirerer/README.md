@@ -50,6 +50,7 @@ npm install inquirerer
     - [Checkbox Question](#checkbox-question)
   - [Advanced Question Options](#advanced-question-options)
   - [Positional Arguments](#positional-arguments)
+  - [Alias](#alias)
 - [Real-World Examples](#real-world-examples)
   - [Project Setup Wizard](#project-setup-wizard)
   - [Configuration Builder](#configuration-builder)
@@ -130,6 +131,7 @@ interface BaseQuestion {
   name: string;           // Property name in result object
   type: string;           // Question type
   _?: boolean;            // Mark as positional argument (can be passed without --name flag)
+  alias?: string | string[];  // Short flag alias(es) for CLI (e.g., 'w' for --workspace)
   message?: string;       // Prompt message to display
   description?: string;   // Additional context
   default?: any;          // Default value
@@ -480,6 +482,75 @@ const questions: Question[] = [
 ```
 
 In this example, `bar` gets its value from the named flag, so the two positional values go to `foo` and `baz`.
+
+### Alias
+
+The `alias` property allows you to define short flag alternatives for question names, making CLI usage more convenient. Users can pass values using either the full name or any defined alias.
+
+#### Basic Usage
+
+```typescript
+const questions: Question[] = [
+  {
+    name: 'workspace',
+    type: 'confirm',
+    alias: 'w',
+    message: 'Create workspace?'
+  },
+  {
+    name: 'outputDir',
+    type: 'text',
+    alias: 'o',
+    message: 'Output directory',
+    default: './dist'
+  }
+];
+
+const argv = minimist(process.argv.slice(2));
+const result = await prompter.prompt(argv, questions);
+```
+
+Now users can run either:
+```bash
+node myprogram.js --workspace --outputDir ./build
+# or equivalently:
+node myprogram.js -w -o ./build
+```
+
+#### Multiple Aliases
+
+You can define multiple aliases for a single question using an array:
+
+```typescript
+{
+  name: 'verbose',
+  type: 'confirm',
+  alias: ['v', 'V'],  // Both -v and -V work
+  message: 'Enable verbose output?'
+}
+```
+
+#### Alias Priority
+
+When both the main name and an alias are provided, the main name takes precedence:
+
+```typescript
+// Running: node myprogram.js --workspace --w=false
+// Results in: { workspace: true }  (--workspace wins)
+```
+
+When multiple aliases are provided in argv, the first alias in the definition order is used:
+
+```typescript
+{
+  name: 'workspace',
+  type: 'text',
+  alias: ['w', 'ws']
+}
+
+// Running: node myprogram.js -w first --ws second
+// Results in: { workspace: 'first' }  (-w is checked first)
+```
 
 #### Positional with Options
 
