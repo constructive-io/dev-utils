@@ -1,7 +1,7 @@
 # @interweb/http-errors
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/constructive-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80"><br />
+  <img src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" height="250"><br />
     @interweb/http-errors
   <br />
   <a href="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml">

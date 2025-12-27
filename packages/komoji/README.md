@@ -1,7 +1,7 @@
 # komoji ✨
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/constructive-io/dev-utils/refs/heads/main/docs/img/logo.svg" width="80">
+  <img src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" height="250">
   <br />
     <strong>the tiny case transformer</strong>
   <br />

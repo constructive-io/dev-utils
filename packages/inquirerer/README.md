@@ -1,7 +1,7 @@
 # inquirerer
 
 <p align="center" width="100%">
-    <img height="90" src="https://raw.githubusercontent.com/constructive-io/dev-utils/refs/heads/main/docs/img/inquirerer.svg" />
+    <img height="250" src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" />
 </p>
 
 <p align="center" width="100%">
