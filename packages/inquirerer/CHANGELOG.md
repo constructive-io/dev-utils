@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.1.2...inquirerer@4.2.0) (2025-12-27)
+
+### Features
+
+- **inquirerer:** add engine-based prompt implementations ([7bdc066](https://github.com/constructive-io/dev-utils/commit/7bdc06617271ed9c1795c13c97eec66ff8ae2211))
+- **inquirerer:** add event-driven UI engine for custom prompts ([a298407](https://github.com/constructive-io/dev-utils/commit/a2984078be1118b49551bb69facf9b7131329d72))
+
 ## [4.1.2](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.1.1...inquirerer@4.1.2) (2025-12-27)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/constructive-io/dev-utils/compare/genomic@5.1.0...genomic@5.2.0) (2025-12-27)
+
+### Features
+
+- **genomic:** add spinner to git clone operation ([8c19cf0](https://github.com/constructive-io/dev-utils/commit/8c19cf01831dc20adcf201849e8624c2f14738c9))
+
 # [5.1.0](https://github.com/constructive-io/dev-utils/compare/genomic@5.0.3...genomic@5.1.0) (2025-12-27)
 
 ### Features
