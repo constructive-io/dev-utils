@@ -11,6 +11,59 @@
  */
 
 import { Writable } from 'stream';
+import stringWidth from 'string-width';
+
+/**
+ * Truncate a string to fit within a given display width
+ * Handles ANSI escape codes and wide characters correctly
+ */
+function truncateToWidth(str: string, maxWidth: number): string {
+  // Quick check - if no ANSI codes and ASCII only, use simple truncation
+  const hasAnsi = /\x1B\[/.test(str);
+  if (!hasAnsi && stringWidth(str) <= maxWidth) {
+    return str;
+  }
+  
+  // For strings with ANSI codes or wide chars, we need to be careful
+  let result = '';
+  let currentWidth = 0;
+  let inEscape = false;
+  let escapeBuffer = '';
+  
+  for (const char of str) {
+    if (inEscape) {
+      escapeBuffer += char;
+      // Check if escape sequence is complete (ends with letter)
+      if (/[a-zA-Z]/.test(char)) {
+        result += escapeBuffer;
+        escapeBuffer = '';
+        inEscape = false;
+      }
+      continue;
+    }
+    
+    if (char === '\x1B') {
+      inEscape = true;
+      escapeBuffer = char;
+      continue;
+    }
+    
+    const charWidth = stringWidth(char);
+    if (currentWidth + charWidth > maxWidth) {
+      break;
+    }
+    
+    result += char;
+    currentWidth += charWidth;
+  }
+  
+  // Reset any open ANSI styles at the end
+  if (hasAnsi) {
+    result += '\x1B[0m';
+  }
+  
+  return result;
+}
 
 /**
  * ANSI escape codes for terminal control
@@ -194,16 +247,17 @@ export class ViewportRenderer {
     this.write(ANSI.cursorToStart);
     
     // Clear and redraw each line
+    // Truncate lines to terminal width to prevent soft-wrap which desyncs cursor position
     for (let i = 0; i < lines.length; i++) {
       this.write(ANSI.clearLine);
-      this.write(lines[i]);
+      this.write(truncateToWidth(lines[i], this.terminalWidth));
       if (i < lines.length - 1) {
         this.write('\n');
       }
     }
     
-    // Move cursor to end of viewport (for next render)
-    this.write('\n');
+    // Position cursor at end of last line (do NOT emit newline to avoid scroll)
+    // The next render will move cursor back up anyway
     
     return this;
   }
