@@ -234,16 +234,20 @@ export class ViewportRenderer {
     }
     
     // On first render, reserve space by printing empty lines
-    // This establishes the viewport region
+    // This establishes the viewport region at the bottom of the terminal
     if (!this.hasRenderedOnce) {
+      // Print viewportHeight newlines to reserve space
       for (let i = 0; i < this.viewportHeight; i++) {
         this.write('\n');
       }
       this.hasRenderedOnce = true;
+      // After first render, cursor is at bottom. Move up viewportHeight to get to top.
+      this.write(ANSI.cursorUp(this.viewportHeight));
+    } else {
+      // On subsequent renders, cursor is on the last viewport row (since we don't emit trailing newline)
+      // Move up (viewportHeight - 1) to get back to the first viewport row
+      this.write(ANSI.cursorUp(this.viewportHeight - 1));
     }
-    
-    // Move cursor back to start of viewport
-    this.write(ANSI.cursorUp(this.viewportHeight));
     this.write(ANSI.cursorToStart);
     
     // Clear and redraw each line
