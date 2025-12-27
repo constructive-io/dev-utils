@@ -1,6 +1,6 @@
 {
   "name": "@genomic/scaffolds",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Constructive <developers@constructive.io>",
   "description": "Clone and customize template repositories with variable replacement",
   "main": "index.js",
