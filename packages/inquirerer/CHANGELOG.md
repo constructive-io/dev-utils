@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.1.1...inquirerer@4.1.2) (2025-12-27)
+
+### Bug Fixes
+
+- **inquirerer:** handle empty filteredOptions in checkbox and autocomplete ([7d4b32c](https://github.com/constructive-io/dev-utils/commit/7d4b32c61ebf8e72fc56f4c24cedaf0f6b40eafb))
+
 ## [4.1.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.1.0...inquirerer@4.1.1) (2025-12-27)
 
 **Note:** Version bump only for package inquirerer

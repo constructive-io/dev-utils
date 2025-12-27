@@ -1,6 +1,6 @@
 {
   "name": "genomic",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "author": "Constructive <developers@constructive.io>",
   "description": "Clone and customize template repositories with variable replacement",
   "main": "index.js",
