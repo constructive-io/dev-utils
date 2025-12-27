@@ -38,6 +38,7 @@ export const KEY_CODES = {
   CTRL_P: '\u0010',  // Previous (up)
   CTRL_F: '\u0006',  // Forward (right)
   CTRL_B: '\u0002',  // Back (left)
+  CTRL_J: '\u000a',  // Newline (fallback for Shift+Enter)
   
   // Alt/Meta key combinations (escape sequences)
   // Note: Alt key sends ESC followed by the character

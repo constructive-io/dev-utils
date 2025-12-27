@@ -12,7 +12,7 @@
  */
 
 import { Readable, Writable } from 'stream';
-import { cyan, dim, green, white, yellow, blue } from 'yanse';
+import { cyan, dim, green, white, yellow, blue, inverse } from 'yanse';
 import { TerminalKeypress, KEY_CODES } from '../keypress';
 import { ViewportRenderer, createViewport } from './viewport';
 
@@ -417,7 +417,7 @@ export class AICodeUI {
       { keys: [KEY_CODES.CTRL_K], action: () => this.killToEnd(), description: 'Kill to end of line' },
       { keys: [KEY_CODES.CTRL_U], action: () => this.killToStart(), description: 'Kill to start of line' },
       { keys: [KEY_CODES.ENTER], action: () => this.submit(), description: 'Submit input' },
-      { keys: [KEY_CODES.SHIFT_ENTER, KEY_CODES.SHIFT_ENTER_ALT], action: () => this.insertNewline(), description: 'Insert newline' },
+      { keys: [KEY_CODES.SHIFT_ENTER, KEY_CODES.SHIFT_ENTER_ALT, KEY_CODES.CTRL_J], action: () => this.insertNewline(), description: 'Insert newline' },
       { keys: [KEY_CODES.CTRL_C], action: () => this.exit(), description: 'Exit' },
       { keys: [KEY_CODES.CTRL_L], action: () => this.clearScreen(), description: 'Clear screen' },
     ];
@@ -727,11 +727,11 @@ export class AICodeUI {
       visibleLines[0] = green('AI: ') + visibleLines[0];
     }
     
-    // Add cursor indicator if streaming
+    // Add cursor indicator if streaming (inverse video on space at end)
     if (this.cursorVisible) {
       const lastIdx = visibleLines.length - 1;
       if (lastIdx >= 0) {
-        visibleLines[lastIdx] += cyan('▋');
+        visibleLines[lastIdx] += inverse(' ');
       }
     }
     
@@ -748,7 +748,7 @@ export class AICodeUI {
     
     if (this.messages.length === 0) {
       lines.push(dim('No messages yet. Type a message and press Enter.'));
-      lines.push(dim('Shift+Enter for newline, UP/DOWN for history, PageUp/PageDown to scroll.'));
+      lines.push(dim('Ctrl+J for newline, UP/DOWN for history, PageUp/PageDown to scroll.'));
       return lines;
     }
     
@@ -779,8 +779,9 @@ export class AICodeUI {
       const prefix = idx === 0 ? blue(this.promptPrefix) : blue('  ');
       if (idx === this.lineEditor.lineIndex && this.cursorVisible && !this.isStreaming) {
         const before = line.slice(0, this.lineEditor.cursorPos);
-        const after = line.slice(this.lineEditor.cursorPos);
-        lines.push(prefix + before + cyan('▋') + after);
+        const cursorChar = line[this.lineEditor.cursorPos] || ' ';
+        const after = line.slice(this.lineEditor.cursorPos + 1);
+        lines.push(prefix + before + inverse(cursorChar) + after);
       } else {
         lines.push(prefix + line);
       }
