@@ -1,0 +1,56 @@
+{
+  "name": "@inquirerer/test",
+  "version": "1.0.0",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Testing utilities for inquirerer-based CLI applications",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "clean-ansi": "workspace:*",
+    "inquirerer": "workspace:*"
+  },
+  "peerDependencies": {
+    "jest": ">=29.0.0"
+  },
+  "peerDependenciesMeta": {
+    "jest": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.0",
+    "makage": "0.1.8"
+  },
+  "keywords": [
+    "cli",
+    "testing",
+    "inquirerer",
+    "test-utils",
+    "mock",
+    "stdin",
+    "stdout"
+  ]
+}

@@ -7,7 +7,7 @@ export { cliExitWithError } from './cli-error';
 export type { CliExitOptions } from './cli-error';
 
 // Update checking
-export { checkForUpdates } from './update-check';
+export { checkForUpdates, shouldSkipUpdateCheck } from './update-check';
 export type { UpdateCheckOptions, UpdateCheckResult } from './update-check';
 
 // Package.json utilities
