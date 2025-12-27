@@ -5,15 +5,13 @@
 </p>
 
 <p align="center" width="100%">
-
   <a href="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml">
     <img height="20" src="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml/badge.svg" />
   </a>
   <a href="https://github.com/constructive-io/dev-utils/blob/main/LICENSE">
     <img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"/>
   </a>
-  <a href="https://www.npmjs.com/package/@genomic/scaffolds"><img height="20" src="https://img.shields.io/npm/dt/@genomic/scaffolds"></a>
-  <a href="https://www.npmjs.com/package/@genomic/scaffolds"><img height="20" src="https://img.shields.io/github/package-json/v/constructive-io/dev-utils?filename=packages%2F@genomic/scaffolds%2Fpackage.json"></a>
+  <a href="https://www.npmjs.com/package/@genomic/scaffolds"><img height="20" src="https://img.shields.io/github/package-json/v/constructive-io/dev-utils?filename=packages%2Fscaffolds%2Fpackage.json"></a>
 </p>
 
 A TypeScript-first library for cloning template repositories, asking the user for variables, and generating a new project with sensible defaults.
