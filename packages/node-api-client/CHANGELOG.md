@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.9](https://github.com/constructive-io/dev-utils/compare/@interweb/node-api-client@0.8.8...@interweb/node-api-client@0.8.9) (2025-12-27)
+
+**Note:** Version bump only for package @interweb/node-api-client
+
 ## [0.8.8](https://github.com/constructive-io/dev-utils/compare/@interweb/node-api-client@0.8.7...@interweb/node-api-client@0.8.8) (2025-12-17)
 
 **Note:** Version bump only for package @interweb/node-api-client
