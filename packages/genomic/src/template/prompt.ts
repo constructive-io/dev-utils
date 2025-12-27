@@ -1,4 +1,4 @@
-import { Prompter, Question } from 'genomic';
+import { Prompter, Question } from 'inquirerer';
 
 import { ExtractedVariables } from '../types';
 

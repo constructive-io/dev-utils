@@ -1,9 +1,9 @@
 import * as fs from 'fs';
-import { Prompter, ListQuestion } from 'genomic';
+import { Prompter, ListQuestion } from 'inquirerer';
 import minimist from 'minimist';
 import * as path from 'path';
 
-import { cloneRepo, extractVariables, promptUser, replaceVariables } from '@genomic/scaffolds';
+import { cloneRepo, extractVariables, promptUser, replaceVariables } from 'genomic';
 
 const DEFAULT_REPO = 'https://github.com/constructive-io/pgpm-boilerplates/';
 const OUTPUT_DIR = './test-output';

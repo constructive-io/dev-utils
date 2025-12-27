@@ -1,5 +1,5 @@
-import { Prompter } from 'genomic';
-import { Question } from 'genomic';
+import { Prompter } from 'inquirerer';
+import { Question } from 'inquirerer';
 
 /**
  * Configuration for TemplateScaffolder instance
