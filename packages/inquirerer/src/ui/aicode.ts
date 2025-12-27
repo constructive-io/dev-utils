@@ -756,9 +756,10 @@ export class AICodeUI {
       lines.push(...conversationLines);
     }
     
-    // Fill remaining space (account for multiline input)
-    const inputLineCount = this.lineEditor.lines.length;
-    const reservedLines = 3 + inputLineCount; // separator + input lines + status
+    // Fill remaining space (use fixed max input height for stable layout)
+    // Max input area: 5 lines (or fewer if buffer is smaller)
+    const maxVisibleInputLines = Math.min(5, this.lineEditor.lines.length);
+    const reservedLines = 3 + maxVisibleInputLines; // separator + input lines + status
     while (lines.length < this.viewportHeight - reservedLines) {
       lines.push('');
     }
@@ -919,42 +920,40 @@ export class AICodeUI {
   
   /**
    * Render the input lines (supports multiline with scrolling)
+   * Uses a fixed max height (5 lines) to keep layout stable
    */
   private renderInputLines(width: number): string[] {
     const lines: string[] = [];
     const inputText = this.getInput();
     const hasContent = inputText.length > 0;
+    const totalLines = this.lineEditor.lines.length;
     
-    // Limit visible input lines to prevent overflow
-    // Reserve space for: welcome/conversation, separator, status bar
-    const maxInputLines = Math.min(this.lineEditor.lines.length, Math.max(3, this.viewportHeight - 10));
+    // Fixed max visible input lines (must match layout calculation in render())
+    const maxInputLines = 5;
+    const visibleCount = Math.min(maxInputLines, totalLines);
     
     // Calculate which lines to show (keep cursor line visible)
     const cursorLine = this.lineEditor.lineIndex;
     let startLine = 0;
-    let endLine = this.lineEditor.lines.length;
     
-    if (this.lineEditor.lines.length > maxInputLines) {
-      // Center the view around the cursor line
-      const halfVisible = Math.floor(maxInputLines / 2);
-      startLine = Math.max(0, cursorLine - halfVisible);
-      endLine = startLine + maxInputLines;
-      
-      // Adjust if we're near the end
-      if (endLine > this.lineEditor.lines.length) {
-        endLine = this.lineEditor.lines.length;
-        startLine = Math.max(0, endLine - maxInputLines);
+    if (totalLines > visibleCount) {
+      // Keep cursor visible with some context
+      if (cursorLine < 2) {
+        startLine = 0;
+      } else if (cursorLine > totalLines - 3) {
+        startLine = totalLines - visibleCount;
+      } else {
+        startLine = cursorLine - 2;
       }
     }
     
-    // Show scroll indicator at top if there are hidden lines above
-    if (startLine > 0) {
-      lines.push(dim(`  [${startLine} more lines above]`));
-    }
+    const endLine = Math.min(startLine + visibleCount, totalLines);
     
     for (let idx = startLine; idx < endLine; idx++) {
       const line = this.lineEditor.lines[idx];
-      const prefix = idx === 0 ? cyan('> ') : '  ';
+      // Show > prefix on first visible line if it's line 0, otherwise show line number hint
+      const isFirstLogicalLine = idx === 0;
+      const prefix = isFirstLogicalLine ? cyan('> ') : '  ';
       let lineContent: string;
       
       if (idx === this.lineEditor.lineIndex && !this.isStreaming) {
@@ -969,23 +968,21 @@ export class AICodeUI {
         lineContent = line;
       }
       
-      // Add send hint on last visible line if there's content and it's the actual last line
-      if (idx === this.lineEditor.lines.length - 1 && hasContent) {
-        const hint = dim(' ↵ send');
+      // Add info on the last visible line
+      if (idx === endLine - 1 && hasContent) {
+        // Show line count if multiline, otherwise show send hint
+        const info = totalLines > 1 
+          ? dim(` ln ${cursorLine + 1}/${totalLines}`)
+          : dim(' ↵ send');
         const lineWidth = displayWidth(prefix + lineContent);
-        const hintWidth = displayWidth(hint);
-        if (lineWidth + hintWidth < width - 2) {
-          const padding = width - lineWidth - hintWidth - 2;
-          lineContent = lineContent + ' '.repeat(Math.max(0, padding)) + hint;
+        const infoWidth = displayWidth(info);
+        if (lineWidth + infoWidth < width - 2) {
+          const padding = width - lineWidth - infoWidth - 2;
+          lineContent = lineContent + ' '.repeat(Math.max(0, padding)) + info;
         }
       }
       
       lines.push(prefix + lineContent);
-    }
-    
-    // Show scroll indicator at bottom if there are hidden lines below
-    if (endLine < this.lineEditor.lines.length) {
-      lines.push(dim(`  [${this.lineEditor.lines.length - endLine} more lines below]`));
     }
     
     return lines;
