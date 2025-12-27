@@ -60,6 +60,7 @@ jobs:
           - strfy-js
           - yanse
           - genomic
+          - inquirerer
           - scaffolds
           - utils
           - create-gen-app-test
