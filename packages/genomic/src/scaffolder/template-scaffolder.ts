@@ -13,6 +13,12 @@ import {
   InspectOptions,
   InspectResult,
 } from './types';
+import {
+  ScannedBoilerplate,
+  ScanBoilerplatesOptions,
+  scanBoilerplatesRecursive,
+  findBoilerplateByPath,
+} from './scan-boilerplates';
 
 /**
  * High-level orchestrator for template scaffolding operations.
@@ -164,6 +170,37 @@ export class TemplateScaffolder {
    */
   getTemplatizer(): Templatizer {
     return this.templatizer;
+  }
+
+  /**
+   * Scan a template directory recursively for all boilerplates.
+   * 
+   * A boilerplate is any directory containing a `.boilerplate.json` file.
+   * This method recursively searches the entire directory tree and returns
+   * all discovered boilerplates with their relative paths.
+   * 
+   * This is useful when:
+   * - The user specifies `--dir .` to bypass `.boilerplates.json`
+   * - You want to discover all available boilerplates regardless of nesting
+   * - You need to present a list of available boilerplates to the user
+   * 
+   * @param templateDir - The root directory to scan
+   * @param options - Scanning options (maxDepth, skipDirectories)
+   * @returns Array of discovered boilerplates with relative paths
+   * 
+   * @example
+   * ```typescript
+   * const scaffolder = new TemplateScaffolder({ toolName: 'my-cli' });
+   * const inspection = scaffolder.inspect({ template: 'org/repo' });
+   * const boilerplates = scaffolder.scanBoilerplates(inspection.templateDir);
+   * // Returns: [{ relativePath: 'default/module', ... }, { relativePath: 'default/workspace', ... }]
+   * ```
+   */
+  scanBoilerplates(
+    templateDir: string,
+    options?: ScanBoilerplatesOptions
+  ): ScannedBoilerplate[] {
+    return scanBoilerplatesRecursive(templateDir, options);
   }
 
   private inspectLocal(
@@ -327,12 +364,13 @@ export class TemplateScaffolder {
   }
 
   /**
-   * Resolve the fromPath using .boilerplates.json convention.
+   * Resolve the fromPath using .boilerplates.json convention and recursive scanning.
    *
    * Resolution order:
    * 1. If explicit fromPath is provided and exists, use it directly
    * 2. If useBoilerplatesConfig is true and .boilerplates.json exists with a dir field, prepend it to fromPath
-   * 3. Return the fromPath as-is
+   * 3. Recursively scan for boilerplates and try to match fromPath (exact match, then basename match if unambiguous)
+   * 4. Return the fromPath as-is (will likely fail later if path doesn't exist)
    *
    * @param templateDir - The template repository root directory
    * @param fromPath - The subdirectory path to resolve
@@ -373,6 +411,18 @@ export class TemplateScaffolder {
           };
         }
       }
+    }
+
+    // Try recursive scan to find a matching boilerplate
+    // This handles cases like `--dir .` where the user wants to match against
+    // discovered boilerplates (e.g., "module" matching "default/module")
+    const boilerplates = scanBoilerplatesRecursive(templateDir);
+    const match = findBoilerplateByPath(boilerplates, fromPath);
+    if (match) {
+      return {
+        fromPath: match.relativePath,
+        resolvedTemplatePath: match.absolutePath,
+      };
     }
 
     return {
