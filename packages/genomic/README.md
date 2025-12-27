@@ -15,8 +15,6 @@
   <a href="https://www.npmjs.com/package/genomic"><img height="20" src="https://img.shields.io/github/package-json/v/constructive-io/dev-utils?filename=packages%2Fgenomic%2Fpackage.json"></a>
 </p>
 
-> Formerly [`inquirerer`](https://www.npmjs.com/package/inquirerer)
-
 A powerful, TypeScript-first library for building beautiful command-line interfaces.Create interactive CLI tools with ease using intuitive prompts, validation, and rich user experiences.
 
 ## Installation
