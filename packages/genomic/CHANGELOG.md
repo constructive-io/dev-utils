@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/constructive-io/dev-utils/compare/genomic@5.0.3...genomic@5.1.0) (2025-12-27)
+
+### Features
+
+- **genomic:** add recursive boilerplate scanning ([e3d45be](https://github.com/constructive-io/dev-utils/commit/e3d45beb6cbd4fe38bc16e80fef04b4e925525d4))
+
 ## [5.0.3](https://github.com/constructive-io/dev-utils/compare/genomic@5.0.2...genomic@5.0.3) (2025-12-27)
 
 **Note:** Version bump only for package genomic
