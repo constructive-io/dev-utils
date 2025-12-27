@@ -1,6 +1,6 @@
 {
   "name": "@inquirerer/utils",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "CLI lifecycle utilities for building command-line applications",
   "main": "index.js",

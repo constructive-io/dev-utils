@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/constructive-io/dev-utils/compare/create-gen-app-test@0.3.2...create-gen-app-test@1.0.0) (2025-12-27)
+
+### Features
+
+- restructure packages - inquirerer for CLI prompts, genomic for scaffolds ([b4dd61a](https://github.com/constructive-io/dev-utils/commit/b4dd61a7ff5fb0d75366ccc4034829896d2181f8))
+
+### BREAKING CHANGES
+
+- Package names have been swapped
+
+* inquirerer is now the CLI prompt library (was genomic)
+* genomic is now the scaffolding utility (was @genomic/scaffolds)
+* @inquirerer/utils replaces @genomic/utils
+
 ## [0.3.2](https://github.com/constructive-io/dev-utils/compare/create-gen-app-test@0.3.1...create-gen-app-test@0.3.2) (2025-12-27)
 
 **Note:** Version bump only for package create-gen-app-test

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@3.0.1...inquirerer@4.0.0) (2025-12-27)
+
+### Bug Fixes
+
+- update remaining Prompter references in comments to Inquirerer ([24f3f1a](https://github.com/constructive-io/dev-utils/commit/24f3f1a3798645043848c165d05ceacef55c38ab))
+- update remaining test files to use Inquirerer instead of Prompter ([6af0a98](https://github.com/constructive-io/dev-utils/commit/6af0a98b9aa45aa3913e224be092c30d90bb35a9))
+- update snapshot files to use Inquirerer instead of Prompter ([3fcf86f](https://github.com/constructive-io/dev-utils/commit/3fcf86ff1e760ca5655973f15ef6f9449abefb00))
+- update test files to use Inquirerer instead of Prompter ([5e4a334](https://github.com/constructive-io/dev-utils/commit/5e4a334e829b1d997bf628a28ac78d0724ebe0d3))
+
+### Features
+
+- restructure packages - inquirerer for CLI prompts, genomic for scaffolds ([b4dd61a](https://github.com/constructive-io/dev-utils/commit/b4dd61a7ff5fb0d75366ccc4034829896d2181f8))
+
+### BREAKING CHANGES
+
+- Package names have been swapped
+
+* inquirerer is now the CLI prompt library (was genomic)
+* genomic is now the scaffolding utility (was @genomic/scaffolds)
+* @inquirerer/utils replaces @genomic/utils
+
 ## [4.0.2](https://github.com/constructive-io/dev-utils/compare/genomic@4.0.1...genomic@4.0.2) (2025-12-27)
 
 **Note:** Version bump only for package genomic

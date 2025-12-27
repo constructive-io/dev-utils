@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/constructive-io/dev-utils/compare/genomic@4.0.2...genomic@5.0.0) (2025-12-27)
+
+### Bug Fixes
+
+- update genomic test to mock inquirerer instead of genomic ([dad197b](https://github.com/constructive-io/dev-utils/commit/dad197bd7a361301cd3e2d730acf1857c8ba1f71))
+
+### Features
+
+- restructure packages - inquirerer for CLI prompts, genomic for scaffolds ([b4dd61a](https://github.com/constructive-io/dev-utils/commit/b4dd61a7ff5fb0d75366ccc4034829896d2181f8))
+
+### BREAKING CHANGES
+
+- Package names have been swapped
+
+* inquirerer is now the CLI prompt library (was genomic)
+* genomic is now the scaffolding utility (was @genomic/scaffolds)
+* @inquirerer/utils replaces @genomic/utils
+
 ## [2.0.2](https://github.com/constructive-io/dev-utils/compare/@genomic/scaffolds@2.0.1...@genomic/scaffolds@2.0.2) (2025-12-27)
 
 **Note:** Version bump only for package @genomic/scaffolds
