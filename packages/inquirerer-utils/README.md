@@ -1,11 +1,11 @@
-# @genomic/utils
+# @inquirerer/utils
 
-CLI lifecycle utilities for building command-line applications.
+CLI lifecycle utilities for building command-line applications with [inquirerer](https://www.npmjs.com/package/inquirerer).
 
 ## Installation
 
 ```bash
-npm install @genomic/utils
+npm install @inquirerer/utils
 ```
 
 ## Features
@@ -15,7 +15,7 @@ npm install @genomic/utils
 Extracts the first positional argument from argv for command routing:
 
 ```typescript
-import { extractFirst } from '@genomic/utils';
+import { extractFirst } from '@inquirerer/utils';
 
 const { first, newArgv } = extractFirst(argv);
 // first = 'init' (the subcommand)
@@ -27,7 +27,7 @@ const { first, newArgv } = extractFirst(argv);
 Exits the CLI with an error message and optional cleanup:
 
 ```typescript
-import { cliExitWithError } from '@genomic/utils';
+import { cliExitWithError } from '@inquirerer/utils';
 
 await cliExitWithError(error, {
   beforeExit: async () => {
@@ -41,7 +41,7 @@ await cliExitWithError(error, {
 Checks for package updates with caching:
 
 ```typescript
-import { checkForUpdates } from '@genomic/utils';
+import { checkForUpdates } from '@inquirerer/utils';
 
 const result = await checkForUpdates({
   pkgName: '@my/cli',
@@ -59,7 +59,7 @@ if (result.hasUpdate) {
 Gets the package.json for the current package:
 
 ```typescript
-import { getSelfPackageJson, getSelfVersion, getSelfName } from '@genomic/utils';
+import { getSelfPackageJson, getSelfVersion, getSelfName } from '@inquirerer/utils';
 
 const pkg = getSelfPackageJson(__dirname);
 const version = getSelfVersion(__dirname);

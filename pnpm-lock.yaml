@@ -174,6 +174,26 @@ importers:
         version: 0.1.8
     publishDirectory: dist
 
+  packages/inquirerer-utils:
+    dependencies:
+      appstash:
+        specifier: workspace:*
+        version: link:../appstash/dist
+      find-and-require-package-json:
+        specifier: workspace:*
+        version: link:../find-and-require-package-json/dist
+      minimist:
+        specifier: ^1.2.8
+        version: 1.2.8
+    devDependencies:
+      '@types/minimist':
+        specifier: ^1.2.5
+        version: 1.2.5
+      makage:
+        specifier: 0.1.8
+        version: 0.1.8
+    publishDirectory: dist
+
   packages/jsonld-tools:
     devDependencies:
       makage:
@@ -292,26 +312,6 @@ importers:
       nested-obj:
         specifier: workspace:*
         version: link:../nested-obj/dist
-    publishDirectory: dist
-
-  packages/utils:
-    dependencies:
-      appstash:
-        specifier: workspace:*
-        version: link:../appstash/dist
-      find-and-require-package-json:
-        specifier: workspace:*
-        version: link:../find-and-require-package-json/dist
-      minimist:
-        specifier: ^1.2.8
-        version: 1.2.8
-    devDependencies:
-      '@types/minimist':
-        specifier: ^1.2.5
-        version: 1.2.5
-      makage:
-        specifier: 0.1.8
-        version: 0.1.8
     publishDirectory: dist
 
   packages/yanse:

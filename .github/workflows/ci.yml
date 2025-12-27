@@ -61,7 +61,7 @@ jobs:
           - yanse
           - inquirerer
           - genomic
-          - utils
+          - inquirerer-utils
           - create-gen-app-test
 
     steps:
