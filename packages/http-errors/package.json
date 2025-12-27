@@ -1,6 +1,6 @@
 {
   "name": "@interweb/http-errors",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "author": "Constructive <developers@constructive.io>",
   "description": "HTTP error handling utilities for API clients",
   "main": "index.js",

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.12](https://github.com/constructive-io/dev-utils/compare/@schema-typescript/cli@0.5.11...@schema-typescript/cli@0.5.12) (2025-12-27)
+
+**Note:** Version bump only for package @schema-typescript/cli
+
 ## [0.5.11](https://github.com/constructive-io/dev-utils/compare/@schema-typescript/cli@0.5.10...@schema-typescript/cli@0.5.11) (2025-12-27)
 
 **Note:** Version bump only for package @schema-typescript/cli

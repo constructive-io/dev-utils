@@ -1,6 +1,6 @@
 {
   "name": "schema-sdk",
-  "version": "0.15.13",
+  "version": "0.15.14",
   "description": "Convert JSON Schema OpenAPI Spec to TypeScript Clients",
   "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",

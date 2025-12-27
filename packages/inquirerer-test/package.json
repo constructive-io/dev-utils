@@ -1,6 +1,6 @@
 {
   "name": "@inquirerer/test",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "author": "Constructive <developers@constructive.io>",
   "description": "Testing utilities for inquirerer-based CLI applications",
   "main": "index.js",

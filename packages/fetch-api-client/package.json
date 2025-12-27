@@ -1,6 +1,6 @@
 {
   "name": "@interweb/fetch-api-client",
-  "version": "0.7.10",
+  "version": "0.7.11",
   "author": "Constructive <developers@constructive.io>",
   "description": "Universal Fetch-based HTTP client for Node.js and browsers",
   "main": "index.js",
