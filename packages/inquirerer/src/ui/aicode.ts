@@ -753,7 +753,8 @@ export class AICodeUI {
     const actualInputLines = Math.min(this.lineEditor.lines.length, maxInputLines);
     
     // Calculate available space for content (welcome box or conversation)
-    const availableContentLines = this.viewportHeight - chromeLines - actualInputLines;
+    // Clamp to 0 minimum to handle very small terminals
+    const availableContentLines = Math.max(0, this.viewportHeight - chromeLines - actualInputLines);
     
     // Show welcome box if no messages, otherwise show conversation
     if (this.messages.length === 0 && !this.isStreaming) {
@@ -783,6 +784,16 @@ export class AICodeUI {
     // Status bar at bottom
     const statusBar = this.renderStatusBar(width);
     lines.push(statusBar);
+    
+    // INVARIANT: lines must be exactly viewportHeight
+    // If too many lines, keep the bottom (input/status) - slice from end
+    if (lines.length > this.viewportHeight) {
+      lines.splice(0, lines.length - this.viewportHeight);
+    }
+    // If too few lines, pad at top
+    while (lines.length < this.viewportHeight) {
+      lines.unshift('');
+    }
     
     this.viewport.render({ lines });
   }
@@ -895,15 +906,19 @@ export class AICodeUI {
       }
     }
     
+    // Reserve 1 line for scroll indicator if needed
+    const hasScrollIndicator = this.scrollOffset > 0;
+    const effectiveMaxLines = hasScrollIndicator ? maxLines - 1 : maxLines;
+    
     // Apply scroll offset and take last N lines
-    const startIdx = Math.max(0, allLines.length - maxLines - this.scrollOffset);
+    const startIdx = Math.max(0, allLines.length - effectiveMaxLines - this.scrollOffset);
     const endIdx = allLines.length - this.scrollOffset;
     const visibleLines = allLines.slice(startIdx, endIdx);
     
     lines.push(...visibleLines);
     
-    // Show scroll indicator if needed
-    if (this.scrollOffset > 0) {
+    // Show scroll indicator if needed (already reserved space above)
+    if (hasScrollIndicator) {
       lines.push(dim(`  [${this.scrollOffset} more below - PageDown to scroll]`));
     }
     
