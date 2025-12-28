@@ -13,7 +13,7 @@
  * Run with: pnpm dev:ai-code
  */
 
-import { createAICodeUI } from '../src/ui';
+import { createAICodeUI } from './ai/aicode';
 import { white, dim, cyan, green } from 'yanse';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

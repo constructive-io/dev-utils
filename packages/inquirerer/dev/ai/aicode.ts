@@ -13,7 +13,7 @@
 
 import { Readable, Writable } from 'stream';
 import { cyan, dim, green, white, yellow, blue, inverse, magenta } from 'yanse';
-import { TerminalKeypress, KEY_CODES } from '../keypress';
+import { TerminalKeypress, KEY_CODES } from '../../src/keypress';
 import { ViewportRenderer, createViewport } from './viewport';
 import stringWidth from 'string-width';
 import { cleanAnsi } from 'clean-ansi';
