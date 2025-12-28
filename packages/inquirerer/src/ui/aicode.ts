@@ -756,10 +756,9 @@ export class AICodeUI {
       lines.push(...conversationLines);
     }
     
-    // Fill remaining space (use fixed max input height for stable layout)
-    // Max input area: 5 lines (or fewer if buffer is smaller)
-    const maxVisibleInputLines = Math.min(5, this.lineEditor.lines.length);
-    const reservedLines = 3 + maxVisibleInputLines; // separator + input lines + status
+    // Fill remaining space - input area grows freely, conversation shrinks
+    const inputLineCount = this.lineEditor.lines.length;
+    const reservedLines = 3 + inputLineCount; // separator + input lines + status
     while (lines.length < this.viewportHeight - reservedLines) {
       lines.push('');
     }
@@ -919,41 +918,15 @@ export class AICodeUI {
   }
   
   /**
-   * Render the input lines (supports multiline with scrolling)
-   * Uses a fixed max height (5 lines) to keep layout stable
+   * Render the input lines (all lines shown, area grows freely)
    */
   private renderInputLines(width: number): string[] {
     const lines: string[] = [];
     const inputText = this.getInput();
     const hasContent = inputText.length > 0;
-    const totalLines = this.lineEditor.lines.length;
     
-    // Fixed max visible input lines (must match layout calculation in render())
-    const maxInputLines = 5;
-    const visibleCount = Math.min(maxInputLines, totalLines);
-    
-    // Calculate which lines to show (keep cursor line visible)
-    const cursorLine = this.lineEditor.lineIndex;
-    let startLine = 0;
-    
-    if (totalLines > visibleCount) {
-      // Keep cursor visible with some context
-      if (cursorLine < 2) {
-        startLine = 0;
-      } else if (cursorLine > totalLines - 3) {
-        startLine = totalLines - visibleCount;
-      } else {
-        startLine = cursorLine - 2;
-      }
-    }
-    
-    const endLine = Math.min(startLine + visibleCount, totalLines);
-    
-    for (let idx = startLine; idx < endLine; idx++) {
-      const line = this.lineEditor.lines[idx];
-      // Show > prefix on first visible line if it's line 0, otherwise show line number hint
-      const isFirstLogicalLine = idx === 0;
-      const prefix = isFirstLogicalLine ? cyan('> ') : '  ';
+    this.lineEditor.lines.forEach((line, idx) => {
+      const prefix = idx === 0 ? cyan('> ') : '  ';
       let lineContent: string;
       
       if (idx === this.lineEditor.lineIndex && !this.isStreaming) {
@@ -968,22 +941,19 @@ export class AICodeUI {
         lineContent = line;
       }
       
-      // Add info on the last visible line
-      if (idx === endLine - 1 && hasContent) {
-        // Show line count if multiline, otherwise show send hint
-        const info = totalLines > 1 
-          ? dim(` ln ${cursorLine + 1}/${totalLines}`)
-          : dim(' ↵ send');
+      // Add send hint on last line if there's content
+      if (idx === this.lineEditor.lines.length - 1 && hasContent) {
+        const hint = dim(' ↵ send');
         const lineWidth = displayWidth(prefix + lineContent);
-        const infoWidth = displayWidth(info);
-        if (lineWidth + infoWidth < width - 2) {
-          const padding = width - lineWidth - infoWidth - 2;
-          lineContent = lineContent + ' '.repeat(Math.max(0, padding)) + info;
+        const hintWidth = displayWidth(hint);
+        if (lineWidth + hintWidth < width - 2) {
+          const padding = width - lineWidth - hintWidth - 2;
+          lineContent = lineContent + ' '.repeat(Math.max(0, padding)) + hint;
         }
       }
       
       lines.push(prefix + lineContent);
-    }
+    });
     
     return lines;
   }
