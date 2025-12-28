@@ -29,13 +29,13 @@
     "dev:chat": "ts-node dev/demo-chat",
     "dev:upgrade": "ts-node dev/demo-upgrade",
     "dev:prompts": "ts-node dev/demo-prompts-engine",
+    "dev:ai-code": "ts-node dev/demo-ai-code",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
     "deepmerge": "^4.3.1",
     "find-and-require-package-json": "workspace:*",
-    "js-yaml": "^4.1.0",
     "minimist": "^1.2.8",
     "yanse": "workspace:*"
   },
@@ -43,6 +43,7 @@
   "devDependencies": {
     "@types/minimist": "^1.2.5",
     "clean-ansi": "workspace:*",
-    "makage": "0.1.8"
+    "makage": "0.1.8",
+    "string-width": "4.2.3"
   }
 }
