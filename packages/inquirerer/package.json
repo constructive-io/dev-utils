@@ -39,13 +39,13 @@
     "find-and-require-package-json": "workspace:*",
     "js-yaml": "^4.1.0",
     "minimist": "^1.2.8",
-    "string-width": "4.2.3",
     "yanse": "workspace:*"
   },
   "keywords": [],
   "devDependencies": {
     "@types/minimist": "^1.2.5",
     "clean-ansi": "workspace:*",
-    "makage": "0.1.8"
+    "makage": "0.1.8",
+    "string-width": "4.2.3"
   }
 }
