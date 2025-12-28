@@ -162,9 +162,6 @@ importers:
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
-      string-width:
-        specifier: 4.2.3
-        version: 4.2.3
       yanse:
         specifier: workspace:*
         version: link:../yanse/dist
@@ -178,6 +175,9 @@ importers:
       makage:
         specifier: 0.1.8
         version: 0.1.8
+      string-width:
+        specifier: 4.2.3
+        version: 4.2.3
     publishDirectory: dist
 
   packages/inquirerer-test:
