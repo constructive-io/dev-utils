@@ -746,28 +746,35 @@ export class AICodeUI {
     const lines: string[] = [];
     const { width } = this.viewport.getTerminalSize();
     
+    // Chrome = 3 lines (separator + separator + status bar)
+    const chromeLines = 3;
+    // Input can grow up to (viewportHeight - chromeLines - 1) to leave at least 1 line for content
+    const maxInputLines = Math.max(1, this.viewportHeight - chromeLines - 1);
+    const actualInputLines = Math.min(this.lineEditor.lines.length, maxInputLines);
+    
+    // Calculate available space for content (welcome box or conversation)
+    const availableContentLines = this.viewportHeight - chromeLines - actualInputLines;
+    
     // Show welcome box if no messages, otherwise show conversation
     if (this.messages.length === 0 && !this.isStreaming) {
       const welcomeLines = this.renderWelcomeBox(width);
-      lines.push(...welcomeLines);
+      lines.push(...welcomeLines.slice(0, availableContentLines));
     } else {
-      // Render conversation history
-      const conversationLines = this.renderConversation(width);
+      // Render conversation history with dynamic max lines
+      const conversationLines = this.renderConversation(width, availableContentLines);
       lines.push(...conversationLines);
     }
     
-    // Fill remaining space - input area grows freely, conversation shrinks
-    const inputLineCount = this.lineEditor.lines.length;
-    const reservedLines = 3 + inputLineCount; // separator + input lines + status
-    while (lines.length < this.viewportHeight - reservedLines) {
+    // Fill remaining space to push input to bottom
+    while (lines.length < availableContentLines) {
       lines.push('');
     }
     
     // Full-width separator before input
     lines.push(dim(BOX.horizontal.repeat(width)));
     
-    // Input prompt
-    const inputLines = this.renderInputLines(width);
+    // Input prompt (with windowing if needed)
+    const inputLines = this.renderInputLines(width, actualInputLines);
     lines.push(...inputLines);
     
     // Full-width separator after input
@@ -842,9 +849,8 @@ export class AICodeUI {
   /**
    * Render conversation history
    */
-  private renderConversation(width: number): string[] {
+  private renderConversation(width: number, maxLines: number): string[] {
     const lines: string[] = [];
-    const maxLines = this.viewportHeight - 5; // Reserve space for input area
     
     // Collect all message lines
     const allLines: string[] = [];
@@ -918,14 +924,31 @@ export class AICodeUI {
   }
   
   /**
-   * Render the input lines (all lines shown, area grows freely)
+   * Render the input lines (with windowing when lines exceed maxVisibleLines)
    */
-  private renderInputLines(width: number): string[] {
+  private renderInputLines(width: number, maxVisibleLines: number): string[] {
     const lines: string[] = [];
     const inputText = this.getInput();
     const hasContent = inputText.length > 0;
+    const totalLines = this.lineEditor.lines.length;
+    const cursorLine = this.lineEditor.lineIndex;
     
-    this.lineEditor.lines.forEach((line, idx) => {
+    // Calculate which lines to show (keep cursor line visible)
+    let startLine = 0;
+    if (totalLines > maxVisibleLines) {
+      // Keep cursor visible with some context
+      if (cursorLine < Math.floor(maxVisibleLines / 2)) {
+        startLine = 0;
+      } else if (cursorLine > totalLines - Math.ceil(maxVisibleLines / 2)) {
+        startLine = totalLines - maxVisibleLines;
+      } else {
+        startLine = cursorLine - Math.floor(maxVisibleLines / 2);
+      }
+    }
+    const endLine = Math.min(startLine + maxVisibleLines, totalLines);
+    
+    for (let idx = startLine; idx < endLine; idx++) {
+      const line = this.lineEditor.lines[idx];
       const prefix = idx === 0 ? cyan('> ') : '  ';
       let lineContent: string;
       
@@ -941,19 +964,22 @@ export class AICodeUI {
         lineContent = line;
       }
       
-      // Add send hint on last line if there's content
-      if (idx === this.lineEditor.lines.length - 1 && hasContent) {
-        const hint = dim(' ↵ send');
+      // Add info on last visible line if there's content
+      if (idx === endLine - 1 && hasContent) {
+        // Show line count if scrolling, otherwise show send hint
+        const info = totalLines > maxVisibleLines
+          ? dim(` ln ${cursorLine + 1}/${totalLines}`)
+          : dim(' ↵ send');
         const lineWidth = displayWidth(prefix + lineContent);
-        const hintWidth = displayWidth(hint);
-        if (lineWidth + hintWidth < width - 2) {
-          const padding = width - lineWidth - hintWidth - 2;
-          lineContent = lineContent + ' '.repeat(Math.max(0, padding)) + hint;
+        const infoWidth = displayWidth(info);
+        if (lineWidth + infoWidth < width - 2) {
+          const padding = width - lineWidth - infoWidth - 2;
+          lineContent = lineContent + ' '.repeat(Math.max(0, padding)) + info;
         }
       }
       
       lines.push(prefix + lineContent);
-    });
+    }
     
     return lines;
   }
