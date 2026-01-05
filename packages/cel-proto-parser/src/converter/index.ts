@@ -147,7 +147,8 @@ export function convertToProtoExpr(node: MarcAstNode, idCounter = { value: 1 }):
       };
     }
 
-    case 'index': {
+    case 'index':
+    case '[]': {
       // Index access: obj[key]
       const args = node.args as [MarcAstNode, MarcAstNode];
       return {
@@ -187,14 +188,19 @@ export function convertToProtoExpr(node: MarcAstNode, idCounter = { value: 1 }):
 
     // Unary operators
     case '!':
-    case 'neg': {
-      const args = node.args as [MarcAstNode];
-      const funcName = node.op === '!' ? '!_' : '-_';
+    case '!_':
+    case 'neg':
+    case '-_': {
+      // Args can be either a single node or an array with one element
+      const argNode = Array.isArray(node.args)
+        ? (node.args as MarcAstNode[])[0]
+        : (node.args as MarcAstNode);
+      const funcName = node.op === '!' || node.op === '!_' ? '!_' : '-_';
       return {
         id,
         callExpr: {
           function: funcName,
-          args: args.map((a) => convertToProtoExpr(a, idCounter))
+          args: [convertToProtoExpr(argNode, idCounter)]
         }
       };
     }
