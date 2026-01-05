@@ -1,0 +1,57 @@
+# Policy-Shaped CEL Expression Fixtures
+# OPA-ish patterns useful for Kubernetes admission control
+# Rich in syntax variety for deparser testing
+
+# 1) Core allow/deny shapes
+request.user == "system:admin"
+request.user in ["alice", "bob", "carol"]
+request.verb in ["create", "update"] && request.resource == "pods"
+!(request.user.startsWith("system:"))
+request.namespace != "kube-system" && request.namespace != "kube-public"
+
+# 2) Field presence / null-ish handling
+has(object.metadata.labels) && has(object.metadata.labels["app"])
+!has(object.spec.replicas) || object.spec.replicas <= 10
+has(object.spec.template) ? object.spec.template.spec.nodeName == "" : true
+has(object.spec.securityContext) && has(object.spec.securityContext.runAsNonRoot) && object.spec.securityContext.runAsNonRoot == true
+has(params.exemptUsers) && request.user in params.exemptUsers
+
+# 3) Map + list literals, indexing, membership
+object.metadata.labels["team"] in ["infra", "platform"]
+object.metadata.annotations["owner"] == request.user
+size(object.spec.containers) > 0
+object.spec.containers[0].image.matches("^ghcr\\.io/constructive-io/.+")
+
+# 4) String ops + regex escaping edge cases
+request.user.matches("^user:[a-z0-9_-]{3,32}$")
+object.metadata.name.matches("^[a-z0-9]([-a-z0-9]*[a-z0-9])?$")
+object.spec.containers.exists(c, c.name.startsWith("sidecar-") && c.image.contains("@sha256:"))
+object.spec.serviceAccountName != "" && !object.spec.serviceAccountName.startsWith("default")
+
+# 5) Quantifiers/macros (great for AST/deparser)
+object.spec.containers.all(c, !c.securityContext.privileged)
+object.spec.containers.exists(c, has(c.resources.limits["cpu"]) && has(c.resources.limits["memory"]))
+object.spec.containers.filter(c, c.image.contains(":latest")).size() == 0
+object.spec.containers.map(c, c.name).exists(n, n == "app")
+
+# 6) Nested logic + precedence stress tests
+request.verb == "update" && (request.user == "alice" || request.user == "bob") && !request.dryRun
+(request.user in params.admins) || (request.namespace == "dev" && request.user.matches("^user:dev_.*$"))
+!(request.verb == "delete" && request.resource == "namespaces")
+
+# 7) Numeric + bounds + ternary
+has(object.spec.replicas) ? (object.spec.replicas >= 1 && object.spec.replicas <= 20) : true
+object.spec.containers.all(c, c.resources.requests["cpu"] <= c.resources.limits["cpu"])
+
+# 8) "OPA-ish" patterns (rule-ish in one expression)
+request.user in params.admins || (request.verb in ["get","list","watch"] && request.namespace in params.readNamespaces)
+request.user == object.metadata.annotations["owner"] || request.user in params.delegates[object.metadata.annotations["owner"]]
+
+# 9) Equality against structured literals (map/list)
+object.metadata.labels == {"app": "api", "tier": "backend"}
+object.spec.tolerations.exists(t, t == {"key":"dedicated","operator":"Equal","value":"gpu","effect":"NoSchedule"})
+
+# 10) "Weird but valid" deparser edge cases
+"" == ""
+true ? false ? true : false : true
+((a + b) * c) / (d - 1) > 0

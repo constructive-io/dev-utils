@@ -1,0 +1,46 @@
+# RLS Policy Template CEL Expressions
+# Maps to common policy templates: direct_owner, membership, permission bits, etc.
+# Uses: row (table row), auth (auth context), acl (ACL table view), params (compile-time params)
+
+# 1) direct_owner (row.owner_id == user_id)
+row.owner_id == auth.user_id
+has(row.owner_id) && row.owner_id == auth.user_id
+
+# 2) multi_owner / any_owner (row.sender_id OR row.receiver_id)
+auth.user_id in [row.sender_id, row.receiver_id]
+
+# 3) membership_by_field (row.org_id exists in ACL for user)
+acl.memberships.exists(m, m.user_id == auth.user_id && m.entity_type == "org" && m.entity_id == row.org_id)
+
+# 4) membership_by_join (row -> join table -> memberships)
+acl.joins.exists(j, j.row_id == row.id && acl.memberships.exists(m, m.user_id == auth.user_id && m.entity_type == "group" && m.entity_id == j.entity_id))
+
+# 5) scoped_owner / scope_owner (membership exists AND matches scope)
+acl.memberships.exists(m, m.user_id == auth.user_id && m.scope == "project" && m.entity_id == row.project_id)
+acl.memberships.exists(m, m.user_id == auth.user_id && m.membership_type == params.membership_type && m.entity_id == row.entity_id)
+
+# 6) hasAccess / permission-bit checks (bitmask)
+# NOTE: @marcbachmann/cel-js does not support bitwise AND (&) operator
+# These would be: acl.memberships.exists(m, m.user_id == auth.user_id && m.entity_id == row.org_id && (m.perms & params.required_perm) != 0)
+
+# 7) Role-based overrides (auth.roles)
+("admin" in auth.roles) || (row.owner_id == auth.user_id)
+auth.user.startsWith("system:") || row.owner_id == auth.user_id
+
+# 8) acl_exists (no entity match; "member of ANY org")
+acl.memberships.exists(m, m.user_id == auth.user_id && m.entity_type == "org")
+
+# 9) relatedAccess / relationship ownership (row references another object)
+acl.parents.exists(p, p.id == row.parent_id && (p.owner_id == auth.user_id || acl.memberships.exists(m, m.user_id == auth.user_id && m.entity_id == p.org_id)))
+
+# 10) Array membership / group array checks
+has(row.allowed_user_ids) && auth.user_id in row.allowed_user_ids
+row.group_ids.exists(gid, acl.memberships.exists(m, m.user_id == auth.user_id && m.entity_type == "group" && m.entity_id == gid))
+
+# 11) "Owner OR membership" compound policy (very common)
+row.owner_id == auth.user_id || acl.memberships.exists(m, m.user_id == auth.user_id && m.entity_id == row.org_id)
+
+# 12) Insert/update "WITH CHECK" style (new row constraints)
+row.owner_id == auth.user_id
+newRow.owner_id == auth.user_id
+request.verb == "update" ? (newRow.owner_id == oldRow.owner_id) : true
