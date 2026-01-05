@@ -1,0 +1,50 @@
+{
+  "name": "@interweb/kubernetes-test",
+  "version": "0.1.0",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Kubernetes testing utilities with wait-for-pods and other helpers for integration tests",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "kubernetes",
+    "k8s",
+    "testing",
+    "integration-tests",
+    "pods",
+    "wait-for-pods",
+    "kubernetesjs",
+    "container",
+    "orchestration",
+    "devops",
+    "cloud-native"
+  ],
+  "dependencies": {
+    "kubernetesjs": "^0.7.6"
+  },
+  "devDependencies": {
+    "makage": "0.1.8"
+  }
+}
