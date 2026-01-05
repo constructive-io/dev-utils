@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.2.1...inquirerer@4.3.0) (2026-01-05)
+
+### Bug Fixes
+
+- **inquirerer:** enforce viewport height invariant ([28ef8ac](https://github.com/constructive-io/dev-utils/commit/28ef8ac8d15736227550ffb943f01743a22ca7b5))
+- **inquirerer:** fix cursor positioning for viewport rendering ([6c67f5e](https://github.com/constructive-io/dev-utils/commit/6c67f5e7c25fc638baec0553f77ab9b5fdc408f1))
+- **inquirerer:** let input area grow freely like Claude Code ([bbf65a7](https://github.com/constructive-io/dev-utils/commit/bbf65a70f9d6d8f55f64661f12862eea9c7271ff))
+- **inquirerer:** limit multiline input height with scrolling ([bf10167](https://github.com/constructive-io/dev-utils/commit/bf10167c47c467b6ffb9f74db89193d27366c286))
+- **inquirerer:** prevent double rendering during streaming ([a2a92f2](https://github.com/constructive-io/dev-utils/commit/a2a92f2c29b8f79e4c876b397f06316c5ef60167))
+- **inquirerer:** prevent viewport scroll and soft-wrap issues ([fe56bad](https://github.com/constructive-io/dev-utils/commit/fe56bad045ceedafc40ba815e45d4fa74c2427bd))
+- **inquirerer:** proper viewport layout with input windowing ([c2345cc](https://github.com/constructive-io/dev-utils/commit/c2345cc88cc6441329807a62dbfcb6f3d23be5bc))
+- **inquirerer:** simplify viewport rendering with cursor positioning ([754ec24](https://github.com/constructive-io/dev-utils/commit/754ec240ceed087bf2a18be523c280158716f3f1))
+- **inquirerer:** use fixed max height for multiline input layout ([30bf119](https://github.com/constructive-io/dev-utils/commit/30bf11924415237168bf6ddc0cc7921932ccb134))
+- **inquirerer:** use inverse video cursor and add Ctrl+J for newlines ([42a3a3e](https://github.com/constructive-io/dev-utils/commit/42a3a3ea8bb25dba2d3071fe02ff17489e3e054c))
+
+### Features
+
+- **inquirerer:** add AICodeUI with diff-based viewport rendering ([6afd415](https://github.com/constructive-io/dev-utils/commit/6afd415e981a4fc241c78b51b554a779ade04805))
+- **inquirerer:** add Claude Code-style UI with welcome box and conversation markers ([89d1f54](https://github.com/constructive-io/dev-utils/commit/89d1f54b89f6a723b98e03dab616ecc8e8a0045e))
+- **inquirerer:** add readline-style keybindings and multiline input support ([80eeaab](https://github.com/constructive-io/dev-utils/commit/80eeaabe06e14f883e988d354874a0d64fbc7199))
+
 ## [4.2.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.2.0...inquirerer@4.2.1) (2025-12-27)
 
 **Note:** Version bump only for package inquirerer
