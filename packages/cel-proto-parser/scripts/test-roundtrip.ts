@@ -6,11 +6,18 @@
  * for parsing and our deparser for converting back to CEL strings.
  *
  * Run with: npx ts-node --esm scripts/test-roundtrip.ts
+ * Or with a fixture file: npx ts-node --esm scripts/test-roundtrip.ts __fixtures__/expressions/basic.txt
  */
 
 import { parse } from '@marcbachmann/cel-js';
 import { deparse, Expr } from '../src/deparser';
 import { convertToProtoExpr, MarcAstNode } from '../src/converter';
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 interface TestResult {
   expression: string;
@@ -51,90 +58,114 @@ function testRoundTrip(expression: string): TestResult {
   }
 }
 
-const testCases = [
-  // Literals
-  '1',
-  '42',
-  '3.14',
-  'true',
-  'false',
-  'null',
-  '"hello"',
-  '"hello world"',
+/**
+ * Load CEL expressions from a fixture file
+ * Lines starting with # are comments, empty lines are ignored
+ */
+function loadFixtures(filePath: string): string[] {
+  const content = readFileSync(filePath, 'utf-8');
+  return content
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#'));
+}
 
-  // Unsigned integers
-  '1u',
-  '42u',
+// Check if a fixture file was provided as argument
+const fixtureArg = process.argv[2];
+let testCases: string[];
 
-  // Identifiers
-  'x',
-  'foo',
-  'request',
+if (fixtureArg) {
+  // Load from fixture file
+  const fixturePath = resolve(__dirname, '..', fixtureArg);
+  console.log(`Loading fixtures from: ${fixturePath}\n`);
+  testCases = loadFixtures(fixturePath);
+} else {
+  // Use default test cases
+  testCases = [
+    // Literals
+    '1',
+    '42',
+    '3.14',
+    'true',
+    'false',
+    'null',
+    '"hello"',
+    '"hello world"',
 
-  // Field access
-  'request.auth',
-  'request.auth.claims',
-  'request.auth.claims.email',
+    // Unsigned integers
+    '1u',
+    '42u',
 
-  // Arithmetic operators
-  '1 + 2',
-  'a + b',
-  'x - y',
-  'a * b',
-  'x / y',
-  '1 + 2 * 3',
+    // Identifiers
+    'x',
+    'foo',
+    'request',
 
-  // Comparison operators
-  'a == b',
-  'x != y',
-  'a < b',
-  'a <= b',
-  'a > b',
-  'a >= b',
+    // Field access
+    'request.auth',
+    'request.auth.claims',
+    'request.auth.claims.email',
 
-  // Logical operators
-  'a && b',
-  'x || y',
-  '!a',
-  'a && b && c',
-  'a || b || c',
+    // Arithmetic operators
+    '1 + 2',
+    'a + b',
+    'x - y',
+    'a * b',
+    'x / y',
+    '1 + 2 * 3',
 
-  // Ternary conditional
-  'x ? 1 : 2',
-  'a == b ? "yes" : "no"',
+    // Comparison operators
+    'a == b',
+    'x != y',
+    'a < b',
+    'a <= b',
+    'a > b',
+    'a >= b',
 
-  // List literals
-  '[]',
-  '[1]',
-  '[1, 2, 3]',
+    // Logical operators
+    'a && b',
+    'x || y',
+    '!a',
+    'a && b && c',
+    'a || b || c',
 
-  // Map literals
-  '{}',
-  '{"a": 1}',
-  '{"a": 1, "b": 2}',
+    // Ternary conditional
+    'x ? 1 : 2',
+    'a == b ? "yes" : "no"',
 
-  // Index access
-  'list[0]',
-  'map["key"]',
+    // List literals
+    '[]',
+    '[1]',
+    '[1, 2, 3]',
 
-  // Function calls
-  'size(list)',
-  'int(x)',
-  'string(42)',
+    // Map literals
+    '{}',
+    '{"a": 1}',
+    '{"a": 1, "b": 2}',
 
-  // Method calls
-  'list.size()',
-  'str.contains("test")',
+    // Index access
+    'list[0]',
+    'map["key"]',
 
-  // In operator
-  'x in list',
-  '"admin" in roles',
+    // Function calls
+    'size(list)',
+    'int(x)',
+    'string(42)',
 
-  // Complex expressions
-  'request.auth.claims.email == "admin@example.com"',
-  'size(request.body) > 0 && request.method == "POST"',
-  'user.age >= 18 && "admin" in user.roles'
-];
+    // Method calls
+    'list.size()',
+    'str.contains("test")',
+
+    // In operator
+    'x in list',
+    '"admin" in roles',
+
+    // Complex expressions
+    'request.auth.claims.email == "admin@example.com"',
+    'size(request.body) > 0 && request.method == "POST"',
+    'user.age >= 18 && "admin" in user.roles'
+  ];
+}
 
 console.log('CEL Round-Trip Tests');
 console.log('====================\n');
