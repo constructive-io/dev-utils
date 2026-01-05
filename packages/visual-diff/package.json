@@ -1,0 +1,46 @@
+{
+  "name": "visual-diff",
+  "version": "0.0.1",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Beautiful visual diff with syntax highlighting for terminal and HTML output",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "yanse": "workspace:*"
+  },
+  "devDependencies": {
+    "makage": "0.1.8"
+  },
+  "keywords": [
+    "diff",
+    "visual",
+    "syntax-highlighting",
+    "terminal",
+    "ansi",
+    "code-diff",
+    "compare"
+  ]
+}
