@@ -18,5 +18,6 @@ export {
   Entry,
   Comprehension
 } from './deparser';
+export { convertToProtoExpr, MarcAstNode } from './converter';
 export * from './ast';
 export * from './utils';

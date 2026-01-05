@@ -1,0 +1,111 @@
+# CEL Expression Fixtures
+# Each line is a CEL expression to test for round-trip parsing
+# Lines starting with # are comments
+
+# Literals
+1
+42
+-5
+3.14
+-2.5
+1.0
+true
+false
+null
+"hello"
+"hello world"
+"with \"quotes\""
+"with\nnewline"
+""
+
+# Unsigned integers
+1u
+42u
+0u
+
+# Identifiers
+x
+foo
+request
+_underscore
+camelCase
+
+# Field access
+request.auth
+request.auth.claims
+request.auth.claims.email
+a.b.c.d
+
+# Arithmetic operators
+1 + 2
+a + b
+x - y
+a * b
+x / y
+a % b
+1 + 2 * 3
+(1 + 2) * 3
+
+# Comparison operators
+a == b
+x != y
+a < b
+a <= b
+a > b
+a >= b
+
+# Logical operators
+a && b
+x || y
+!a
+a && b && c
+a || b || c
+a && b || c
+(a || b) && c
+
+# Ternary conditional
+x ? 1 : 2
+a == b ? "yes" : "no"
+x > 0 ? x : -x
+
+# List literals
+[]
+[1]
+[1, 2, 3]
+[a, b, c]
+["a", "b", "c"]
+
+# Map literals
+{}
+{"a": 1}
+{"a": 1, "b": 2}
+{1: "one", 2: "two"}
+
+# Index access
+list[0]
+map["key"]
+a[b]
+list[i + 1]
+
+# Function calls
+size(list)
+int(x)
+string(42)
+type(x)
+
+# Method calls
+list.size()
+str.contains("test")
+list.map(x, x * 2)
+
+# In operator
+x in list
+"admin" in roles
+key in map
+
+# Complex expressions
+request.auth.claims.email == "admin@example.com"
+size(request.body) > 0 && request.method == "POST"
+user.age >= 18 && "admin" in user.roles
+items.all(x, x > 0)
+items.exists(x, x == target)

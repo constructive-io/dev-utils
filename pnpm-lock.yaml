@@ -78,6 +78,9 @@ importers:
       '@launchql/protobufjs':
         specifier: ^7.2.6
         version: 7.2.6
+      '@marcbachmann/cel-js':
+        specifier: ^7.1.0
+        version: 7.1.0
       nested-obj:
         specifier: workspace:*
         version: link:../nested-obj/dist
@@ -755,6 +758,11 @@ packages:
   '@lerna/create@8.2.4':
     resolution: {integrity: sha512-A8AlzetnS2WIuhijdAzKUyFpR5YbLLfV3luQ4lzBgIBgRfuoBDZeF+RSZPhra+7A6/zTUlrbhKZIOi/MNhqgvQ==}
     engines: {node: '>=18.0.0'}
+
+  '@marcbachmann/cel-js@7.1.0':
+    resolution: {integrity: sha512-pWAOYqaH41M47OBzt9OPcam7qello+vAdrjt+c2UFEbjVUjQq9rTfCRnEtzIAEScwarkPX90M5qMv0MK2ao5ZQ==}
+    engines: {node: '>=20.19.0'}
+    hasBin: true
 
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
@@ -4527,6 +4535,8 @@ snapshots:
       - encoding
       - supports-color
       - typescript
+
+  '@marcbachmann/cel-js@7.1.0': {}
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
