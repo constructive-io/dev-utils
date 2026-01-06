@@ -1,0 +1,44 @@
+{
+  "name": "rego-deparser",
+  "version": "0.1.0",
+  "description": "Rego (OPA policy language) AST types and deparser for TypeScript",
+  "author": "Constructive <developers@constructive.io>",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "keywords": [
+    "rego",
+    "opa",
+    "open-policy-agent",
+    "deparser",
+    "ast",
+    "policy"
+  ],
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "makage": "0.1.8"
+  }
+}
