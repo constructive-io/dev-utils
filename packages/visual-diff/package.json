@@ -1,6 +1,6 @@
 {
   "name": "@interweb/visual-diff",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "Beautiful visual diff with syntax highlighting for terminal and HTML output",
   "main": "index.js",
@@ -19,16 +19,16 @@
   "bugs": {
     "url": "https://github.com/constructive-io/dev-utils/issues"
   },
-    "scripts": {
-      "copy": "makage assets",
-      "clean": "makage clean",
-      "prepublishOnly": "npm run build",
-      "build": "makage build",
-      "dev": "node -r ts-node/register dev/index.ts",
-      "lint": "eslint . --fix",
-      "test": "jest",
-      "test:watch": "jest --watch"
-    },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "dev": "node -r ts-node/register dev/index.ts",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
   "dependencies": {
     "yanse": "workspace:*"
   },
