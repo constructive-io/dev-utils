@@ -19,15 +19,16 @@
   "bugs": {
     "url": "https://github.com/constructive-io/dev-utils/issues"
   },
-  "scripts": {
-    "copy": "makage assets",
-    "clean": "makage clean",
-    "prepublishOnly": "npm run build",
-    "build": "makage build",
-    "lint": "eslint . --fix",
-    "test": "jest",
-    "test:watch": "jest --watch"
-  },
+    "scripts": {
+      "copy": "makage assets",
+      "clean": "makage clean",
+      "prepublishOnly": "npm run build",
+      "build": "makage build",
+      "dev": "node -r ts-node/register dev/index.ts",
+      "lint": "eslint . --fix",
+      "test": "jest",
+      "test:watch": "jest --watch"
+    },
   "dependencies": {
     "yanse": "workspace:*"
   },
