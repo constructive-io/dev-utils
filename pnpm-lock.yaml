@@ -386,6 +386,17 @@ importers:
         version: link:../nested-obj/dist
     publishDirectory: dist
 
+  packages/visual-diff:
+    dependencies:
+      yanse:
+        specifier: workspace:*
+        version: link:../yanse/dist
+    devDependencies:
+      makage:
+        specifier: 0.1.8
+        version: 0.1.8
+    publishDirectory: dist
+
   packages/yanse:
     devDependencies:
       makage:
