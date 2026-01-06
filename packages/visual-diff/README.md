@@ -1,4 +1,4 @@
-# visual-diff
+# @interweb/visual-diff
 
 Beautiful visual diff with syntax highlighting for terminal and HTML output.
 
@@ -16,17 +16,17 @@ Beautiful visual diff with syntax highlighting for terminal and HTML output.
 ## Installation
 
 ```bash
-npm install visual-diff
+npm install @interweb/visual-diff
 # or
-pnpm add visual-diff
+pnpm add @interweb/visual-diff
 # or
-yarn add visual-diff
+yarn add @interweb/visual-diff
 ```
 
 ## Quick Start
 
 ```typescript
-import { diff, renderTerminal, renderHtml } from 'visual-diff';
+import { diff, renderTerminal, renderHtml } from '@interweb/visual-diff';
 
 const oldCode = `function hello() {
   console.log("Hello");
@@ -133,7 +133,7 @@ Built-in themes:
 #### Custom Themes
 
 ```typescript
-import { createTheme } from 'visual-diff';
+import { createTheme } from '@interweb/visual-diff';
 
 const myTheme = createTheme('custom', {
   added: { fg: 'cyan', bold: true },
@@ -167,7 +167,7 @@ Supported languages:
 #### Language Detection
 
 ```typescript
-import { detectLanguage } from 'visual-diff';
+import { detectLanguage } from '@interweb/visual-diff';
 
 detectLanguage('file.ts');  // 'typescript'
 detectLanguage('file.py');  // 'python'
@@ -177,7 +177,7 @@ detectLanguage('file.sql'); // 'sql'
 ### Unified Diff Format
 
 ```typescript
-import { createUnifiedDiff, parseUnifiedDiff } from 'visual-diff';
+import { createUnifiedDiff, parseUnifiedDiff } from '@interweb/visual-diff';
 
 // Create unified diff string
 const unified = createUnifiedDiff(result);
@@ -189,7 +189,7 @@ const parsed = parseUnifiedDiff(unifiedDiffString);
 ### Utilities
 
 ```typescript
-import { hasDifferences, countChanges } from 'visual-diff';
+import { hasDifferences, countChanges } from '@interweb/visual-diff';
 
 // Check if there are any differences
 if (hasDifferences(result)) {
