@@ -1,11 +1,11 @@
-# @interweb/kubernetes-test
+# kubernetes-test
 
 Kubernetes testing utilities with wait-for-pods and other helpers for integration tests.
 
 ## Installation
 
 ```bash
-npm install @interweb/kubernetes-test
+npm install kubernetes-test
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ The `waitForPods` function allows you to wait for pods to become ready in a Kube
 
 ```typescript
 import { KubernetesClient } from 'kubernetesjs';
-import { waitForPods, waitForPodByName, waitForPodsWithLabel } from '@interweb/kubernetes-test';
+import { waitForPods, waitForPodByName, waitForPodsWithLabel } from 'kubernetes-test';
 
 // Create a Kubernetes client
 const client = new KubernetesClient({
@@ -73,7 +73,7 @@ import {
   waitForPods, 
   WaitForPodsTimeoutError, 
   WaitForPodsError 
-} from '@interweb/kubernetes-test';
+} from 'kubernetes-test';
 
 try {
   await waitForPods(client, { labelSelector: 'app=my-app' });

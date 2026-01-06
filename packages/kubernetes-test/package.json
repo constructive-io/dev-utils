@@ -1,5 +1,5 @@
 {
-  "name": "@interweb/kubernetes-test",
+  "name": "kubernetes-test",
   "version": "0.1.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "Kubernetes testing utilities with wait-for-pods and other helpers for integration tests",
