@@ -7,6 +7,8 @@ import {
   distinctPluralizeLast,
   lcFirst,
   ucFirst,
+  camelize,
+  underscore,
   fixCapitalisedPlural,
   toFieldName,
   toQueryName,
@@ -123,6 +125,43 @@ describe('ucFirst', () => {
 
   it('should handle already uppercase strings', () => {
     expect(ucFirst('User')).toBe('User');
+  });
+});
+
+describe('camelize', () => {
+  it('should convert snake_case to PascalCase by default', () => {
+    expect(camelize('user_profile')).toBe('UserProfile');
+    expect(camelize('order_item')).toBe('OrderItem');
+    expect(camelize('api_schema')).toBe('ApiSchema');
+  });
+
+  it('should convert snake_case to camelCase when lowFirstLetter is true', () => {
+    expect(camelize('user_profile', true)).toBe('userProfile');
+    expect(camelize('order_item', true)).toBe('orderItem');
+    expect(camelize('api_schema', true)).toBe('apiSchema');
+  });
+
+  it('should handle single words', () => {
+    expect(camelize('user')).toBe('User');
+    expect(camelize('user', true)).toBe('user');
+  });
+});
+
+describe('underscore', () => {
+  it('should convert PascalCase to snake_case', () => {
+    expect(underscore('UserProfile')).toBe('user_profile');
+    expect(underscore('OrderItem')).toBe('order_item');
+    expect(underscore('ApiSchema')).toBe('api_schema');
+  });
+
+  it('should convert camelCase to snake_case', () => {
+    expect(underscore('userProfile')).toBe('user_profile');
+    expect(underscore('orderItem')).toBe('order_item');
+  });
+
+  it('should handle single words', () => {
+    expect(underscore('User')).toBe('user');
+    expect(underscore('user')).toBe('user');
   });
 });
 

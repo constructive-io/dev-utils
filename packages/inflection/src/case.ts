@@ -1,6 +1,7 @@
 /**
  * Case transformation utilities
  */
+import * as inflection from 'inflection';
 
 /**
  * Convert PascalCase to camelCase (lowercase first character)
@@ -8,6 +9,25 @@
  */
 export function lcFirst(str: string): string {
   return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+/**
+ * Convert a string to camelCase
+ * @param str - The string to convert
+ * @param lowFirstLetter - If true, the first letter will be lowercase (default: false)
+ * @example camelize("user_profile") -> "UserProfile"
+ * @example camelize("user_profile", true) -> "userProfile"
+ */
+export function camelize(str: string, lowFirstLetter?: boolean): string {
+  return inflection.camelize(str, lowFirstLetter);
+}
+
+/**
+ * Convert a camelCase or PascalCase string to snake_case
+ * @example underscore("UserProfile") -> "user_profile"
+ */
+export function underscore(str: string): string {
+  return inflection.underscore(str);
 }
 
 /**
