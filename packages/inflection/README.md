@@ -36,11 +36,6 @@ import {
   ucFirst,
   camelize,
   underscore,
-  toPascalCase,
-  toCamelCase,
-  toSnakeCase,
-  toKebabCase,
-  toConstantCase,
   toFieldName,
   toQueryName,
 } from 'inflekt';
@@ -67,13 +62,6 @@ camelize('user_profile');       // 'UserProfile'
 camelize('user_profile', true); // 'userProfile'
 underscore('UserProfile');      // 'user_profile'
 
-// Full case transformations (re-exported from komoji)
-toPascalCase('hello-world');      // 'HelloWorld'
-toCamelCase('hello-world');       // 'helloWorld'
-toSnakeCase('helloWorld');        // 'hello_world'
-toKebabCase('HelloWorld');        // 'hello-world'
-toConstantCase('helloWorld');     // 'HELLO_WORLD'
-
 // GraphQL naming helpers
 toFieldName('Users');     // 'user'
 toQueryName('User');      // 'users'
@@ -97,11 +85,6 @@ toQueryName('User');      // 'users'
 - `camelize(str, lowFirstLetter?)` - Convert snake_case to PascalCase (or camelCase if lowFirstLetter is true)
 - `underscore(str)` - Convert PascalCase/camelCase to snake_case
 - `fixCapitalisedPlural(str)` - Fix capitalized S after numbers (e.g., `Table1S` -> `Table1s`)
-- `toPascalCase(str)` - Convert to PascalCase (re-exported from komoji)
-- `toCamelCase(str)` - Convert to camelCase (re-exported from komoji)
-- `toSnakeCase(str)` - Convert to snake_case (re-exported from komoji)
-- `toKebabCase(str)` - Convert to kebab-case (re-exported from komoji)
-- `toConstantCase(str)` - Convert to CONSTANT_CASE (re-exported from komoji)
 
 ### Naming Helpers
 

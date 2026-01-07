@@ -41,7 +41,6 @@
     "makage": "0.1.8"
   },
   "dependencies": {
-    "inflection": "^3.0.0",
-    "komoji": "workspace:^"
+    "inflection": "^3.0.0"
   }
 }
