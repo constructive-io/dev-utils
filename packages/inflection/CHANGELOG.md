@@ -1,0 +1,11 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 0.1.0 (2026-01-07)
+
+### Features
+
+- add @interweb/inflection library for PostGraphile-compatible pluralization ([3dce373](https://github.com/constructive-io/dev-utils/commit/3dce373f11e1bfdf8c6fd986eb82bcf1a0159e01))
+- add camelize and underscore exports to @interweb/inflection ([50809e5](https://github.com/constructive-io/dev-utils/commit/50809e512de479bbd9428c2f404e900f81abd964))
