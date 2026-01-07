@@ -1,7 +1,13 @@
 /**
  * Case transformation utilities
  */
-import * as inflection from 'inflection';
+export {
+  toPascalCase,
+  toCamelCase,
+  toSnakeCase,
+  toKebabCase,
+  toConstantCase,
+} from 'komoji';
 
 /**
  * Convert PascalCase to camelCase (lowercase first character)
@@ -9,25 +15,6 @@ import * as inflection from 'inflection';
  */
 export function lcFirst(str: string): string {
   return str.charAt(0).toLowerCase() + str.slice(1);
-}
-
-/**
- * Convert a string to camelCase
- * @param str - The string to convert
- * @param lowFirstLetter - If true, the first letter will be lowercase (default: false)
- * @example camelize("user_profile") -> "UserProfile"
- * @example camelize("user_profile", true) -> "userProfile"
- */
-export function camelize(str: string, lowFirstLetter?: boolean): string {
-  return inflection.camelize(str, lowFirstLetter);
-}
-
-/**
- * Convert a camelCase or PascalCase string to snake_case
- * @example underscore("UserProfile") -> "user_profile"
- */
-export function underscore(str: string): string {
-  return inflection.underscore(str);
 }
 
 /**
@@ -45,4 +32,35 @@ export function ucFirst(str: string): string {
  */
 export function fixCapitalisedPlural(str: string): string {
   return str.replace(/[0-9]S(?=[A-Z]|$)/g, (match) => match.toLowerCase());
+}
+
+/**
+ * Convert snake_case to PascalCase (or camelCase if lowFirstLetter is true)
+ * @param str - The snake_case string to convert
+ * @param lowFirstLetter - If true, returns camelCase instead of PascalCase
+ * @example camelize('user_profile') -> 'UserProfile'
+ * @example camelize('user_profile', true) -> 'userProfile'
+ */
+export function camelize(str: string, lowFirstLetter?: boolean): string {
+  const result = str
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+
+  if (lowFirstLetter) {
+    return lcFirst(result);
+  }
+  return result;
+}
+
+/**
+ * Convert PascalCase or camelCase to snake_case
+ * @example underscore('UserProfile') -> 'user_profile'
+ * @example underscore('userProfile') -> 'user_profile'
+ */
+export function underscore(str: string): string {
+  return str
+    .replace(/([A-Z])/g, '_$1')
+    .replace(/^_/, '')
+    .toLowerCase();
 }

@@ -182,6 +182,9 @@ importers:
       inflection:
         specifier: ^3.0.0
         version: 3.0.2
+      komoji:
+        specifier: workspace:^
+        version: link:../komoji/dist
     devDependencies:
       makage:
         specifier: 0.1.8
