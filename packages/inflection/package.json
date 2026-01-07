@@ -1,0 +1,45 @@
+{
+  "name": "@interweb/inflection",
+  "version": "0.0.1",
+  "description": "Inflection utilities for pluralization and singularization with PostGraphile-compatible Latin suffix handling",
+  "author": "Constructive <developers@constructive.io>",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "keywords": [
+    "inflection",
+    "pluralize",
+    "singularize",
+    "postgraphile",
+    "graphql",
+    "constructive"
+  ],
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "devDependencies": {
+    "makage": "0.1.8"
+  },
+  "dependencies": {
+    "inflection": "^3.0.0"
+  }
+}
