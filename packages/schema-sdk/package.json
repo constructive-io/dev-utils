@@ -33,7 +33,7 @@
     "@babel/parser": "^7.23.6",
     "@babel/traverse": "7.28.5",
     "@babel/types": "7.28.5",
-    "@interweb/fetch-api-client": "workspace:*",
+    "@constructive-io/fetch-api-client": "workspace:*",
     "deepmerge": "^4.3.1",
     "fast-json-patch": "^3.1.1",
     "komoji": "workspace:*",

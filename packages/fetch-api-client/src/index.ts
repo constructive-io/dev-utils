@@ -1,4 +1,4 @@
-import { createHTTPError } from '@interweb/http-errors';
+import { createHTTPError } from '@constructive-io/http-errors';
 import { URLSearchParams } from 'url';
 
 export class NotFoundError extends Error {}

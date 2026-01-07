@@ -1,4 +1,4 @@
-import { createHTTPError } from '@interweb/http-errors';
+import { createHTTPError } from '@constructive-io/http-errors';
 import * as http from 'http';
 import * as querystring from 'querystring';
 import { URLSearchParams } from 'url';

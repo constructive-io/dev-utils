@@ -1,5 +1,5 @@
 {
-  "name": "@interweb/visual-diff",
+  "name": "@constructive-io/visual-diff",
   "version": "0.1.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "Beautiful visual diff with syntax highlighting for terminal and HTML output",

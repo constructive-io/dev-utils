@@ -1,5 +1,5 @@
 {
-  "name": "@interweb/fetch-api-client",
+  "name": "@constructive-io/fetch-api-client",
   "version": "0.7.11",
   "author": "Constructive <developers@constructive.io>",
   "description": "Universal Fetch-based HTTP client for Node.js and browsers",
@@ -30,7 +30,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@interweb/http-errors": "workspace:*",
+    "@constructive-io/http-errors": "workspace:*",
     "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {

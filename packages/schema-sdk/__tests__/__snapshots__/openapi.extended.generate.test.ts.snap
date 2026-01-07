@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`full-name-strategy 1`] = `
-"import { APIClient, APIClientRequestOpts, APIClientOptions } from "@interweb/fetch-api-client";
+"import { APIClient, APIClientRequestOpts, APIClientOptions } from "@constructive-io/fetch-api-client";
 /* com.coreos.monitoring.v1.Alertmanager */
 /* The \`Alertmanager\` custom resource definition (CRD) defines a desired [Alertmanager](https://prometheus.io/docs/alerting) setup to run in a Kubernetes cluster. It allows to specify many options such as the number of replicas, persistent storage and many more.
 
@@ -42685,7 +42685,7 @@ export type KubernetesResource = ComponentStatus | ConfigMap | Endpoints | Event
 `;
 
 exports[`merged 1`] = `
-"import { APIClient, APIClientRequestOpts, APIClientOptions } from "@interweb/fetch-api-client";
+"import { APIClient, APIClientRequestOpts, APIClientOptions } from "@constructive-io/fetch-api-client";
 export interface MonitoringCoreosComV1Alertmanager {
   apiVersion?: string;
   kind?: string;
@@ -80428,7 +80428,7 @@ export class KubernetesClient extends APIClient {
 `;
 
 exports[`swagger 1`] = `
-"import { APIClient, APIClientRequestOpts, APIClientOptions } from "@interweb/fetch-api-client";
+"import { APIClient, APIClientRequestOpts, APIClientOptions } from "@constructive-io/fetch-api-client";
 /* com.coreos.monitoring.v1.Alertmanager */
 /* The \`Alertmanager\` custom resource definition (CRD) defines a desired [Alertmanager](https://prometheus.io/docs/alerting) setup to run in a Kubernetes cluster. It allows to specify many options such as the number of replicas, persistent storage and many more.
 

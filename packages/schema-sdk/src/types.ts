@@ -6,7 +6,7 @@ import type { Operation } from 'fast-json-patch';
 export interface OpenAPIOptions extends SchemaTSOptions {
   clientName: string;
   version?: 'v1' | 'v1beta1' | 'v2beta1' | 'v2beta2';
-  npmApiClient?: '@interweb/fetch-api-client' | '@interweb/node-api-client' | string;
+  npmApiClient?: '@constructive-io/fetch-api-client' | '@constructive-io/node-api-client' | string;
   mergedParams?: boolean;
   includeSwaggerUrl?: boolean;
   /**
@@ -72,7 +72,7 @@ export interface OpenAPIOptions extends SchemaTSOptions {
 export const defaultSchemaSDKOptions: DeepPartial<OpenAPIOptions> = {
   ...defaultSchemaTSOptions,
   clientName: 'Client',
-  npmApiClient: '@interweb/fetch-api-client',
+  npmApiClient: '@constructive-io/fetch-api-client',
   mergedParams: false,
   includeSwaggerUrl: false,
   opsIndex: {

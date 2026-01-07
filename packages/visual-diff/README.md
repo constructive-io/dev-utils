@@ -1,4 +1,4 @@
-# @interweb/visual-diff
+# @constructive-io/visual-diff
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" height="250">
@@ -33,17 +33,17 @@ Beautiful visual diff with syntax highlighting for terminal and HTML output.
 ## Installation
 
 ```bash
-npm install @interweb/visual-diff
+npm install @constructive-io/visual-diff
 # or
-pnpm add @interweb/visual-diff
+pnpm add @constructive-io/visual-diff
 # or
-yarn add @interweb/visual-diff
+yarn add @constructive-io/visual-diff
 ```
 
 ## Quick Start
 
 ```typescript
-import { diff, renderTerminal, renderHtml } from '@interweb/visual-diff';
+import { diff, renderTerminal, renderHtml } from '@constructive-io/visual-diff';
 
 const oldCode = `function hello() {
   console.log("Hello");
@@ -150,7 +150,7 @@ Built-in themes:
 #### Custom Themes
 
 ```typescript
-import { createTheme } from '@interweb/visual-diff';
+import { createTheme } from '@constructive-io/visual-diff';
 
 const myTheme = createTheme('custom', {
   added: { fg: 'cyan', bold: true },
@@ -184,7 +184,7 @@ Supported languages:
 #### Language Detection
 
 ```typescript
-import { detectLanguage } from '@interweb/visual-diff';
+import { detectLanguage } from '@constructive-io/visual-diff';
 
 detectLanguage('file.ts');  // 'typescript'
 detectLanguage('file.py');  // 'python'
@@ -194,7 +194,7 @@ detectLanguage('file.sql'); // 'sql'
 ### Unified Diff Format
 
 ```typescript
-import { createUnifiedDiff, parseUnifiedDiff } from '@interweb/visual-diff';
+import { createUnifiedDiff, parseUnifiedDiff } from '@constructive-io/visual-diff';
 
 // Create unified diff string
 const unified = createUnifiedDiff(result);
@@ -206,7 +206,7 @@ const parsed = parseUnifiedDiff(unifiedDiffString);
 ### Utilities
 
 ```typescript
-import { hasDifferences, countChanges } from '@interweb/visual-diff';
+import { hasDifferences, countChanges } from '@constructive-io/visual-diff';
 
 // Check if there are any differences
 if (hasDifferences(result)) {

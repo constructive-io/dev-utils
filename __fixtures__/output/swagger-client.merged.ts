@@ -1,4 +1,4 @@
-import { APIClient, APIClientRequestOpts, APIClientOptions } from '@interweb/fetch-api-client';
+import { APIClient, APIClientRequestOpts, APIClientOptions } from '@constructive-io/fetch-api-client';
 export interface MutatingWebhook {
   admissionReviewVersions: string[];
   clientConfig: IoK8sApiAdmissionregistrationV1WebhookClientConfig;

@@ -1,5 +1,5 @@
 {
-  "name": "@interweb/node-api-client",
+  "name": "@constructive-io/node-api-client",
   "version": "0.8.11",
   "author": "Constructive <developers@constructive.io>",
   "description": "Lightweight HTTP client for Node.js RESTful APIs",
@@ -29,7 +29,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@interweb/http-errors": "workspace:*"
+    "@constructive-io/http-errors": "workspace:*"
   },
   "devDependencies": {
     "makage": "0.1.8"

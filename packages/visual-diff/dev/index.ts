@@ -108,7 +108,7 @@ function generateHtmlPreview(): string {
 </head>
 <body>
   <div class="container">
-    <h1>@interweb/visual-diff Preview</h1>
+    <h1>@constructive-io/visual-diff Preview</h1>
 `);
 
   const themeNames = Object.keys(themes);

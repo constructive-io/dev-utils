@@ -1,8 +1,8 @@
-# @interweb/http-errors
+# @constructive-io/http-errors
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" height="250"><br />
-    @interweb/http-errors
+    @constructive-io/http-errors
   <br />
   <a href="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml">
     <img height="20" src="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml/badge.svg" />
@@ -15,5 +15,5 @@
 ## install
 
 ```sh
-npm install @interweb/http-errors
+npm install @constructive-io/http-errors
 ```

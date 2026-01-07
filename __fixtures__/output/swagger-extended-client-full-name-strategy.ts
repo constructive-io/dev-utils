@@ -1,4 +1,4 @@
-import { APIClient, APIClientRequestOpts, APIClientOptions } from '@interweb/fetch-api-client';
+import { APIClient, APIClientRequestOpts, APIClientOptions } from '@constructive-io/fetch-api-client';
 /* com.coreos.monitoring.v1.Alertmanager */
 /* The `Alertmanager` custom resource definition (CRD) defines a desired [Alertmanager](https://prometheus.io/docs/alerting) setup to run in a Kubernetes cluster. It allows to specify many options such as the number of replicas, persistent storage and many more.
 

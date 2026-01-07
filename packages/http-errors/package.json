@@ -1,5 +1,5 @@
 {
-  "name": "@interweb/http-errors",
+  "name": "@constructive-io/http-errors",
   "version": "0.2.11",
   "author": "Constructive <developers@constructive.io>",
   "description": "HTTP error handling utilities for API clients",
