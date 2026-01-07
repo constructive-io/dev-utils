@@ -1,5 +1,5 @@
 {
-  "name": "@interweb/inflection",
+  "name": "inflekt",
   "version": "0.0.1",
   "description": "Inflection utilities for pluralization and singularization with PostGraphile-compatible Latin suffix handling",
   "author": "Constructive <developers@constructive.io>",
@@ -26,6 +26,7 @@
     "url": "https://github.com/constructive-io/dev-utils"
   },
   "keywords": [
+    "inflekt",
     "inflection",
     "pluralize",
     "singularize",
@@ -40,6 +41,7 @@
     "makage": "0.1.8"
   },
   "dependencies": {
-    "inflection": "^3.0.0"
+    "inflection": "^3.0.0",
+    "komoji": "workspace:^"
   }
 }

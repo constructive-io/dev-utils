@@ -1,11 +1,26 @@
-# @interweb/inflection
+# inflekt
 
-Inflection utilities for pluralization and singularization with PostGraphile-compatible Latin suffix handling.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" height="250">
+  <br />
+    <strong>smart pluralization and inflection for the modern web</strong>
+  <br />
+  <br />
+  Inflection utilities for pluralization and singularization with PostGraphile-compatible Latin suffix handling
+  <br />
+  <br />
+  <a href="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml">
+    <img height="20" src="https://github.com/constructive-io/dev-utils/actions/workflows/ci.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/constructive-io/dev-utils/blob/main/LICENSE">
+    <img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"/>
+  </a>
+</p>
 
 ## Installation
 
 ```bash
-npm install @interweb/inflection
+npm install inflekt
 ```
 
 ## Usage
@@ -19,9 +34,16 @@ import {
   distinctPluralize,
   lcFirst,
   ucFirst,
+  camelize,
+  underscore,
+  toPascalCase,
+  toCamelCase,
+  toSnakeCase,
+  toKebabCase,
+  toConstantCase,
   toFieldName,
   toQueryName,
-} from '@interweb/inflection';
+} from 'inflekt';
 
 // Basic singularization/pluralization
 singularize('Users');     // 'User'
@@ -36,9 +58,21 @@ singularize('Media');     // 'Medium'
 singularizeLast('UserProfiles');  // 'UserProfile'
 pluralizeLast('UserProfile');     // 'UserProfiles'
 
-// Case transformations
+// First character case transformations
 lcFirst('UserProfile');   // 'userProfile'
 ucFirst('userProfile');   // 'UserProfile'
+
+// Snake case / camel case conversions
+camelize('user_profile');       // 'UserProfile'
+camelize('user_profile', true); // 'userProfile'
+underscore('UserProfile');      // 'user_profile'
+
+// Full case transformations (re-exported from komoji)
+toPascalCase('hello-world');      // 'HelloWorld'
+toCamelCase('hello-world');       // 'helloWorld'
+toSnakeCase('helloWorld');        // 'hello_world'
+toKebabCase('HelloWorld');        // 'hello-world'
+toConstantCase('helloWorld');     // 'HELLO_WORLD'
 
 // GraphQL naming helpers
 toFieldName('Users');     // 'user'
@@ -60,7 +94,14 @@ toQueryName('User');      // 'users'
 
 - `lcFirst(str)` - Convert first character to lowercase (PascalCase to camelCase)
 - `ucFirst(str)` - Convert first character to uppercase (camelCase to PascalCase)
+- `camelize(str, lowFirstLetter?)` - Convert snake_case to PascalCase (or camelCase if lowFirstLetter is true)
+- `underscore(str)` - Convert PascalCase/camelCase to snake_case
 - `fixCapitalisedPlural(str)` - Fix capitalized S after numbers (e.g., `Table1S` -> `Table1s`)
+- `toPascalCase(str)` - Convert to PascalCase (re-exported from komoji)
+- `toCamelCase(str)` - Convert to camelCase (re-exported from komoji)
+- `toSnakeCase(str)` - Convert to snake_case (re-exported from komoji)
+- `toKebabCase(str)` - Convert to kebab-case (re-exported from komoji)
+- `toConstantCase(str)` - Convert to CONSTANT_CASE (re-exported from komoji)
 
 ### Naming Helpers
 
