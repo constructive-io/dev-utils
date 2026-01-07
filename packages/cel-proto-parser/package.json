@@ -1,6 +1,6 @@
 {
   "name": "cel-proto-parser",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CEL (Common Expression Language) proto parser and deparser for TypeScript",
   "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",
