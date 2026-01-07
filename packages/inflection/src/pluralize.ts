@@ -26,6 +26,25 @@ const LATIN_SUFFIX_OVERRIDES: Array<[string, string]> = [
 ];
 
 /**
+ * Latin plural overrides for pluralization.
+ *
+ * PostGraphile uses Latin-style plurals for certain words (schema -> schemata).
+ * The inflection library uses English-style plurals (schema -> schemas).
+ *
+ * Format: [singularSuffix, pluralSuffix]
+ */
+const LATIN_PLURAL_OVERRIDES: Array<[string, string]> = [
+  ['schema', 'schemata'],
+  ['criterion', 'criteria'],
+  ['phenomenon', 'phenomena'],
+  ['medium', 'media'],
+  ['memorandum', 'memoranda'],
+  ['stratum', 'strata'],
+  ['curriculum', 'curricula'],
+  ['datum', 'data'],
+];
+
+/**
  * Convert a word to its singular form with PostGraphile-compatible Latin handling
  * @example "Users" -> "User", "People" -> "Person", "Schemata" -> "Schema", "ApiSchemata" -> "ApiSchema"
  */
@@ -59,10 +78,35 @@ export function singularize(word: string): string {
 }
 
 /**
- * Convert a word to its plural form
- * @example "User" -> "Users", "Person" -> "People"
+ * Convert a word to its plural form with PostGraphile-compatible Latin handling
+ * @example "User" -> "Users", "Person" -> "People", "Schema" -> "Schemata", "ApiSchema" -> "ApiSchemata"
  */
 export function pluralize(word: string): string {
+  const lowerWord = word.toLowerCase();
+
+  for (const [singularSuffix, pluralSuffix] of LATIN_PLURAL_OVERRIDES) {
+    if (lowerWord.endsWith(singularSuffix)) {
+      const suffixStart = word.length - singularSuffix.length;
+      const prefix = word.slice(0, suffixStart);
+      const originalSuffix = word.slice(suffixStart);
+
+      const isAllCaps = originalSuffix === originalSuffix.toUpperCase();
+      const isUpperSuffix =
+        originalSuffix[0] === originalSuffix[0].toUpperCase();
+
+      let newSuffix: string;
+      if (isAllCaps) {
+        newSuffix = pluralSuffix.toUpperCase();
+      } else if (isUpperSuffix) {
+        newSuffix = pluralSuffix.charAt(0).toUpperCase() + pluralSuffix.slice(1);
+      } else {
+        newSuffix = pluralSuffix;
+      }
+
+      return prefix + newSuffix;
+    }
+  }
+
   return inflection.pluralize(word);
 }
 
