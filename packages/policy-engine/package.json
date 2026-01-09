@@ -1,0 +1,42 @@
+{
+  "name": "policy-engine",
+  "version": "0.0.1",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "TypeScript policy engine with deterministic evaluation",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/constructive-io/dockerjs",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dockerjs"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dockerjs/issues"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean dist",
+    "prepublishOnly": "npm run build",
+    "build": "npm run clean && tsc && tsc -p tsconfig.esm.json && npm run copy",
+    "build:dev": "npm run clean && tsc --declarationMap && tsc -p tsconfig.esm.json && npm run copy",
+    "lint": "cd ../.. && eslint packages/policy-engine --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "policy",
+    "engine",
+    "authorization",
+    "typescript",
+    "deterministic"
+  ],
+  "devDependencies": {
+    "makage": "^0.1.8"
+  }
+}
