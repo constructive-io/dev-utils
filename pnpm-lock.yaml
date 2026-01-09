@@ -75,6 +75,20 @@ importers:
         version: 0.1.10
     publishDirectory: dist
 
+  packages/nginx-parser:
+    devDependencies:
+      makage:
+        specifier: ^0.1.8
+        version: 0.1.10
+    publishDirectory: dist
+
+  packages/policy-engine:
+    devDependencies:
+      makage:
+        specifier: ^0.1.8
+        version: 0.1.10
+    publishDirectory: dist
+
 packages:
 
   '@babel/code-frame@7.27.1':
