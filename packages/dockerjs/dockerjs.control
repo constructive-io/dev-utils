@@ -1,0 +1,7 @@
+# dockerjs extension
+comment = 'dockerjs extension'
+default_version = '0.0.1'
+module_pathname = '$libdir/dockerjs'
+requires = 'uuid-ossp,plpgsql'
+relocatable = false
+superuser = false
