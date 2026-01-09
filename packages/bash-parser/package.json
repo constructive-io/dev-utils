@@ -7,9 +7,9 @@
   "module": "esm/index.js",
   "types": "index.d.ts",
   "homepage": "https://github.com/constructive-io/dockerjs",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
-    "access": "public",
+    "access": "restricted",
     "directory": "dist"
   },
   "repository": {

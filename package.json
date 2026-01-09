@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/constructive-io/dockerjs"
   },
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "restricted"
   },
