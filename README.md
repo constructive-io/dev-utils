@@ -5,49 +5,41 @@
 </p>
 
 <p align="center" width="100%">
-  <a href="https://github.com/pyramation/dockerjs/actions/workflows/ci.yml">
-    <img height="20" src="https://github.com/pyramation/dockerjs/actions/workflows/ci.yml/badge.svg" />
+  <a href="https://github.com/constructive-io/dockerjs/actions/workflows/ci.yml">
+    <img height="20" src="https://github.com/constructive-io/dockerjs/actions/workflows/ci.yml/badge.svg" />
   </a>
 </p>
 
+Dockerfile and Bash parsers for JavaScript/TypeScript.
+
+## Packages
+
+| Package | Description |
+|---------|-------------|
+| [docker-parser](./packages/docker-parser) | Parse Dockerfiles into AST and deparse back to source |
+| [bash-parser](./packages/bash-parser) | Parse bash/shell commands into AST and deparse back to source |
 
 ## Getting Started
-
-This workspace was generated with `pgpm init workspace`. For a complete guide on developing with pgpm workspaces, see [Workspaces: Organize Postgres](https://constructive.io/learn/modular-postgres/workspaces-organize-postgres).
-
-### Quick Start
 
 ```sh
 # Install dependencies
 pnpm install
 
-# Start PostgreSQL (requires Docker)
-pgpm docker start
+# Build all packages
+pnpm build
 
-# Load environment variables
-eval "$(pgpm env)"
-
-# Create a module
-pgpm init
-
-# Navigate to your module and run tests
-cd packages/your-module
-pnpm test:watch
+# Run tests
+pnpm test
 ```
 
 ### Prerequisites
 
 - Node.js 20+
 - pnpm
-- Docker
-- PostgreSQL client tools (`psql`)
-- pgpm (`npm install -g pgpm`)
-
-See [Prerequisites](https://constructive.io/learn/quickstart/prerequisites) for detailed setup instructions.
 
 ## Credits
 
-**🛠 Built by the [Constructive](https://constructive.io) team — creators of modular Postgres tooling for secure, composable backends. If you like our work, contribute on [GitHub](https://github.com/constructive-io).**
+Built by the [Constructive](https://constructive.io) team.
 
 ## Disclaimer
 
