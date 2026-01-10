@@ -1,10 +1,10 @@
-# dockerjs
+# safegres
 
 <p align="center" width="100%">
   <img height="250" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
 </p>
 
-Dockerfile and Bash parsers for JavaScript/TypeScript.
+Parsers and policy engine for JavaScript/TypeScript.
 
 ## Packages
 
@@ -12,6 +12,8 @@ Dockerfile and Bash parsers for JavaScript/TypeScript.
 |---------|-------------|
 | [docker-parser](./packages/docker-parser) | Parse Dockerfiles into AST and deparse back to source |
 | [bash-parser](./packages/bash-parser) | Parse bash/shell commands into AST and deparse back to source |
+| [nginx-parser](./packages/nginx-parser) | Parse Nginx configuration into AST and deparse back to source |
+| [policy-engine](./packages/policy-engine) | Policy engine with deterministic evaluation |
 
 ## Getting Started
 
