@@ -1,5 +1,15 @@
 # safegres
 
+<p align="center" width="100%">
+  <img height="120" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
+</p>
+
+<p align="center" width="100%">
+  <a href="https://github.com/constructive-io/safegres/actions/workflows/ci.yml">
+    <img height="20" src="https://github.com/constructive-io/safegres/actions/workflows/ci.yml/badge.svg" />
+  </a>
+</p>
+
 Unified security system for postgres, ingress, and egress policies.
 
 ## Overview
