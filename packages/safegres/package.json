@@ -1,0 +1,46 @@
+{
+  "name": "safegres",
+  "version": "0.0.1",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Unified security system for postgres, ingress, and egress policies",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/constructive-io/dockerjs",
+  "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "restricted",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dockerjs"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dockerjs/issues"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean dist",
+    "prepublishOnly": "npm run build",
+    "build": "npm run clean && tsc && tsc -p tsconfig.esm.json && npm run copy",
+    "build:dev": "npm run clean && tsc --declarationMap && tsc -p tsconfig.esm.json && npm run copy",
+    "lint": "cd ../.. && eslint packages/safegres --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "security",
+    "policy",
+    "rls",
+    "row-level-security",
+    "postgres",
+    "nginx",
+    "ingress",
+    "egress",
+    "authorization"
+  ],
+  "devDependencies": {
+    "makage": "^0.1.8"
+  }
+}

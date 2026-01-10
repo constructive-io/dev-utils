@@ -89,6 +89,13 @@ importers:
         version: 0.1.10
     publishDirectory: dist
 
+  packages/safegres:
+    devDependencies:
+      makage:
+        specifier: ^0.1.8
+        version: 0.1.10
+    publishDirectory: dist
+
 packages:
 
   '@babel/code-frame@7.27.1':
