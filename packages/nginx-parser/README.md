@@ -1,5 +1,9 @@
 # nginx-parser
 
+<p align="center" width="100%">
+  <img height="250" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
+</p>
+
 TypeScript Nginx configuration parser and deparser. Parse nginx.conf files into AST and regenerate configuration from AST.
 
 ## Installation

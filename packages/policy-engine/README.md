@@ -1,5 +1,9 @@
 # policy-engine
 
+<p align="center" width="100%">
+  <img height="250" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
+</p>
+
 TypeScript policy engine with deterministic evaluation. Define authorization policies as pure TypeScript functions that return allow/deny decisions with obligations.
 
 ## Installation

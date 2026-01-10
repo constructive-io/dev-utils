@@ -1,5 +1,9 @@
 # bash-parser
 
+<p align="center" width="100%">
+  <img height="250" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
+</p>
+
 Bash/shell command parser and deparser for JavaScript/TypeScript.
 
 ## Installation
