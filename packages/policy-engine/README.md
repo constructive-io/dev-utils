@@ -1,5 +1,15 @@
 # policy-engine
 
+<p align="center" width="100%">
+  <img height="120" src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" />
+</p>
+
+<p align="center" width="100%">
+  <a href="https://github.com/constructive-io/safegres/actions/workflows/ci.yml">
+    <img height="20" src="https://github.com/constructive-io/safegres/actions/workflows/ci.yml/badge.svg" />
+  </a>
+</p>
+
 TypeScript policy engine with deterministic evaluation. Define authorization policies as pure TypeScript functions that return allow/deny decisions with obligations.
 
 ## Installation

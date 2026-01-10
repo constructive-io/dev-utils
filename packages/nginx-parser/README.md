@@ -1,5 +1,15 @@
 # nginx-parser
 
+<p align="center" width="100%">
+  <img height="120" src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" />
+</p>
+
+<p align="center" width="100%">
+  <a href="https://github.com/constructive-io/safegres/actions/workflows/ci.yml">
+    <img height="20" src="https://github.com/constructive-io/safegres/actions/workflows/ci.yml/badge.svg" />
+  </a>
+</p>
+
 TypeScript Nginx configuration parser and deparser. Parse nginx.conf files into AST and regenerate configuration from AST.
 
 ## Installation
