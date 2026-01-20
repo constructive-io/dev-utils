@@ -11,6 +11,18 @@ export interface CliExitOptions {
 /**
  * Exits the CLI with an error message and optional cleanup.
  * Supports a beforeExit hook for cleanup operations (e.g., closing database connections).
+ *
+ * @example
+ * ```typescript
+ * await cliExitWithError('Invalid configuration file');
+ *
+ * // With cleanup
+ * await cliExitWithError(error, {
+ *   beforeExit: async () => {
+ *     await db.close();
+ *   }
+ * });
+ * ```
  */
 export const cliExitWithError = async (
   error: Error | string,

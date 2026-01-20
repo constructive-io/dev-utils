@@ -1,15 +1,14 @@
-// Argv utilities
-export { extractFirst } from './argv';
-export type { ParsedArgs } from './argv';
+// Re-export core CLI utilities from inquirerer
+export {
+  parseArgv,
+  extractFirst,
+  cliExitWithError,
+  getPackageJson,
+  getPackageVersion,
+  getPackageName
+} from 'inquirerer';
+export type { ParsedArgs, ParseArgvOptions, CliExitOptions, PackageJson } from 'inquirerer';
 
-// CLI error handling
-export { cliExitWithError } from './cli-error';
-export type { CliExitOptions } from './cli-error';
-
-// Update checking
+// Update checking (requires appstash, not available in inquirerer)
 export { checkForUpdates, shouldSkipUpdateCheck } from './update-check';
 export type { UpdateCheckOptions, UpdateCheckResult } from './update-check';
-
-// Package.json utilities
-export { getSelfPackageJson, getSelfVersion, getSelfName } from './package-json';
-export type { PackageJsonInfo } from './package-json';

@@ -62,6 +62,10 @@ npm install inquirerer
   - [Custom Resolvers](#custom-resolvers)
   - [Resolver Examples](#resolver-examples)
 - [CLI Helper](#cli-helper)
+- [CLI Utilities](#cli-utilities)
+  - [Package Information](#package-information)
+  - [Argument Parsing](#argument-parsing)
+  - [Error Handling](#error-handling)
 - [UI Components](#ui-components)
   - [Spinner](#spinner)
   - [Progress Bar](#progress-bar)
@@ -1242,6 +1246,130 @@ const handler: CommandHandler = async (argv, prompter) => {
 
   const answers = await prompter.prompt(argv, questions);
   // Handle answers
+};
+
+const cli = new CLI(handler, options);
+await cli.run();
+```
+
+## CLI Utilities
+
+inquirerer provides a complete set of utilities for building CLI applications, so you can import everything from a single package.
+
+### Package Information
+
+Get information about your CLI's package.json for version display and other metadata:
+
+```typescript
+import { getPackageJson, getPackageVersion, getPackageName } from 'inquirerer';
+
+// Get the full package.json object
+const pkg = getPackageJson(__dirname);
+console.log(`${pkg.name}@${pkg.version}`);
+
+// Or use the convenience helpers
+if (argv.version) {
+  console.log(getPackageVersion(__dirname));
+  process.exit(0);
+}
+
+const toolName = getPackageName(__dirname);
+console.log(`Welcome to ${toolName}!`);
+```
+
+### Argument Parsing
+
+Parse command-line arguments and extract subcommands:
+
+```typescript
+import { parseArgv, extractFirst } from 'inquirerer';
+
+const argv = parseArgv(process.argv);
+const { first, newArgv } = extractFirst(argv);
+
+// Running: mycli generate --output ./dist
+// first = 'generate'
+// newArgv = { output: './dist', _: [] }
+
+switch (first) {
+  case 'generate':
+    await handleGenerate(newArgv);
+    break;
+  case 'init':
+    await handleInit(newArgv);
+    break;
+  default:
+    console.log('Unknown command');
+}
+```
+
+### Error Handling
+
+Exit gracefully with error messages and optional cleanup:
+
+```typescript
+import { cliExitWithError, CliExitOptions } from 'inquirerer';
+
+try {
+  await riskyOperation();
+} catch (error) {
+  await cliExitWithError(error, {
+    context: { operation: 'build', target: 'production' },
+    beforeExit: async () => {
+      await cleanup();
+    },
+    logger: customLogger // optional, defaults to console
+  });
+}
+```
+
+### Complete CLI Example
+
+Here's a complete example using all the CLI utilities:
+
+```typescript
+import { 
+  CLI, 
+  CLIOptions, 
+  Inquirerer,
+  extractFirst, 
+  cliExitWithError, 
+  getPackageVersion,
+  ParsedArgs 
+} from 'inquirerer';
+
+const options: Partial<CLIOptions> = {
+  minimistOpts: {
+    alias: { v: 'version', h: 'help' },
+    boolean: ['help', 'version']
+  }
+};
+
+const handler = async (argv: Partial<ParsedArgs>, prompter: Inquirerer) => {
+  if (argv.version) {
+    console.log(getPackageVersion(__dirname));
+    process.exit(0);
+  }
+
+  const { first, newArgv } = extractFirst(argv);
+
+  try {
+    switch (first) {
+      case 'init':
+        await handleInit(newArgv, prompter);
+        break;
+      case 'build':
+        await handleBuild(newArgv, prompter);
+        break;
+      default:
+        console.log('Usage: mycli <command> [options]');
+        console.log('Commands: init, build');
+    }
+  } catch (error) {
+    await cliExitWithError(error, {
+      context: { command: first }
+    });
+  }
 };
 
 const cli = new CLI(handler, options);
