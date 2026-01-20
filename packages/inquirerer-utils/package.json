@@ -29,8 +29,7 @@
   },
   "dependencies": {
     "appstash": "workspace:*",
-    "find-and-require-package-json": "workspace:*",
-    "minimist": "^1.2.8"
+    "inquirerer": "workspace:*"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
