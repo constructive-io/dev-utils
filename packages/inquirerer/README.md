@@ -1279,13 +1279,12 @@ console.log(`Welcome to ${toolName}!`);
 
 ### Argument Parsing
 
-Extract the first positional argument for command routing:
+Parse command-line arguments and extract subcommands:
 
 ```typescript
-import { extractFirst, ParsedArgs } from 'inquirerer';
-import minimist from 'minimist';
+import { parseArgv, extractFirst } from 'inquirerer';
 
-const argv = minimist(process.argv.slice(2));
+const argv = parseArgv(process.argv);
 const { first, newArgv } = extractFirst(argv);
 
 // Running: mycli generate --output ./dist

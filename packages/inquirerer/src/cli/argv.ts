@@ -1,8 +1,22 @@
-import { ParsedArgs } from 'minimist';
+import minimist, { Opts, ParsedArgs } from 'minimist';
+
+/**
+ * Parse command-line arguments using minimist.
+ * Wrapper around minimist so you don't need to import it directly.
+ *
+ * @example
+ * ```typescript
+ * const argv = parseArgv(process.argv);
+ * console.log(argv.config); // --config value
+ * ```
+ */
+export const parseArgv = (args: string[] = process.argv, opts?: Opts): ParsedArgs => {
+  return minimist(args.slice(2), opts);
+};
 
 /**
  * Extracts the first positional argument from argv and returns it along with the remaining argv.
- * This is useful for command routing in CLI applications where the first argument is a subcommand.
+ * Useful for command routing where the first argument is a subcommand.
  *
  * @example
  * ```typescript
@@ -21,4 +35,4 @@ export const extractFirst = (argv: Partial<ParsedArgs>) => {
   return { first, newArgv };
 };
 
-export type { ParsedArgs } from 'minimist';
+export type { ParsedArgs, Opts as ParseArgvOptions } from 'minimist';
