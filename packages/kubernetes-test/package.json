@@ -45,6 +45,6 @@
     "kubernetesjs": "^0.7.6"
   },
   "devDependencies": {
-    "makage": "0.1.8"
+    "makage": "0.1.10"
   }
 }

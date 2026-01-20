@@ -43,7 +43,7 @@
   "devDependencies": {
     "@types/minimist": "^1.2.5",
     "clean-ansi": "workspace:*",
-    "makage": "0.1.8",
+    "makage": "0.1.10",
     "string-width": "4.2.3"
   }
 }

@@ -29,7 +29,7 @@
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
   },
   "devDependencies": {
-    "makage": "0.1.8"
+    "makage": "0.1.10"
   },
   "bugs": {
     "url": "https://github.com/constructive-io/dev-utils/issues"

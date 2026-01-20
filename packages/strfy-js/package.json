@@ -31,7 +31,7 @@
     "url": "https://github.com/constructive-io/dev-utils/issues"
   },
   "devDependencies": {
-    "makage": "0.1.8",
+    "makage": "0.1.10",
     "nested-obj": "workspace:*"
   },
   "dependencies": {

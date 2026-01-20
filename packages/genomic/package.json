@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "makage": "0.1.8"
+    "makage": "0.1.10"
   },
   "keywords": []
 }

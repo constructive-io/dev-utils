@@ -39,8 +39,8 @@
     "url": "https://github.com/constructive-io/dev-utils/issues"
   },
   "dependencies": {
-    "@babel/generator": "^7.26.9",
-    "@babel/types": "^7.26.9",
+    "@babel/generator": "^7.28.6",
+    "@babel/types": "^7.28.6",
     "@launchql/protobufjs": "^7.2.6",
     "@marcbachmann/cel-js": "^7.1.0",
     "nested-obj": "workspace:*",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@types/babel__generator": "^7.6.8",
-    "makage": "0.1.8",
+    "makage": "0.1.10",
     "ts-node": "^10.9.2"
   }
 }

@@ -32,7 +32,7 @@
     "@constructive-io/http-errors": "workspace:*"
   },
   "devDependencies": {
-    "makage": "0.1.8"
+    "makage": "0.1.10"
   },
   "keywords": []
 }
