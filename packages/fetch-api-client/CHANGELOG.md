@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/constructive-io/dev-utils/compare/@constructive-io/fetch-api-client@0.7.12...@constructive-io/fetch-api-client@0.8.0) (2026-01-20)
+
+**Note:** Version bump only for package @constructive-io/fetch-api-client
+
 ## 0.7.12 (2026-01-07)
 
 **Note:** Version bump only for package @constructive-io/fetch-api-client

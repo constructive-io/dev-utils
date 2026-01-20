@@ -1,6 +1,6 @@
 {
   "name": "kubernetes-test",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "Kubernetes testing utilities with wait-for-pods and other helpers for integration tests",
   "main": "index.js",

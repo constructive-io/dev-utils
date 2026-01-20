@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/constructive-io/dev-utils/compare/@inquirerer/utils@3.1.3...@inquirerer/utils@3.2.0) (2026-01-20)
+
+### Features
+
+- **inquirerer:** add package helpers and update @inquirerer/utils ([c087ac8](https://github.com/constructive-io/dev-utils/commit/c087ac87bde92d6bb14c7f231647fe28ee73bc62))
+- **inquirerer:** add parseArgv helper and tests ([9050181](https://github.com/constructive-io/dev-utils/commit/9050181c13bd7c14a7e97b5e151b59cf20c422a6))
+
 ## [3.1.3](https://github.com/constructive-io/dev-utils/compare/@inquirerer/utils@3.1.2...@inquirerer/utils@3.1.3) (2026-01-07)
 
 **Note:** Version bump only for package @inquirerer/utils
