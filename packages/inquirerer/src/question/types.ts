@@ -71,5 +71,10 @@ export interface BaseQuestion {
     type: 'number';
     default?: number;
   }
+
+  export interface PasswordQuestion extends BaseQuestion {
+    type: 'password';
+    mask?: string;  // Character to use for masking (default: '*')
+  }
   
-  export type Question = ConfirmQuestion | ListQuestion | AutocompleteQuestion | CheckboxQuestion | TextQuestion | NumberQuestion;
+  export type Question = ConfirmQuestion | ListQuestion | AutocompleteQuestion | CheckboxQuestion | TextQuestion | NumberQuestion | PasswordQuestion;
