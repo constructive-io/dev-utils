@@ -3,7 +3,7 @@ import readline from 'readline';
 import { Readable, Writable } from 'stream';
 
 import { KEY_CODES, TerminalKeypress } from './keypress';
-import { AutocompleteQuestion, CheckboxQuestion, ConfirmQuestion, ListQuestion, NumberQuestion, OptionValue, Question, TextQuestion, Validation, Value } from './question';
+import { AutocompleteQuestion, CheckboxQuestion, ConfirmQuestion, ListQuestion, NumberQuestion, OptionValue, PasswordQuestion, Question, TextQuestion, Validation, Value } from './question';
 import { DefaultResolverRegistry, globalResolverRegistry } from './resolvers';
 // import { writeFileSync } from 'fs';
 
@@ -788,6 +788,8 @@ export class Inquirerer {
         return this.autocomplete(question as AutocompleteQuestion, ctx);
       case 'number':
         return this.number(question as NumberQuestion, ctx);
+      case 'password':
+        return this.password(question as PasswordQuestion, ctx);
       case 'text':
         return this.text(question as TextQuestion, ctx);
       default:
@@ -864,6 +866,53 @@ export class Inquirerer {
           resolve(question.default); // Use default if input is empty
         } else {
           resolve(null); // Empty and no default
+        }
+      });
+    });
+  }
+
+  public async password(question: PasswordQuestion, ctx: PromptContext): Promise<string | null> {
+    if (this.noTty || !this.rl || !this.keypress) {
+      return null; // Password input requires interactive terminal
+    }
+
+    this.keypress.resume();
+    const mask = question.mask ?? '*';
+    let input = '';
+
+    // Display the prompt with masked input
+    const display = (): void => {
+      this.clearScreen();
+      const maskedInput = mask.repeat(input.length);
+      this.displayPrompt(question, ctx, maskedInput);
+    };
+
+    display();
+
+    // Handle backspace
+    this.keypress.on(KEY_CODES.BACKSPACE, () => {
+      if (input.length > 0) {
+        input = input.slice(0, -1);
+        display();
+      }
+    });
+
+    // Register alphanumeric, symbols, and space keypresses
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()_+-=[]{}|;:\'",.<>?/`~\\';
+    chars.split('').forEach(char => {
+      this.keypress.on(char, () => {
+        input += char;
+        display();
+      });
+    });
+
+    return new Promise<string | null>((resolve) => {
+      this.keypress.on(KEY_CODES.ENTER, () => {
+        this.keypress.pause();
+        if (input.trim() !== '') {
+          resolve(input);
+        } else {
+          resolve(null);
         }
       });
     });
