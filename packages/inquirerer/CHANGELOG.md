@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.4.0...inquirerer@4.5.0) (2026-01-24)
+
+### Features
+
+- **inquirerer:** add password input type with masked display ([fc476f1](https://github.com/constructive-io/dev-utils/commit/fc476f19359ee342788f1654ef8614f40f208e0d))
+
 # [4.4.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.3.1...inquirerer@4.4.0) (2026-01-20)
 
 ### Features
