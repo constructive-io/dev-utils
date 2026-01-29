@@ -25,8 +25,7 @@ pnpm test:watch
 
 ## Credits
 
-Built for developers, with developers.  
-👉 https://launchql.com | https://hyperweb.io
+**🛠 Built by the [Constructive](https://constructive.io) team — creators of modular Postgres tooling for secure, composable backends. If you like our work, contribute on [GitHub](https://github.com/constructive-io).**
 
 ## Disclaimer
 
