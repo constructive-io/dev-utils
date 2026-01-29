@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.2](https://github.com/constructive-io/dev-utils/compare/@inquirerer/test@1.3.1...@inquirerer/test@1.3.2) (2026-01-29)
+
+**Note:** Version bump only for package @inquirerer/test
+
 ## [1.3.1](https://github.com/constructive-io/dev-utils/compare/@inquirerer/test@1.3.0...@inquirerer/test@1.3.1) (2026-01-24)
 
 **Note:** Version bump only for package @inquirerer/test
