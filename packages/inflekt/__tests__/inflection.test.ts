@@ -12,6 +12,7 @@ import {
   fixCapitalisedPlural,
   toFieldName,
   toQueryName,
+  inflektObject,
 } from '../src';
 
 describe('singularize', () => {
@@ -196,5 +197,123 @@ describe('toQueryName', () => {
     expect(toQueryName('User')).toBe('users');
     expect(toQueryName('OrderItem')).toBe('orderItems');
     expect(toQueryName('Category')).toBe('categories');
+  });
+});
+
+describe('inflektObject', () => {
+  it('should convert kebab-case keys to camelCase', () => {
+    const input = {
+      'schema-file': 'test.graphql',
+      'dry-run': true,
+      'api-names': ['api1', 'api2'],
+    };
+    const expected = {
+      schemaFile: 'test.graphql',
+      dryRun: true,
+      apiNames: ['api1', 'api2'],
+    };
+    expect(inflektObject(input)).toEqual(expected);
+  });
+
+  it('should preserve camelCase keys', () => {
+    const input = {
+      endpoint: 'http://localhost:3000',
+      output: './generated',
+      verbose: false,
+    };
+    expect(inflektObject(input)).toEqual(input);
+  });
+
+  it('should handle mixed kebab-case and camelCase keys', () => {
+    const input = {
+      'schema-file': 'schema.graphql',
+      endpoint: 'http://localhost:3000',
+      'react-query': true,
+      output: './dist',
+      'browser-compatible': false,
+    };
+    const expected = {
+      schemaFile: 'schema.graphql',
+      endpoint: 'http://localhost:3000',
+      reactQuery: true,
+      output: './dist',
+      browserCompatible: false,
+    };
+    expect(inflektObject(input)).toEqual(expected);
+  });
+
+  it('should handle empty objects', () => {
+    expect(inflektObject({})).toEqual({});
+  });
+
+  it('should handle objects with various value types', () => {
+    const input = {
+      'string-value': 'test',
+      'number-value': 42,
+      'boolean-value': true,
+      'null-value': null as null,
+      'undefined-value': undefined as undefined,
+      'array-value': [1, 2, 3],
+      'object-value': { nested: 'value' },
+    };
+    const expected = {
+      stringValue: 'test',
+      numberValue: 42,
+      booleanValue: true,
+      nullValue: null as null,
+      undefinedValue: undefined as undefined,
+      arrayValue: [1, 2, 3],
+      objectValue: { nested: 'value' },
+    };
+    expect(inflektObject(input)).toEqual(expected);
+  });
+
+  it('should handle multiple consecutive hyphens', () => {
+    const input = {
+      'multi-word-key-name': 'value',
+    };
+    const expected = {
+      multiWordKeyName: 'value',
+    };
+    expect(inflektObject(input)).toEqual(expected);
+  });
+
+  it('should preserve single-word keys', () => {
+    const input = {
+      endpoint: 'url',
+      schemas: ['public'],
+      orm: true,
+    };
+    expect(inflektObject(input)).toEqual(input);
+  });
+
+  it('should handle CLI argument conversion use case', () => {
+    const argv = {
+      endpoint: 'http://localhost:5000/graphql',
+      'schema-file': undefined as string | undefined,
+      output: 'codegen',
+      schemas: undefined as string[] | undefined,
+      'api-names': undefined as string[] | undefined,
+      'react-query': true,
+      orm: false,
+      'browser-compatible': true,
+      authorization: 'Bearer token123',
+      'dry-run': false,
+      verbose: true,
+    };
+    const expected = {
+      endpoint: 'http://localhost:5000/graphql',
+      schemaFile: undefined as string | undefined,
+      output: 'codegen',
+      schemas: undefined as string[] | undefined,
+      apiNames: undefined as string[] | undefined,
+      reactQuery: true,
+      orm: false,
+      browserCompatible: true,
+      authorization: 'Bearer token123',
+      dryRun: false,
+      verbose: true,
+    };
+    expect(inflektObject(argv)).toEqual(expected);
   });
 });

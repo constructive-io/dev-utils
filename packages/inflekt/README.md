@@ -38,6 +38,7 @@ import {
   underscore,
   toFieldName,
   toQueryName,
+  inflektObject,
 } from 'inflekt';
 
 // Basic singularization/pluralization
@@ -65,6 +66,10 @@ underscore('UserProfile');      // 'user_profile'
 // GraphQL naming helpers
 toFieldName('Users');     // 'user'
 toQueryName('User');      // 'users'
+
+// Object key transformation (kebab-case to camelCase)
+inflektObject({ 'schema-file': 'test.graphql', 'dry-run': true });
+// { schemaFile: 'test.graphql', dryRun: true }
 ```
 
 ## API
@@ -90,6 +95,10 @@ toQueryName('User');      // 'users'
 
 - `toFieldName(pluralTypeName)` - Convert plural PascalCase to singular camelCase field name
 - `toQueryName(singularTypeName)` - Convert singular PascalCase to plural camelCase query name
+
+### Object Transformations
+
+- `inflektObject(obj)` - Convert kebab-case object keys to camelCase (useful for CLI argument conversion)
 
 ## Latin Suffix Overrides
 
