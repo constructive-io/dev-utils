@@ -9,3 +9,4 @@ export * from './pluralize';
 export * from './case';
 export * from './naming';
 export * from './transform-keys';
+export * from './argv';
