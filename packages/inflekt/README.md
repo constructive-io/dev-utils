@@ -38,6 +38,7 @@ import {
   underscore,
   toFieldName,
   toQueryName,
+  inflektTree,
 } from 'inflekt';
 
 // Basic singularization/pluralization
@@ -65,6 +66,14 @@ underscore('UserProfile');      // 'user_profile'
 // GraphQL naming helpers
 toFieldName('Users');     // 'user'
 toQueryName('User');      // 'users'
+
+// Deep object key transformation
+const apiResponse = {
+  user_name: 'John',
+  order_items: [{ item_id: 1, product_name: 'Widget' }]
+};
+inflektTree(apiResponse, (key) => camelize(key, true));
+// Result: { userName: 'John', orderItems: [{ itemId: 1, productName: 'Widget' }] }
 ```
 
 ## API
@@ -90,6 +99,86 @@ toQueryName('User');      // 'users'
 
 - `toFieldName(pluralTypeName)` - Convert plural PascalCase to singular camelCase field name
 - `toQueryName(singularTypeName)` - Convert singular PascalCase to plural camelCase query name
+
+### Deep Object Transformation
+
+- `inflektTree(obj, transformer, options?)` - Recursively transform all property names in an object tree
+
+## Deep Object Key Transformation
+
+The `inflektTree` function recursively transforms all property names in an object tree using any transformer function. This is useful for converting API responses between naming conventions.
+
+### Basic Usage
+
+```typescript
+// Convert snake_case API response to camelCase for frontend
+const apiResponse = {
+  user_name: 'John',
+  user_profile: {
+    profile_image: 'https://example.com/avatar.jpg',
+    account_status: 'active'
+  },
+  order_items: [
+    { item_id: 1, item_name: 'Product A' },
+    { item_id: 2, item_name: 'Product B' }
+  ]
+};
+
+const result = inflektTree(apiResponse, (key) => camelize(key, true));
+// Result:
+// {
+//   userName: 'John',
+//   userProfile: {
+//     profileImage: 'https://example.com/avatar.jpg',
+//     accountStatus: 'active'
+//   },
+//   orderItems: [
+//     { itemId: 1, itemName: 'Product A' },
+//     { itemId: 2, itemName: 'Product B' }
+//   ]
+// }
+
+// Convert camelCase frontend data to snake_case for API
+const frontendData = { userName: 'John', orderItems: [{ itemId: 1 }] };
+const payload = inflektTree(frontendData, underscore);
+// Result: { user_name: 'John', order_items: [{ item_id: 1 }] }
+```
+
+### Skipping Keys
+
+Use the `skip` option to preserve certain keys:
+
+```typescript
+// Skip keys starting with underscore
+const input = {
+  user_name: 'John',
+  _private_field: 'secret',
+  _metadata: { _internal: true }
+};
+
+const result = inflektTree(input, (key) => camelize(key, true), {
+  skip: (key) => key.startsWith('_')
+});
+// Result: { userName: 'John', _private_field: 'secret', _metadata: { _internal: true } }
+
+// Skip specific keys
+const result2 = inflektTree(input, (key) => camelize(key, true), {
+  skip: (key) => key === 'created_at' || key === 'updated_at'
+});
+
+// Skip based on path depth (only transform top 2 levels)
+const result3 = inflektTree(deepObject, (key) => camelize(key, true), {
+  skip: (key, path) => path.length > 1
+});
+```
+
+### Features
+
+- Handles nested objects and arrays of any depth
+- Preserves `Date` objects (clones them)
+- Preserves `null` and `undefined` values
+- Returns primitives unchanged
+- Works with any transformer function
 
 ## Latin Suffix Overrides
 
