@@ -141,6 +141,18 @@ describe('camelize', () => {
     expect(camelize('api_schema', true)).toBe('apiSchema');
   });
 
+  it('should convert kebab-case to PascalCase by default', () => {
+    expect(camelize('schema-file')).toBe('SchemaFile');
+    expect(camelize('dry-run')).toBe('DryRun');
+    expect(camelize('output-dir')).toBe('OutputDir');
+  });
+
+  it('should convert kebab-case to camelCase when lowFirstLetter is true', () => {
+    expect(camelize('schema-file', true)).toBe('schemaFile');
+    expect(camelize('dry-run', true)).toBe('dryRun');
+    expect(camelize('output-dir', true)).toBe('outputDir');
+  });
+
   it('should handle single words', () => {
     expect(camelize('user')).toBe('User');
     expect(camelize('user', true)).toBe('user');

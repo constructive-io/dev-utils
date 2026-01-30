@@ -28,15 +28,17 @@ export function fixCapitalisedPlural(str: string): string {
 }
 
 /**
- * Convert snake_case to PascalCase (or camelCase if lowFirstLetter is true)
- * @param str - The snake_case string to convert
+ * Convert snake_case or kebab-case to PascalCase (or camelCase if lowFirstLetter is true)
+ * @param str - The snake_case or kebab-case string to convert
  * @param lowFirstLetter - If true, returns camelCase instead of PascalCase
  * @example camelize('user_profile') -> 'UserProfile'
  * @example camelize('user_profile', true) -> 'userProfile'
+ * @example camelize('schema-file') -> 'SchemaFile'
+ * @example camelize('schema-file', true) -> 'schemaFile'
  */
 export function camelize(str: string, lowFirstLetter?: boolean): string {
   const result = str
-    .split('_')
+    .split(/[-_]/)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join('');
 

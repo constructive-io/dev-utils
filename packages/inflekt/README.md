@@ -39,7 +39,6 @@ import {
   toFieldName,
   toQueryName,
   inflektTree,
-  camelizeArgv,
 } from 'inflekt';
 
 // Basic singularization/pluralization
@@ -75,11 +74,6 @@ const apiResponse = {
 };
 inflektTree(apiResponse, (key) => camelize(key, true));
 // Result: { userName: 'John', orderItems: [{ itemId: 1, productName: 'Widget' }] }
-
-// CLI argument transformation (kebab-case to camelCase)
-const argv = { 'schema-file': 'test.graphql', 'dry-run': true, _: [] };
-camelizeArgv(argv);
-// Result: { schemaFile: 'test.graphql', dryRun: true, _: [] }
 ```
 
 ## API
@@ -109,10 +103,6 @@ camelizeArgv(argv);
 ### Deep Object Transformation
 
 - `inflektTree(obj, transformer, options?)` - Recursively transform all property names in an object tree
-
-### CLI Argument Utilities
-
-- `camelizeArgv(argv)` - Transform CLI argument keys (kebab-case/snake_case) to camelCase, preserving minimist internals
 
 ## Deep Object Key Transformation
 
@@ -189,40 +179,6 @@ const result3 = inflektTree(deepObject, (key) => camelize(key, true), {
 - Preserves `null` and `undefined` values
 - Returns primitives unchanged
 - Works with any transformer function
-
-## CLI Argument Transformation
-
-The `camelizeArgv` function is a specialized utility for transforming CLI argument objects (typically from minimist or similar parsers) from kebab-case or snake_case to camelCase.
-
-### Usage
-
-```typescript
-import { camelizeArgv } from 'inflekt';
-
-// Transform CLI arguments
-const argv = {
-  'schema-file': 'test.graphql',
-  'dry-run': true,
-  output_dir: 'dist',
-  _: ['arg1', 'arg2']
-};
-
-const parsedArgv = camelizeArgv(argv);
-// Result:
-// {
-//   schemaFile: 'test.graphql',
-//   dryRun: true,
-//   outputDir: 'dist',
-//   _: ['arg1', 'arg2']
-// }
-```
-
-### Features
-
-- Transforms kebab-case and snake_case keys to camelCase
-- Only transforms top-level keys (preserves nested object structure)
-- Preserves minimist internal keys (`_` and keys starting with `_`)
-- Built on top of `inflektTree` for consistency
 
 ## Latin Suffix Overrides
 
