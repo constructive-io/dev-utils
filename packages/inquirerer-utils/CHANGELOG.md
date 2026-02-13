@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.3](https://github.com/constructive-io/dev-utils/compare/@inquirerer/utils@3.2.2...@inquirerer/utils@3.2.3) (2026-02-13)
+
+### Bug Fixes
+
+- **@inquirerer/utils:** use semver for version comparison and add clearUpdateCache() ([b012c9b](https://github.com/constructive-io/dev-utils/commit/b012c9b2fc388e8f5ecd4ff3fc6845e4fd781127))
+
 ## [3.2.2](https://github.com/constructive-io/dev-utils/compare/@inquirerer/utils@3.2.1...@inquirerer/utils@3.2.2) (2026-01-29)
 
 **Note:** Version bump only for package @inquirerer/utils
