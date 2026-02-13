@@ -10,5 +10,5 @@ export {
 export type { ParsedArgs, ParseArgvOptions, CliExitOptions, PackageJson } from 'inquirerer';
 
 // Update checking (requires appstash, not available in inquirerer)
-export { checkForUpdates, shouldSkipUpdateCheck } from './update-check';
+export { checkForUpdates, clearUpdateCache, shouldSkipUpdateCheck } from './update-check';
 export type { UpdateCheckOptions, UpdateCheckResult } from './update-check';

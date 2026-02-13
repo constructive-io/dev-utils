@@ -1,6 +1,7 @@
 import { appstash } from 'appstash';
 import * as fs from 'fs';
 import * as path from 'path';
+import semver from 'semver';
 
 export interface UpdateCheckOptions {
   pkgName: string;
@@ -66,8 +67,28 @@ export function shouldSkipUpdateCheck(
   return { skip: false };
 }
 
+const CACHE_FILENAME = 'update-check.json';
 const DEFAULT_TTL = 24 * 60 * 60 * 1000; // 24 hours
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org';
+
+export function clearUpdateCache(toolName: string): boolean {
+  try {
+    const dirs = appstash(toolName);
+    const cacheFile = path.join(dirs.cache, CACHE_FILENAME);
+    if (fs.existsSync(cacheFile)) {
+      fs.unlinkSync(cacheFile);
+      return true;
+    }
+  } catch {}
+  return false;
+}
+
+function isNewerVersion(latest: string, current: string): boolean {
+  if (semver.valid(latest) && semver.valid(current)) {
+    return semver.gt(latest, current);
+  }
+  return latest !== current && latest > current;
+}
 
 /**
  * Checks for updates to a package and caches the result.
@@ -108,7 +129,7 @@ export const checkForUpdates = async (
   }
 
   const dirs = appstash(toolName);
-  const cacheFile = path.join(dirs.cache, 'update-check.json');
+  const cacheFile = path.join(dirs.cache, CACHE_FILENAME);
 
   // Check cache first
   try {
@@ -116,10 +137,10 @@ export const checkForUpdates = async (
       const cached = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
       if (Date.now() - cached.timestamp < ttl) {
         return {
-          hasUpdate: cached.latestVersion !== pkgVersion && cached.latestVersion > pkgVersion,
+          hasUpdate: isNewerVersion(cached.latestVersion, pkgVersion),
           currentVersion: pkgVersion,
           latestVersion: cached.latestVersion,
-          message: cached.latestVersion > pkgVersion
+          message: isNewerVersion(cached.latestVersion, pkgVersion)
             ? `Update available: ${pkgVersion} -> ${cached.latestVersion}`
             : null
         };
@@ -158,10 +179,10 @@ export const checkForUpdates = async (
     }
 
     return {
-      hasUpdate: latestVersion !== pkgVersion && latestVersion > pkgVersion,
+      hasUpdate: isNewerVersion(latestVersion, pkgVersion),
       currentVersion: pkgVersion,
       latestVersion,
-      message: latestVersion > pkgVersion
+      message: isNewerVersion(latestVersion, pkgVersion)
         ? `Update available: ${pkgVersion} -> ${latestVersion}`
         : null
     };
