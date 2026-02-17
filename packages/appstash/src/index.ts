@@ -272,3 +272,13 @@ export function resolve(
 ): string {
   return path.join(dirs[kind], ...parts);
 }
+
+export { createConfigStore } from './config-store';
+export type {
+  ConfigStore,
+  ConfigStoreOptions,
+  ContextConfig,
+  ContextCredentials,
+  Credentials,
+  GlobalSettings,
+} from './config-store';
