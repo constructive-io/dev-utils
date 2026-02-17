@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/constructive-io/dev-utils/compare/appstash@0.4.0...appstash@0.5.0) (2026-02-17)
+
+### Features
+
+- **appstash:** add multi-target context support ([f662b92](https://github.com/constructive-io/dev-utils/commit/f662b92ad11294a911ef0f2e929a5cdc4ca3ac64))
+
 # [0.4.0](https://github.com/constructive-io/dev-utils/compare/appstash@0.3.1...appstash@0.4.0) (2026-02-17)
 
 ### Features
