@@ -255,6 +255,95 @@ describe('createConfigStore', () => {
     });
   });
 
+  describe('multi-target contexts', () => {
+    it('should create a context with targets', () => {
+      const store = createStore();
+      const ctx = store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+        targets: {
+          auth: { endpoint: 'https://auth.example.com/graphql' },
+          members: { endpoint: 'https://members.example.com/graphql' },
+          app: { endpoint: 'https://app.example.com/graphql' },
+        },
+      });
+      expect(ctx.targets).toBeDefined();
+      expect(ctx.targets!.auth.endpoint).toBe('https://auth.example.com/graphql');
+      expect(ctx.targets!.members.endpoint).toBe('https://members.example.com/graphql');
+      expect(ctx.targets!.app.endpoint).toBe('https://app.example.com/graphql');
+    });
+
+    it('should load a context with targets', () => {
+      const store = createStore();
+      store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+        targets: {
+          auth: { endpoint: 'https://auth.example.com/graphql' },
+        },
+      });
+      const ctx = store.loadContext('production');
+      expect(ctx!.targets!.auth.endpoint).toBe('https://auth.example.com/graphql');
+    });
+
+    it('should create a context without targets (backward compatible)', () => {
+      const store = createStore();
+      const ctx = store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+      });
+      expect(ctx.targets).toBeUndefined();
+    });
+
+    it('should get target endpoint from multi-target context', () => {
+      const store = createStore();
+      store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+        targets: {
+          auth: { endpoint: 'https://auth.example.com/graphql' },
+          app: { endpoint: 'https://app.example.com/graphql' },
+        },
+      });
+      store.setCurrentContext('production');
+      expect(store.getTargetEndpoint('auth')).toBe('https://auth.example.com/graphql');
+      expect(store.getTargetEndpoint('app')).toBe('https://app.example.com/graphql');
+    });
+
+    it('should fall back to main endpoint for unknown target', () => {
+      const store = createStore();
+      store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+        targets: {
+          auth: { endpoint: 'https://auth.example.com/graphql' },
+        },
+      });
+      store.setCurrentContext('production');
+      expect(store.getTargetEndpoint('unknown')).toBe('https://api.example.com/graphql');
+    });
+
+    it('should fall back to main endpoint for single-target context', () => {
+      const store = createStore();
+      store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+      });
+      store.setCurrentContext('production');
+      expect(store.getTargetEndpoint('anything')).toBe('https://api.example.com/graphql');
+    });
+
+    it('should return null when no current context for getTargetEndpoint', () => {
+      const store = createStore();
+      expect(store.getTargetEndpoint('auth')).toBeNull();
+    });
+
+    it('should get target endpoint by explicit context name', () => {
+      const store = createStore();
+      store.createContext('staging', {
+        endpoint: 'https://staging.example.com/graphql',
+        targets: {
+          auth: { endpoint: 'https://auth.staging.example.com/graphql' },
+        },
+      });
+      expect(store.getTargetEndpoint('auth', 'staging')).toBe('https://auth.staging.example.com/graphql');
+    });
+  });
+
   describe('full workflow', () => {
     it('should support the complete context + auth workflow', () => {
       const store = createStore();

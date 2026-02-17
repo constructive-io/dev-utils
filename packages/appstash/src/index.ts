@@ -279,6 +279,7 @@ export type {
   ConfigStoreOptions,
   ContextConfig,
   ContextCredentials,
+  ContextTargetEndpoint,
   Credentials,
   GlobalSettings,
 } from './config-store';

@@ -2,9 +2,14 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { appstash, resolve } from './index';
 
+export interface ContextTargetEndpoint {
+  endpoint: string;
+}
+
 export interface ContextConfig {
   name: string;
   endpoint: string;
+  targets?: Record<string, ContextTargetEndpoint>;
   createdAt: string;
   updatedAt: string;
 }
@@ -31,12 +36,13 @@ export interface ConfigStore {
   loadSettings(): GlobalSettings;
   saveSettings(settings: GlobalSettings): void;
 
-  createContext(name: string, options: { endpoint: string }): ContextConfig;
+  createContext(name: string, options: { endpoint: string; targets?: Record<string, ContextTargetEndpoint> }): ContextConfig;
   loadContext(name: string): ContextConfig | null;
   listContexts(): ContextConfig[];
   deleteContext(name: string): boolean;
   getCurrentContext(): ContextConfig | null;
   setCurrentContext(name: string): boolean;
+  getTargetEndpoint(targetName: string, contextName?: string): string | null;
 
   setCredentials(contextName: string, creds: ContextCredentials): void;
   getCredentials(contextName: string): ContextCredentials | null;
@@ -97,7 +103,7 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
     return readJson<ContextConfig | null>(contextPath(name), null);
   }
 
-  function createContext(name: string, options: { endpoint: string }): ContextConfig {
+  function createContext(name: string, options: { endpoint: string; targets?: Record<string, ContextTargetEndpoint> }): ContextConfig {
     const now = new Date().toISOString();
     const context: ContextConfig = {
       name,
@@ -105,6 +111,9 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
       createdAt: now,
       updatedAt: now,
     };
+    if (options.targets) {
+      context.targets = options.targets;
+    }
     writeJson(contextPath(name), context);
     return context;
   }
@@ -203,6 +212,20 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
     return true;
   }
 
+  function getTargetEndpoint(targetName: string, contextName?: string): string | null {
+    let ctx: ContextConfig | null;
+    if (contextName) {
+      ctx = loadContext(contextName);
+    } else {
+      ctx = getCurrentContext();
+    }
+    if (!ctx) return null;
+    if (ctx.targets && ctx.targets[targetName]) {
+      return ctx.targets[targetName].endpoint;
+    }
+    return ctx.endpoint;
+  }
+
   return {
     loadSettings,
     saveSettings,
@@ -212,6 +235,7 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
     deleteContext,
     getCurrentContext,
     setCurrentContext,
+    getTargetEndpoint,
     setCredentials,
     getCredentials,
     removeCredentials,
