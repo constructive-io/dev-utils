@@ -83,6 +83,43 @@ export function clearUpdateCache(toolName: string): boolean {
   return false;
 }
 
+/**
+ * Write a cache entry that suppresses the update notification.
+ *
+ * After a CLI `update` command installs a new version, the currently running
+ * binary still reports the OLD version via getPackageJson(__dirname). If we
+ * merely clear the cache, the next command will fetch the latest from npm and
+ * compare it against the stale pkgVersion, producing a false-positive
+ * "Update available" message.
+ *
+ * By writing the current binary's version as `latestVersion`, the next
+ * checkForUpdates call sees latestVersion === pkgVersion and returns
+ * hasUpdate: false. Once the cache expires (24 h by default), a fresh check
+ * runs against the (by then correct) new binary version.
+ *
+ * @param toolName - Tool name used for appstash directory (e.g., 'pgpm')
+ * @param currentVersion - The version of the currently running binary
+ * @returns true if the cache was written successfully
+ */
+export function suppressUpdateCheck(toolName: string, currentVersion: string): boolean {
+  try {
+    const dirs = appstash(toolName);
+    const cacheFile = path.join(dirs.cache, CACHE_FILENAME);
+    if (!fs.existsSync(dirs.cache)) {
+      fs.mkdirSync(dirs.cache, { recursive: true });
+    }
+    fs.writeFileSync(cacheFile, JSON.stringify({
+      latestVersion: currentVersion,
+      timestamp: Date.now()
+    }));
+    return true;
+  } catch {
+    // If writing fails, fall back to clearing the old cache
+    clearUpdateCache(toolName);
+    return false;
+  }
+}
+
 function isNewerVersion(latest: string, current: string): boolean {
   if (semver.valid(latest) && semver.valid(current)) {
     return semver.gt(latest, current);
