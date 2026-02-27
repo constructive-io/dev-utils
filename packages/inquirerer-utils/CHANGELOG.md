@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/constructive-io/dev-utils/compare/@inquirerer/utils@3.2.5...@inquirerer/utils@3.3.0) (2026-02-27)
+
+### Features
+
+- **inquirerer-utils:** add suppressUpdateCheck to write cache entry after update ([a920534](https://github.com/constructive-io/dev-utils/commit/a9205346d4896cb3497b7a25f6c504676fbe2345))
+
 ## [3.2.5](https://github.com/constructive-io/dev-utils/compare/@inquirerer/utils@3.2.4...@inquirerer/utils@3.2.5) (2026-02-17)
 
 **Note:** Version bump only for package @inquirerer/utils
