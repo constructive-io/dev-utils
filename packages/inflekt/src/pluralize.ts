@@ -25,18 +25,59 @@ const LATIN_SUFFIX_OVERRIDES: Array<[string, string]> = [
   ['data', 'datum'],
 ];
 
+const TRAILING_TRIPLE_S_REGEX = /[sS]{3,}$/;
+const TRAILING_TRIPLE_S_BEFORE_ES_REGEX = /[sS]{3,}(?=e[sS]$)/;
+
+function normalizeTrailingSRun(suffix: string): string {
+  return suffix === suffix.toUpperCase() ? 'SS' : 'ss';
+}
+
+function normalizeTripleSBeforeEs(word: string): string {
+  return word.replace(TRAILING_TRIPLE_S_BEFORE_ES_REGEX, normalizeTrailingSRun);
+}
+
+function normalizeTrailingTripleS(word: string): string {
+  const match = word.match(TRAILING_TRIPLE_S_REGEX);
+  if (!match) {
+    return word;
+  }
+
+  const suffix = match[0];
+  const prefix = word.slice(0, -suffix.length);
+  const normalizedSuffix = normalizeTrailingSRun(suffix);
+  return `${prefix}${normalizedSuffix}`;
+}
+
+function normalizeMalformedDoubleS(word: string): string {
+  return normalizeTrailingTripleS(normalizeTripleSBeforeEs(word));
+}
+
+function enforceDoubleSPlural(singularWord: string, pluralWord: string): string {
+  if (!singularWord.toLowerCase().endsWith('ss')) {
+    return pluralWord;
+  }
+
+  // Defensive normalization for malformed outputs like "hazardClasss".
+  if (pluralWord === `${singularWord}s`) {
+    return `${singularWord}es`;
+  }
+
+  return pluralWord;
+}
+
 /**
  * Convert a word to its singular form with PostGraphile-compatible Latin handling
  * @example "Users" -> "User", "People" -> "Person", "Schemata" -> "Schema", "ApiSchemata" -> "ApiSchema"
  */
 export function singularize(word: string): string {
-  const lowerWord = word.toLowerCase();
+  const normalizedWord = normalizeMalformedDoubleS(word);
+  const lowerWord = normalizedWord.toLowerCase();
 
   for (const [pluralSuffix, singularSuffix] of LATIN_SUFFIX_OVERRIDES) {
     if (lowerWord.endsWith(pluralSuffix)) {
-      const suffixStart = word.length - pluralSuffix.length;
-      const prefix = word.slice(0, suffixStart);
-      const originalSuffix = word.slice(suffixStart);
+      const suffixStart = normalizedWord.length - pluralSuffix.length;
+      const prefix = normalizedWord.slice(0, suffixStart);
+      const originalSuffix = normalizedWord.slice(suffixStart);
 
       const isAllCaps = originalSuffix === originalSuffix.toUpperCase();
       const isUpperSuffix =
@@ -55,7 +96,13 @@ export function singularize(word: string): string {
     }
   }
 
-  return inflection.singularize(word);
+  return normalizeMalformedDoubleS(inflection.singularize(normalizedWord));
+}
+
+function pluralizeCanonical(word: string): string {
+  const normalizedWord = normalizeMalformedDoubleS(word);
+  const pluralWord = normalizeMalformedDoubleS(inflection.pluralize(normalizedWord));
+  return enforceDoubleSPlural(singularize(normalizedWord), pluralWord);
 }
 
 /**
@@ -63,7 +110,7 @@ export function singularize(word: string): string {
  * @example "User" -> "Users", "Person" -> "People"
  */
 export function pluralize(word: string): string {
-  return inflection.pluralize(word);
+  return pluralizeCanonical(word);
 }
 
 /**

@@ -46,6 +46,14 @@ describe('singularize', () => {
     expect(singularize('apiSchemata')).toBe('apiSchema');
     expect(singularize('SCHEMATA')).toBe('SCHEMA');
   });
+
+  it('should canonicalize malformed trailing triple-s words', () => {
+    expect(singularize('classs')).toBe('class');
+    expect(singularize('Classs')).toBe('Class');
+    expect(singularize('hazardClasss')).toBe('hazardClass');
+    expect(singularize('hazardClassses')).toBe('hazardClass');
+    expect(singularize('CLASSS')).toBe('CLASS');
+  });
 });
 
 describe('pluralize', () => {
@@ -55,6 +63,36 @@ describe('pluralize', () => {
     expect(pluralize('Person')).toBe('People');
     expect(pluralize('Category')).toBe('Categories');
   });
+
+  it('should normalize class variants', () => {
+    expect(pluralize('class')).toBe('classes');
+    expect(pluralize('Class')).toBe('Classes');
+    expect(pluralize('hazardClass')).toBe('hazardClasses');
+    expect(pluralize('HazardClass')).toBe('HazardClasses');
+    expect(pluralize('hazardClasss')).toBe('hazardClasses');
+    expect(pluralize('classs')).toBe('classes');
+  });
+
+  it('should preserve already-plural Latin words', () => {
+    expect(pluralize('Schemata')).toBe('Schemata');
+    expect(pluralize('schemata')).toBe('schemata');
+  });
+
+  it.each([
+    ['class', 'classes'],
+    ['glass', 'glasses'],
+    ['boss', 'bosses'],
+    ['process', 'processes'],
+    ['address', 'addresses'],
+    ['witness', 'witnesses'],
+    ['abyss', 'abysses'],
+  ])(
+    'should handle -ss noun roundtrip for %s -> %s',
+    (singularWord, pluralWord) => {
+      expect(pluralize(singularWord)).toBe(pluralWord);
+      expect(singularize(pluralWord)).toBe(singularWord);
+    }
+  );
 });
 
 describe('singularizeLast', () => {
@@ -69,6 +107,11 @@ describe('singularizeLast', () => {
     expect(singularizeLast('api_schemata')).toBe('api_schema');
     expect(singularizeLast('ApiSchemata')).toBe('ApiSchema');
   });
+
+  it('should normalize malformed class suffixes in the final segment', () => {
+    expect(singularizeLast('hazardClassses')).toBe('hazardClass');
+    expect(singularizeLast('HazardClassses')).toBe('HazardClass');
+  });
 });
 
 describe('pluralizeLast', () => {
@@ -77,6 +120,13 @@ describe('pluralizeLast', () => {
     expect(pluralizeLast('UserProfile')).toBe('UserProfiles');
     expect(pluralizeLast('order_item')).toBe('order_items');
     expect(pluralizeLast('OrderItem')).toBe('OrderItems');
+  });
+
+  it('should normalize malformed class suffixes in the final segment', () => {
+    expect(pluralizeLast('hazardClass')).toBe('hazardClasses');
+    expect(pluralizeLast('HazardClass')).toBe('HazardClasses');
+    expect(pluralizeLast('hazardClasss')).toBe('hazardClasses');
+    expect(pluralizeLast('HazardClasss')).toBe('HazardClasses');
   });
 });
 
@@ -95,12 +145,22 @@ describe('distinctPluralize', () => {
     expect(distinctPluralize('bus')).toBe('buses');
     expect(distinctPluralize('box')).toBe('boxes');
   });
+
+  it('should normalize malformed class variants', () => {
+    expect(distinctPluralize('classs')).toBe('classes');
+    expect(distinctPluralize('hazardClasss')).toBe('hazardClasses');
+  });
 });
 
 describe('distinctPluralizeLast', () => {
   it('should distinctly pluralize only the last word', () => {
     expect(distinctPluralizeLast('user_profile')).toBe('user_profiles');
     expect(distinctPluralizeLast('UserProfile')).toBe('UserProfiles');
+  });
+
+  it('should normalize malformed class variants in the final segment', () => {
+    expect(distinctPluralizeLast('hazardClasss')).toBe('hazardClasses');
+    expect(distinctPluralizeLast('HazardClasss')).toBe('HazardClasses');
   });
 });
 
@@ -189,6 +249,12 @@ describe('toFieldName', () => {
     expect(toFieldName('Schemata')).toBe('schema');
     expect(toFieldName('ApiSchemata')).toBe('apiSchema');
   });
+
+  it('should normalize malformed class variants', () => {
+    expect(toFieldName('Classes')).toBe('class');
+    expect(toFieldName('HazardClasses')).toBe('hazardClass');
+    expect(toFieldName('HazardClassses')).toBe('hazardClass');
+  });
 });
 
 describe('toQueryName', () => {
@@ -196,5 +262,7 @@ describe('toQueryName', () => {
     expect(toQueryName('User')).toBe('users');
     expect(toQueryName('OrderItem')).toBe('orderItems');
     expect(toQueryName('Category')).toBe('categories');
+    expect(toQueryName('Class')).toBe('classes');
+    expect(toQueryName('HazardClass')).toBe('hazardClasses');
   });
 });
