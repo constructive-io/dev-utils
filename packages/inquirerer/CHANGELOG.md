@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.2](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.5.1...inquirerer@4.5.2) (2026-03-03)
+
+### Bug Fixes
+
+- prevent keypress memory leak with multiple Inquirerer instances ([d8812a1](https://github.com/constructive-io/dev-utils/commit/d8812a1853deade38e7b7e8bbae857cf6933370c))
+
 ## [4.5.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.5.0...inquirerer@4.5.1) (2026-01-29)
 
 **Note:** Version bump only for package inquirerer
