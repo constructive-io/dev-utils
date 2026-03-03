@@ -150,6 +150,9 @@ export class TerminalKeypress {
   pause(): void {
     this.active = false;
     this.clearHandlers();
+    if (typeof (this.input as any).setRawMode === 'function') {
+      (this.input as any).setRawMode(false);
+    }
   }
 
   resume(): void {

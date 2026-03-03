@@ -1329,7 +1329,11 @@ export class Inquirerer {
   public close() {
     if (this.rl) {
       this.rl.close();
+      this.rl = null;
+    }
+    if (this.keypress) {
       this.keypress.destroy();
+      this.keypress = null;
     }
   }
 }
