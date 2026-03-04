@@ -1,6 +1,6 @@
 {
   "name": "inflekt",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Inflection utilities for pluralization and singularization with PostGraphile-compatible Latin suffix handling",
   "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",
