@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.5.2...inquirerer@4.6.0) (2026-03-05)
+
+### Features
+
+- **inquirerer:** add skipPrompt flag to skip prompting for optional fields ([681331d](https://github.com/constructive-io/dev-utils/commit/681331d617eb617a69be918161363dad9fc22f72))
+
 ## [4.5.2](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.5.1...inquirerer@4.5.2) (2026-03-03)
 
 ### Bug Fixes
