@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.7.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.6.0...inquirerer@4.7.0) (2026-03-05)
+
+### Features
+
+- **inquirerer:** add boolean alias and json question types ([ea6fe03](https://github.com/constructive-io/dev-utils/commit/ea6fe0353b15c17cbc2b81c24de62129b4276f5d))
+
 # [4.6.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.5.2...inquirerer@4.6.0) (2026-03-05)
 
 ### Features
