@@ -3,7 +3,7 @@ import readline from 'readline';
 import { Readable, Writable } from 'stream';
 
 import { KEY_CODES, TerminalKeypress } from './keypress';
-import { AutocompleteQuestion, CheckboxQuestion, ConfirmQuestion, ListQuestion, NumberQuestion, OptionValue, PasswordQuestion, Question, TextQuestion, Validation, Value } from './question';
+import { AutocompleteQuestion, BooleanQuestion, CheckboxQuestion, ConfirmQuestion, JsonQuestion, ListQuestion, NumberQuestion, OptionValue, PasswordQuestion, Question, TextQuestion, Validation, Value } from './question';
 import { DefaultResolverRegistry, globalResolverRegistry } from './resolvers';
 // import { writeFileSync } from 'fs';
 
@@ -136,9 +136,17 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
   // 2. Append default inline (only if present)
   switch (type) {
     case 'confirm':
+    case 'boolean':
       promptLine += ' (y/n)';
       if (def !== undefined) {
         promptLine += ` ${yellow(`[${def ? 'y' : 'n'}]`)}`;
+      }
+      break;
+
+    case 'json':
+      promptLine += dim(' (JSON)');
+      if (def !== undefined) {
+        promptLine += ` ${yellow(`[${JSON.stringify(def)}]`)}`;
       }
       break;
 
@@ -789,6 +797,10 @@ export class Inquirerer {
     switch (question.type) {
       case 'confirm':
         return this.confirm(question as ConfirmQuestion, ctx);
+      case 'boolean':
+        return this.confirm(question as unknown as ConfirmQuestion, ctx);
+      case 'json':
+        return this.json(question as JsonQuestion, ctx);
       case 'checkbox':
         return this.checkbox(question as CheckboxQuestion, ctx);
       case 'list':
@@ -845,6 +857,36 @@ export class Inquirerer {
           resolve(question.default);  // Use default if input is empty
         } else {
           resolve(null);  // Return null if empty and not required
+        }
+      });
+    });
+  }
+
+  public async json(question: JsonQuestion, ctx: PromptContext): Promise<Record<string, unknown> | null> {
+    if (this.noTty || !this.rl) {
+      if ('default' in question) {
+        return question.default;
+      }
+      return;
+    }
+
+    let input = '';
+
+    return new Promise<Record<string, unknown> | null>((resolve) => {
+      this.clearScreen();
+      this.rl.question(this.getPrompt(question, ctx, input), (answer) => {
+        input = answer.trim();
+        if (input !== '') {
+          try {
+            const parsed = JSON.parse(input);
+            resolve(parsed);
+          } catch {
+            resolve(null); // Let validation handle invalid JSON
+          }
+        } else if ('default' in question) {
+          resolve(question.default);
+        } else {
+          resolve(null);
         }
       });
     });

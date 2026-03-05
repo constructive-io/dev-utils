@@ -39,6 +39,16 @@ export interface BaseQuestion {
     type: 'confirm';
     default?: boolean;  // Defaults are typically boolean for confirm types
   }
+
+  export interface BooleanQuestion extends BaseQuestion {
+    type: 'boolean';
+    default?: boolean;  // Alias for confirm — same behavior, semantic name
+  }
+
+  export interface JsonQuestion extends BaseQuestion {
+    type: 'json';
+    default?: Record<string, unknown>;  // Default JSON value
+  }
   
   export interface AutocompleteQuestion extends BaseQuestion {
     type: 'autocomplete';
@@ -78,4 +88,4 @@ export interface BaseQuestion {
     mask?: string;  // Character to use for masking (default: '*')
   }
   
-  export type Question = ConfirmQuestion | ListQuestion | AutocompleteQuestion | CheckboxQuestion | TextQuestion | NumberQuestion | PasswordQuestion;
+  export type Question = ConfirmQuestion | BooleanQuestion | JsonQuestion | ListQuestion | AutocompleteQuestion | CheckboxQuestion | TextQuestion | NumberQuestion | PasswordQuestion;
