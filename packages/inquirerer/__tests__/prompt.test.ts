@@ -86,6 +86,9 @@ describe('Inquirerer', () => {
       }
     });
 
+    inputQueue = [];
+    currentInputIndex = 0;
+
     setupReadlineMock();
     // Pipe the transform stream to the mock output to intercept writes
     //  transformStream.pipe(mockOutput);
@@ -331,6 +334,139 @@ describe('Inquirerer', () => {
       expect('createdAt' in result).toBe(false);
       expect('updatedAt' in result).toBe(false);
       expect('internalId' in result).toBe(false);
+    });
+  });
+
+  describe('boolean type (alias for confirm)', () => {
+    it('should treat boolean type as confirm — yes input', async () => {
+      enqueueInputResponse({ type: 'read', value: 'y' });
+
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'isActive', type: 'boolean' },
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      expect(result).toEqual({ isActive: true });
+    });
+
+    it('should treat boolean type as confirm — no input', async () => {
+      enqueueInputResponse({ type: 'read', value: 'n' });
+
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'isActive', type: 'boolean' },
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      expect(result).toEqual({ isActive: false });
+    });
+
+    it('should use default for boolean type in noTty mode', async () => {
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: true
+      });
+      const questions: Question[] = [
+        { name: 'isActive', type: 'boolean', default: true },
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      expect(result).toEqual({ isActive: true });
+    });
+
+    it('should accept CLI flag override for boolean type', async () => {
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'isActive', type: 'boolean' },
+      ];
+
+      const result = await prompter.prompt({ isActive: true }, questions);
+
+      expect(result).toEqual({ isActive: true });
+    });
+  });
+
+  describe('json type', () => {
+    it('should parse valid JSON input', async () => {
+      enqueueInputResponse({ type: 'read', value: '{"email":"test@example.com","password":"secret"}' });
+
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'input', type: 'json' },
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      expect(result).toEqual({ input: { email: 'test@example.com', password: 'secret' } });
+    });
+
+    it('should return null for invalid JSON input', async () => {
+      enqueueInputResponse({ type: 'read', value: 'not valid json' });
+
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'data', type: 'json' },
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      // Invalid JSON returns null from the handler
+      expect(result).toEqual({ data: null });
+    });
+
+    it('should use default for json type in noTty mode', async () => {
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: true
+      });
+      const questions: Question[] = [
+        { name: 'config', type: 'json', default: { key: 'value' } },
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      expect(result).toEqual({ config: { key: 'value' } });
+    });
+
+    it('should accept CLI flag override for json type', async () => {
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'data', type: 'json' },
+      ];
+
+      const result = await prompter.prompt({ data: { foo: 'bar' } }, questions);
+
+      expect(result).toEqual({ data: { foo: 'bar' } });
     });
   });
 

@@ -45,6 +45,8 @@ npm install inquirerer
     - [Text Question](#text-question)
     - [Number Question](#number-question)
     - [Confirm Question](#confirm-question)
+    - [Boolean Question](#boolean-question)
+    - [JSON Question](#json-question)
     - [List Question](#list-question)
     - [Autocomplete Question](#autocomplete-question)
     - [Checkbox Question](#checkbox-question)
@@ -112,6 +114,8 @@ import {
   TextQuestion,
   NumberQuestion,
   ConfirmQuestion,
+  BooleanQuestion,
+  JsonQuestion,
   ListQuestion,
   AutocompleteQuestion,
   CheckboxQuestion,
@@ -319,6 +323,42 @@ Yes/no questions.
   default: true  // Default to 'yes'
 }
 ```
+
+#### Boolean Question
+
+Alias for `confirm` — provides a semantic name for boolean fields. Behaves identically to `confirm` (y/n prompt).
+
+```typescript
+{
+  type: 'boolean',
+  name: 'isActive',
+  message: 'Is this record active?',
+  default: true
+}
+```
+
+Useful when generating CLI prompts from schema types where the field type is `Boolean` rather than a yes/no confirmation.
+
+#### JSON Question
+
+Collect structured JSON input. Validates input with `JSON.parse()` — invalid JSON returns `null`.
+
+```typescript
+{
+  type: 'json',
+  name: 'metadata',
+  message: 'Enter metadata',
+  default: { key: 'value' }
+}
+```
+
+The prompt displays a `(JSON)` hint. Users enter raw JSON strings:
+```bash
+$ Enter metadata (JSON)
+> {"email":"user@example.com","role":"admin"}
+```
+
+In non-interactive mode, returns the `default` value if provided, otherwise `undefined`.
 
 #### List Question
 
