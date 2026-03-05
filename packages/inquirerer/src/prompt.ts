@@ -475,6 +475,15 @@ export class Inquirerer {
         continue;
       }
 
+      // Skip prompt entirely if skipPrompt is set.
+      // The question still appears in man pages and CLI flag overrides still work
+      // (handled by the `question.name in obj` check above), but no interactive
+      // prompt is shown. The field is simply left out of the answers object.
+      if (question.skipPrompt) {
+        ctx.nextQuestion();
+        continue;
+      }
+
       // Apply default value if applicable
       // this is if useDefault is set, rare! not typical defaults which happen AFTER
       // this is mostly to avoid a prompt for "hidden" options

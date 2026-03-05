@@ -32,6 +32,7 @@ export interface BaseQuestion {
     pattern?: string;
     dependsOn?: string[];
     when?: (answers: any) => boolean;
+    skipPrompt?: boolean;
   }
   
   export interface ConfirmQuestion extends BaseQuestion {
