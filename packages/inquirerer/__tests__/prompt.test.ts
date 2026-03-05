@@ -232,6 +232,108 @@ describe('Inquirerer', () => {
     snap(result);
   });
 
+  describe('skipPrompt', () => {
+    it('should skip question with skipPrompt: true and not include it in result', async () => {
+      enqueueInputResponse({ type: 'read', value: 'my name' });
+
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'name', type: 'text' },
+        { name: 'status', type: 'text', skipPrompt: true },
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      // 'status' should not be in the result since it was skipped
+      expect(result).toEqual({ name: 'my name' });
+      expect('status' in result).toBe(false);
+    });
+
+    it('should still allow CLI flag override when skipPrompt is true', async () => {
+      enqueueInputResponse({ type: 'read', value: 'my name' });
+
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'name', type: 'text' },
+        { name: 'status', type: 'text', skipPrompt: true },
+      ];
+
+      // Pass status via argv (simulating --status "active")
+      const result = await prompter.prompt({ status: 'active' }, questions);
+
+      expect(result).toEqual({ name: 'my name', status: 'active' });
+    });
+
+    it('should skip question in noTty mode with skipPrompt: true', async () => {
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: true
+      });
+      const questions: Question[] = [
+        { name: 'name', type: 'text', required: true },
+        { name: 'status', type: 'text', skipPrompt: true },
+      ];
+
+      const result = await prompter.prompt({ name: 'test' }, questions);
+
+      expect(result).toEqual({ name: 'test' });
+      expect('status' in result).toBe(false);
+    });
+
+    it('should include skipPrompt question in man page', () => {
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'name', type: 'text', required: true },
+        { name: 'status', type: 'text', skipPrompt: true },
+      ];
+
+      const manPage = prompter.generateManPage({
+        commandName: 'test-cmd',
+        questions,
+      });
+
+      // Both fields should appear in the man page
+      expect(manPage).toContain('NAME');
+      expect(manPage).toContain('STATUS');
+    });
+
+    it('should skip multiple skipPrompt questions and only prompt remaining', async () => {
+      enqueueInputResponse({ type: 'read', value: 'hello' });
+
+      const prompter = new Inquirerer({
+        input: mockInput,
+        output: mockOutput,
+        noTty: false
+      });
+      const questions: Question[] = [
+        { name: 'greeting', type: 'text' },
+        { name: 'createdAt', type: 'text', skipPrompt: true },
+        { name: 'updatedAt', type: 'text', skipPrompt: true },
+        { name: 'internalId', type: 'text', skipPrompt: true },
+      ];
+
+      const result = await prompter.prompt({}, questions);
+
+      expect(result).toEqual({ greeting: 'hello' });
+      expect('createdAt' in result).toBe(false);
+      expect('updatedAt' in result).toBe(false);
+      expect('internalId' in result).toBe(false);
+    });
+  });
+
   it('handles readline inputs', async () => {
 
     const prompter = new Inquirerer({

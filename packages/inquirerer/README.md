@@ -146,8 +146,10 @@ interface BaseQuestion {
   default?: any;          // Default value
   defaultFrom?: string;   // Dynamic default from resolver (e.g., 'git.user.name')
   setFrom?: string;       // Auto-set value from resolver, bypassing prompt entirely
+  optionsFrom?: string;   // Dynamic options from another answer's value
   useDefault?: boolean;   // Skip prompt and use default
   required?: boolean;     // Validation requirement
+  skipPrompt?: boolean;   // Skip prompting entirely (field still in man pages / CLI flags)
   validate?: (input: any, answers: any) => boolean | Validation;
   sanitize?: (input: any, answers: any) => any;
   pattern?: string;       // Regex pattern for validation
@@ -155,6 +157,40 @@ interface BaseQuestion {
   when?: (answers: any) => boolean;  // Conditional display
 }
 ```
+
+#### Skipping Prompts
+
+Use `skipPrompt: true` to skip interactive prompting for a question entirely. The field is omitted from the answers object unless the user explicitly passes it via a CLI flag. This is useful for fields with backend-managed defaults where the CLI should not prompt, but should still allow overrides.
+
+```typescript
+const questions: Question[] = [
+  {
+    type: 'text',
+    name: 'username',
+    message: 'Username',
+    required: true
+  },
+  {
+    type: 'text',
+    name: 'status',
+    message: 'Account status',
+    skipPrompt: true  // Won't prompt, but user can pass --status active
+  }
+];
+
+const result = await prompter.prompt({}, questions);
+// { username: 'john' }  — status is not included
+
+const result2 = await prompter.prompt({ status: 'active' }, questions);
+// { username: 'john', status: 'active' }  — CLI flag override works
+```
+
+Key behaviors:
+- The question still appears in generated man pages
+- CLI flag overrides (e.g. `--status active`) still work
+- The field is simply left out of the answers if not provided
+- Different from `when`: `skipPrompt` is unconditional, while `when` depends on other answers
+- Different from `useDefault`: `skipPrompt` does not apply a default value
 
 ### Non-Interactive Mode
 
