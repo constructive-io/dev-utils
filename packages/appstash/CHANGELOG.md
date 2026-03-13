@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/constructive-io/dev-utils/compare/appstash@0.5.0...appstash@0.6.0) (2026-03-13)
+
+### Features
+
+- **appstash:** add per-context vars, getClientConfig with 3-tier resolution ([2531efb](https://github.com/constructive-io/dev-utils/commit/2531efbaff34e0371b231bee367ac81cb148a027))
+
 # [0.5.0](https://github.com/constructive-io/dev-utils/compare/appstash@0.4.0...appstash@0.5.0) (2026-02-17)
 
 ### Features
