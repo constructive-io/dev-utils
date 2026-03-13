@@ -32,6 +32,11 @@ export interface ConfigStoreOptions {
   baseDir?: string;
 }
 
+export interface ClientConfig {
+  endpoint: string;
+  headers: Record<string, string>;
+}
+
 export interface ConfigStore {
   loadSettings(): GlobalSettings;
   saveSettings(settings: GlobalSettings): void;
@@ -48,19 +53,24 @@ export interface ConfigStore {
   getCredentials(contextName: string): ContextCredentials | null;
   removeCredentials(contextName: string): boolean;
   hasValidCredentials(contextName: string): boolean;
-}
 
-const DEFAULT_SETTINGS: GlobalSettings = {};
+  setVar(key: string, value: string, contextName?: string): void;
+  getVar(key: string, contextName?: string): string | null;
+  deleteVar(key: string, contextName?: string): boolean;
+  listVars(contextName?: string): Record<string, string>;
+
+  getClientConfig(targetName: string, contextName?: string): ClientConfig;
+}
 
 function readJson<T>(filePath: string, fallback: T): T {
   if (fs.existsSync(filePath)) {
     try {
       return JSON.parse(fs.readFileSync(filePath, 'utf8'));
     } catch {
-      return fallback;
+      return JSON.parse(JSON.stringify(fallback));
     }
   }
-  return fallback;
+  return JSON.parse(JSON.stringify(fallback));
 }
 
 function writeJson(filePath: string, data: unknown, mode?: number): void {
@@ -92,7 +102,7 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
   }
 
   function loadSettings(): GlobalSettings {
-    return readJson(settingsPath(), DEFAULT_SETTINGS);
+    return readJson<GlobalSettings>(settingsPath(), {});
   }
 
   function saveSettings(settings: GlobalSettings): void {
@@ -226,6 +236,105 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
     return ctx.endpoint;
   }
 
+  function varsPath(ctxName: string): string {
+    const varsDir = resolve(dirs, 'config', 'vars');
+    if (!fs.existsSync(varsDir)) {
+      fs.mkdirSync(varsDir, { recursive: true });
+    }
+    return path.join(varsDir, `${ctxName}.json`);
+  }
+
+  function loadVars(ctxName: string): Record<string, string> {
+    return readJson<Record<string, string>>(varsPath(ctxName), {});
+  }
+
+  function saveVars(ctxName: string, vars: Record<string, string>): void {
+    writeJson(varsPath(ctxName), vars);
+  }
+
+  function resolveContextName(contextName?: string): string | null {
+    if (contextName) return contextName;
+    const settings = loadSettings();
+    return settings.currentContext || null;
+  }
+
+  function setVar(key: string, value: string, contextName?: string): void {
+    const ctxName = resolveContextName(contextName);
+    if (!ctxName) {
+      throw new Error('No active context. Run "context create" or "context use" first.');
+    }
+    const vars = loadVars(ctxName);
+    vars[key] = value;
+    saveVars(ctxName, vars);
+  }
+
+  function getVar(key: string, contextName?: string): string | null {
+    const ctxName = resolveContextName(contextName);
+    if (!ctxName) return null;
+    const vars = loadVars(ctxName);
+    return vars[key] ?? null;
+  }
+
+  function deleteVar(key: string, contextName?: string): boolean {
+    const ctxName = resolveContextName(contextName);
+    if (!ctxName) return false;
+    const vars = loadVars(ctxName);
+    if (key in vars) {
+      delete vars[key];
+      saveVars(ctxName, vars);
+      return true;
+    }
+    return false;
+  }
+
+  function listVars(contextName?: string): Record<string, string> {
+    const ctxName = resolveContextName(contextName);
+    if (!ctxName) return {};
+    return loadVars(ctxName);
+  }
+
+  function getClientConfig(targetName: string, contextName?: string): ClientConfig {
+    const envPrefix = toolName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+    const targetSuffix = targetName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+
+    // Tier 1: Try appstash store
+    const ctx = contextName ? loadContext(contextName) : getCurrentContext();
+    if (ctx) {
+      const endpoint = getTargetEndpoint(targetName, ctx.name);
+      const headers: Record<string, string> = {};
+      if (hasValidCredentials(ctx.name)) {
+        const creds = getCredentials(ctx.name);
+        if (creds?.token) {
+          headers['Authorization'] = `Bearer ${creds.token}`;
+        }
+      }
+      if (endpoint) {
+        return { endpoint, headers };
+      }
+    }
+
+    // Tier 2: Try env vars
+    const envToken = process.env[`${envPrefix}_TOKEN`];
+    const envEndpoint =
+      process.env[`${envPrefix}_${targetSuffix}_ENDPOINT`] ||
+      process.env[`${envPrefix}_ENDPOINT`];
+
+    if (envEndpoint) {
+      const headers: Record<string, string> = {};
+      if (envToken) {
+        headers['Authorization'] = `Bearer ${envToken}`;
+      }
+      return { endpoint: envEndpoint, headers };
+    }
+
+    // Tier 3: Throw with actionable error
+    throw new Error(
+      `No configuration found for target "${targetName}". ` +
+      `Set up a context with "${toolName} context create" and authenticate with "${toolName} auth", ` +
+      `or set ${envPrefix}_${targetSuffix}_ENDPOINT and ${envPrefix}_TOKEN environment variables.`
+    );
+  }
+
   return {
     loadSettings,
     saveSettings,
@@ -240,5 +349,10 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
     getCredentials,
     removeCredentials,
     hasValidCredentials,
+    setVar,
+    getVar,
+    deleteVar,
+    listVars,
+    getClientConfig,
   };
 }

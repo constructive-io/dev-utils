@@ -344,6 +344,235 @@ describe('createConfigStore', () => {
     });
   });
 
+  describe('vars (key-value store)', () => {
+    it('should return null for getVar when no context is active', () => {
+      const store = createStore();
+      expect(store.getVar('orgId')).toBeNull();
+    });
+
+    it('should throw on setVar when no context is active', () => {
+      const store = createStore();
+      expect(() => store.setVar('orgId', 'abc-123')).toThrow('No active context');
+    });
+
+    it('should set and get a var in the current context', () => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com/graphql' });
+      store.setCurrentContext('production');
+      store.setVar('orgId', 'abc-123');
+      expect(store.getVar('orgId')).toBe('abc-123');
+    });
+
+    it('should set and get a var by explicit context name', () => {
+      const store = createStore();
+      store.createContext('staging', { endpoint: 'https://staging.example.com/graphql' });
+      store.setVar('orgId', 'staging-org', 'staging');
+      expect(store.getVar('orgId', 'staging')).toBe('staging-org');
+    });
+
+    it('should overwrite existing var', () => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com/graphql' });
+      store.setCurrentContext('production');
+      store.setVar('orgId', 'old');
+      store.setVar('orgId', 'new');
+      expect(store.getVar('orgId')).toBe('new');
+    });
+
+    it('should return null for non-existent var', () => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com/graphql' });
+      store.setCurrentContext('production');
+      expect(store.getVar('nonexistent')).toBeNull();
+    });
+
+    it('should delete a var', () => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com/graphql' });
+      store.setCurrentContext('production');
+      store.setVar('orgId', 'abc-123');
+      const deleted = store.deleteVar('orgId');
+      expect(deleted).toBe(true);
+      expect(store.getVar('orgId')).toBeNull();
+    });
+
+    it('should return false when deleting non-existent var', () => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com/graphql' });
+      store.setCurrentContext('production');
+      expect(store.deleteVar('nonexistent')).toBe(false);
+    });
+
+    it('should return false for deleteVar when no context is active', () => {
+      const store = createStore();
+      expect(store.deleteVar('orgId')).toBe(false);
+    });
+
+    it('should list all vars for current context', () => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com/graphql' });
+      store.setCurrentContext('production');
+      store.setVar('orgId', 'abc-123');
+      store.setVar('defaultDatabase', 'my-app');
+      const vars = store.listVars();
+      expect(vars).toEqual({ orgId: 'abc-123', defaultDatabase: 'my-app' });
+    });
+
+    it('should return empty object for listVars when no context is active', () => {
+      const store = createStore();
+      expect(store.listVars()).toEqual({});
+    });
+
+    it('should isolate vars between contexts', () => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com/graphql' });
+      store.createContext('staging', { endpoint: 'https://staging.example.com/graphql' });
+
+      store.setVar('orgId', 'prod-org', 'production');
+      store.setVar('orgId', 'staging-org', 'staging');
+
+      expect(store.getVar('orgId', 'production')).toBe('prod-org');
+      expect(store.getVar('orgId', 'staging')).toBe('staging-org');
+    });
+  });
+
+  describe('getClientConfig', () => {
+    it('should return endpoint and auth header from store', () => {
+      const store = createStore();
+      store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+        targets: {
+          auth: { endpoint: 'https://auth.example.com/graphql' },
+          public: { endpoint: 'https://public.example.com/graphql' },
+        },
+      });
+      store.setCurrentContext('production');
+      store.setCredentials('production', { token: 'my-jwt-token' });
+
+      const config = store.getClientConfig('auth');
+      expect(config.endpoint).toBe('https://auth.example.com/graphql');
+      expect(config.headers['Authorization']).toBe('Bearer my-jwt-token');
+    });
+
+    it('should return config for explicit context name', () => {
+      const store = createStore();
+      store.createContext('staging', {
+        endpoint: 'https://staging.example.com/graphql',
+        targets: {
+          public: { endpoint: 'https://public.staging.example.com/graphql' },
+        },
+      });
+      store.setCredentials('staging', { token: 'staging-token' });
+
+      const config = store.getClientConfig('public', 'staging');
+      expect(config.endpoint).toBe('https://public.staging.example.com/graphql');
+      expect(config.headers['Authorization']).toBe('Bearer staging-token');
+    });
+
+    it('should return config without auth header when no credentials', () => {
+      const store = createStore();
+      store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+      });
+      store.setCurrentContext('production');
+
+      const config = store.getClientConfig('public');
+      expect(config.endpoint).toBe('https://api.example.com/graphql');
+      expect(config.headers['Authorization']).toBeUndefined();
+    });
+
+    it('should fall back to env vars when no context exists', () => {
+      const store = createStore();
+      process.env['TESTAPP_PUBLIC_ENDPOINT'] = 'https://env.example.com/graphql';
+      process.env['TESTAPP_TOKEN'] = 'env-token';
+
+      try {
+        const config = store.getClientConfig('public');
+        expect(config.endpoint).toBe('https://env.example.com/graphql');
+        expect(config.headers['Authorization']).toBe('Bearer env-token');
+      } finally {
+        delete process.env['TESTAPP_PUBLIC_ENDPOINT'];
+        delete process.env['TESTAPP_TOKEN'];
+      }
+    });
+
+    it('should fall back to generic endpoint env var', () => {
+      const store = createStore();
+      process.env['TESTAPP_ENDPOINT'] = 'https://generic.example.com/graphql';
+
+      try {
+        const config = store.getClientConfig('auth');
+        expect(config.endpoint).toBe('https://generic.example.com/graphql');
+        expect(config.headers['Authorization']).toBeUndefined();
+      } finally {
+        delete process.env['TESTAPP_ENDPOINT'];
+      }
+    });
+
+    it('should prefer target-specific env var over generic', () => {
+      const store = createStore();
+      process.env['TESTAPP_AUTH_ENDPOINT'] = 'https://auth-specific.example.com/graphql';
+      process.env['TESTAPP_ENDPOINT'] = 'https://generic.example.com/graphql';
+      process.env['TESTAPP_TOKEN'] = 'env-token';
+
+      try {
+        const config = store.getClientConfig('auth');
+        expect(config.endpoint).toBe('https://auth-specific.example.com/graphql');
+      } finally {
+        delete process.env['TESTAPP_AUTH_ENDPOINT'];
+        delete process.env['TESTAPP_ENDPOINT'];
+        delete process.env['TESTAPP_TOKEN'];
+      }
+    });
+
+    it('should throw with actionable error when nothing is configured', () => {
+      const store = createStore();
+      expect(() => store.getClientConfig('public')).toThrow(
+        /No configuration found for target "public"/
+      );
+      expect(() => store.getClientConfig('public')).toThrow(
+        /TESTAPP_PUBLIC_ENDPOINT/
+      );
+    });
+
+    it('should prioritize store over env vars', () => {
+      const store = createStore();
+      store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+        targets: {
+          public: { endpoint: 'https://store.example.com/graphql' },
+        },
+      });
+      store.setCurrentContext('production');
+      store.setCredentials('production', { token: 'store-token' });
+      process.env['TESTAPP_PUBLIC_ENDPOINT'] = 'https://env.example.com/graphql';
+      process.env['TESTAPP_TOKEN'] = 'env-token';
+
+      try {
+        const config = store.getClientConfig('public');
+        expect(config.endpoint).toBe('https://store.example.com/graphql');
+        expect(config.headers['Authorization']).toBe('Bearer store-token');
+      } finally {
+        delete process.env['TESTAPP_PUBLIC_ENDPOINT'];
+        delete process.env['TESTAPP_TOKEN'];
+      }
+    });
+
+    it('should fall back to main endpoint when target not in store targets', () => {
+      const store = createStore();
+      store.createContext('production', {
+        endpoint: 'https://api.example.com/graphql',
+        targets: {
+          auth: { endpoint: 'https://auth.example.com/graphql' },
+        },
+      });
+      store.setCurrentContext('production');
+
+      const config = store.getClientConfig('public');
+      expect(config.endpoint).toBe('https://api.example.com/graphql');
+    });
+  });
+
   describe('full workflow', () => {
     it('should support the complete context + auth workflow', () => {
       const store = createStore();

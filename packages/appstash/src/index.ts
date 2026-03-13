@@ -275,6 +275,7 @@ export function resolve(
 
 export { createConfigStore } from './config-store';
 export type {
+  ClientConfig,
   ConfigStore,
   ConfigStoreOptions,
   ContextConfig,
