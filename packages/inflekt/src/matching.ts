@@ -9,8 +9,6 @@
  * across those boundaries instead of duplicating fuzzy-match logic in every consumer.
  */
 
-import { singularize } from './pluralize';
-
 /**
  * Normalize a name for case-insensitive, delimiter-insensitive comparison.
  * Strips underscores and lowercases.
