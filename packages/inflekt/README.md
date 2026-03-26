@@ -101,7 +101,6 @@ inflektTree(apiResponse, toCamelCase);
 - `toScreamingSnake(str)` - Convert to SCREAMING_SNAKE_CASE
 - `underscore(str)` - Convert PascalCase/camelCase to snake_case
 - `fixCapitalisedPlural(str)` - Fix capitalized S after numbers (e.g., `Table1S` -> `Table1s`)
-- `camelize(str, lowFirstLetter?)` - **Deprecated.** Use `toCamelCase` or `toPascalCase` instead
 
 ### Naming Helpers
 

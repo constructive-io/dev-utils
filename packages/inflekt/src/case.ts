@@ -28,21 +28,6 @@ export function fixCapitalisedPlural(str: string): string {
 }
 
 /**
- * Convert snake_case to PascalCase (or camelCase if lowFirstLetter is true)
- * @deprecated Use `toCamelCase` or `toPascalCase` instead for a cleaner, declarative API.
- * @param str - The snake_case string to convert
- * @param lowFirstLetter - If true, returns camelCase instead of PascalCase
- * @example camelize('user_profile') -> 'UserProfile'
- * @example camelize('user_profile', true) -> 'userProfile'
- */
-export function camelize(str: string, lowFirstLetter?: boolean): string {
-  if (lowFirstLetter) {
-    return toCamelCase(str);
-  }
-  return toPascalCase(str);
-}
-
-/**
  * Convert PascalCase or camelCase to snake_case
  * @example underscore('UserProfile') -> 'user_profile'
  * @example underscore('userProfile') -> 'user_profile'

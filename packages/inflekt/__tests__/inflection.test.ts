@@ -7,7 +7,6 @@ import {
   distinctPluralizeLast,
   lcFirst,
   ucFirst,
-  camelize,
   toCamelCase,
   toPascalCase,
   toScreamingSnake,
@@ -253,25 +252,6 @@ describe('toScreamingSnake', () => {
   it('should handle single words', () => {
     expect(toScreamingSnake('user')).toBe('USER');
     expect(toScreamingSnake('User')).toBe('USER');
-  });
-});
-
-describe('camelize (deprecated)', () => {
-  it('should delegate to toPascalCase by default', () => {
-    expect(camelize('user_profile')).toBe('UserProfile');
-    expect(camelize('order_item')).toBe('OrderItem');
-    expect(camelize('api_schema')).toBe('ApiSchema');
-  });
-
-  it('should delegate to toCamelCase when lowFirstLetter is true', () => {
-    expect(camelize('user_profile', true)).toBe('userProfile');
-    expect(camelize('order_item', true)).toBe('orderItem');
-    expect(camelize('api_schema', true)).toBe('apiSchema');
-  });
-
-  it('should handle single words', () => {
-    expect(camelize('user')).toBe('User');
-    expect(camelize('user', true)).toBe('user');
   });
 });
 
