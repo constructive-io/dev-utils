@@ -268,14 +268,26 @@ function getTypeForProp(
   }
 
   if (prop.enum) {
-    const enumType = prop.enum.map((enumValue) =>
-      t.tsLiteralType(t.stringLiteral(enumValue))
-    );
+    const enumType = prop.enum.map((enumValue) => {
+      if (typeof enumValue === 'number') {
+        return t.tsLiteralType(t.numericLiteral(enumValue));
+      }
+      if (typeof enumValue === 'boolean') {
+        return t.tsLiteralType(t.booleanLiteral(enumValue));
+      }
+      return t.tsLiteralType(t.stringLiteral(String(enumValue)));
+    });
     return t.tsUnionType(enumType);
   }
 
-  if (prop.const) {
-    return t.tsLiteralType(t.stringLiteral(prop.const));
+  if (prop.const !== undefined) {
+    if (typeof prop.const === 'number') {
+      return t.tsLiteralType(t.numericLiteral(prop.const));
+    }
+    if (typeof prop.const === 'boolean') {
+      return t.tsLiteralType(t.booleanLiteral(prop.const));
+    }
+    return t.tsLiteralType(t.stringLiteral(String(prop.const)));
   }
 
   if (prop.type) {
