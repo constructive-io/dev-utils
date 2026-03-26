@@ -27,7 +27,7 @@ export interface InflektTreeOptions {
  * @example
  * // Convert snake_case keys to camelCase
  * const apiResponse = { user_name: 'John', order_items: [{ item_id: 1 }] };
- * const result = inflektTree(apiResponse, (key) => camelize(key, true));
+ * const result = inflektTree(apiResponse, toCamelCase);
  * // Result: { userName: 'John', orderItems: [{ itemId: 1 }] }
  *
  * @example
@@ -38,7 +38,7 @@ export interface InflektTreeOptions {
  *
  * @example
  * // Skip keys starting with underscore
- * inflektTree(obj, (key) => camelize(key, true), {
+ * inflektTree(obj, toCamelCase, {
  *   skip: (key) => key.startsWith('_')
  * });
  */
