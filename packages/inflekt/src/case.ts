@@ -28,25 +28,6 @@ export function fixCapitalisedPlural(str: string): string {
 }
 
 /**
- * Convert snake_case to PascalCase (or camelCase if lowFirstLetter is true)
- * @param str - The snake_case string to convert
- * @param lowFirstLetter - If true, returns camelCase instead of PascalCase
- * @example camelize('user_profile') -> 'UserProfile'
- * @example camelize('user_profile', true) -> 'userProfile'
- */
-export function camelize(str: string, lowFirstLetter?: boolean): string {
-  const result = str
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('');
-
-  if (lowFirstLetter) {
-    return lcFirst(result);
-  }
-  return result;
-}
-
-/**
  * Convert PascalCase or camelCase to snake_case
  * @example underscore('UserProfile') -> 'user_profile'
  * @example underscore('userProfile') -> 'user_profile'
@@ -59,11 +40,11 @@ export function underscore(str: string): string {
 }
 
 /**
- * Convert a hyphenated or underscored string to camelCase.
- * Unlike `camelize`, this also handles hyphens and preserves
- * camelCase boundaries that are already present.
+ * Convert a hyphenated, underscored, or already-camelCased string to camelCase.
+ * Handles both `-` and `_` delimiters.
  * @example toCamelCase('user-profile') -> 'userProfile'
  * @example toCamelCase('user_profile') -> 'userProfile'
+ * @example toCamelCase('UserProfile') -> 'userProfile'
  */
 export function toCamelCase(str: string): string {
   return str
@@ -72,10 +53,11 @@ export function toCamelCase(str: string): string {
 }
 
 /**
- * Convert a hyphenated or underscored string to PascalCase.
- * Unlike `camelize`, this also handles hyphens.
+ * Convert a hyphenated, underscored, or already-camelCased string to PascalCase.
+ * Handles both `-` and `_` delimiters.
  * @example toPascalCase('user-profile') -> 'UserProfile'
  * @example toPascalCase('user_profile') -> 'UserProfile'
+ * @example toPascalCase('userProfile') -> 'UserProfile'
  */
 export function toPascalCase(str: string): string {
   return str

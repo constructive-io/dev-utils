@@ -34,7 +34,9 @@ import {
   distinctPluralize,
   lcFirst,
   ucFirst,
-  camelize,
+  toCamelCase,
+  toPascalCase,
+  toScreamingSnake,
   underscore,
   toFieldName,
   toQueryName,
@@ -58,9 +60,12 @@ pluralizeLast('UserProfile');     // 'UserProfiles'
 lcFirst('UserProfile');   // 'userProfile'
 ucFirst('userProfile');   // 'UserProfile'
 
-// Snake case / camel case conversions
-camelize('user_profile');       // 'UserProfile'
-camelize('user_profile', true); // 'userProfile'
+// Case conversions (handles underscores, hyphens, and camelCase boundaries)
+toCamelCase('user_profile');    // 'userProfile'
+toCamelCase('user-profile');    // 'userProfile'
+toPascalCase('user_profile');   // 'UserProfile'
+toPascalCase('user-profile');   // 'UserProfile'
+toScreamingSnake('userProfile'); // 'USER_PROFILE'
 underscore('UserProfile');      // 'user_profile'
 
 // GraphQL naming helpers
@@ -72,7 +77,7 @@ const apiResponse = {
   user_name: 'John',
   order_items: [{ item_id: 1, product_name: 'Widget' }]
 };
-inflektTree(apiResponse, (key) => camelize(key, true));
+inflektTree(apiResponse, toCamelCase);
 // Result: { userName: 'John', orderItems: [{ itemId: 1, productName: 'Widget' }] }
 ```
 
@@ -91,7 +96,9 @@ inflektTree(apiResponse, (key) => camelize(key, true));
 
 - `lcFirst(str)` - Convert first character to lowercase (PascalCase to camelCase)
 - `ucFirst(str)` - Convert first character to uppercase (camelCase to PascalCase)
-- `camelize(str, lowFirstLetter?)` - Convert snake_case to PascalCase (or camelCase if lowFirstLetter is true)
+- `toCamelCase(str)` - Convert to camelCase (handles underscores, hyphens, and PascalCase input)
+- `toPascalCase(str)` - Convert to PascalCase (handles underscores, hyphens, and camelCase input)
+- `toScreamingSnake(str)` - Convert to SCREAMING_SNAKE_CASE
 - `underscore(str)` - Convert PascalCase/camelCase to snake_case
 - `fixCapitalisedPlural(str)` - Fix capitalized S after numbers (e.g., `Table1S` -> `Table1s`)
 
@@ -124,7 +131,7 @@ const apiResponse = {
   ]
 };
 
-const result = inflektTree(apiResponse, (key) => camelize(key, true));
+const result = inflektTree(apiResponse, toCamelCase);
 // Result:
 // {
 //   userName: 'John',
@@ -156,18 +163,18 @@ const input = {
   _metadata: { _internal: true }
 };
 
-const result = inflektTree(input, (key) => camelize(key, true), {
+const result = inflektTree(input, toCamelCase, {
   skip: (key) => key.startsWith('_')
 });
 // Result: { userName: 'John', _private_field: 'secret', _metadata: { _internal: true } }
 
 // Skip specific keys
-const result2 = inflektTree(input, (key) => camelize(key, true), {
+const result2 = inflektTree(input, toCamelCase, {
   skip: (key) => key === 'created_at' || key === 'updated_at'
 });
 
 // Skip based on path depth (only transform top 2 levels)
-const result3 = inflektTree(deepObject, (key) => camelize(key, true), {
+const result3 = inflektTree(deepObject, toCamelCase, {
   skip: (key, path) => path.length > 1
 });
 ```

@@ -7,7 +7,9 @@ import {
   distinctPluralizeLast,
   lcFirst,
   ucFirst,
-  camelize,
+  toCamelCase,
+  toPascalCase,
+  toScreamingSnake,
   underscore,
   fixCapitalisedPlural,
   toFieldName,
@@ -188,22 +190,68 @@ describe('ucFirst', () => {
   });
 });
 
-describe('camelize', () => {
-  it('should convert snake_case to PascalCase by default', () => {
-    expect(camelize('user_profile')).toBe('UserProfile');
-    expect(camelize('order_item')).toBe('OrderItem');
-    expect(camelize('api_schema')).toBe('ApiSchema');
+describe('toCamelCase', () => {
+  it('should convert snake_case to camelCase', () => {
+    expect(toCamelCase('user_profile')).toBe('userProfile');
+    expect(toCamelCase('order_item')).toBe('orderItem');
+    expect(toCamelCase('api_schema')).toBe('apiSchema');
   });
 
-  it('should convert snake_case to camelCase when lowFirstLetter is true', () => {
-    expect(camelize('user_profile', true)).toBe('userProfile');
-    expect(camelize('order_item', true)).toBe('orderItem');
-    expect(camelize('api_schema', true)).toBe('apiSchema');
+  it('should convert hyphenated strings to camelCase', () => {
+    expect(toCamelCase('user-profile')).toBe('userProfile');
+    expect(toCamelCase('order-item')).toBe('orderItem');
+    expect(toCamelCase('my-component')).toBe('myComponent');
+  });
+
+  it('should convert PascalCase to camelCase', () => {
+    expect(toCamelCase('UserProfile')).toBe('userProfile');
+    expect(toCamelCase('HelloWorld')).toBe('helloWorld');
   });
 
   it('should handle single words', () => {
-    expect(camelize('user')).toBe('User');
-    expect(camelize('user', true)).toBe('user');
+    expect(toCamelCase('user')).toBe('user');
+    expect(toCamelCase('User')).toBe('user');
+  });
+});
+
+describe('toPascalCase', () => {
+  it('should convert snake_case to PascalCase', () => {
+    expect(toPascalCase('user_profile')).toBe('UserProfile');
+    expect(toPascalCase('order_item')).toBe('OrderItem');
+    expect(toPascalCase('api_schema')).toBe('ApiSchema');
+  });
+
+  it('should convert hyphenated strings to PascalCase', () => {
+    expect(toPascalCase('user-profile')).toBe('UserProfile');
+    expect(toPascalCase('order-item')).toBe('OrderItem');
+    expect(toPascalCase('my-component')).toBe('MyComponent');
+  });
+
+  it('should convert camelCase to PascalCase', () => {
+    expect(toPascalCase('userProfile')).toBe('UserProfile');
+    expect(toPascalCase('helloWorld')).toBe('HelloWorld');
+  });
+
+  it('should handle single words', () => {
+    expect(toPascalCase('user')).toBe('User');
+    expect(toPascalCase('User')).toBe('User');
+  });
+});
+
+describe('toScreamingSnake', () => {
+  it('should convert camelCase to SCREAMING_SNAKE_CASE', () => {
+    expect(toScreamingSnake('userProfile')).toBe('USER_PROFILE');
+    expect(toScreamingSnake('orderItem')).toBe('ORDER_ITEM');
+  });
+
+  it('should convert PascalCase to SCREAMING_SNAKE_CASE', () => {
+    expect(toScreamingSnake('UserProfile')).toBe('USER_PROFILE');
+    expect(toScreamingSnake('OrderItem')).toBe('ORDER_ITEM');
+  });
+
+  it('should handle single words', () => {
+    expect(toScreamingSnake('user')).toBe('USER');
+    expect(toScreamingSnake('User')).toBe('USER');
   });
 });
 

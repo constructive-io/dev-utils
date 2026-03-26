@@ -1,10 +1,10 @@
-import { inflektTree, camelize, underscore } from '../src';
+import { inflektTree, toCamelCase, underscore } from '../src';
 
 describe('inflektTree', () => {
   describe('basic key transformation', () => {
     it('should transform flat object keys from snake_case to camelCase', () => {
       const input = { user_name: 'John', user_age: 30 };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({ userName: 'John', userAge: 30 });
     });
 
@@ -15,7 +15,7 @@ describe('inflektTree', () => {
     });
 
     it('should handle empty objects', () => {
-      const result = inflektTree({}, (key) => camelize(key, true));
+      const result = inflektTree({}, toCamelCase);
       expect(result).toEqual({});
     });
   });
@@ -29,7 +29,7 @@ describe('inflektTree', () => {
           profile_bio: 'bio text',
         },
       };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({
         userName: 'John',
         userProfile: {
@@ -49,7 +49,7 @@ describe('inflektTree', () => {
           },
         },
       };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({
         levelOne: {
           levelTwo: {
@@ -70,7 +70,7 @@ describe('inflektTree', () => {
           { item_id: 2, item_name: 'Product B' },
         ],
       };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({
         orderItems: [
           { itemId: 1, itemName: 'Product A' },
@@ -81,7 +81,7 @@ describe('inflektTree', () => {
 
     it('should handle arrays of primitives', () => {
       const input = { user_tags: ['tag1', 'tag2', 'tag3'] };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({ userTags: ['tag1', 'tag2', 'tag3'] });
     });
 
@@ -92,7 +92,7 @@ describe('inflektTree', () => {
           [{ cell_value: 3 }, { cell_value: 4 }],
         ],
       };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({
         dataMatrix: [
           [{ cellValue: 1 }, { cellValue: 2 }],
@@ -120,7 +120,7 @@ describe('inflektTree', () => {
           updated_at: '2024-01-02',
         },
       };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({
         userName: 'John',
         orderItems: [
@@ -144,7 +144,7 @@ describe('inflektTree', () => {
     it('should preserve Date objects', () => {
       const date = new Date('2024-01-15T12:00:00Z');
       const input = { created_at: date };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
 
       expect(result.createdAt).toBeInstanceOf(Date);
       expect(result.createdAt.getTime()).toBe(date.getTime());
@@ -158,7 +158,7 @@ describe('inflektTree', () => {
           last_login: date,
         },
       };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
 
       expect(result.userData.lastLogin).toBeInstanceOf(Date);
       expect(result.userData.lastLogin.getTime()).toBe(date.getTime());
@@ -167,35 +167,35 @@ describe('inflektTree', () => {
 
   describe('null and undefined handling', () => {
     it('should return null for null input', () => {
-      const result = inflektTree(null, (key) => camelize(key, true));
+      const result = inflektTree(null, toCamelCase);
       expect(result).toBeNull();
     });
 
     it('should return undefined for undefined input', () => {
-      const result = inflektTree(undefined, (key) => camelize(key, true));
+      const result = inflektTree(undefined, toCamelCase);
       expect(result).toBeUndefined();
     });
 
     it('should preserve null values in objects', () => {
       const input = { user_name: null as null, user_age: 30 };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({ userName: null, userAge: 30 });
     });
 
     it('should preserve undefined values in objects', () => {
       const input = { user_name: undefined as undefined, user_age: 30 };
-      const result = inflektTree(input, (key) => camelize(key, true));
+      const result = inflektTree(input, toCamelCase);
       expect(result).toEqual({ userName: undefined, userAge: 30 });
     });
   });
 
   describe('primitive inputs', () => {
     it('should return primitives as-is', () => {
-      expect(inflektTree('string', (key) => camelize(key, true))).toBe(
+      expect(inflektTree('string', toCamelCase)).toBe(
         'string'
       );
-      expect(inflektTree(123, (key) => camelize(key, true))).toBe(123);
-      expect(inflektTree(true, (key) => camelize(key, true))).toBe(true);
+      expect(inflektTree(123, toCamelCase)).toBe(123);
+      expect(inflektTree(true, toCamelCase)).toBe(true);
     });
   });
 
@@ -206,7 +206,7 @@ describe('inflektTree', () => {
         _private_field: 'secret',
         _another_private: 'data',
       };
-      const result = inflektTree(input, (key) => camelize(key, true), {
+      const result = inflektTree(input, toCamelCase, {
         skip: (key) => key.startsWith('_'),
       });
       expect(result).toEqual({
@@ -226,7 +226,7 @@ describe('inflektTree', () => {
           },
         },
       };
-      const result = inflektTree(input, (key) => camelize(key, true), {
+      const result = inflektTree(input, toCamelCase, {
         skip: (key, path) => path.length > 1, // only transform top 2 levels
       });
       expect(result).toEqual({
@@ -269,7 +269,7 @@ describe('inflektTree', () => {
         created_at: '2024-01-01',
         updated_at: '2024-01-02',
       };
-      const result = inflektTree(input, (key) => camelize(key, true), {
+      const result = inflektTree(input, toCamelCase, {
         skip: (key) => key === 'created_at' || key === 'updated_at',
       });
       expect(result).toEqual({
@@ -283,7 +283,7 @@ describe('inflektTree', () => {
       const input = {
         items: [{ item_id: 1, _meta: 'data' }],
       };
-      const result = inflektTree(input, (key) => camelize(key, true), {
+      const result = inflektTree(input, toCamelCase, {
         skip: (key) => key.startsWith('_'),
       });
       expect(result).toEqual({
@@ -296,7 +296,7 @@ describe('inflektTree', () => {
     it('should be able to convert to snake_case and back to camelCase', () => {
       const original = { userName: 'John', orderItems: [{ itemId: 1 }] };
       const snakeCase = inflektTree(original, underscore);
-      const backToCamel = inflektTree(snakeCase, (key) => camelize(key, true));
+      const backToCamel = inflektTree(snakeCase, toCamelCase);
       expect(backToCamel).toEqual(original);
     });
   });
