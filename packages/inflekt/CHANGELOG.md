@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/constructive-io/dev-utils/compare/inflekt@0.3.3...inflekt@0.5.0) (2026-03-26)
+
+### Bug Fixes
+
+- remove unused singularize import from matching.ts ([a81bf53](https://github.com/constructive-io/dev-utils/commit/a81bf53210daaabc9c614d14488af221f3271511))
+
+### Features
+
+- **inflekt:** add shared name-matching utilities and case helpers ([650d12e](https://github.com/constructive-io/dev-utils/commit/650d12e64998666e256ee8712cf25e6be74184af))
+
 ## [0.3.3](https://github.com/constructive-io/dev-utils/compare/inflekt@0.3.2...inflekt@0.3.3) (2026-03-04)
 
 ### Bug Fixes
