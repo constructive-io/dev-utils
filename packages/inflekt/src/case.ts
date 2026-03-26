@@ -57,3 +57,41 @@ export function underscore(str: string): string {
     .replace(/^_/, '')
     .toLowerCase();
 }
+
+/**
+ * Convert a hyphenated or underscored string to camelCase.
+ * Unlike `camelize`, this also handles hyphens and preserves
+ * camelCase boundaries that are already present.
+ * @example toCamelCase('user-profile') -> 'userProfile'
+ * @example toCamelCase('user_profile') -> 'userProfile'
+ */
+export function toCamelCase(str: string): string {
+  return str
+    .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
+    .replace(/^(.)/, (_, char) => char.toLowerCase());
+}
+
+/**
+ * Convert a hyphenated or underscored string to PascalCase.
+ * Unlike `camelize`, this also handles hyphens.
+ * @example toPascalCase('user-profile') -> 'UserProfile'
+ * @example toPascalCase('user_profile') -> 'UserProfile'
+ */
+export function toPascalCase(str: string): string {
+  return str
+    .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
+    .replace(/^(.)/, (_, char) => char.toUpperCase());
+}
+
+/**
+ * Convert a camelCase or PascalCase string to SCREAMING_SNAKE_CASE.
+ * @example toScreamingSnake('userProfile') -> 'USER_PROFILE'
+ * @example toScreamingSnake('UserProfile') -> 'USER_PROFILE'
+ */
+export function toScreamingSnake(str: string): string {
+  return str
+    .replace(/([A-Z])/g, '_$1')
+    .replace(/[-\s]/g, '_')
+    .toUpperCase()
+    .replace(/^_/, '');
+}
