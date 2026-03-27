@@ -1,4 +1,6 @@
 import {
+  lcFirst,
+  ucFirst,
   isValidIdentifier,
   isValidIdentifierCamelized,
   toCamelCase,
@@ -41,6 +43,40 @@ it('should validate valid JavaScript-like identifiers allowing internal hyphens'
   expect(isValidIdentifierCamelized('invalid-identifier-')).toBe(true);
 });
 
+describe('lcFirst', () => {
+  test('lowercases the first character', () => {
+    expect(lcFirst('UserProfile')).toBe('userProfile');
+    expect(lcFirst('User')).toBe('user');
+    expect(lcFirst('ABC')).toBe('aBC');
+  });
+
+  test('handles already lowercase strings', () => {
+    expect(lcFirst('user')).toBe('user');
+  });
+
+  test('handles single character', () => {
+    expect(lcFirst('A')).toBe('a');
+    expect(lcFirst('a')).toBe('a');
+  });
+});
+
+describe('ucFirst', () => {
+  test('uppercases the first character', () => {
+    expect(ucFirst('userProfile')).toBe('UserProfile');
+    expect(ucFirst('user')).toBe('User');
+    expect(ucFirst('abc')).toBe('Abc');
+  });
+
+  test('handles already uppercase strings', () => {
+    expect(ucFirst('User')).toBe('User');
+  });
+
+  test('handles single character', () => {
+    expect(ucFirst('a')).toBe('A');
+    expect(ucFirst('A')).toBe('A');
+  });
+});
+
 describe('toPascalCase', () => {
   test('converts normal string', () => {
     expect(toPascalCase('hello_world')).toBe('HelloWorld');
@@ -56,6 +92,18 @@ describe('toPascalCase', () => {
     expect(toPascalCase('hello___world--great')).toBe('HelloWorldGreat');
   });
 
+  test('handles consecutive mixed separators', () => {
+    expect(toPascalCase('my__double_under')).toBe('MyDoubleUnder');
+    expect(toPascalCase('my-_mixed-_sep')).toBe('MyMixedSep');
+    expect(toPascalCase('my--double-dash')).toBe('MyDoubleDash');
+  });
+
+  test('handles leading separators', () => {
+    expect(toPascalCase('_private')).toBe('Private');
+    expect(toPascalCase('__double')).toBe('Double');
+    expect(toPascalCase('-leading')).toBe('Leading');
+  });
+
   test('handles single word', () => {
     expect(toPascalCase('word')).toBe('Word');
   });
@@ -66,6 +114,11 @@ describe('toPascalCase', () => {
 
   test('handles string with numbers', () => {
     expect(toPascalCase('version1_2_3')).toBe('Version123');
+  });
+
+  test('handles spaces', () => {
+    expect(toPascalCase('my table name')).toBe('MyTableName');
+    expect(toPascalCase('My Table Name')).toBe('MyTableName');
   });
 });
 
