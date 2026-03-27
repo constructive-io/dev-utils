@@ -26,7 +26,7 @@ export interface AppStashResult {
  * Options for appstash()
  */
 export interface AppStashOptions {
-  /** Base directory (defaults to os.homedir()) */
+  /** Base directory (defaults to APPSTASH_BASE_DIR env var, then os.homedir()) */
   baseDir?: string;
   /** Use XDG fallback if home fails (default: true) */
   useXdgFallback?: boolean;
@@ -112,6 +112,8 @@ export function appstash(tool: string, options: AppStashOptions = {}): AppStashR
   let base: string;
   if (baseDir) {
     base = baseDir;
+  } else if (process.env.APPSTASH_BASE_DIR) {
+    base = process.env.APPSTASH_BASE_DIR;
   } else {
     const home = getHomeDir();
     if (!home) {

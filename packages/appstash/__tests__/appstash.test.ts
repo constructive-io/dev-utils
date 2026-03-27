@@ -132,6 +132,36 @@ describe('appstash', () => {
     });
   });
 
+  describe('APPSTASH_BASE_DIR env var', () => {
+    const originalEnv = process.env.APPSTASH_BASE_DIR;
+
+    afterEach(() => {
+      if (originalEnv === undefined) {
+        delete process.env.APPSTASH_BASE_DIR;
+      } else {
+        process.env.APPSTASH_BASE_DIR = originalEnv;
+      }
+    });
+
+    it('should use APPSTASH_BASE_DIR when no baseDir option is provided', () => {
+      process.env.APPSTASH_BASE_DIR = tempBase;
+      const dirs = appstash('pgpm');
+
+      expect(dirs.root).toBe(path.join(tempBase, '.pgpm'));
+      expect(dirs.config).toBe(path.join(tempBase, '.pgpm', 'config'));
+    });
+
+    it('should prefer baseDir option over APPSTASH_BASE_DIR env var', () => {
+      const otherBase = fs.mkdtempSync(path.join(os.tmpdir(), 'appstash-other-'));
+      process.env.APPSTASH_BASE_DIR = otherBase;
+
+      const dirs = appstash('pgpm', { baseDir: tempBase });
+
+      expect(dirs.root).toBe(path.join(tempBase, '.pgpm'));
+      fs.rmSync(otherBase, { recursive: true, force: true });
+    });
+  });
+
   describe('Edge cases', () => {
     it('should handle tool names with special characters', () => {
       const dirs = appstash('my-app', { baseDir: tempBase });
