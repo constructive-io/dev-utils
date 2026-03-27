@@ -16,7 +16,7 @@ import {
 } from 'komoji';
 
 // Re-export komoji functions directly
-export { lcFirst, ucFirst, toPascalCase };
+export { lcFirst, ucFirst, toPascalCase, toSnakeCase, toConstantCase };
 
 // Re-export toCamelCase — komoji's version accepts a second parameter
 // (stripLeadingNonAlphabetChars) so we wrap to keep the simpler inflekt signature
