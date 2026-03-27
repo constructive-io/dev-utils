@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/constructive-io/dev-utils/compare/inflekt@0.5.1...inflekt@0.6.0) (2026-03-27)
+
+### Features
+
+- **inflekt:** re-export toSnakeCase and toConstantCase from komoji ([c8558c6](https://github.com/constructive-io/dev-utils/commit/c8558c6c75537443cb48ccdd018ae65a2cc340a0))
+- unify casing libraries — komoji as origin of truth ([da6da94](https://github.com/constructive-io/dev-utils/commit/da6da941a554b4a41bd37d262b161595af3c663e))
+
 ## [0.5.1](https://github.com/constructive-io/dev-utils/compare/inflekt@0.5.0...inflekt@0.5.1) (2026-03-26)
 
 **Note:** Version bump only for package inflekt
