@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/constructive-io/dev-utils/compare/appstash@0.6.0...appstash@0.7.0) (2026-03-27)
+
+### Features
+
+- **appstash:** add APPSTASH_BASE_DIR env var support ([37fb052](https://github.com/constructive-io/dev-utils/commit/37fb052d9bff1ef044f614a2651411c9658e6e71))
+
 # [0.6.0](https://github.com/constructive-io/dev-utils/compare/appstash@0.5.0...appstash@0.6.0) (2026-03-13)
 
 ### Features
