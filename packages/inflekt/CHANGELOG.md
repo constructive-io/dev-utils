@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/constructive-io/dev-utils/compare/inflekt@0.6.0...inflekt@0.7.0) (2026-03-27)
+
+### Features
+
+- **inflekt:** re-export toKebabCase from komoji ([9d2e03c](https://github.com/constructive-io/dev-utils/commit/9d2e03c5db06d7821c0431cab490202500b50b95))
+
 # [0.6.0](https://github.com/constructive-io/dev-utils/compare/inflekt@0.5.1...inflekt@0.6.0) (2026-03-27)
 
 ### Features
