@@ -1,21 +1,27 @@
 /**
  * Case transformation utilities
+ *
+ * Pure case transforms are delegated to komoji (the origin of truth).
+ * This module re-exports them for backward compatibility and adds
+ * inflekt-specific helpers (fixCapitalisedPlural, underscore, toScreamingSnake).
  */
 
-/**
- * Convert PascalCase to camelCase (lowercase first character)
- * @example "UserProfile" -> "userProfile"
- */
-export function lcFirst(str: string): string {
-  return str.charAt(0).toLowerCase() + str.slice(1);
-}
+import {
+  lcFirst,
+  ucFirst,
+  toCamelCase as _toCamelCase,
+  toPascalCase,
+  toSnakeCase,
+  toConstantCase,
+} from 'komoji';
 
-/**
- * Convert camelCase to PascalCase (uppercase first character)
- * @example "userProfile" -> "UserProfile"
- */
-export function ucFirst(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+// Re-export komoji functions directly
+export { lcFirst, ucFirst, toPascalCase, toSnakeCase, toConstantCase };
+
+// Re-export toCamelCase — komoji's version accepts a second parameter
+// (stripLeadingNonAlphabetChars) so we wrap to keep the simpler inflekt signature
+export function toCamelCase(str: string): string {
+  return _toCamelCase(str);
 }
 
 /**
@@ -29,51 +35,20 @@ export function fixCapitalisedPlural(str: string): string {
 
 /**
  * Convert PascalCase or camelCase to snake_case
+ * @deprecated Use toSnakeCase from komoji instead
  * @example underscore('UserProfile') -> 'user_profile'
  * @example underscore('userProfile') -> 'user_profile'
  */
 export function underscore(str: string): string {
-  return str
-    .replace(/([A-Z])/g, '_$1')
-    .replace(/^_/, '')
-    .toLowerCase();
-}
-
-/**
- * Convert a hyphenated, underscored, or already-camelCased string to camelCase.
- * Handles both `-` and `_` delimiters.
- * @example toCamelCase('user-profile') -> 'userProfile'
- * @example toCamelCase('user_profile') -> 'userProfile'
- * @example toCamelCase('UserProfile') -> 'userProfile'
- */
-export function toCamelCase(str: string): string {
-  return str
-    .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
-    .replace(/^(.)/, (_, char) => char.toLowerCase());
-}
-
-/**
- * Convert a hyphenated, underscored, or already-camelCased string to PascalCase.
- * Handles both `-` and `_` delimiters.
- * @example toPascalCase('user-profile') -> 'UserProfile'
- * @example toPascalCase('user_profile') -> 'UserProfile'
- * @example toPascalCase('userProfile') -> 'UserProfile'
- */
-export function toPascalCase(str: string): string {
-  return str
-    .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
-    .replace(/^(.)/, (_, char) => char.toUpperCase());
+  return toSnakeCase(str);
 }
 
 /**
  * Convert a camelCase or PascalCase string to SCREAMING_SNAKE_CASE.
+ * @deprecated Use toConstantCase from komoji instead
  * @example toScreamingSnake('userProfile') -> 'USER_PROFILE'
  * @example toScreamingSnake('UserProfile') -> 'USER_PROFILE'
  */
 export function toScreamingSnake(str: string): string {
-  return str
-    .replace(/([A-Z])/g, '_$1')
-    .replace(/[-\s]/g, '_')
-    .toUpperCase()
-    .replace(/^_/, '');
+  return toConstantCase(str);
 }

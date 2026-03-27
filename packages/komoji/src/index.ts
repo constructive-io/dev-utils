@@ -1,9 +1,25 @@
+/**
+ * Lowercase the first character of a string
+ * @example "UserProfile" -> "userProfile"
+ */
+export function lcFirst(str: string): string {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+/**
+ * Uppercase the first character of a string
+ * @example "userProfile" -> "UserProfile"
+ */
+export function ucFirst(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export function toPascalCase(str: string) {
   return str
-    .replace(/(^|_|\s|-)(\w)/g, (_: any, __: any, letter: string) =>
-      letter.toUpperCase()
-    )
-    .replace(/[_\s-]/g, '');
+    // Convert what follows one-or-more separators into upper case (handles consecutive separators)
+    .replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
+    // Ensure the first character is always uppercase
+    .replace(/^./, (c) => c.toUpperCase());
 }
 
 export function toCamelCase(
