@@ -25,6 +25,13 @@ const LATIN_SUFFIX_OVERRIDES: Array<[string, string]> = [
   ['data', 'datum'],
 ];
 
+/**
+ * Compound words ending in "base" that the inflection library incorrectly
+ * singularizes via its (b)a branch in the ses$ rule (e.g. codebases -> codebasis).
+ * We intercept these before delegating to inflection.singularize().
+ */
+const COMPOUND_BASE_REGEX = /(database|codebase|firebase|knowledgebase)s$/i;
+
 const TRAILING_TRIPLE_S_REGEX = /[sS]{3,}$/;
 const TRAILING_TRIPLE_S_BEFORE_ES_REGEX = /[sS]{3,}(?=e[sS]$)/;
 
@@ -94,6 +101,13 @@ export function singularize(word: string): string {
 
       return prefix + newSuffix;
     }
+  }
+
+  // Compound *base words: the inflection library's (b)a branch in the ses$
+  // rule incorrectly produces "codebasis" instead of "codebase".
+  const baseMatch = normalizedWord.match(COMPOUND_BASE_REGEX);
+  if (baseMatch) {
+    return normalizedWord.slice(0, -1);
   }
 
   return normalizeMalformedDoubleS(inflection.singularize(normalizedWord));

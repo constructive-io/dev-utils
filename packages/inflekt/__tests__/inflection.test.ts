@@ -49,6 +49,19 @@ describe('singularize', () => {
     expect(singularize('SCHEMATA')).toBe('SCHEMA');
   });
 
+  it('should singularize compound *base words correctly', () => {
+    expect(singularize('codebases')).toBe('codebase');
+    expect(singularize('databases')).toBe('database');
+    expect(singularize('firebases')).toBe('firebase');
+    expect(singularize('knowledgebases')).toBe('knowledgebase');
+    expect(singularize('Codebases')).toBe('Codebase');
+    expect(singularize('Databases')).toBe('Database');
+  });
+
+  it('should still singularize "bases" to "basis"', () => {
+    expect(singularize('bases')).toBe('basis');
+  });
+
   it('should canonicalize malformed trailing triple-s words', () => {
     expect(singularize('classs')).toBe('class');
     expect(singularize('Classs')).toBe('Class');
