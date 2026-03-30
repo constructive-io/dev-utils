@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/constructive-io/dev-utils/compare/inflekt@0.7.0...inflekt@0.7.1) (2026-03-30)
+
+### Bug Fixes
+
+- **inflekt:** add compound \*base word exceptions to singularize (codebases → codebase) ([1c233cb](https://github.com/constructive-io/dev-utils/commit/1c233cbfef56103dadf37c75ad436f1821874a70))
+
 # [0.7.0](https://github.com/constructive-io/dev-utils/compare/inflekt@0.6.0...inflekt@0.7.0) (2026-03-27)
 
 ### Features
