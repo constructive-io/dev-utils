@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.8.0...inquirerer@4.8.1) (2026-04-26)
+
+### Bug Fixes
+
+- **inquirerer:** defer process.stdin/stdout access in defaultCLIOptions ([79eedf7](https://github.com/constructive-io/dev-utils/commit/79eedf79fe74654d26555d179b2f1403c33f3c27))
+
 # [4.8.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.7.0...inquirerer@4.8.0) (2026-04-26)
 
 ### Features
