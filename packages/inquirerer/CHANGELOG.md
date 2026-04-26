@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.7.0...inquirerer@4.8.0) (2026-04-26)
+
+### Features
+
+- **inquirerer-test:** add runCli subprocess helper + Testing docs in inquirerer ([fc5b836](https://github.com/constructive-io/dev-utils/commit/fc5b836cbf120a4e436facc8b70e965a7f92bd6f))
+
 # [4.7.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.6.0...inquirerer@4.7.0) (2026-03-05)
 
 ### Features

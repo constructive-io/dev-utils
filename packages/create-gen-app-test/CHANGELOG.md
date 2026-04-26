@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.10](https://github.com/constructive-io/dev-utils/compare/create-gen-app-test@1.1.9...create-gen-app-test@1.1.10) (2026-04-26)
+
+**Note:** Version bump only for package create-gen-app-test
+
 ## [1.1.9](https://github.com/constructive-io/dev-utils/compare/create-gen-app-test@1.1.8...create-gen-app-test@1.1.9) (2026-03-27)
 
 **Note:** Version bump only for package create-gen-app-test
