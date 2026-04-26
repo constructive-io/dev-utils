@@ -16,11 +16,21 @@ export interface CLIOptions {
   version: string;
 }
 
+// NOTE: `input` and `output` are lazy getters rather than plain properties.
+// `process.stdin` / `process.stdout` are Node getters that lazy-construct
+// streams on first access. When fd 0 is a pipe (e.g. a Jest worker or any
+// spawned child), constructing stdin registers a libuv PIPEWRAP handle
+// that the runtime must close before the process can exit. Evaluating
+// these defaults eagerly as object properties meant that merely
+// `require('inquirerer')` — even via a transitive dep that never
+// constructs `CLI` — would open stdin and produce a spurious open-handle
+// warning under `jest --detectOpenHandles`. Deferring the access to
+// read-time keeps the module side-effect free.
 export const defaultCLIOptions: CLIOptions = {
   version: `inquirerer@${getVersion()}`,
   noTty: false,
-  input: process.stdin,
-  output: process.stdout,
+  get input() { return process.stdin; },
+  get output() { return process.stdout; },
   minimistOpts: {
     alias: {
       v: 'version'
