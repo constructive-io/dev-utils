@@ -73,6 +73,7 @@ npm install inquirerer
   - [Progress Bar](#progress-bar)
   - [Streaming Text](#streaming-text)
   - [Custom UI with UIEngine](#custom-ui-with-uiengine)
+- [Testing](#testing)
 - [Developing](#developing)
 
 ## Quick Start
@@ -1641,6 +1642,51 @@ await engine.run({
   }
 });
 ```
+
+## Testing
+
+For testing CLI applications built with `inquirerer`, use the companion
+package [`@inquirerer/test`](https://www.npmjs.com/package/@inquirerer/test)
+(also in this repo). It provides everything you need to mock stdin/stdout,
+queue keypresses and readline responses, capture and snapshot output, and
+even drive the built executable as a subprocess for end-to-end tests —
+without you having to hand-roll any of that scaffolding.
+
+```bash
+npm install --save-dev @inquirerer/test
+```
+
+**In-process testing** (mock streams):
+
+```typescript
+import { createTestEnvironment, KEY_SEQUENCES } from '@inquirerer/test';
+import { Inquirerer } from 'inquirerer';
+
+const env = createTestEnvironment();
+env.sendKey(KEY_SEQUENCES.ENTER);
+
+const prompter = new Inquirerer(env.options);
+const result = await prompter.prompt({}, [
+  { name: 'confirm', type: 'confirm', message: 'Continue?' }
+]);
+
+expect(result.confirm).toBe(true);
+expect(env.getOutput()).toContain('Continue?');
+```
+
+**Subprocess (E2E) testing** — drive the actual built CLI:
+
+```typescript
+import { runCli } from '@inquirerer/test';
+
+const { stdout, exitCode } = await runCli('node', [CLI_ENTRY, 'search', 'hello']);
+expect(exitCode).toBe(0);
+expect(stdout).toContain('1 result');
+```
+
+See the [@inquirerer/test README](https://github.com/constructive-io/dev-utils/tree/main/packages/inquirerer-test#readme) for the full API, including `createTestFixture` (temp-dir + commands runner), key-sequence constants, and snapshot normalisers.
+
+## Developing
 
 **Run the demos:**
 

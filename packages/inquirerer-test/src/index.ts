@@ -14,5 +14,9 @@ export type { TestFixture, TestFixtureOptions, RunCmdResult } from './fixture';
 export { normalizePackageJsonForSnapshot } from './snapshot';
 export type { NormalizeOptions } from './snapshot';
 
+// Subprocess testing for CLI E2E tests
+export { runCli, parseArgString, RunCliError } from './subprocess';
+export type { RunCliOptions, RunCliResult } from './subprocess';
+
 // ANSI utilities (re-exported from clean-ansi for convenience)
 export { cleanAnsi } from 'clean-ansi';

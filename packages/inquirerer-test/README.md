@@ -114,6 +114,85 @@ The `createTestEnvironment()` function returns a `TestEnvironment` object with:
 | `getOutput` | `() => string` | Get all captured output |
 | `clearOutput` | `() => void` | Clear captured output |
 
+## Subprocess Testing (CLI E2E)
+
+Some CLI tests need to exercise the actual built executable rather than the
+in-process `Inquirerer` class — for example, you want to verify exit codes,
+shebang resolution, or that the binary works against a real HTTP server. For
+those, use `runCli`.
+
+```typescript
+import { runCli, parseArgString } from '@inquirerer/test';
+
+const CLI_ENTRY = require.resolve('../src/index.ts');
+
+it('search returns results', async () => {
+  const { stdout, exitCode } = await runCli('node', [CLI_ENTRY, 'search', 'hello']);
+  expect(exitCode).toBe(0);
+  expect(stdout).toContain('1 result');
+});
+```
+
+### Shell-string args
+
+If you'd prefer to write args as a single string (handy for table-driven
+tests), use `parseArgString` — it splits on whitespace while respecting
+single- and double-quoted segments. It does **not** interpret shell
+features (no globbing, no env expansion, no escapes).
+
+```typescript
+const { stdout } = await runCli(
+  'node',
+  parseArgString(`${CLI_ENTRY} search "hello world" --json`)
+);
+```
+
+### Inspecting failures
+
+By default `runCli` rejects with a `RunCliError` on non-zero exit, with the
+captured `stdout` / `stderr` / `exitCode` attached. Pass `reject: false` to
+resolve regardless of exit status:
+
+```typescript
+const result = await runCli(BIN, ['bad-command'], { reject: false });
+expect(result.exitCode).toBe(1);
+expect(result.stderr).toContain('Unknown command');
+```
+
+### Custom environment (e.g. `tsx` inside Jest)
+
+When launching `tsx` / `ts-node` from a Jest worker, clear `NODE_OPTIONS`
+to avoid Jest's instrumentation leaking into the child:
+
+```typescript
+await runCli(TSX_BIN, [CLI_ENTRY, 'init'], {
+  cwd: REPO_ROOT,
+  env: {
+    ...process.env,
+    HOME: testHome,
+    NODE_OPTIONS: '',
+  },
+  timeout: 120_000,
+});
+```
+
+### `runCli` API
+
+```typescript
+runCli(bin: string, args: string[], options?: RunCliOptions): Promise<RunCliResult>
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `cwd` | `string` | parent | Working directory for the child |
+| `env` | `NodeJS.ProcessEnv` | parent | Environment vars (replaces parent env when set — spread `process.env` to extend) |
+| `timeout` | `number` | `30_000` | Max ms before the child is killed |
+| `killSignal` | `NodeJS.Signals` | `'SIGKILL'` | Signal used on timeout |
+| `stdin` | `string` | — | Optional string written to the child's stdin |
+| `reject` | `boolean` | `true` | Reject on non-zero exit; set `false` to inspect failures |
+
+`RunCliResult` exposes `stdout`, `stderr`, `exitCode`, `signal`, `timedOut`, and `command`. `RunCliError` (thrown on non-zero exit or timeout) carries the same fields.
+
 ## License
 
 MIT
