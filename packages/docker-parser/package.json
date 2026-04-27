@@ -36,7 +36,7 @@
     "deparser"
   ],
   "dependencies": {
-    "bash-parser": "workspace:*"
+    "bash-ast": "workspace:*"
   },
   "devDependencies": {
     "makage": "0.1.10"

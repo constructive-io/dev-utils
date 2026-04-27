@@ -1,4 +1,4 @@
-import { parse as parseBash } from 'bash-parser';
+import { parse as parseBash } from 'bash-ast';
 
 import { Lexer, Token, TokenType } from './lexer';
 import {
@@ -462,7 +462,7 @@ export class Parser {
       };
     }
 
-    // Shell form - also parse with bash-parser for heterogeneous AST
+    // Shell form - also parse with bash-ast for heterogeneous AST
     const command = this.collectRestOfLine();
     let bashAst: unknown;
     try {

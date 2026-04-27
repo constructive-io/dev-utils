@@ -7,7 +7,7 @@ import { parse } from '../src/parser';
 import { Script } from '../src/types';
 
 /**
- * Test utilities for bash-parser
+ * Test utilities for bash-ast
  */
 export class TestUtils {
   /**

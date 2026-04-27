@@ -1,4 +1,4 @@
-# nginx-parser
+# nginx-ast
 
 <p align="center" width="100%">
   <img height="250" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
@@ -9,7 +9,7 @@ TypeScript Nginx configuration parser and deparser. Parse nginx.conf files into 
 ## Installation
 
 ```bash
-npm install nginx-parser
+npm install nginx-ast
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm install nginx-parser
 ### Parse Nginx Configuration
 
 ```typescript
-import { parse } from 'nginx-parser';
+import { parse } from 'nginx-ast';
 
 const config = `
 server {
@@ -37,7 +37,7 @@ console.log(ast);
 ### Deparse AST to Configuration
 
 ```typescript
-import { parse, deparse } from 'nginx-parser';
+import { parse, deparse } from 'nginx-ast';
 
 const ast = parse(config);
 const output = deparse(ast);
@@ -47,7 +47,7 @@ console.log(output);
 ### Round-Trip Testing
 
 ```typescript
-import { parse, deparse, cleanTree } from 'nginx-parser';
+import { parse, deparse, cleanTree } from 'nginx-ast';
 
 const ast1 = parse(config);
 const output = deparse(ast1);
@@ -126,7 +126,7 @@ const output = deparse(ast, { indent: '  ' });
 Remove location/range information from AST for comparison:
 
 ```typescript
-import { cleanTree } from 'nginx-parser';
+import { cleanTree } from 'nginx-ast';
 
 const cleaned = cleanTree(ast);
 ```
@@ -136,7 +136,7 @@ const cleaned = cleanTree(ast);
 Compare two ASTs ignoring location info:
 
 ```typescript
-import { astEqual } from 'nginx-parser';
+import { astEqual } from 'nginx-ast';
 
 if (astEqual(ast1, ast2)) {
   console.log('ASTs are equivalent');

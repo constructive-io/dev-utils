@@ -1,7 +1,7 @@
 import { parse } from '../src/parser';
 import { LogicalExpression,Pipeline, SimpleCommand } from '../src/types';
 
-describe('bash-parser', () => {
+describe('bash-ast', () => {
   describe('parse', () => {
     it('should parse a simple command', () => {
       const source = 'echo hello';

@@ -1,4 +1,4 @@
-# bash-parser
+# bash-ast
 
 <p align="center" width="100%">
   <img height="250" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
@@ -9,7 +9,7 @@ Bash/shell command parser and deparser for JavaScript/TypeScript.
 ## Installation
 
 ```bash
-npm install bash-parser
+npm install bash-ast
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm install bash-parser
 ### Parsing
 
 ```typescript
-import { parse } from 'bash-parser';
+import { parse } from 'bash-ast';
 
 const source = 'echo hello | grep h && ls -la';
 const ast = parse(source);
@@ -27,7 +27,7 @@ console.log(JSON.stringify(ast, null, 2));
 ### Deparsing
 
 ```typescript
-import { parse, deparse } from 'bash-parser';
+import { parse, deparse } from 'bash-ast';
 
 const source = 'echo hello';
 const ast = parse(source);
@@ -38,7 +38,7 @@ console.log(output); // echo hello
 ### AST Comparison
 
 ```typescript
-import { parse, cleanTree } from 'bash-parser';
+import { parse, cleanTree } from 'bash-ast';
 
 const ast1 = parse('echo hello');
 const ast2 = parse('echo hello');

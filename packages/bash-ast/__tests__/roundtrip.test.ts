@@ -2,7 +2,7 @@ import { cleanTree } from '../src/clean';
 import { deparse } from '../src/deparser';
 import { parse } from '../src/parser';
 
-describe('bash-parser round-trip', () => {
+describe('bash-ast round-trip', () => {
   /**
    * Round-trip test helper: parse -> deparse -> parse -> compare cleaned ASTs
    */

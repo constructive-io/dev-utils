@@ -92,7 +92,7 @@ export interface RunInstruction extends BaseInstruction {
   mount?: MountFlag[];
   network?: string;
   security?: string;
-  bashAst?: unknown; // Bash Script AST from bash-parser (heterogeneous parsing)
+  bashAst?: unknown; // Bash Script AST from bash-ast (heterogeneous parsing)
 }
 
 /**

@@ -1,5 +1,5 @@
 {
-  "name": "nginx-parser",
+  "name": "nginx-ast",
   "version": "0.0.1",
   "author": "Constructive <developers@constructive.io>",
   "description": "TypeScript Nginx configuration parser and deparser",

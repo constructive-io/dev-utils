@@ -67,7 +67,7 @@ importers:
         version: 0.1.10
     publishDirectory: dist
 
-  packages/bash-parser:
+  packages/bash-ast:
     devDependencies:
       makage:
         specifier: 0.1.10
@@ -138,9 +138,9 @@ importers:
 
   packages/docker-parser:
     dependencies:
-      bash-parser:
+      bash-ast:
         specifier: workspace:*
-        version: link:../bash-parser/dist
+        version: link:../bash-ast/dist
     devDependencies:
       makage:
         specifier: 0.1.10
@@ -316,7 +316,7 @@ importers:
         version: 0.1.10
     publishDirectory: dist
 
-  packages/nginx-parser:
+  packages/nginx-ast:
     devDependencies:
       makage:
         specifier: 0.1.10
