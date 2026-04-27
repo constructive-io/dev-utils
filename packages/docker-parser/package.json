@@ -1,0 +1,44 @@
+{
+  "name": "docker-parser",
+  "version": "0.0.1",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Dockerfile parser and deparser",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "docker",
+    "dockerfile",
+    "parser",
+    "ast",
+    "deparser"
+  ],
+  "dependencies": {
+    "bash-parser": "workspace:*"
+  },
+  "devDependencies": {
+    "makage": "0.1.10"
+  }
+}
