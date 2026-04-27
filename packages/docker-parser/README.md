@@ -1,7 +1,7 @@
 # docker-parser
 
 <p align="center" width="100%">
-  <img height="250" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
+  <img src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" height="250">
 </p>
 
 Dockerfile parser and deparser for JavaScript/TypeScript.

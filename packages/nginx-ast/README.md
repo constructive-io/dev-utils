@@ -1,7 +1,7 @@
 # nginx-ast
 
 <p align="center" width="100%">
-  <img height="250" src="https://raw.githubusercontent.com/Safegres/brand/refs/heads/main/safegres.svg" />
+  <img src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" height="250">
 </p>
 
 TypeScript Nginx configuration parser and deparser. Parse nginx.conf files into AST and regenerate configuration from AST.
