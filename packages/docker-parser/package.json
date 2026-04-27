@@ -1,6 +1,6 @@
 {
   "name": "docker-parser",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "Dockerfile parser and deparser",
   "main": "index.js",
