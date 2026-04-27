@@ -63,6 +63,9 @@ jobs:
           - genomic
           - inquirerer-utils
           - create-gen-app-test
+          - bash-parser
+          - docker-parser
+          - nginx-parser
 
     steps:
     - name: Checkout code

@@ -6,26 +6,25 @@
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/constructive-io/dockerjs",
-  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
   "publishConfig": {
-    "access": "restricted",
+    "access": "public",
     "directory": "dist"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/constructive-io/dockerjs"
+    "url": "https://github.com/constructive-io/dev-utils"
   },
   "bugs": {
-    "url": "https://github.com/constructive-io/dockerjs/issues"
+    "url": "https://github.com/constructive-io/dev-utils/issues"
   },
   "scripts": {
     "copy": "makage assets",
-    "clean": "makage clean dist",
+    "clean": "makage clean",
     "prepublishOnly": "npm run build",
-    "build": "npm run clean && tsc && tsc -p tsconfig.esm.json && npm run copy",
-    "build:dev": "npm run clean && tsc --declarationMap && tsc -p tsconfig.esm.json && npm run copy",
-    "lint": "cd ../.. && eslint packages/bash-parser --fix",
+    "build": "makage build",
+    "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -37,6 +36,6 @@
     "deparser"
   ],
   "devDependencies": {
-    "makage": "^0.1.8"
+    "makage": "0.1.10"
   }
 }
