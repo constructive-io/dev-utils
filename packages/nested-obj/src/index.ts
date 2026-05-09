@@ -1,6 +1,18 @@
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
+function parsePath(path: string): string[] {
+  const keys = path.replace(/\[(\w+)\]/g, '.$1').split('.');
+  for (const key of keys) {
+    if (UNSAFE_KEYS.has(key)) {
+      throw new Error('Unsafe path segment: ' + key);
+    }
+  }
+  return keys;
+}
+
 export default {
   get<T>(obj: Record<string, any>, path: string): T | undefined {
-    const keys = path.replace(/\[(\w+)\]/g, '.$1').split('.');
+    const keys = parsePath(path);
     let result: any = obj;
     for (const key of keys) {
       if (result == null) {
@@ -16,7 +28,7 @@ export default {
       return;
     }
 
-    const keys = path.replace(/\[(\w+)\]/g, '.$1').split('.');
+    const keys = parsePath(path);
     let current = obj;
     for (let i = 0; i < keys.length - 1; i++) {
       const key = keys[i];
@@ -29,7 +41,7 @@ export default {
   },
 
   has(obj: Record<string, any>, path: string): boolean {
-    const keys = path.replace(/\[(\w+)\]/g, '.$1').split('.');
+    const keys = parsePath(path);
     let current = obj;
     for (const key of keys) {
       if (current == null || !(key in current)) {
