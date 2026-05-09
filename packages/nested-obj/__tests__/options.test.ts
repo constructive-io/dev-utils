@@ -57,6 +57,34 @@ describe('Object Path Operations', () => {
     });
   });
 
+  describe('prototype pollution protection', () => {
+    it('should throw on __proto__ path segment in set', () => {
+      expect(() => objectPath.set(obj, '__proto__.polluted', 'yes')).toThrow('Unsafe path segment: __proto__');
+      expect(({} as any).polluted).toBeUndefined();
+    });
+
+    it('should throw on constructor path segment in set', () => {
+      expect(() => objectPath.set(obj, 'constructor.polluted', 'yes')).toThrow('Unsafe path segment: constructor');
+    });
+
+    it('should throw on prototype path segment in set', () => {
+      expect(() => objectPath.set(obj, 'prototype.polluted', 'yes')).toThrow('Unsafe path segment: prototype');
+    });
+
+    it('should throw on __proto__ path segment in get', () => {
+      expect(() => objectPath.get(obj, '__proto__.polluted')).toThrow('Unsafe path segment: __proto__');
+    });
+
+    it('should throw on __proto__ path segment in has', () => {
+      expect(() => objectPath.has(obj, '__proto__.polluted')).toThrow('Unsafe path segment: __proto__');
+    });
+
+    it('should throw on nested unsafe path segments', () => {
+      expect(() => objectPath.set(obj, 'user.__proto__.polluted', 'yes')).toThrow('Unsafe path segment: __proto__');
+      expect(() => objectPath.set(obj, 'user.constructor.polluted', 'yes')).toThrow('Unsafe path segment: constructor');
+    });
+  });
+
   describe('has', () => {
     it('should return true if a path exists', () => {
       expect(objectPath.has(obj, 'user.name')).toBe(true);
