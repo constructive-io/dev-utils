@@ -9,7 +9,7 @@
   "module": "esm/index.js",
   "types": "index.d.ts",
   "publishConfig": {
-    "access": "restricted",
+    "access": "public",
     "directory": "dist"
   },
   "scripts": {
@@ -44,5 +44,6 @@
   },
   "devDependencies": {
     "makage": "0.1.10"
-  }
+  },
+  "gitHead": "9d6f42172ae6d5777212226e97959c05b4dddd32"
 }
