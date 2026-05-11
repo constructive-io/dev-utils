@@ -1,0 +1,48 @@
+{
+  "name": "@constructive-io/noble-hashes",
+  "version": "0.1.0",
+  "description": "Audited & minimal 0-dependency JS implementation of SHA, RIPEMD, BLAKE, HMAC, HKDF, PBKDF & Scrypt. Dual CJS+ESM fork of @noble/hashes.",
+  "author": "Constructive <developers@constructive.io>",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "restricted",
+    "directory": "dist"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build && cp LICENSE dist/LICENSE",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "keywords": [
+    "sha256",
+    "sha512",
+    "sha3",
+    "blake2",
+    "blake3",
+    "hmac",
+    "hkdf",
+    "pbkdf2",
+    "scrypt",
+    "hash",
+    "cryptography",
+    "noble-hashes"
+  ],
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "devDependencies": {
+    "makage": "0.1.10"
+  }
+}
