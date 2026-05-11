@@ -1,6 +1,6 @@
 {
   "name": "@constructive-io/noble-hashes",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Audited & minimal 0-dependency JS implementation of SHA, RIPEMD, BLAKE, HMAC, HKDF, PBKDF & Scrypt. Dual CJS+ESM fork of @noble/hashes.",
   "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",
