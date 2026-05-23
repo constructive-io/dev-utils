@@ -25,6 +25,7 @@ describe('license templates', () => {
       expect.arrayContaining([
         'MIT',
         'APACHE-2.0',
+        'CONSTRUCTIVE',
         'ISC',
         'GPL-3.0',
         'BSD-3-CLAUSE',
@@ -41,6 +42,15 @@ describe('license templates', () => {
     expect(content).toContain('<test@example.com>');
     expect(content).toContain('2099');
     expect(content).toContain('All Rights Reserved');
+  });
+
+  it('renders CONSTRUCTIVE license with fixed Interweb copyright', () => {
+    const content = renderLicense('CONSTRUCTIVE', context);
+    expect(content).toContain('Interweb, Inc. (Constructive)');
+    expect(content).toContain('2099');
+    expect(content).toContain('Constructive platform');
+    expect(content).toContain('https://constructive.io/legal/license');
+    expect(content).not.toContain('Test User');
   });
 
   it('handles case-insensitive lookups', () => {
