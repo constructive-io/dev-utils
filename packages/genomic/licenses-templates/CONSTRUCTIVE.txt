@@ -17,7 +17,7 @@ Restrictions:
   developer platform for third-party builders.
 
 Generated TypeScript clients and SDKs may be distributed under their own
-applicable open-source licenses, where separately indicated.
+applicable open-source licenses, as separately indicated.
 
 Full license terms: https://constructive.io/legal/license
 
