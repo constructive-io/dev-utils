@@ -1,4 +1,4 @@
-Constructive Generated Code License
+Constructive License
 
 Copyright (c) {{YEAR}} Interweb, Inc. (Constructive)
 
