@@ -47,7 +47,7 @@ describe('license templates', () => {
   it('renders CONSTRUCTIVE license with fixed Interweb copyright', () => {
     const content = renderLicense('CONSTRUCTIVE', context);
     expect(content).toContain('Constructive License');
-    expect(content).toContain('Interweb, Inc. (Constructive)');
+    expect(content).toContain('Interweb, Inc. d/b/a Constructive');
     expect(content).toContain('2099');
     expect(content).toContain('Constructive platform');
     expect(content).toContain('https://constructive.io/legal/license');
