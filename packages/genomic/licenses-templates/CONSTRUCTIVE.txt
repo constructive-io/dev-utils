@@ -21,7 +21,7 @@ Generated TypeScript clients and SDKs may be distributed under their own
 applicable open-source licenses, as indicated by LICENSE files in those
 packages.
 
-Full license terms: https://constructive.io/legal/license
+Full license terms: https://constructive.io/legal/license/v1.0
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
