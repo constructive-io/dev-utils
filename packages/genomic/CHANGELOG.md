@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/constructive-io/dev-utils/compare/genomic@5.3.11...genomic@5.4.0) (2026-05-24)
+
+### Bug Fixes
+
+- 'as separately indicated' wording ([8a14a18](https://github.com/constructive-io/dev-utils/commit/8a14a1858577a531542d3ed2ace614450ae88263))
+- add 'cloud functions' to restriction list ([66929e3](https://github.com/constructive-io/dev-utils/commit/66929e3b57ed063bf66d3a01bc4fb1405c9a4fe8))
+- add 'except under separate commercial agreement' to restriction 1 ([b99f78b](https://github.com/constructive-io/dev-utils/commit/b99f78be0ed827ab313e6f74db5d6b02a776c9ba))
+- add 'primary purpose' qualifier and 'in whole or substantial part' ([acfa5a9](https://github.com/constructive-io/dev-utils/commit/acfa5a9f2b7f8d73a1200b37bc27fb2e345dde40))
+- add versioned license URL (v1.0), keep title as 'Constructive License' ([ee7c1c6](https://github.com/constructive-io/dev-utils/commit/ee7c1c64c7bf13ab9857fc3822290d5cb0de38c4))
+- clean up copyright header per feedback ([d65f364](https://github.com/constructive-io/dev-utils/commit/d65f364e48fcf04ce1c167e20d7ef3ab44a29777))
+- polish grant and SDK carve-out wording ([9419853](https://github.com/constructive-io/dev-utils/commit/941985321c4dda587baa148a9326567f2ce61025))
+- revert license title to 'Constructive License' ([19203ea](https://github.com/constructive-io/dev-utils/commit/19203ea922bce7757826796f1725ff4f68a32ebd))
+- simplify grant language, drop 'for any purpose' ([7dda5b6](https://github.com/constructive-io/dev-utils/commit/7dda5b60a41b5f9edcc0c08c783d65de41b1b91b))
+- tighten first restriction clause per feedback ([95f5e01](https://github.com/constructive-io/dev-utils/commit/95f5e018f08dd63435a73cf8eb718967ea5164ce))
+- use 'AI infrastructure' to align with full license ([e8decae](https://github.com/constructive-io/dev-utils/commit/e8decaea2317c2e6a841735468ca7a7f7064f515))
+
+### Features
+
+- **genomic:** add Constructive license template ([8b0a3ec](https://github.com/constructive-io/dev-utils/commit/8b0a3ec18db880d46b37a7857176ff42224f96de))
+
 ## [5.3.11](https://github.com/constructive-io/dev-utils/compare/genomic@5.3.10...genomic@5.3.11) (2026-04-26)
 
 **Note:** Version bump only for package genomic
