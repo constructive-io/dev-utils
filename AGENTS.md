@@ -1,18 +1,18 @@
 # AGENTS.md
 
-This file provides guidance to AI coding agents working with code in this repository.
+This file provides guidance to AI agents working with the `constructive-io/dev-utils` monorepo.
 
 ## Available Skills
 
 | Skill | Description |
 |-------|-------------|
-| **inquirerer-cli** | inquirerer CLI framework — interactive prompts, appStash state persistence, yanse terminal colors, and README formatting conventions. Use when building CLIs with inquirerer or formatting documentation. |
+| **dev-utils** | Developer utilities — inquirerer (CLI prompts), yanse (terminal colors), appStash (state persistence), inflekt (string inflection), and 25+ other packages |
 
 ## Skill Structure
 
 ```
 .agents/skills/
-  inquirerer-cli/
+  dev-utils/
     SKILL.md              # Skill definition
     references/           # Detailed documentation
       inquirerer-cli.md
@@ -21,5 +21,5 @@ This file provides guidance to AI coding agents working with code in this reposi
       inquirerer-yanse.md
       inquirerer-anti-patterns.md
       readme-formatting.md
-  inquirerer-cli.zip      # Packaged for distribution
+  dev-utils.zip           # Packaged for distribution
 ```

@@ -1,20 +1,22 @@
 ---
-name: inquirerer-cli
-description: "inquirerer CLI framework — interactive prompts, appStash state persistence, yanse terminal colors, and README formatting conventions. Use when building CLIs with inquirerer or formatting documentation. For pnpm workspace/publishing/monorepo management, see the constructive-pnpm skill instead."
+name: dev-utils
+description: "Developer utilities monorepo — inquirerer (interactive CLI prompts), yanse (terminal colors), appStash (state persistence), inflekt (string inflection), strfy-js (JSON stringify), clean-ansi, and 25+ other packages. Use when building CLIs with inquirerer, working with terminal colors, string inflection, or any package in the dev-utils repo."
 metadata:
   author: constructive-io
   version: "2.0.0"
 ---
 
-# inquirerer CLI
+# dev-utils
 
-Build interactive CLI tools with the inquirerer framework: prompts, appStash state persistence, yanse terminal colors, and documentation formatting.
+Developer utilities monorepo with 30+ packages for CLI tooling, parsing, and general-purpose TypeScript utilities.
 
 ## When to Apply
 
 Use this skill when:
 - Building interactive CLIs with `inquirerer`
-- Formatting README and documentation files
+- Working with terminal colors (`yanse`)
+- Using string inflection (`inflekt`)
+- Working with any package in the `constructive-io/dev-utils` repo
 
 **For pnpm workspace management, publishing, and monorepo configuration**, see the `constructive-pnpm` skill.
 
