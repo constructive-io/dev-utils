@@ -140,6 +140,17 @@ export interface BoilerplatesConfig {
 }
 
 /**
+ * Declares a skill to install after scaffolding completes.
+ * Used with the agentskills.io CLI (`npx skills add <source> --skill <name>`).
+ */
+export interface BoilerplateSkill {
+  /** GitHub repository in org/repo format, or a full URL */
+  source: string;
+  /** Skill name(s) to install from the source */
+  skills: string[];
+}
+
+/**
  * Configuration for a single boilerplate template.
  * Stored in `.boilerplate.json` within each template directory.
  */
@@ -153,6 +164,13 @@ export interface BoilerplateConfig {
    * Questions to prompt the user during scaffolding
    */
   questions?: Question[];
+
+  /**
+   * Skills to install after scaffolding completes.
+   * Each entry specifies a source repository and skill names to install.
+   * Non-fatal: callers should handle install failures gracefully.
+   */
+  skills?: BoilerplateSkill[];
 }
 
 /**
