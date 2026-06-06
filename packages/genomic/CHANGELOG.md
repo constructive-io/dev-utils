@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/constructive-io/dev-utils/compare/genomic@5.4.0...genomic@5.5.0) (2026-06-06)
+
+### Features
+
+- **genomic:** add skills field to BoilerplateConfig ([ce51843](https://github.com/constructive-io/dev-utils/commit/ce51843e6d8f81ac56c9412664aa92117ecc1514))
+
 # [5.4.0](https://github.com/constructive-io/dev-utils/compare/genomic@5.3.11...genomic@5.4.0) (2026-05-24)
 
 ### Bug Fixes
