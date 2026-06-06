@@ -20,6 +20,8 @@ export * from './git/git-cloner';
 export * from './git/types';
 export * from './scaffolder/template-scaffolder';
 export * from './scaffolder/types';
+export * from './skills/skill-installer';
+export * from './skills/types';
 export * from './template/templatizer';
 export * from './template/types';
 export * from './utils/npm-version-check';
