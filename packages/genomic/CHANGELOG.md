@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/constructive-io/dev-utils/compare/genomic@5.5.0...genomic@5.6.0) (2026-06-06)
+
+### Features
+
+- **genomic:** add SkillInstaller for fast skill installation via shallow clone ([a2d6f55](https://github.com/constructive-io/dev-utils/commit/a2d6f55eda30810a8acfe70a2ddb02249070ac13))
+
 # [5.5.0](https://github.com/constructive-io/dev-utils/compare/genomic@5.4.0...genomic@5.5.0) (2026-06-06)
 
 ### Features
