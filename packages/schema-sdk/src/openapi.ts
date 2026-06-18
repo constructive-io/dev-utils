@@ -765,6 +765,7 @@ const getOperationTypeName = (
 
 export const createOperation = (
   options: OpenAPIOptions,
+  schema: OpenAPISpec,
   operation: Operation,
   path: string,
   method: string,
@@ -788,11 +789,16 @@ export const createOperation = (
     opts
   ];
 
-  const hasBody = operation.parameters?.some(
+  // Resolve $ref parameters before checking for body/query presence
+  const resolvedParams = (operation.parameters || []).map(
+    (param) => resolveParameterRef(schema, param)
+  );
+
+  const hasBody = resolvedParams.some(
     (param) => param.in === 'body' || param.in === 'formData'
   ) && ['post', 'put', 'patch'].includes(method)
 
-  const hasQuery = operation.parameters?.some(
+  const hasQuery = resolvedParams.some(
     (param) => param.in === 'query'
   );
 
@@ -863,10 +869,10 @@ export function generateMethods(
 
       if (alias) {
         methods.push(
-          createOperation(options, operation, path, method, alias, interfaceRenameMap)
+          createOperation(options, schema, operation, path, method, alias, interfaceRenameMap)
         );
       }
-      methods.push(createOperation(options, operation, path, method, undefined, interfaceRenameMap));
+      methods.push(createOperation(options, schema, operation, path, method, undefined, interfaceRenameMap));
     });
   });
 
