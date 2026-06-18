@@ -1,4 +1,4 @@
-import { APIClient, APIClientRequestOpts, APIClientOptions } from "@constructive-io/fetch-api-client";
+import { APIClient, APIClientRequestOpts, APIClientOptions } from '@constructive-io/fetch-api-client';
 export interface MonitoringCoreosComV1Alertmanager {
   apiVersion?: string;
   kind?: string;
@@ -157,7 +157,7 @@ export interface MonitoringCoreosComV1Alertmanager {
       };
     };
     alertmanagerConfigMatcherStrategy?: {
-      type?: "OnNamespace" | "OnNamespaceExceptForAlertmanagerNamespace" | "None";
+      type?: 'OnNamespace' | 'OnNamespaceExceptForAlertmanagerNamespace' | 'None';
     };
     alertmanagerConfigNamespaceSelector?: {
       matchExpressions?: {
@@ -268,8 +268,8 @@ export interface MonitoringCoreosComV1Alertmanager {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -310,8 +310,8 @@ export interface MonitoringCoreosComV1Alertmanager {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -399,8 +399,8 @@ export interface MonitoringCoreosComV1Alertmanager {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -481,8 +481,8 @@ export interface MonitoringCoreosComV1Alertmanager {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       server: {
@@ -789,7 +789,7 @@ export interface MonitoringCoreosComV1Alertmanager {
       }[];
       searches?: string[];
     };
-    dnsPolicy?: "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
+    dnsPolicy?: 'ClusterFirstWithHostNet' | 'ClusterFirst' | 'Default' | 'None';
     enableFeatures?: string[];
     enableServiceLinks?: boolean;
     externalUrl?: string;
@@ -800,7 +800,7 @@ export interface MonitoringCoreosComV1Alertmanager {
     }[];
     hostUsers?: boolean;
     image?: string;
-    imagePullPolicy?: "" | "Always" | "Never" | "IfNotPresent";
+    imagePullPolicy?: '' | 'Always' | 'Never' | 'IfNotPresent';
     imagePullSecrets?: {
       name?: string;
     }[];
@@ -1062,8 +1062,8 @@ export interface MonitoringCoreosComV1Alertmanager {
       maxSilences?: number;
     };
     listenLocal?: boolean;
-    logFormat?: "" | "logfmt" | "json";
-    logLevel?: "" | "debug" | "info" | "warn" | "error";
+    logFormat?: '' | 'logfmt' | 'json';
+    logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
     minReadySeconds?: number;
     nodeSelector?: {
       [key: string]: unknown;
@@ -1627,8 +1627,8 @@ export interface MonitoringCoreosComV1Alertmanager {
         headers?: {
           contentSecurityPolicy?: string;
           strictTransportSecurity?: string;
-          xContentTypeOptions?: "" | "NoSniff";
-          xFrameOptions?: "" | "Deny" | "SameOrigin";
+          xContentTypeOptions?: '' | 'NoSniff';
+          xFrameOptions?: '' | 'Deny' | 'SameOrigin';
           xXSSProtection?: string;
         };
         http2?: boolean;
@@ -1709,7 +1709,7 @@ export interface MonitoringCoreosComV1PodMonitor {
     };
     bodySizeLimit?: string;
     convertClassicHistogramsToNHCB?: boolean;
-    fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+    fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
     jobLabel?: string;
     keepDroppedTargets?: number;
     labelLimit?: number;
@@ -1754,7 +1754,7 @@ export interface MonitoringCoreosComV1PodMonitor {
       honorTimestamps?: boolean;
       interval?: string;
       metricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -1822,8 +1822,8 @@ export interface MonitoringCoreosComV1PodMonitor {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -1840,7 +1840,7 @@ export interface MonitoringCoreosComV1PodMonitor {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       relabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -1848,7 +1848,7 @@ export interface MonitoringCoreosComV1PodMonitor {
         sourceLabels?: string[];
         targetLabel?: string;
       }[];
-      scheme?: "http" | "https";
+      scheme?: 'http' | 'https';
       scrapeTimeout?: string;
       targetPort?: any;
       tlsConfig?: {
@@ -1882,8 +1882,8 @@ export interface MonitoringCoreosComV1PodMonitor {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       trackTimestampsStaleness?: boolean;
@@ -1892,7 +1892,7 @@ export interface MonitoringCoreosComV1PodMonitor {
     sampleLimit?: number;
     scrapeClass?: string;
     scrapeClassicHistograms?: boolean;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     selector: {
       matchExpressions?: {
         key: string;
@@ -1903,7 +1903,7 @@ export interface MonitoringCoreosComV1PodMonitor {
         [key: string]: unknown;
       };
     };
-    selectorMechanism?: "RelabelConfig" | "RoleSelector";
+    selectorMechanism?: 'RelabelConfig' | 'RoleSelector';
     targetLimit?: number;
   };
 }
@@ -1944,7 +1944,7 @@ export interface MonitoringCoreosComV1Probe {
       optional?: boolean;
     };
     convertClassicHistogramsToNHCB?: boolean;
-    fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+    fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
     interval?: string;
     jobName?: string;
     keepDroppedTargets?: number;
@@ -1952,7 +1952,7 @@ export interface MonitoringCoreosComV1Probe {
     labelNameLengthLimit?: number;
     labelValueLengthLimit?: number;
     metricRelabelings?: {
-      action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+      action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
       modulus?: number;
       regex?: string;
       replacement?: string;
@@ -2022,8 +2022,8 @@ export interface MonitoringCoreosComV1Probe {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       tokenUrl: string;
@@ -2040,13 +2040,13 @@ export interface MonitoringCoreosComV1Probe {
       };
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
-      scheme?: "http" | "https";
+      scheme?: 'http' | 'https';
       url: string;
     };
     sampleLimit?: number;
     scrapeClass?: string;
     scrapeClassicHistograms?: boolean;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     scrapeTimeout?: string;
     targetLimit?: number;
     targets?: {
@@ -2056,7 +2056,7 @@ export interface MonitoringCoreosComV1Probe {
           matchNames?: string[];
         };
         relabelingConfigs?: {
-          action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+          action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
           modulus?: number;
           regex?: string;
           replacement?: string;
@@ -2080,7 +2080,7 @@ export interface MonitoringCoreosComV1Probe {
           [key: string]: unknown;
         };
         relabelingConfigs?: {
-          action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+          action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
           modulus?: number;
           regex?: string;
           replacement?: string;
@@ -2122,8 +2122,8 @@ export interface MonitoringCoreosComV1Probe {
         name?: string;
         optional?: boolean;
       };
-      maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-      minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+      maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+      minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
       serverName?: string;
     };
   };
@@ -2308,7 +2308,7 @@ export interface MonitoringCoreosComV1Prometheus {
     alerting?: {
       alertmanagers: {
         alertRelabelings?: {
-          action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+          action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
           modulus?: number;
           regex?: string;
           replacement?: string;
@@ -2316,7 +2316,7 @@ export interface MonitoringCoreosComV1Prometheus {
           sourceLabels?: string[];
           targetLabel?: string;
         }[];
-        apiVersion?: "v1" | "V1" | "v2" | "V2";
+        apiVersion?: 'v1' | 'V1' | 'v2' | 'V2';
         authorization?: {
           credentials?: {
             key: string;
@@ -2350,7 +2350,7 @@ export interface MonitoringCoreosComV1Prometheus {
         proxyFromEnvironment?: boolean;
         proxyUrl?: string;
         relabelings?: {
-          action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+          action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
           modulus?: number;
           regex?: string;
           replacement?: string;
@@ -2409,8 +2409,8 @@ export interface MonitoringCoreosComV1Prometheus {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
       }[];
@@ -2481,8 +2481,8 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     };
@@ -2756,7 +2756,7 @@ export interface MonitoringCoreosComV1Prometheus {
       }[];
       searches?: string[];
     };
-    dnsPolicy?: "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
+    dnsPolicy?: 'ClusterFirstWithHostNet' | 'ClusterFirst' | 'Default' | 'None';
     enableAdminAPI?: boolean;
     enableFeatures?: string[];
     enableOTLPReceiver?: boolean;
@@ -2772,10 +2772,10 @@ export interface MonitoringCoreosComV1Prometheus {
     enforcedTargetLimit?: number;
     evaluationInterval?: string;
     excludedFromEnforcement?: {
-      group?: "monitoring.coreos.com";
+      group?: 'monitoring.coreos.com';
       name?: string;
       namespace: string;
-      resource: "prometheusrules" | "servicemonitors" | "podmonitors" | "probes" | "scrapeconfigs";
+      resource: 'prometheusrules' | 'servicemonitors' | 'podmonitors' | 'probes' | 'scrapeconfigs';
     }[];
     exemplars?: {
       maxSize?: number;
@@ -2792,7 +2792,7 @@ export interface MonitoringCoreosComV1Prometheus {
     hostUsers?: boolean;
     ignoreNamespaceSelectors?: boolean;
     image?: string;
-    imagePullPolicy?: "" | "Always" | "Never" | "IfNotPresent";
+    imagePullPolicy?: '' | 'Always' | 'Never' | 'IfNotPresent';
     imagePullSecrets?: {
       name?: string;
     }[];
@@ -3054,12 +3054,12 @@ export interface MonitoringCoreosComV1Prometheus {
     labelNameLengthLimit?: number;
     labelValueLengthLimit?: number;
     listenLocal?: boolean;
-    logFormat?: "" | "logfmt" | "json";
-    logLevel?: "" | "debug" | "info" | "warn" | "error";
+    logFormat?: '' | 'logfmt' | 'json';
+    logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
     maximumStartupDurationSeconds?: number;
     minReadySeconds?: number;
-    nameEscapingScheme?: "AllowUTF8" | "Underscores" | "Dots" | "Values";
-    nameValidationScheme?: "UTF8" | "Legacy";
+    nameEscapingScheme?: 'AllowUTF8' | 'Underscores' | 'Dots' | 'Values';
+    nameValidationScheme?: 'UTF8' | 'Legacy';
     nodeSelector?: {
       [key: string]: unknown;
     };
@@ -3069,7 +3069,7 @@ export interface MonitoringCoreosComV1Prometheus {
       keepIdentifyingResourceAttributes?: boolean;
       promoteAllResourceAttributes?: boolean;
       promoteResourceAttributes?: string[];
-      translationStrategy?: "NoUTF8EscapingWithSuffixes" | "UnderscoreEscapingWithSuffixes" | "NoTranslation";
+      translationStrategy?: 'NoUTF8EscapingWithSuffixes' | 'UnderscoreEscapingWithSuffixes' | 'NoTranslation';
     };
     overrideHonorLabels?: boolean;
     overrideHonorTimestamps?: boolean;
@@ -3142,7 +3142,7 @@ export interface MonitoringCoreosComV1Prometheus {
       timeout?: string;
     };
     queryLogFile?: string;
-    reloadStrategy?: "HTTP" | "ProcessSignal";
+    reloadStrategy?: 'HTTP' | 'ProcessSignal';
     remoteRead?: {
       authorization?: {
         credentials?: {
@@ -3233,8 +3233,8 @@ export interface MonitoringCoreosComV1Prometheus {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -3283,8 +3283,8 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
@@ -3300,7 +3300,7 @@ export interface MonitoringCoreosComV1Prometheus {
         type?: string;
       };
       azureAd?: {
-        cloud?: "AzureChina" | "AzureGovernment" | "AzurePublic";
+        cloud?: 'AzureChina' | 'AzureGovernment' | 'AzurePublic';
         managedIdentity?: {
           clientId: string;
         };
@@ -3336,7 +3336,7 @@ export interface MonitoringCoreosComV1Prometheus {
       headers?: {
         [key: string]: unknown;
       };
-      messageVersion?: "V1.0" | "V2.0";
+      messageVersion?: 'V1.0' | 'V2.0';
       metadataConfig?: {
         maxSamplesPerSend?: number;
         send?: boolean;
@@ -3403,8 +3403,8 @@ export interface MonitoringCoreosComV1Prometheus {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -3479,13 +3479,13 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
       writeRelabelConfigs?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -3494,7 +3494,7 @@ export interface MonitoringCoreosComV1Prometheus {
         targetLabel?: string;
       }[];
     }[];
-    remoteWriteReceiverMessageVersions?: ("V1.0" | "V2.0")[];
+    remoteWriteReceiverMessageVersions?: ('V1.0' | 'V2.0')[];
     replicaExternalLabelName?: string;
     replicas?: number;
     resources?: {
@@ -3558,9 +3558,9 @@ export interface MonitoringCoreosComV1Prometheus {
         type?: string;
       };
       default?: boolean;
-      fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+      fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
       metricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -3570,7 +3570,7 @@ export interface MonitoringCoreosComV1Prometheus {
       }[];
       name: string;
       relabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -3612,8 +3612,8 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -3640,7 +3640,7 @@ export interface MonitoringCoreosComV1Prometheus {
     };
     scrapeFailureLogFile?: string;
     scrapeInterval?: string;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     scrapeTimeout?: string;
     secrets?: string[];
     securityContext?: {
@@ -3678,7 +3678,7 @@ export interface MonitoringCoreosComV1Prometheus {
       };
     };
     serviceAccountName?: string;
-    serviceDiscoveryRole?: "Endpoints" | "EndpointSlice";
+    serviceDiscoveryRole?: 'Endpoints' | 'EndpointSlice';
     serviceMonitorNamespaceSelector?: {
       matchExpressions?: {
         key: string;
@@ -3705,7 +3705,7 @@ export interface MonitoringCoreosComV1Prometheus {
       retain?: {
         retentionPeriod: string;
       };
-      whenScaled?: "Retain" | "Delete";
+      whenScaled?: 'Retain' | 'Delete';
     };
     shards?: number;
     storage?: {
@@ -3880,15 +3880,15 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       httpListenLocal?: boolean;
       image?: string;
       listenLocal?: boolean;
-      logFormat?: "" | "logfmt" | "json";
-      logLevel?: "" | "debug" | "info" | "warn" | "error";
+      logFormat?: '' | 'logfmt' | 'json';
+      logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
       minTime?: string;
       objectStorageConfig?: {
         key: string;
@@ -3936,7 +3936,7 @@ export interface MonitoringCoreosComV1Prometheus {
       value?: string;
     }[];
     topologySpreadConstraints?: {
-      additionalLabelSelectors?: "OnResource" | "OnShard";
+      additionalLabelSelectors?: 'OnResource' | 'OnShard';
       labelSelector?: {
         matchExpressions?: {
           key: string;
@@ -3956,8 +3956,8 @@ export interface MonitoringCoreosComV1Prometheus {
       whenUnsatisfiable: string;
     }[];
     tracingConfig?: {
-      clientType?: "http" | "grpc";
-      compression?: "gzip";
+      clientType?: 'http' | 'grpc';
+      compression?: 'gzip';
       endpoint: string;
       headers?: {
         [key: string]: unknown;
@@ -3999,8 +3999,8 @@ export interface MonitoringCoreosComV1Prometheus {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     };
@@ -4344,8 +4344,8 @@ export interface MonitoringCoreosComV1Prometheus {
         headers?: {
           contentSecurityPolicy?: string;
           strictTransportSecurity?: string;
-          xContentTypeOptions?: "" | "NoSniff";
-          xFrameOptions?: "" | "Deny" | "SameOrigin";
+          xContentTypeOptions?: '' | 'NoSniff';
+          xFrameOptions?: '' | 'Deny' | 'SameOrigin';
           xXSSProtection?: string;
         };
         http2?: boolean;
@@ -4505,7 +4505,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
       honorTimestamps?: boolean;
       interval?: string;
       metricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -4573,8 +4573,8 @@ export interface MonitoringCoreosComV1ServiceMonitor {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -4590,7 +4590,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       relabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -4598,7 +4598,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
         sourceLabels?: string[];
         targetLabel?: string;
       }[];
-      scheme?: "http" | "https";
+      scheme?: 'http' | 'https';
       scrapeTimeout?: string;
       targetPort?: any;
       tlsConfig?: {
@@ -4635,13 +4635,13 @@ export interface MonitoringCoreosComV1ServiceMonitor {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       trackTimestampsStaleness?: boolean;
     }[];
-    fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+    fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
     jobLabel?: string;
     keepDroppedTargets?: number;
     labelLimit?: number;
@@ -4657,7 +4657,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
     sampleLimit?: number;
     scrapeClass?: string;
     scrapeClassicHistograms?: boolean;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     selector: {
       matchExpressions?: {
         key: string;
@@ -4668,7 +4668,7 @@ export interface MonitoringCoreosComV1ServiceMonitor {
         [key: string]: unknown;
       };
     };
-    selectorMechanism?: "RelabelConfig" | "RoleSelector";
+    selectorMechanism?: 'RelabelConfig' | 'RoleSelector';
     targetLabels?: string[];
     targetLimit?: number;
   };
@@ -4680,12 +4680,12 @@ export interface MonitoringCoreosComV1ServiceMonitor {
         observedGeneration?: number;
         reason?: string;
         status: string;
-        type: "Accepted";
+        type: 'Accepted';
       }[];
-      group: "monitoring.coreos.com";
+      group: 'monitoring.coreos.com';
       name: string;
       namespace: string;
-      resource: "prometheuses" | "prometheusagents";
+      resource: 'prometheuses' | 'prometheusagents';
     }[];
   };
 }
@@ -5126,16 +5126,16 @@ export interface MonitoringCoreosComV1ThanosRuler {
       }[];
       searches?: string[];
     };
-    dnsPolicy?: "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
+    dnsPolicy?: 'ClusterFirstWithHostNet' | 'ClusterFirst' | 'Default' | 'None';
     enableFeatures?: string[];
     enableServiceLinks?: boolean;
     enforcedNamespaceLabel?: string;
     evaluationInterval?: string;
     excludedFromEnforcement?: {
-      group?: "monitoring.coreos.com";
+      group?: 'monitoring.coreos.com';
       name?: string;
       namespace: string;
-      resource: "prometheusrules" | "servicemonitors" | "podmonitors" | "probes" | "scrapeconfigs";
+      resource: 'prometheusrules' | 'servicemonitors' | 'podmonitors' | 'probes' | 'scrapeconfigs';
     }[];
     externalPrefix?: string;
     grpcServerTlsConfig?: {
@@ -5172,8 +5172,8 @@ export interface MonitoringCoreosComV1ThanosRuler {
         name?: string;
         optional?: boolean;
       };
-      maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-      minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+      maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+      minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
       serverName?: string;
     };
     hostAliases?: {
@@ -5182,7 +5182,7 @@ export interface MonitoringCoreosComV1ThanosRuler {
     }[];
     hostUsers?: boolean;
     image?: string;
-    imagePullPolicy?: "" | "Always" | "Never" | "IfNotPresent";
+    imagePullPolicy?: '' | 'Always' | 'Never' | 'IfNotPresent';
     imagePullSecrets?: {
       name?: string;
     }[];
@@ -5443,8 +5443,8 @@ export interface MonitoringCoreosComV1ThanosRuler {
       [key: string]: unknown;
     };
     listenLocal?: boolean;
-    logFormat?: "" | "logfmt" | "json";
-    logLevel?: "" | "debug" | "info" | "warn" | "error";
+    logFormat?: '' | 'logfmt' | 'json';
+    logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
     minReadySeconds?: number;
     nodeSelector?: {
       [key: string]: unknown;
@@ -5488,7 +5488,7 @@ export interface MonitoringCoreosComV1ThanosRuler {
         type?: string;
       };
       azureAd?: {
-        cloud?: "AzureChina" | "AzureGovernment" | "AzurePublic";
+        cloud?: 'AzureChina' | 'AzureGovernment' | 'AzurePublic';
         managedIdentity?: {
           clientId: string;
         };
@@ -5524,7 +5524,7 @@ export interface MonitoringCoreosComV1ThanosRuler {
       headers?: {
         [key: string]: unknown;
       };
-      messageVersion?: "V1.0" | "V2.0";
+      messageVersion?: 'V1.0' | 'V2.0';
       metadataConfig?: {
         maxSamplesPerSend?: number;
         send?: boolean;
@@ -5591,8 +5591,8 @@ export interface MonitoringCoreosComV1ThanosRuler {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -5667,13 +5667,13 @@ export interface MonitoringCoreosComV1ThanosRuler {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
       writeRelabelConfigs?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -6252,8 +6252,8 @@ export interface MonitoringCoreosComV1ThanosRuler {
         headers?: {
           contentSecurityPolicy?: string;
           strictTransportSecurity?: string;
-          xContentTypeOptions?: "" | "NoSniff";
-          xFrameOptions?: "" | "Deny" | "SameOrigin";
+          xContentTypeOptions?: '' | 'NoSniff';
+          xFrameOptions?: '' | 'Deny' | 'SameOrigin';
           xXSSProtection?: string;
         };
         http2?: boolean;
@@ -6330,13 +6330,13 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
     inhibitRules?: {
       equal?: string[];
       sourceMatch?: {
-        matchType?: "!=" | "=" | "=~" | "!~";
+        matchType?: '!=' | '=' | '=~' | '!~';
         name: string;
         regex?: boolean;
         value?: string;
       }[];
       targetMatch?: {
-        matchType?: "!=" | "=" | "=~" | "!~";
+        matchType?: '!=' | '=' | '=~' | '!~';
         name: string;
         regex?: boolean;
         value?: string;
@@ -6454,8 +6454,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -6497,8 +6497,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -6562,8 +6562,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         to?: string;
@@ -6656,8 +6656,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -6699,8 +6699,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -6802,8 +6802,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -6845,8 +6845,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -6961,8 +6961,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7004,8 +7004,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7121,8 +7121,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7164,8 +7164,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7284,8 +7284,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7327,8 +7327,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7456,8 +7456,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7499,8 +7499,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7641,8 +7641,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7684,8 +7684,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7795,8 +7795,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -7838,8 +7838,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -7962,8 +7962,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8005,14 +8005,14 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
         message?: string;
         messageThreadID?: number;
-        parseMode?: "MarkdownV2" | "Markdown" | "HTML";
+        parseMode?: 'MarkdownV2' | 'Markdown' | 'HTML';
         sendResolved?: boolean;
       }[];
       victoropsConfigs?: {
@@ -8114,8 +8114,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8157,8 +8157,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8257,8 +8257,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8300,8 +8300,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8397,8 +8397,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8440,8 +8440,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8551,8 +8551,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
                 name?: string;
                 optional?: boolean;
               };
-              maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-              minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+              maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+              minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
               serverName?: string;
             };
             tokenUrl: string;
@@ -8594,8 +8594,8 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
               name?: string;
               optional?: boolean;
             };
-            maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-            minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+            maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+            minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
             serverName?: string;
           };
         };
@@ -8614,7 +8614,7 @@ export interface MonitoringCoreosComV1alpha1AlertmanagerConfig {
       groupInterval?: string;
       groupWait?: string;
       matchers?: {
-        matchType?: "!=" | "=" | "=~" | "!~";
+        matchType?: '!=' | '=' | '=~' | '!~';
         name: string;
         regex?: boolean;
         value?: string;
@@ -8858,8 +8858,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     };
@@ -9131,7 +9131,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       }[];
       searches?: string[];
     };
-    dnsPolicy?: "ClusterFirstWithHostNet" | "ClusterFirst" | "Default" | "None";
+    dnsPolicy?: 'ClusterFirstWithHostNet' | 'ClusterFirst' | 'Default' | 'None';
     enableFeatures?: string[];
     enableOTLPReceiver?: boolean;
     enableRemoteWriteReceiver?: boolean;
@@ -9145,10 +9145,10 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
     enforcedSampleLimit?: number;
     enforcedTargetLimit?: number;
     excludedFromEnforcement?: {
-      group?: "monitoring.coreos.com";
+      group?: 'monitoring.coreos.com';
       name?: string;
       namespace: string;
-      resource: "prometheusrules" | "servicemonitors" | "podmonitors" | "probes" | "scrapeconfigs";
+      resource: 'prometheusrules' | 'servicemonitors' | 'podmonitors' | 'probes' | 'scrapeconfigs';
     }[];
     externalLabels?: {
       [key: string]: unknown;
@@ -9162,7 +9162,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
     hostUsers?: boolean;
     ignoreNamespaceSelectors?: boolean;
     image?: string;
-    imagePullPolicy?: "" | "Always" | "Never" | "IfNotPresent";
+    imagePullPolicy?: '' | 'Always' | 'Never' | 'IfNotPresent';
     imagePullSecrets?: {
       name?: string;
     }[];
@@ -9424,13 +9424,13 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
     labelNameLengthLimit?: number;
     labelValueLengthLimit?: number;
     listenLocal?: boolean;
-    logFormat?: "" | "logfmt" | "json";
-    logLevel?: "" | "debug" | "info" | "warn" | "error";
+    logFormat?: '' | 'logfmt' | 'json';
+    logLevel?: '' | 'debug' | 'info' | 'warn' | 'error';
     maximumStartupDurationSeconds?: number;
     minReadySeconds?: number;
-    mode?: "StatefulSet" | "DaemonSet";
-    nameEscapingScheme?: "AllowUTF8" | "Underscores" | "Dots" | "Values";
-    nameValidationScheme?: "UTF8" | "Legacy";
+    mode?: 'StatefulSet' | 'DaemonSet';
+    nameEscapingScheme?: 'AllowUTF8' | 'Underscores' | 'Dots' | 'Values';
+    nameValidationScheme?: 'UTF8' | 'Legacy';
     nodeSelector?: {
       [key: string]: unknown;
     };
@@ -9440,7 +9440,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       keepIdentifyingResourceAttributes?: boolean;
       promoteAllResourceAttributes?: boolean;
       promoteResourceAttributes?: string[];
-      translationStrategy?: "NoUTF8EscapingWithSuffixes" | "UnderscoreEscapingWithSuffixes" | "NoTranslation";
+      translationStrategy?: 'NoUTF8EscapingWithSuffixes' | 'UnderscoreEscapingWithSuffixes' | 'NoTranslation';
     };
     overrideHonorLabels?: boolean;
     overrideHonorTimestamps?: boolean;
@@ -9502,7 +9502,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       };
     };
     prometheusExternalLabelName?: string;
-    reloadStrategy?: "HTTP" | "ProcessSignal";
+    reloadStrategy?: 'HTTP' | 'ProcessSignal';
     remoteWrite?: {
       authorization?: {
         credentials?: {
@@ -9514,7 +9514,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
         type?: string;
       };
       azureAd?: {
-        cloud?: "AzureChina" | "AzureGovernment" | "AzurePublic";
+        cloud?: 'AzureChina' | 'AzureGovernment' | 'AzurePublic';
         managedIdentity?: {
           clientId: string;
         };
@@ -9550,7 +9550,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       headers?: {
         [key: string]: unknown;
       };
-      messageVersion?: "V1.0" | "V2.0";
+      messageVersion?: 'V1.0' | 'V2.0';
       metadataConfig?: {
         maxSamplesPerSend?: number;
         send?: boolean;
@@ -9617,8 +9617,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -9693,13 +9693,13 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
       writeRelabelConfigs?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -9708,7 +9708,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
         targetLabel?: string;
       }[];
     }[];
-    remoteWriteReceiverMessageVersions?: ("V1.0" | "V2.0")[];
+    remoteWriteReceiverMessageVersions?: ('V1.0' | 'V2.0')[];
     replicaExternalLabelName?: string;
     replicas?: number;
     resources?: {
@@ -9742,9 +9742,9 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
         type?: string;
       };
       default?: boolean;
-      fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+      fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
       metricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -9754,7 +9754,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       }[];
       name: string;
       relabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -9796,8 +9796,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -9824,7 +9824,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
     };
     scrapeFailureLogFile?: string;
     scrapeInterval?: string;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     scrapeTimeout?: string;
     secrets?: string[];
     securityContext?: {
@@ -9862,7 +9862,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       };
     };
     serviceAccountName?: string;
-    serviceDiscoveryRole?: "Endpoints" | "EndpointSlice";
+    serviceDiscoveryRole?: 'Endpoints' | 'EndpointSlice';
     serviceMonitorNamespaceSelector?: {
       matchExpressions?: {
         key: string;
@@ -10020,7 +10020,7 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       value?: string;
     }[];
     topologySpreadConstraints?: {
-      additionalLabelSelectors?: "OnResource" | "OnShard";
+      additionalLabelSelectors?: 'OnResource' | 'OnShard';
       labelSelector?: {
         matchExpressions?: {
           key: string;
@@ -10040,8 +10040,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
       whenUnsatisfiable: string;
     }[];
     tracingConfig?: {
-      clientType?: "http" | "grpc";
-      compression?: "gzip";
+      clientType?: 'http' | 'grpc';
+      compression?: 'gzip';
       endpoint: string;
       headers?: {
         [key: string]: unknown;
@@ -10083,8 +10083,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     };
@@ -10428,8 +10428,8 @@ export interface MonitoringCoreosComV1alpha1PrometheusAgent {
         headers?: {
           contentSecurityPolicy?: string;
           strictTransportSecurity?: string;
-          xContentTypeOptions?: "" | "NoSniff";
-          xFrameOptions?: "" | "Deny" | "SameOrigin";
+          xContentTypeOptions?: '' | 'NoSniff';
+          xFrameOptions?: '' | 'Deny' | 'SameOrigin';
           xXSSProtection?: string;
         };
         http2?: boolean;
@@ -10523,7 +10523,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       type?: string;
     };
     azureSDConfigs?: {
-      authenticationMethod?: "OAuth" | "ManagedIdentity" | "SDK";
+      authenticationMethod?: 'OAuth' | 'ManagedIdentity' | 'SDK';
       authorization?: {
         credentials?: {
           key: string;
@@ -10613,8 +10613,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -10660,8 +10660,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -10767,8 +10767,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -10781,7 +10781,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       refreshInterval?: string;
-      scheme?: "HTTP" | "HTTPS";
+      scheme?: 'HTTP' | 'HTTPS';
       server: string;
       services?: string[];
       tagSeparator?: string;
@@ -10817,8 +10817,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       tokenRef?: {
@@ -10899,8 +10899,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -10943,8 +10943,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -10952,7 +10952,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       names: string[];
       port?: number;
       refreshInterval?: string;
-      type?: "A" | "AAAA" | "MX" | "NS" | "SRV";
+      type?: 'A' | 'AAAA' | 'MX' | 'NS' | 'SRV';
     }[];
     dockerSDConfigs?: {
       authorization?: {
@@ -11044,8 +11044,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11088,8 +11088,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11181,8 +11181,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11194,7 +11194,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       refreshInterval?: string;
-      role: "Services" | "Tasks" | "Nodes";
+      role: 'Services' | 'Tasks' | 'Nodes';
       tlsConfig?: {
         ca?: {
           configMap?: {
@@ -11226,8 +11226,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11289,8 +11289,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11379,8 +11379,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11423,12 +11423,12 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
-    fallbackScrapeProtocol?: "PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0";
+    fallbackScrapeProtocol?: 'PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0';
     fileSDConfigs?: {
       files: string[];
       refreshInterval?: string;
@@ -11525,8 +11525,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11538,7 +11538,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       refreshInterval?: string;
-      role: "hcloud" | "Hcloud" | "robot" | "Robot";
+      role: 'hcloud' | 'Hcloud' | 'robot' | 'Robot';
       tlsConfig?: {
         ca?: {
           configMap?: {
@@ -11570,8 +11570,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11660,8 +11660,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11703,8 +11703,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
@@ -11781,8 +11781,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11825,8 +11825,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -11923,8 +11923,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -11934,11 +11934,11 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       };
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
-      role: "Pod" | "Endpoints" | "Ingress" | "Service" | "Node" | "EndpointSlice";
+      role: 'Pod' | 'Endpoints' | 'Ingress' | 'Service' | 'Node' | 'EndpointSlice';
       selectors?: {
         field?: string;
         label?: string;
-        role: "Pod" | "Endpoints" | "Ingress" | "Service" | "Node" | "EndpointSlice";
+        role: 'Pod' | 'Endpoints' | 'Ingress' | 'Service' | 'Node' | 'EndpointSlice';
       }[];
       tlsConfig?: {
         ca?: {
@@ -11971,8 +11971,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12061,8 +12061,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12105,8 +12105,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12202,8 +12202,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12253,8 +12253,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12329,8 +12329,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12375,13 +12375,13 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
     metricRelabelings?: {
-      action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+      action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
       modulus?: number;
       regex?: string;
       replacement?: string;
@@ -12390,8 +12390,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       targetLabel?: string;
     }[];
     metricsPath?: string;
-    nameEscapingScheme?: "AllowUTF8" | "Underscores" | "Dots" | "Values";
-    nameValidationScheme?: "UTF8" | "Legacy";
+    nameEscapingScheme?: 'AllowUTF8' | 'Underscores' | 'Dots' | 'Values';
+    nameValidationScheme?: 'UTF8' | 'Legacy';
     nativeHistogramBucketLimit?: number;
     nativeHistogramMinBucketFactor?: any;
     noProxy?: string;
@@ -12480,8 +12480,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12526,8 +12526,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
     }[];
@@ -12590,8 +12590,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       tokenUrl: string;
@@ -12605,7 +12605,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
         name?: string;
         optional?: boolean;
       };
-      availability?: "Public" | "public" | "Admin" | "admin" | "Internal" | "internal";
+      availability?: 'Public' | 'public' | 'Admin' | 'admin' | 'Internal' | 'internal';
       domainID?: string;
       domainName?: string;
       identityEndpoint?: string;
@@ -12619,7 +12619,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       projectName?: string;
       refreshInterval?: string;
       region: string;
-      role: "Instance" | "Hypervisor" | "LoadBalancer";
+      role: 'Instance' | 'Hypervisor' | 'LoadBalancer';
       tlsConfig?: {
         ca?: {
           configMap?: {
@@ -12651,8 +12651,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       userid?: string;
@@ -12766,8 +12766,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
             name?: string;
             optional?: boolean;
           };
-          maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-          minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+          maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+          minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
           serverName?: string;
         };
         tokenUrl: string;
@@ -12811,14 +12811,14 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       url: string;
     }[];
     relabelings?: {
-      action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+      action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
       modulus?: number;
       regex?: string;
       replacement?: string;
@@ -12842,7 +12842,7 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
       proxyFromEnvironment?: boolean;
       proxyUrl?: string;
       refreshInterval?: string;
-      role: "Instance" | "Baremetal";
+      role: 'Instance' | 'Baremetal';
       secretKey: {
         key: string;
         name?: string;
@@ -12880,17 +12880,17 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
           name?: string;
           optional?: boolean;
         };
-        maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-        minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+        maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+        minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
         serverName?: string;
       };
       zone?: string;
     }[];
-    scheme?: "HTTP" | "HTTPS";
+    scheme?: 'HTTP' | 'HTTPS';
     scrapeClass?: string;
     scrapeClassicHistograms?: boolean;
     scrapeInterval?: string;
-    scrapeProtocols?: ("PrometheusProto" | "OpenMetricsText0.0.1" | "OpenMetricsText1.0.0" | "PrometheusText0.0.4" | "PrometheusText1.0.0")[];
+    scrapeProtocols?: ('PrometheusProto' | 'OpenMetricsText0.0.1' | 'OpenMetricsText1.0.0' | 'PrometheusText0.0.4' | 'PrometheusText1.0.0')[];
     scrapeTimeout?: string;
     staticConfigs?: {
       labels?: {
@@ -12930,8 +12930,8 @@ export interface MonitoringCoreosComV1alpha1ScrapeConfig {
         name?: string;
         optional?: boolean;
       };
-      maxVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
-      minVersion?: "TLS10" | "TLS11" | "TLS12" | "TLS13";
+      maxVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
+      minVersion?: 'TLS10' | 'TLS11' | 'TLS12' | 'TLS13';
       serverName?: string;
     };
     trackTimestampsStaleness?: boolean;
@@ -14230,7 +14230,7 @@ export interface AcmeCertManagerIoV1Challenge {
             key?: string;
             name: string;
           };
-          environment?: "AzurePublicCloud" | "AzureChinaCloud" | "AzureGermanCloud" | "AzureUSGovernmentCloud";
+          environment?: 'AzurePublicCloud' | 'AzureChinaCloud' | 'AzureGermanCloud' | 'AzureUSGovernmentCloud';
           hostedZoneName?: string;
           managedIdentity?: {
             clientID?: string;
@@ -14260,7 +14260,7 @@ export interface AcmeCertManagerIoV1Challenge {
           };
           email?: string;
         };
-        cnameStrategy?: "None" | "Follow";
+        cnameStrategy?: 'None' | 'Follow';
         digitalocean?: {
           tokenSecretRef: {
             key?: string;
@@ -14737,7 +14737,7 @@ export interface AcmeCertManagerIoV1Challenge {
       };
     };
     token: string;
-    type: "HTTP-01" | "DNS-01";
+    type: 'HTTP-01' | 'DNS-01';
     url: string;
     wildcard?: boolean;
   };
@@ -14745,7 +14745,7 @@ export interface AcmeCertManagerIoV1Challenge {
     presented?: boolean;
     processing?: boolean;
     reason?: string;
-    state?: "valid" | "ready" | "pending" | "processing" | "invalid" | "expired" | "errored";
+    state?: 'valid' | 'ready' | 'pending' | 'processing' | 'invalid' | 'expired' | 'errored';
   };
 }
 export interface AcmeCertManagerIoV1ChallengeList {
@@ -14778,7 +14778,7 @@ export interface AcmeCertManagerIoV1Order {
         url: string;
       }[];
       identifier?: string;
-      initialState?: "valid" | "ready" | "pending" | "processing" | "invalid" | "expired" | "errored";
+      initialState?: 'valid' | 'ready' | 'pending' | 'processing' | 'invalid' | 'expired' | 'errored';
       url: string;
       wildcard?: boolean;
     }[];
@@ -14786,7 +14786,7 @@ export interface AcmeCertManagerIoV1Order {
     failureTime?: string;
     finalizeURL?: string;
     reason?: string;
-    state?: "valid" | "ready" | "pending" | "processing" | "invalid" | "expired" | "errored";
+    state?: 'valid' | 'ready' | 'pending' | 'processing' | 'invalid' | 'expired' | 'errored';
     url?: string;
   };
 }
@@ -14802,7 +14802,7 @@ export interface CertManagerIoV1Certificate {
   metadata?: ObjectMeta;
   spec?: {
     additionalOutputFormats?: {
-      type: "DER" | "CombinedPEM";
+      type: 'DER' | 'CombinedPEM';
     }[];
     commonName?: string;
     dnsNames?: string[];
@@ -14833,7 +14833,7 @@ export interface CertManagerIoV1Certificate {
           key?: string;
           name: string;
         };
-        profile?: "LegacyRC2" | "LegacyDES" | "Modern2023";
+        profile?: 'LegacyRC2' | 'LegacyDES' | 'Modern2023';
       };
     };
     literalSubject?: string;
@@ -14857,9 +14857,9 @@ export interface CertManagerIoV1Certificate {
       utf8Value?: string;
     }[];
     privateKey?: {
-      algorithm?: "RSA" | "ECDSA" | "Ed25519";
-      encoding?: "PKCS1" | "PKCS8";
-      rotationPolicy?: "Never" | "Always";
+      algorithm?: 'RSA' | 'ECDSA' | 'Ed25519';
+      encoding?: 'PKCS1' | 'PKCS8';
+      rotationPolicy?: 'Never' | 'Always';
       size?: number;
     };
     renewBefore?: string;
@@ -14885,7 +14885,7 @@ export interface CertManagerIoV1Certificate {
       streetAddresses?: string[];
     };
     uris?: string[];
-    usages?: ("signing" | "digital signature" | "content commitment" | "key encipherment" | "key agreement" | "data encipherment" | "cert sign" | "crl sign" | "encipher only" | "decipher only" | "any" | "server auth" | "client auth" | "code signing" | "email protection" | "s/mime" | "ipsec end system" | "ipsec tunnel" | "ipsec user" | "timestamping" | "ocsp signing" | "microsoft sgc" | "netscape sgc")[];
+    usages?: ('signing' | 'digital signature' | 'content commitment' | 'key encipherment' | 'key agreement' | 'data encipherment' | 'cert sign' | 'crl sign' | 'encipher only' | 'decipher only' | 'any' | 'server auth' | 'client auth' | 'code signing' | 'email protection' | 's/mime' | 'ipsec end system' | 'ipsec tunnel' | 'ipsec user' | 'timestamping' | 'ocsp signing' | 'microsoft sgc' | 'netscape sgc')[];
   };
   status?: {
     conditions?: {
@@ -14893,7 +14893,7 @@ export interface CertManagerIoV1Certificate {
       message?: string;
       observedGeneration?: number;
       reason?: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
     failedIssuanceAttempts?: number;
@@ -14929,7 +14929,7 @@ export interface CertManagerIoV1CertificateRequest {
     };
     request: string;
     uid?: string;
-    usages?: ("signing" | "digital signature" | "content commitment" | "key encipherment" | "key agreement" | "data encipherment" | "cert sign" | "crl sign" | "encipher only" | "decipher only" | "any" | "server auth" | "client auth" | "code signing" | "email protection" | "s/mime" | "ipsec end system" | "ipsec tunnel" | "ipsec user" | "timestamping" | "ocsp signing" | "microsoft sgc" | "netscape sgc")[];
+    usages?: ('signing' | 'digital signature' | 'content commitment' | 'key encipherment' | 'key agreement' | 'data encipherment' | 'cert sign' | 'crl sign' | 'encipher only' | 'decipher only' | 'any' | 'server auth' | 'client auth' | 'code signing' | 'email protection' | 's/mime' | 'ipsec end system' | 'ipsec tunnel' | 'ipsec user' | 'timestamping' | 'ocsp signing' | 'microsoft sgc' | 'netscape sgc')[];
     username?: string;
   };
   status?: {
@@ -14939,7 +14939,7 @@ export interface CertManagerIoV1CertificateRequest {
       lastTransitionTime?: string;
       message?: string;
       reason?: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
     failureTime?: string;
@@ -14962,7 +14962,7 @@ export interface CertManagerIoV1ClusterIssuer {
       email?: string;
       enableDurationFeature?: boolean;
       externalAccountBinding?: {
-        keyAlgorithm?: "HS256" | "HS384" | "HS512";
+        keyAlgorithm?: 'HS256' | 'HS384' | 'HS512';
         keyID: string;
         keySecretRef: {
           key?: string;
@@ -15006,7 +15006,7 @@ export interface CertManagerIoV1ClusterIssuer {
               key?: string;
               name: string;
             };
-            environment?: "AzurePublicCloud" | "AzureChinaCloud" | "AzureGermanCloud" | "AzureUSGovernmentCloud";
+            environment?: 'AzurePublicCloud' | 'AzureChinaCloud' | 'AzureGermanCloud' | 'AzureUSGovernmentCloud';
             hostedZoneName?: string;
             managedIdentity?: {
               clientID?: string;
@@ -15036,7 +15036,7 @@ export interface CertManagerIoV1ClusterIssuer {
             };
             email?: string;
           };
-          cnameStrategy?: "None" | "Follow";
+          cnameStrategy?: 'None' | 'Follow';
           digitalocean?: {
             tokenSecretRef: {
               key?: string;
@@ -15604,7 +15604,7 @@ export interface CertManagerIoV1ClusterIssuer {
       message?: string;
       observedGeneration?: number;
       reason?: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
   };
@@ -15626,7 +15626,7 @@ export interface CertManagerIoV1Issuer {
       email?: string;
       enableDurationFeature?: boolean;
       externalAccountBinding?: {
-        keyAlgorithm?: "HS256" | "HS384" | "HS512";
+        keyAlgorithm?: 'HS256' | 'HS384' | 'HS512';
         keyID: string;
         keySecretRef: {
           key?: string;
@@ -15670,7 +15670,7 @@ export interface CertManagerIoV1Issuer {
               key?: string;
               name: string;
             };
-            environment?: "AzurePublicCloud" | "AzureChinaCloud" | "AzureGermanCloud" | "AzureUSGovernmentCloud";
+            environment?: 'AzurePublicCloud' | 'AzureChinaCloud' | 'AzureGermanCloud' | 'AzureUSGovernmentCloud';
             hostedZoneName?: string;
             managedIdentity?: {
               clientID?: string;
@@ -15700,7 +15700,7 @@ export interface CertManagerIoV1Issuer {
             };
             email?: string;
           };
-          cnameStrategy?: "None" | "Follow";
+          cnameStrategy?: 'None' | 'Follow';
           digitalocean?: {
             tokenSecretRef: {
               key?: string;
@@ -16268,7 +16268,7 @@ export interface CertManagerIoV1Issuer {
       message?: string;
       observedGeneration?: number;
       reason?: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
   };
@@ -16287,7 +16287,7 @@ export interface PostgresqlCnpgIoV1Backup {
     cluster: {
       name: string;
     };
-    method?: "barmanObjectStore" | "volumeSnapshot" | "plugin";
+    method?: 'barmanObjectStore' | 'volumeSnapshot' | 'plugin';
     online?: boolean;
     onlineConfiguration?: {
       immediateCheckpoint?: boolean;
@@ -16299,7 +16299,7 @@ export interface PostgresqlCnpgIoV1Backup {
         [key: string]: unknown;
       };
     };
-    target?: "primary" | "prefer-standby";
+    target?: 'primary' | 'prefer-standby';
   };
   status?: {
     azureCredentials?: {
@@ -16581,8 +16581,8 @@ export interface PostgresqlCnpgIoV1Cluster {
         };
         data?: {
           additionalCommandArgs?: string[];
-          compression?: "bzip2" | "gzip" | "snappy";
-          encryption?: "AES256" | "aws:kms";
+          compression?: 'bzip2' | 'gzip' | 'snappy';
+          encryption?: 'AES256' | 'aws:kms';
           immediateCheckpoint?: boolean;
           jobs?: number;
         };
@@ -16627,14 +16627,14 @@ export interface PostgresqlCnpgIoV1Cluster {
         };
         wal?: {
           archiveAdditionalCommandArgs?: string[];
-          compression?: "bzip2" | "gzip" | "lz4" | "snappy" | "xz" | "zstd";
-          encryption?: "AES256" | "aws:kms";
+          compression?: 'bzip2' | 'gzip' | 'lz4' | 'snappy' | 'xz' | 'zstd';
+          encryption?: 'AES256' | 'aws:kms';
           maxParallel?: number;
           restoreAdditionalCommandArgs?: string[];
         };
       };
       retentionPolicy?: string;
-      target?: "primary" | "prefer-standby";
+      target?: 'primary' | 'prefer-standby';
       volumeSnapshot?: {
         annotations?: {
           [key: string]: unknown;
@@ -16648,7 +16648,7 @@ export interface PostgresqlCnpgIoV1Cluster {
           immediateCheckpoint?: boolean;
           waitForArchive?: boolean;
         };
-        snapshotOwnerReference?: "none" | "cluster" | "backup";
+        snapshotOwnerReference?: 'none' | 'cluster' | 'backup';
         tablespaceClassName?: {
           [key: string]: unknown;
         };
@@ -16673,7 +16673,7 @@ export interface PostgresqlCnpgIoV1Cluster {
           source: {
             externalCluster: string;
           };
-          type: "microservice" | "monolith";
+          type: 'microservice' | 'monolith';
         };
         locale?: string;
         localeCType?: string;
@@ -16884,8 +16884,8 @@ export interface PostgresqlCnpgIoV1Cluster {
         };
         data?: {
           additionalCommandArgs?: string[];
-          compression?: "bzip2" | "gzip" | "snappy";
-          encryption?: "AES256" | "aws:kms";
+          compression?: 'bzip2' | 'gzip' | 'snappy';
+          encryption?: 'AES256' | 'aws:kms';
           immediateCheckpoint?: boolean;
           jobs?: number;
         };
@@ -16930,8 +16930,8 @@ export interface PostgresqlCnpgIoV1Cluster {
         };
         wal?: {
           archiveAdditionalCommandArgs?: string[];
-          compression?: "bzip2" | "gzip" | "lz4" | "snappy" | "xz" | "zstd";
-          encryption?: "AES256" | "aws:kms";
+          compression?: 'bzip2' | 'gzip' | 'lz4' | 'snappy' | 'xz' | 'zstd';
+          encryption?: 'AES256' | 'aws:kms';
           maxParallel?: number;
           restoreAdditionalCommandArgs?: string[];
         };
@@ -16991,7 +16991,7 @@ export interface PostgresqlCnpgIoV1Cluster {
     };
     instances: number;
     livenessProbeTimeout?: number;
-    logLevel?: "error" | "warning" | "info" | "debug" | "trace";
+    logLevel?: 'error' | 'warning' | 'info' | 'debug' | 'trace';
     managed?: {
       roles?: {
         bypassrls?: boolean;
@@ -17000,7 +17000,7 @@ export interface PostgresqlCnpgIoV1Cluster {
         createdb?: boolean;
         createrole?: boolean;
         disablePassword?: boolean;
-        ensure?: "present" | "absent";
+        ensure?: 'present' | 'absent';
         inRoles?: string[];
         inherit?: boolean;
         login?: boolean;
@@ -17014,7 +17014,7 @@ export interface PostgresqlCnpgIoV1Cluster {
       }[];
       services?: {
         additional?: {
-          selectorType: "rw" | "r" | "ro";
+          selectorType: 'rw' | 'r' | 'ro';
           serviceTemplate: {
             metadata?: {
               annotations?: {
@@ -17061,9 +17061,9 @@ export interface PostgresqlCnpgIoV1Cluster {
               type?: string;
             };
           };
-          updateStrategy?: "patch" | "replace";
+          updateStrategy?: 'patch' | 'replace';
         }[];
-        disabledDefaultServices?: ("rw" | "r" | "ro")[];
+        disabledDefaultServices?: ('rw' | 'r' | 'ro')[];
       };
     };
     maxSyncReplicas?: number;
@@ -17080,7 +17080,7 @@ export interface PostgresqlCnpgIoV1Cluster {
       disableDefaultQueries?: boolean;
       enablePodMonitor?: boolean;
       podMonitorMetricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -17089,7 +17089,7 @@ export interface PostgresqlCnpgIoV1Cluster {
         targetLabel?: string;
       }[];
       podMonitorRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -17134,7 +17134,7 @@ export interface PostgresqlCnpgIoV1Cluster {
           searchFilter?: string;
         };
         port?: number;
-        scheme?: "ldap" | "ldaps";
+        scheme?: 'ldap' | 'ldaps';
         server?: string;
         tls?: boolean;
       };
@@ -17150,16 +17150,16 @@ export interface PostgresqlCnpgIoV1Cluster {
         nodeLabelsAntiAffinity?: string[];
       };
       synchronous?: {
-        dataDurability?: "required" | "preferred";
+        dataDurability?: 'required' | 'preferred';
         maxStandbyNamesFromCluster?: number;
-        method: "any" | "first";
+        method: 'any' | 'first';
         number: number;
         standbyNamesPost?: string[];
         standbyNamesPre?: string[];
       };
     };
-    primaryUpdateMethod?: "switchover" | "restart";
-    primaryUpdateStrategy?: "unsupervised" | "supervised";
+    primaryUpdateMethod?: 'switchover' | 'restart';
+    primaryUpdateStrategy?: 'unsupervised' | 'supervised';
     priorityClassName?: string;
     probes?: {
       liveness?: {
@@ -17473,7 +17473,7 @@ export interface PostgresqlCnpgIoV1Cluster {
       message: string;
       observedGeneration?: number;
       reason: string;
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       type: string;
     }[];
     configMapResourceVersion?: {
@@ -17619,9 +17619,9 @@ export interface PostgresqlCnpgIoV1Database {
     };
     collationVersion?: string;
     connectionLimit?: number;
-    databaseReclaimPolicy?: "delete" | "retain";
+    databaseReclaimPolicy?: 'delete' | 'retain';
     encoding?: string;
-    ensure?: "present" | "absent";
+    ensure?: 'present' | 'absent';
     icuLocale?: string;
     icuRules?: string;
     isTemplate?: boolean;
@@ -17682,7 +17682,7 @@ export interface PostgresqlCnpgIoV1Pooler {
     monitoring?: {
       enablePodMonitor?: boolean;
       podMonitorMetricRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -17691,7 +17691,7 @@ export interface PostgresqlCnpgIoV1Pooler {
         targetLabel?: string;
       }[];
       podMonitorRelabelings?: {
-        action?: "replace" | "Replace" | "keep" | "Keep" | "drop" | "Drop" | "hashmod" | "HashMod" | "labelmap" | "LabelMap" | "labeldrop" | "LabelDrop" | "labelkeep" | "LabelKeep" | "lowercase" | "Lowercase" | "uppercase" | "Uppercase" | "keepequal" | "KeepEqual" | "dropequal" | "DropEqual";
+        action?: 'replace' | 'Replace' | 'keep' | 'Keep' | 'drop' | 'Drop' | 'hashmod' | 'HashMod' | 'labelmap' | 'LabelMap' | 'labeldrop' | 'LabelDrop' | 'labelkeep' | 'LabelKeep' | 'lowercase' | 'Lowercase' | 'uppercase' | 'Uppercase' | 'keepequal' | 'KeepEqual' | 'dropequal' | 'DropEqual';
         modulus?: number;
         regex?: string;
         replacement?: string;
@@ -17710,7 +17710,7 @@ export interface PostgresqlCnpgIoV1Pooler {
       };
       paused?: boolean;
       pg_hba?: string[];
-      poolMode?: "session" | "transaction";
+      poolMode?: 'session' | 'transaction';
     };
     serviceTemplate?: {
       metadata?: {
@@ -19125,7 +19125,7 @@ export interface PostgresqlCnpgIoV1Pooler {
         }[];
       };
     };
-    type?: "rw" | "ro" | "r";
+    type?: 'rw' | 'ro' | 'r';
   };
   status?: {
     instances?: number;
@@ -19170,7 +19170,7 @@ export interface PostgresqlCnpgIoV1Publication {
     parameters?: {
       [key: string]: unknown;
     };
-    publicationReclaimPolicy?: "delete" | "retain";
+    publicationReclaimPolicy?: 'delete' | 'retain';
     target: {
       allTables?: boolean;
       objects?: {
@@ -19201,12 +19201,12 @@ export interface PostgresqlCnpgIoV1ScheduledBackup {
   kind?: string;
   metadata: ObjectMeta;
   spec: {
-    backupOwnerReference?: "none" | "self" | "cluster";
+    backupOwnerReference?: 'none' | 'self' | 'cluster';
     cluster: {
       name: string;
     };
     immediate?: boolean;
-    method?: "barmanObjectStore" | "volumeSnapshot" | "plugin";
+    method?: 'barmanObjectStore' | 'volumeSnapshot' | 'plugin';
     online?: boolean;
     onlineConfiguration?: {
       immediateCheckpoint?: boolean;
@@ -19220,7 +19220,7 @@ export interface PostgresqlCnpgIoV1ScheduledBackup {
     };
     schedule: string;
     suspend?: boolean;
-    target?: "primary" | "prefer-standby";
+    target?: 'primary' | 'prefer-standby';
   };
   status?: {
     lastCheckTime?: string;
@@ -19250,7 +19250,7 @@ export interface PostgresqlCnpgIoV1Subscription {
     };
     publicationDBName?: string;
     publicationName: string;
-    subscriptionReclaimPolicy?: "delete" | "retain";
+    subscriptionReclaimPolicy?: 'delete' | 'retain';
   };
   status?: {
     applied?: boolean;
@@ -19278,7 +19278,7 @@ export interface MatchCondition {
 }
 export interface MatchResources {
   excludeResourceRules?: NamedRuleWithOperations[];
-  matchPolicy?: "Equivalent" | "Exact";
+  matchPolicy?: 'Equivalent' | 'Exact';
   namespaceSelector?: LabelSelector;
   objectSelector?: LabelSelector;
   resourceRules?: NamedRuleWithOperations[];
@@ -19286,15 +19286,15 @@ export interface MatchResources {
 export interface MutatingWebhook {
   admissionReviewVersions: string[];
   clientConfig: IoK8sApiAdmissionregistrationV1WebhookClientConfig;
-  failurePolicy?: "Fail" | "Ignore";
+  failurePolicy?: 'Fail' | 'Ignore';
   matchConditions?: MatchCondition[];
-  matchPolicy?: "Equivalent" | "Exact";
+  matchPolicy?: 'Equivalent' | 'Exact';
   name: string;
   namespaceSelector?: LabelSelector;
   objectSelector?: LabelSelector;
-  reinvocationPolicy?: "IfNeeded" | "Never";
+  reinvocationPolicy?: 'IfNeeded' | 'Never';
   rules?: RuleWithOperations[];
-  sideEffects: "None" | "NoneOnDryRun" | "Some" | "Unknown";
+  sideEffects: 'None' | 'NoneOnDryRun' | 'Some' | 'Unknown';
   timeoutSeconds?: number;
 }
 export interface AdmissionregistrationK8sIoV1MutatingWebhookConfiguration {
@@ -19312,7 +19312,7 @@ export interface AdmissionregistrationK8sIoV1MutatingWebhookConfigurationList {
 export interface NamedRuleWithOperations {
   apiGroups?: string[];
   apiVersions?: string[];
-  operations?: ("*" | "CONNECT" | "CREATE" | "DELETE" | "UPDATE")[];
+  operations?: ('*' | 'CONNECT' | 'CREATE' | 'DELETE' | 'UPDATE')[];
   resourceNames?: string[];
   resources?: string[];
   scope?: string;
@@ -19330,7 +19330,7 @@ export interface ParamRef {
 export interface RuleWithOperations {
   apiGroups?: string[];
   apiVersions?: string[];
-  operations?: ("*" | "CONNECT" | "CREATE" | "DELETE" | "UPDATE")[];
+  operations?: ('*' | 'CONNECT' | 'CREATE' | 'DELETE' | 'UPDATE')[];
   resources?: string[];
   scope?: string;
 }
@@ -19366,7 +19366,7 @@ export interface ValidatingAdmissionPolicyBindingSpec {
   matchResources?: MatchResources;
   paramRef?: ParamRef;
   policyName?: string;
-  validationActions?: ("Audit" | "Deny" | "Warn")[];
+  validationActions?: ('Audit' | 'Deny' | 'Warn')[];
 }
 export interface AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyList {
   apiVersion?: string;
@@ -19376,7 +19376,7 @@ export interface AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyList {
 }
 export interface ValidatingAdmissionPolicySpec {
   auditAnnotations?: AuditAnnotation[];
-  failurePolicy?: "Fail" | "Ignore";
+  failurePolicy?: 'Fail' | 'Ignore';
   matchConditions?: MatchCondition[];
   matchConstraints?: MatchResources;
   paramKind?: ParamKind;
@@ -19391,14 +19391,14 @@ export interface ValidatingAdmissionPolicyStatus {
 export interface ValidatingWebhook {
   admissionReviewVersions: string[];
   clientConfig: IoK8sApiAdmissionregistrationV1WebhookClientConfig;
-  failurePolicy?: "Fail" | "Ignore";
+  failurePolicy?: 'Fail' | 'Ignore';
   matchConditions?: MatchCondition[];
-  matchPolicy?: "Equivalent" | "Exact";
+  matchPolicy?: 'Equivalent' | 'Exact';
   name: string;
   namespaceSelector?: LabelSelector;
   objectSelector?: LabelSelector;
   rules?: RuleWithOperations[];
-  sideEffects: "None" | "NoneOnDryRun" | "Some" | "Unknown";
+  sideEffects: 'None' | 'NoneOnDryRun' | 'Some' | 'Unknown';
   timeoutSeconds?: number;
 }
 export interface AdmissionregistrationK8sIoV1ValidatingWebhookConfiguration {
@@ -19482,7 +19482,7 @@ export interface DaemonSetStatus {
 }
 export interface DaemonSetUpdateStrategy {
   rollingUpdate?: RollingUpdateDaemonSet;
-  type?: "OnDelete" | "RollingUpdate";
+  type?: 'OnDelete' | 'RollingUpdate';
 }
 export interface AppsV1Deployment {
   apiVersion?: string;
@@ -19527,7 +19527,7 @@ export interface DeploymentStatus {
 }
 export interface DeploymentStrategy {
   rollingUpdate?: RollingUpdateDeployment;
-  type?: "Recreate" | "RollingUpdate";
+  type?: 'Recreate' | 'RollingUpdate';
 }
 export interface AppsV1ReplicaSet {
   apiVersion?: string;
@@ -19606,7 +19606,7 @@ export interface StatefulSetSpec {
   minReadySeconds?: number;
   ordinals?: StatefulSetOrdinals;
   persistentVolumeClaimRetentionPolicy?: StatefulSetPersistentVolumeClaimRetentionPolicy;
-  podManagementPolicy?: "OrderedReady" | "Parallel";
+  podManagementPolicy?: 'OrderedReady' | 'Parallel';
   replicas?: number;
   revisionHistoryLimit?: number;
   selector: LabelSelector;
@@ -19629,7 +19629,7 @@ export interface StatefulSetStatus {
 }
 export interface StatefulSetUpdateStrategy {
   rollingUpdate?: RollingUpdateStatefulSetStrategy;
-  type?: "OnDelete" | "RollingUpdate";
+  type?: 'OnDelete' | 'RollingUpdate';
 }
 export interface BoundObjectReference {
   apiVersion?: string;
@@ -19965,7 +19965,7 @@ export interface BatchV1CronJobList {
   metadata?: ListMeta;
 }
 export interface CronJobSpec {
-  concurrencyPolicy?: "Allow" | "Forbid" | "Replace";
+  concurrencyPolicy?: 'Allow' | 'Forbid' | 'Replace';
   failedJobsHistoryLimit?: number;
   jobTemplate: JobTemplateSpec;
   schedule: string;
@@ -20004,14 +20004,14 @@ export interface JobSpec {
   activeDeadlineSeconds?: number;
   backoffLimit?: number;
   backoffLimitPerIndex?: number;
-  completionMode?: "Indexed" | "NonIndexed";
+  completionMode?: 'Indexed' | 'NonIndexed';
   completions?: number;
   managedBy?: string;
   manualSelector?: boolean;
   maxFailedIndexes?: number;
   parallelism?: number;
   podFailurePolicy?: PodFailurePolicy;
-  podReplacementPolicy?: "Failed" | "TerminatingOrFailed";
+  podReplacementPolicy?: 'Failed' | 'TerminatingOrFailed';
   selector?: LabelSelector;
   successPolicy?: SuccessPolicy;
   suspend?: boolean;
@@ -20040,7 +20040,7 @@ export interface PodFailurePolicy {
 }
 export interface PodFailurePolicyOnExitCodesRequirement {
   containerName?: string;
-  operator: "In" | "NotIn";
+  operator: 'In' | 'NotIn';
   values: number[];
 }
 export interface PodFailurePolicyOnPodConditionsPattern {
@@ -20048,7 +20048,7 @@ export interface PodFailurePolicyOnPodConditionsPattern {
   type: string;
 }
 export interface PodFailurePolicyRule {
-  action: "Count" | "FailIndex" | "FailJob" | "Ignore";
+  action: 'Count' | 'FailIndex' | 'FailJob' | 'Ignore';
   onExitCodes?: PodFailurePolicyOnExitCodesRequirement;
   onPodConditions?: PodFailurePolicyOnPodConditionsPattern[];
 }
@@ -20093,7 +20093,7 @@ export interface CertificateSigningRequestSpec {
   request: string;
   signerName: string;
   uid?: string;
-  usages?: ("any" | "cert sign" | "client auth" | "code signing" | "content commitment" | "crl sign" | "data encipherment" | "decipher only" | "digital signature" | "email protection" | "encipher only" | "ipsec end system" | "ipsec tunnel" | "ipsec user" | "key agreement" | "key encipherment" | "microsoft sgc" | "netscape sgc" | "ocsp signing" | "s/mime" | "server auth" | "signing" | "timestamping")[];
+  usages?: ('any' | 'cert sign' | 'client auth' | 'code signing' | 'content commitment' | 'crl sign' | 'data encipherment' | 'decipher only' | 'digital signature' | 'email protection' | 'encipher only' | 'ipsec end system' | 'ipsec tunnel' | 'ipsec user' | 'key agreement' | 'key encipherment' | 'microsoft sgc' | 'netscape sgc' | 'ocsp signing' | 's/mime' | 'server auth' | 'signing' | 'timestamping')[];
   username?: string;
 }
 export interface CertificateSigningRequestStatus {
@@ -20134,18 +20134,18 @@ export interface Affinity {
 }
 export interface AppArmorProfile {
   localhostProfile?: string;
-  type: "Localhost" | "RuntimeDefault" | "Unconfined";
+  type: 'Localhost' | 'RuntimeDefault' | 'Unconfined';
 }
 export interface AttachedVolume {
   devicePath: string;
   name: string;
 }
 export interface AzureDiskVolumeSource {
-  cachingMode?: "None" | "ReadOnly" | "ReadWrite";
+  cachingMode?: 'None' | 'ReadOnly' | 'ReadWrite';
   diskName: string;
   diskURI: string;
   fsType?: string;
-  kind?: "Dedicated" | "Managed" | "Shared";
+  kind?: 'Dedicated' | 'Managed' | 'Shared';
   readOnly?: boolean;
 }
 export interface AzureFilePersistentVolumeSource {
@@ -20299,7 +20299,7 @@ export interface Container {
   env?: EnvVar[];
   envFrom?: EnvFromSource[];
   image?: string;
-  imagePullPolicy?: "Always" | "IfNotPresent" | "Never";
+  imagePullPolicy?: 'Always' | 'IfNotPresent' | 'Never';
   lifecycle?: Lifecycle;
   livenessProbe?: IoK8sApiCoreV1Probe;
   name: string;
@@ -20313,7 +20313,7 @@ export interface Container {
   stdin?: boolean;
   stdinOnce?: boolean;
   terminationMessagePath?: string;
-  terminationMessagePolicy?: "FallbackToLogsOnError" | "File";
+  terminationMessagePolicy?: 'FallbackToLogsOnError' | 'File';
   tty?: boolean;
   volumeDevices?: VolumeDevice[];
   volumeMounts?: VolumeMount[];
@@ -20328,7 +20328,7 @@ export interface ContainerPort {
   hostIP?: string;
   hostPort?: number;
   name?: string;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
 }
 export interface ContainerResizePolicy {
   resourceName: string;
@@ -20406,7 +20406,7 @@ export interface IoK8sApiCoreV1EndpointPort {
   appProtocol?: string;
   name?: string;
   port: number;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
 }
 export interface EndpointSubset {
   addresses?: EndpointAddress[];
@@ -20447,7 +20447,7 @@ export interface EphemeralContainer {
   env?: EnvVar[];
   envFrom?: EnvFromSource[];
   image?: string;
-  imagePullPolicy?: "Always" | "IfNotPresent" | "Never";
+  imagePullPolicy?: 'Always' | 'IfNotPresent' | 'Never';
   lifecycle?: Lifecycle;
   livenessProbe?: IoK8sApiCoreV1Probe;
   name: string;
@@ -20462,7 +20462,7 @@ export interface EphemeralContainer {
   stdinOnce?: boolean;
   targetContainerName?: string;
   terminationMessagePath?: string;
-  terminationMessagePolicy?: "FallbackToLogsOnError" | "File";
+  terminationMessagePolicy?: 'FallbackToLogsOnError' | 'File';
   tty?: boolean;
   volumeDevices?: VolumeDevice[];
   volumeMounts?: VolumeMount[];
@@ -20567,7 +20567,7 @@ export interface HTTPGetAction {
   httpHeaders?: HTTPHeader[];
   path?: string;
   port: IntOrString;
-  scheme?: "HTTP" | "HTTPS";
+  scheme?: 'HTTP' | 'HTTPS';
 }
 export interface HTTPHeader {
   name: string;
@@ -20582,7 +20582,7 @@ export interface HostIP {
 }
 export interface HostPathVolumeSource {
   path: string;
-  type?: "" | "BlockDevice" | "CharDevice" | "Directory" | "DirectoryOrCreate" | "File" | "FileOrCreate" | "Socket";
+  type?: '' | 'BlockDevice' | 'CharDevice' | 'Directory' | 'DirectoryOrCreate' | 'File' | 'FileOrCreate' | 'Socket';
 }
 export interface ISCSIPersistentVolumeSource {
   chapAuthDiscovery?: boolean;
@@ -20611,7 +20611,7 @@ export interface ISCSIVolumeSource {
   targetPortal: string;
 }
 export interface ImageVolumeSource {
-  pullPolicy?: "Always" | "IfNotPresent" | "Never";
+  pullPolicy?: 'Always' | 'IfNotPresent' | 'Never';
   reference?: string;
 }
 export interface KeyToPath {
@@ -20684,7 +20684,7 @@ export interface LocalVolumeSource {
   path: string;
 }
 export interface ModifyVolumeStatus {
-  status: "InProgress" | "Infeasible" | "Pending";
+  status: 'InProgress' | 'Infeasible' | 'Pending';
   targetVolumeAttributesClassName?: string;
 }
 export interface NFSVolumeSource {
@@ -20717,7 +20717,7 @@ export interface NamespaceSpec {
 }
 export interface NamespaceStatus {
   conditions?: NamespaceCondition[];
-  phase?: "Active" | "Terminating";
+  phase?: 'Active' | 'Terminating';
 }
 export interface Node {
   apiVersion?: string;
@@ -20776,7 +20776,7 @@ export interface NodeSelector {
 }
 export interface NodeSelectorRequirement {
   key: string;
-  operator: "DoesNotExist" | "Exists" | "Gt" | "In" | "Lt" | "NotIn";
+  operator: 'DoesNotExist' | 'Exists' | 'Gt' | 'In' | 'Lt' | 'NotIn';
   values?: string[];
 }
 export interface NodeSelectorTerm {
@@ -20806,7 +20806,7 @@ export interface NodeStatus {
   features?: NodeFeatures;
   images?: ContainerImage[];
   nodeInfo?: NodeSystemInfo;
-  phase?: "Pending" | "Running" | "Terminated";
+  phase?: 'Pending' | 'Running' | 'Terminated';
   runtimeHandlers?: NodeRuntimeHandler[];
   volumesAttached?: AttachedVolume[];
   volumesInUse?: string[];
@@ -20865,18 +20865,18 @@ export interface PersistentVolumeClaimList {
   metadata?: ListMeta;
 }
 export interface PersistentVolumeClaimSpec {
-  accessModes?: ("ReadOnlyMany" | "ReadWriteMany" | "ReadWriteOnce" | "ReadWriteOncePod")[];
+  accessModes?: ('ReadOnlyMany' | 'ReadWriteMany' | 'ReadWriteOnce' | 'ReadWriteOncePod')[];
   dataSource?: TypedLocalObjectReference;
   dataSourceRef?: TypedObjectReference;
   resources?: VolumeResourceRequirements;
   selector?: LabelSelector;
   storageClassName?: string;
   volumeAttributesClassName?: string;
-  volumeMode?: "Block" | "Filesystem";
+  volumeMode?: 'Block' | 'Filesystem';
   volumeName?: string;
 }
 export interface PersistentVolumeClaimStatus {
-  accessModes?: ("ReadOnlyMany" | "ReadWriteMany" | "ReadWriteOnce" | "ReadWriteOncePod")[];
+  accessModes?: ('ReadOnlyMany' | 'ReadWriteMany' | 'ReadWriteOnce' | 'ReadWriteOncePod')[];
   allocatedResourceStatuses?: {
     [key: string]: unknown;
   };
@@ -20889,7 +20889,7 @@ export interface PersistentVolumeClaimStatus {
   conditions?: PersistentVolumeClaimCondition[];
   currentVolumeAttributesClassName?: string;
   modifyVolumeStatus?: ModifyVolumeStatus;
-  phase?: "Bound" | "Lost" | "Pending";
+  phase?: 'Bound' | 'Lost' | 'Pending';
 }
 export interface PersistentVolumeClaimTemplate {
   metadata?: ObjectMeta;
@@ -20906,7 +20906,7 @@ export interface PersistentVolumeList {
   metadata?: ListMeta;
 }
 export interface PersistentVolumeSpec {
-  accessModes?: ("ReadOnlyMany" | "ReadWriteMany" | "ReadWriteOnce" | "ReadWriteOncePod")[];
+  accessModes?: ('ReadOnlyMany' | 'ReadWriteMany' | 'ReadWriteOnce' | 'ReadWriteOncePod')[];
   awsElasticBlockStore?: AWSElasticBlockStoreVolumeSource;
   azureDisk?: AzureDiskVolumeSource;
   azureFile?: AzureFilePersistentVolumeSource;
@@ -20928,7 +20928,7 @@ export interface PersistentVolumeSpec {
   mountOptions?: string[];
   nfs?: NFSVolumeSource;
   nodeAffinity?: VolumeNodeAffinity;
-  persistentVolumeReclaimPolicy?: "Delete" | "Recycle" | "Retain";
+  persistentVolumeReclaimPolicy?: 'Delete' | 'Recycle' | 'Retain';
   photonPersistentDisk?: PhotonPersistentDiskVolumeSource;
   portworxVolume?: PortworxVolumeSource;
   quobyte?: QuobyteVolumeSource;
@@ -20937,13 +20937,13 @@ export interface PersistentVolumeSpec {
   storageClassName?: string;
   storageos?: StorageOSPersistentVolumeSource;
   volumeAttributesClassName?: string;
-  volumeMode?: "Block" | "Filesystem";
+  volumeMode?: 'Block' | 'Filesystem';
   vsphereVolume?: VsphereVirtualDiskVolumeSource;
 }
 export interface PersistentVolumeStatus {
   lastPhaseTransitionTime?: Time;
   message?: string;
-  phase?: "Available" | "Bound" | "Failed" | "Pending" | "Released";
+  phase?: 'Available' | 'Bound' | 'Failed' | 'Pending' | 'Released';
   reason?: string;
 }
 export interface PhotonPersistentDiskVolumeSource {
@@ -21020,7 +21020,7 @@ export interface PodSchedulingGate {
 export interface PodSecurityContext {
   appArmorProfile?: AppArmorProfile;
   fsGroup?: number;
-  fsGroupChangePolicy?: "Always" | "OnRootMismatch";
+  fsGroupChangePolicy?: 'Always' | 'OnRootMismatch';
   runAsGroup?: number;
   runAsNonRoot?: boolean;
   runAsUser?: number;
@@ -21028,7 +21028,7 @@ export interface PodSecurityContext {
   seLinuxOptions?: SELinuxOptions;
   seccompProfile?: SeccompProfile;
   supplementalGroups?: number[];
-  supplementalGroupsPolicy?: "Merge" | "Strict";
+  supplementalGroupsPolicy?: 'Merge' | 'Strict';
   sysctls?: Sysctl[];
   windowsOptions?: WindowsSecurityContextOptions;
 }
@@ -21038,7 +21038,7 @@ export interface PodSpec {
   automountServiceAccountToken?: boolean;
   containers: Container[];
   dnsConfig?: PodDNSConfig;
-  dnsPolicy?: "ClusterFirst" | "ClusterFirstWithHostNet" | "Default" | "None";
+  dnsPolicy?: 'ClusterFirst' | 'ClusterFirstWithHostNet' | 'Default' | 'None';
   enableServiceLinks?: boolean;
   ephemeralContainers?: EphemeralContainer[];
   hostAliases?: HostAlias[];
@@ -21057,13 +21057,13 @@ export interface PodSpec {
   overhead?: {
     [key: string]: unknown;
   };
-  preemptionPolicy?: "Never" | "PreemptLowerPriority";
+  preemptionPolicy?: 'Never' | 'PreemptLowerPriority';
   priority?: number;
   priorityClassName?: string;
   readinessGates?: PodReadinessGate[];
   resourceClaims?: PodResourceClaim[];
   resources?: ResourceRequirements;
-  restartPolicy?: "Always" | "Never" | "OnFailure";
+  restartPolicy?: 'Always' | 'Never' | 'OnFailure';
   runtimeClassName?: string;
   schedulerName?: string;
   schedulingGates?: PodSchedulingGate[];
@@ -21087,10 +21087,10 @@ export interface PodStatus {
   initContainerStatuses?: ContainerStatus[];
   message?: string;
   nominatedNodeName?: string;
-  phase?: "Failed" | "Pending" | "Running" | "Succeeded" | "Unknown";
+  phase?: 'Failed' | 'Pending' | 'Running' | 'Succeeded' | 'Unknown';
   podIP?: string;
   podIPs?: PodIP[];
-  qosClass?: "BestEffort" | "Burstable" | "Guaranteed";
+  qosClass?: 'BestEffort' | 'Burstable' | 'Guaranteed';
   reason?: string;
   resize?: string;
   resourceClaimStatuses?: PodResourceClaimStatus[];
@@ -21115,7 +21115,7 @@ export interface PodTemplateSpec {
 export interface PortStatus {
   error?: string;
   port: number;
-  protocol: "SCTP" | "TCP" | "UDP";
+  protocol: 'SCTP' | 'TCP' | 'UDP';
 }
 export interface PortworxVolumeSource {
   fsType?: string;
@@ -21237,7 +21237,7 @@ export interface ResourceQuotaSpec {
     [key: string]: unknown;
   };
   scopeSelector?: ScopeSelector;
-  scopes?: ("BestEffort" | "CrossNamespacePodAffinity" | "NotBestEffort" | "NotTerminating" | "PriorityClass" | "Terminating")[];
+  scopes?: ('BestEffort' | 'CrossNamespacePodAffinity' | 'NotBestEffort' | 'NotTerminating' | 'PriorityClass' | 'Terminating')[];
 }
 export interface ResourceQuotaStatus {
   hard?: {
@@ -21294,13 +21294,13 @@ export interface ScopeSelector {
   matchExpressions?: ScopedResourceSelectorRequirement[];
 }
 export interface ScopedResourceSelectorRequirement {
-  operator: "DoesNotExist" | "Exists" | "In" | "NotIn";
-  scopeName: "BestEffort" | "CrossNamespacePodAffinity" | "NotBestEffort" | "NotTerminating" | "PriorityClass" | "Terminating";
+  operator: 'DoesNotExist' | 'Exists' | 'In' | 'NotIn';
+  scopeName: 'BestEffort' | 'CrossNamespacePodAffinity' | 'NotBestEffort' | 'NotTerminating' | 'PriorityClass' | 'Terminating';
   values?: string[];
 }
 export interface SeccompProfile {
   localhostProfile?: string;
-  type: "Localhost" | "RuntimeDefault" | "Unconfined";
+  type: 'Localhost' | 'RuntimeDefault' | 'Unconfined';
 }
 export interface Secret {
   apiVersion?: string;
@@ -21350,7 +21350,7 @@ export interface SecurityContext {
   appArmorProfile?: AppArmorProfile;
   capabilities?: Capabilities;
   privileged?: boolean;
-  procMount?: "Default" | "Unmasked";
+  procMount?: 'Default' | 'Unmasked';
   readOnlyRootFilesystem?: boolean;
   runAsGroup?: number;
   runAsNonRoot?: boolean;
@@ -21396,7 +21396,7 @@ export interface ServicePort {
   name?: string;
   nodePort?: number;
   port: number;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
   targetPort?: IntOrString;
 }
 export interface ServiceSpec {
@@ -21405,11 +21405,11 @@ export interface ServiceSpec {
   clusterIPs?: string[];
   externalIPs?: string[];
   externalName?: string;
-  externalTrafficPolicy?: "Cluster" | "Local";
+  externalTrafficPolicy?: 'Cluster' | 'Local';
   healthCheckNodePort?: number;
-  internalTrafficPolicy?: "Cluster" | "Local";
-  ipFamilies?: ("" | "IPv4" | "IPv6")[];
-  ipFamilyPolicy?: "PreferDualStack" | "RequireDualStack" | "SingleStack";
+  internalTrafficPolicy?: 'Cluster' | 'Local';
+  ipFamilies?: ('' | 'IPv4' | 'IPv6')[];
+  ipFamilyPolicy?: 'PreferDualStack' | 'RequireDualStack' | 'SingleStack';
   loadBalancerClass?: string;
   loadBalancerIP?: string;
   loadBalancerSourceRanges?: string[];
@@ -21418,10 +21418,10 @@ export interface ServiceSpec {
   selector?: {
     [key: string]: unknown;
   };
-  sessionAffinity?: "ClientIP" | "None";
+  sessionAffinity?: 'ClientIP' | 'None';
   sessionAffinityConfig?: SessionAffinityConfig;
   trafficDistribution?: string;
-  type?: "ClusterIP" | "ExternalName" | "LoadBalancer" | "NodePort";
+  type?: 'ClusterIP' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
 }
 export interface ServiceStatus {
   conditions?: Condition[];
@@ -21456,15 +21456,15 @@ export interface TCPSocketAction {
   port: IntOrString;
 }
 export interface Taint {
-  effect: "NoExecute" | "NoSchedule" | "PreferNoSchedule";
+  effect: 'NoExecute' | 'NoSchedule' | 'PreferNoSchedule';
   key: string;
   timeAdded?: Time;
   value?: string;
 }
 export interface Toleration {
-  effect?: "NoExecute" | "NoSchedule" | "PreferNoSchedule";
+  effect?: 'NoExecute' | 'NoSchedule' | 'PreferNoSchedule';
   key?: string;
-  operator?: "Equal" | "Exists";
+  operator?: 'Equal' | 'Exists';
   tolerationSeconds?: number;
   value?: string;
 }
@@ -21480,10 +21480,10 @@ export interface TopologySpreadConstraint {
   matchLabelKeys?: string[];
   maxSkew: number;
   minDomains?: number;
-  nodeAffinityPolicy?: "Honor" | "Ignore";
-  nodeTaintsPolicy?: "Honor" | "Ignore";
+  nodeAffinityPolicy?: 'Honor' | 'Ignore';
+  nodeTaintsPolicy?: 'Honor' | 'Ignore';
   topologyKey: string;
-  whenUnsatisfiable: "DoNotSchedule" | "ScheduleAnyway";
+  whenUnsatisfiable: 'DoNotSchedule' | 'ScheduleAnyway';
 }
 export interface TypedLocalObjectReference {
   apiGroup?: string;
@@ -21535,7 +21535,7 @@ export interface VolumeDevice {
 }
 export interface VolumeMount {
   mountPath: string;
-  mountPropagation?: "Bidirectional" | "HostToContainer" | "None";
+  mountPropagation?: 'Bidirectional' | 'HostToContainer' | 'None';
   name: string;
   readOnly?: boolean;
   recursiveReadOnly?: string;
@@ -21606,10 +21606,10 @@ export interface IoK8sApiDiscoveryV1EndpointPort {
   appProtocol?: string;
   name?: string;
   port?: number;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
 }
 export interface DiscoveryK8sIoV1EndpointSlice {
-  addressType: "FQDN" | "IPv4" | "IPv6";
+  addressType: 'FQDN' | 'IPv4' | 'IPv6';
   apiVersion?: string;
   endpoints: Endpoint[];
   kind?: string;
@@ -21771,7 +21771,7 @@ export interface UserSubject {
 export interface HTTPIngressPath {
   backend: IngressBackend;
   path?: string;
-  pathType: "Exact" | "ImplementationSpecific" | "Prefix";
+  pathType: 'Exact' | 'ImplementationSpecific' | 'Prefix';
 }
 export interface HTTPIngressRuleValue {
   paths: HTTPIngressPath[];
@@ -21831,7 +21831,7 @@ export interface IngressLoadBalancerStatus {
 export interface IngressPortStatus {
   error?: string;
   port: number;
-  protocol: "SCTP" | "TCP" | "UDP";
+  protocol: 'SCTP' | 'TCP' | 'UDP';
 }
 export interface IngressRule {
   host?: string;
@@ -21882,13 +21882,13 @@ export interface NetworkPolicyPeer {
 export interface NetworkPolicyPort {
   endPort?: number;
   port?: IntOrString;
-  protocol?: "SCTP" | "TCP" | "UDP";
+  protocol?: 'SCTP' | 'TCP' | 'UDP';
 }
 export interface NetworkPolicySpec {
   egress?: NetworkPolicyEgressRule[];
   ingress?: NetworkPolicyIngressRule[];
   podSelector: LabelSelector;
-  policyTypes?: ("Egress" | "Ingress")[];
+  policyTypes?: ('Egress' | 'Ingress')[];
 }
 export interface ServiceBackendPort {
   name?: string;
@@ -21942,7 +21942,7 @@ export interface PodDisruptionBudgetSpec {
   maxUnavailable?: IntOrString;
   minAvailable?: IntOrString;
   selector?: LabelSelector;
-  unhealthyPodEvictionPolicy?: "AlwaysAllow" | "IfHealthyBudget";
+  unhealthyPodEvictionPolicy?: 'AlwaysAllow' | 'IfHealthyBudget';
 }
 export interface PodDisruptionBudgetStatus {
   conditions?: Condition[];
@@ -22033,7 +22033,7 @@ export interface SchedulingK8sIoV1PriorityClass {
   globalDefault?: boolean;
   kind?: string;
   metadata?: ObjectMeta;
-  preemptionPolicy?: "Never" | "PreemptLowerPriority";
+  preemptionPolicy?: 'Never' | 'PreemptLowerPriority';
   value: number;
 }
 export interface SchedulingK8sIoV1PriorityClassList {
@@ -22111,8 +22111,8 @@ export interface StorageK8sIoV1StorageClass {
     [key: string]: unknown;
   };
   provisioner: string;
-  reclaimPolicy?: "Delete" | "Recycle" | "Retain";
-  volumeBindingMode?: "Immediate" | "WaitForFirstConsumer";
+  reclaimPolicy?: 'Delete' | 'Recycle' | 'Retain';
+  volumeBindingMode?: 'Immediate' | 'WaitForFirstConsumer';
 }
 export interface StorageK8sIoV1StorageClassList {
   apiVersion?: string;
@@ -22291,13 +22291,13 @@ export interface JSONSchemaProps {
   title?: string;
   type?: string;
   uniqueItems?: boolean;
-  "x-kubernetes-embedded-resource"?: boolean;
-  "x-kubernetes-int-or-string"?: boolean;
-  "x-kubernetes-list-map-keys"?: string[];
-  "x-kubernetes-list-type"?: string;
-  "x-kubernetes-map-type"?: string;
-  "x-kubernetes-preserve-unknown-fields"?: boolean;
-  "x-kubernetes-validations"?: ValidationRule[];
+  'x-kubernetes-embedded-resource'?: boolean;
+  'x-kubernetes-int-or-string'?: boolean;
+  'x-kubernetes-list-map-keys'?: string[];
+  'x-kubernetes-list-type'?: string;
+  'x-kubernetes-map-type'?: string;
+  'x-kubernetes-preserve-unknown-fields'?: boolean;
+  'x-kubernetes-validations'?: ValidationRule[];
 }
 export type JSONSchemaPropsOrArray = any;
 export type JSONSchemaPropsOrBool = any;
@@ -22316,7 +22316,7 @@ export interface ValidationRule {
   message?: string;
   messageExpression?: string;
   optionalOldSelf?: boolean;
-  reason?: "FieldValueDuplicate" | "FieldValueForbidden" | "FieldValueInvalid" | "FieldValueRequired";
+  reason?: 'FieldValueDuplicate' | 'FieldValueForbidden' | 'FieldValueInvalid' | 'FieldValueRequired';
   rule: string;
 }
 export interface IoK8sApiextensionsApiserverPkgApisApiextensionsV1WebhookClientConfig {
@@ -33318,7 +33318,7 @@ export class KubernetesClient extends APIClient {
     super(options);
   }
   async getSwaggerJSON() {
-    const path = "/openapi/v2";
+    const path = '/openapi/v2';
     return this.get(path);
   }
   async getServiceAccountIssuerOpenIDConfiguration(params: GetServiceAccountIssuerOpenIDConfigurationRequest, opts?: APIClientRequestOpts): Promise<string> {
@@ -33359,7 +33359,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCoreV1Namespace(params: ListCoreV1NamespaceRequest, opts?: APIClientRequestOpts): Promise<NamespaceList> {
     const path = `/api/v1/namespaces`;
-    return await this.get<NamespaceList>(path, params.query, null, opts);
+    return await this.get<NamespaceList>(path, null, null, opts);
   }
   async createCoreV1Namespace(params: CreateCoreV1NamespaceRequest, opts?: APIClientRequestOpts): Promise<Namespace> {
     const path = `/api/v1/namespaces`;
@@ -33371,7 +33371,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCoreV1NamespacedConfigMap(params: ListCoreV1NamespacedConfigMapRequest, opts?: APIClientRequestOpts): Promise<ConfigMapList> {
     const path = `/api/v1/namespaces/${params.namespace}/configmaps`;
-    return await this.get<ConfigMapList>(path, params.query, null, opts);
+    return await this.get<ConfigMapList>(path, null, null, opts);
   }
   async createCoreV1NamespacedConfigMap(params: CreateCoreV1NamespacedConfigMapRequest, opts?: APIClientRequestOpts): Promise<ConfigMap> {
     const path = `/api/v1/namespaces/${params.namespace}/configmaps`;
@@ -33395,11 +33395,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedConfigMap(params: PatchCoreV1NamespacedConfigMapRequest, opts?: APIClientRequestOpts): Promise<ConfigMap> {
     const path = `/api/v1/namespaces/${params.namespace}/configmaps/${params.name}`;
-    return await this.patch<ConfigMap>(path, params.query, params.body, opts);
+    return await this.patch<ConfigMap>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedEndpoints(params: ListCoreV1NamespacedEndpointsRequest, opts?: APIClientRequestOpts): Promise<EndpointsList> {
     const path = `/api/v1/namespaces/${params.namespace}/endpoints`;
-    return await this.get<EndpointsList>(path, params.query, null, opts);
+    return await this.get<EndpointsList>(path, null, null, opts);
   }
   async createCoreV1NamespacedEndpoints(params: CreateCoreV1NamespacedEndpointsRequest, opts?: APIClientRequestOpts): Promise<Endpoints> {
     const path = `/api/v1/namespaces/${params.namespace}/endpoints`;
@@ -33423,11 +33423,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedEndpoints(params: PatchCoreV1NamespacedEndpointsRequest, opts?: APIClientRequestOpts): Promise<Endpoints> {
     const path = `/api/v1/namespaces/${params.namespace}/endpoints/${params.name}`;
-    return await this.patch<Endpoints>(path, params.query, params.body, opts);
+    return await this.patch<Endpoints>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedEvent(params: ListCoreV1NamespacedEventRequest, opts?: APIClientRequestOpts): Promise<EventList> {
     const path = `/api/v1/namespaces/${params.namespace}/events`;
-    return await this.get<EventList>(path, params.query, null, opts);
+    return await this.get<EventList>(path, null, null, opts);
   }
   async createCoreV1NamespacedEvent(params: CreateCoreV1NamespacedEventRequest, opts?: APIClientRequestOpts): Promise<Event> {
     const path = `/api/v1/namespaces/${params.namespace}/events`;
@@ -33451,11 +33451,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedEvent(params: PatchCoreV1NamespacedEventRequest, opts?: APIClientRequestOpts): Promise<Event> {
     const path = `/api/v1/namespaces/${params.namespace}/events/${params.name}`;
-    return await this.patch<Event>(path, params.query, params.body, opts);
+    return await this.patch<Event>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedLimitRange(params: ListCoreV1NamespacedLimitRangeRequest, opts?: APIClientRequestOpts): Promise<LimitRangeList> {
     const path = `/api/v1/namespaces/${params.namespace}/limitranges`;
-    return await this.get<LimitRangeList>(path, params.query, null, opts);
+    return await this.get<LimitRangeList>(path, null, null, opts);
   }
   async createCoreV1NamespacedLimitRange(params: CreateCoreV1NamespacedLimitRangeRequest, opts?: APIClientRequestOpts): Promise<LimitRange> {
     const path = `/api/v1/namespaces/${params.namespace}/limitranges`;
@@ -33479,11 +33479,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedLimitRange(params: PatchCoreV1NamespacedLimitRangeRequest, opts?: APIClientRequestOpts): Promise<LimitRange> {
     const path = `/api/v1/namespaces/${params.namespace}/limitranges/${params.name}`;
-    return await this.patch<LimitRange>(path, params.query, params.body, opts);
+    return await this.patch<LimitRange>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedPersistentVolumeClaim(params: ListCoreV1NamespacedPersistentVolumeClaimRequest, opts?: APIClientRequestOpts): Promise<PersistentVolumeClaimList> {
     const path = `/api/v1/namespaces/${params.namespace}/persistentvolumeclaims`;
-    return await this.get<PersistentVolumeClaimList>(path, params.query, null, opts);
+    return await this.get<PersistentVolumeClaimList>(path, null, null, opts);
   }
   async createCoreV1NamespacedPersistentVolumeClaim(params: CreateCoreV1NamespacedPersistentVolumeClaimRequest, opts?: APIClientRequestOpts): Promise<PersistentVolumeClaim> {
     const path = `/api/v1/namespaces/${params.namespace}/persistentvolumeclaims`;
@@ -33507,7 +33507,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedPersistentVolumeClaim(params: PatchCoreV1NamespacedPersistentVolumeClaimRequest, opts?: APIClientRequestOpts): Promise<PersistentVolumeClaim> {
     const path = `/api/v1/namespaces/${params.namespace}/persistentvolumeclaims/${params.name}`;
-    return await this.patch<PersistentVolumeClaim>(path, params.query, params.body, opts);
+    return await this.patch<PersistentVolumeClaim>(path, params.query, null, opts);
   }
   async readCoreV1NamespacedPersistentVolumeClaimStatus(params: ReadCoreV1NamespacedPersistentVolumeClaimStatusRequest, opts?: APIClientRequestOpts): Promise<PersistentVolumeClaim> {
     const path = `/api/v1/namespaces/${params.namespace}/persistentvolumeclaims/${params.name}/status`;
@@ -33519,11 +33519,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedPersistentVolumeClaimStatus(params: PatchCoreV1NamespacedPersistentVolumeClaimStatusRequest, opts?: APIClientRequestOpts): Promise<PersistentVolumeClaim> {
     const path = `/api/v1/namespaces/${params.namespace}/persistentvolumeclaims/${params.name}/status`;
-    return await this.patch<PersistentVolumeClaim>(path, params.query, params.body, opts);
+    return await this.patch<PersistentVolumeClaim>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedPod(params: ListCoreV1NamespacedPodRequest, opts?: APIClientRequestOpts): Promise<PodList> {
     const path = `/api/v1/namespaces/${params.namespace}/pods`;
-    return await this.get<PodList>(path, params.query, null, opts);
+    return await this.get<PodList>(path, null, null, opts);
   }
   async createCoreV1NamespacedPod(params: CreateCoreV1NamespacedPodRequest, opts?: APIClientRequestOpts): Promise<Pod> {
     const path = `/api/v1/namespaces/${params.namespace}/pods`;
@@ -33547,7 +33547,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedPod(params: PatchCoreV1NamespacedPodRequest, opts?: APIClientRequestOpts): Promise<Pod> {
     const path = `/api/v1/namespaces/${params.namespace}/pods/${params.name}`;
-    return await this.patch<Pod>(path, params.query, params.body, opts);
+    return await this.patch<Pod>(path, params.query, null, opts);
   }
   async connectCoreV1GetNamespacedPodAttach(params: ConnectCoreV1GetNamespacedPodAttachRequest, opts?: APIClientRequestOpts): Promise<string> {
     const path = `/api/v1/namespaces/${params.namespace}/pods/${params.name}/attach`;
@@ -33571,7 +33571,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedPodEphemeralcontainers(params: PatchCoreV1NamespacedPodEphemeralcontainersRequest, opts?: APIClientRequestOpts): Promise<Pod> {
     const path = `/api/v1/namespaces/${params.namespace}/pods/${params.name}/ephemeralcontainers`;
-    return await this.patch<Pod>(path, params.query, params.body, opts);
+    return await this.patch<Pod>(path, params.query, null, opts);
   }
   async createCoreV1NamespacedPodEviction(params: CreateCoreV1NamespacedPodEvictionRequest, opts?: APIClientRequestOpts): Promise<PolicyV1Eviction> {
     const path = `/api/v1/namespaces/${params.namespace}/pods/${params.name}/eviction`;
@@ -33647,11 +33647,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedPodStatus(params: PatchCoreV1NamespacedPodStatusRequest, opts?: APIClientRequestOpts): Promise<Pod> {
     const path = `/api/v1/namespaces/${params.namespace}/pods/${params.name}/status`;
-    return await this.patch<Pod>(path, params.query, params.body, opts);
+    return await this.patch<Pod>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedPodTemplate(params: ListCoreV1NamespacedPodTemplateRequest, opts?: APIClientRequestOpts): Promise<PodTemplateList> {
     const path = `/api/v1/namespaces/${params.namespace}/podtemplates`;
-    return await this.get<PodTemplateList>(path, params.query, null, opts);
+    return await this.get<PodTemplateList>(path, null, null, opts);
   }
   async createCoreV1NamespacedPodTemplate(params: CreateCoreV1NamespacedPodTemplateRequest, opts?: APIClientRequestOpts): Promise<PodTemplate> {
     const path = `/api/v1/namespaces/${params.namespace}/podtemplates`;
@@ -33675,11 +33675,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedPodTemplate(params: PatchCoreV1NamespacedPodTemplateRequest, opts?: APIClientRequestOpts): Promise<PodTemplate> {
     const path = `/api/v1/namespaces/${params.namespace}/podtemplates/${params.name}`;
-    return await this.patch<PodTemplate>(path, params.query, params.body, opts);
+    return await this.patch<PodTemplate>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedReplicationController(params: ListCoreV1NamespacedReplicationControllerRequest, opts?: APIClientRequestOpts): Promise<ReplicationControllerList> {
     const path = `/api/v1/namespaces/${params.namespace}/replicationcontrollers`;
-    return await this.get<ReplicationControllerList>(path, params.query, null, opts);
+    return await this.get<ReplicationControllerList>(path, null, null, opts);
   }
   async createCoreV1NamespacedReplicationController(params: CreateCoreV1NamespacedReplicationControllerRequest, opts?: APIClientRequestOpts): Promise<ReplicationController> {
     const path = `/api/v1/namespaces/${params.namespace}/replicationcontrollers`;
@@ -33703,7 +33703,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedReplicationController(params: PatchCoreV1NamespacedReplicationControllerRequest, opts?: APIClientRequestOpts): Promise<ReplicationController> {
     const path = `/api/v1/namespaces/${params.namespace}/replicationcontrollers/${params.name}`;
-    return await this.patch<ReplicationController>(path, params.query, params.body, opts);
+    return await this.patch<ReplicationController>(path, params.query, null, opts);
   }
   async readCoreV1NamespacedReplicationControllerScale(params: ReadCoreV1NamespacedReplicationControllerScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/api/v1/namespaces/${params.namespace}/replicationcontrollers/${params.name}/scale`;
@@ -33715,7 +33715,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedReplicationControllerScale(params: PatchCoreV1NamespacedReplicationControllerScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/api/v1/namespaces/${params.namespace}/replicationcontrollers/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readCoreV1NamespacedReplicationControllerStatus(params: ReadCoreV1NamespacedReplicationControllerStatusRequest, opts?: APIClientRequestOpts): Promise<ReplicationController> {
     const path = `/api/v1/namespaces/${params.namespace}/replicationcontrollers/${params.name}/status`;
@@ -33727,11 +33727,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedReplicationControllerStatus(params: PatchCoreV1NamespacedReplicationControllerStatusRequest, opts?: APIClientRequestOpts): Promise<ReplicationController> {
     const path = `/api/v1/namespaces/${params.namespace}/replicationcontrollers/${params.name}/status`;
-    return await this.patch<ReplicationController>(path, params.query, params.body, opts);
+    return await this.patch<ReplicationController>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedResourceQuota(params: ListCoreV1NamespacedResourceQuotaRequest, opts?: APIClientRequestOpts): Promise<ResourceQuotaList> {
     const path = `/api/v1/namespaces/${params.namespace}/resourcequotas`;
-    return await this.get<ResourceQuotaList>(path, params.query, null, opts);
+    return await this.get<ResourceQuotaList>(path, null, null, opts);
   }
   async createCoreV1NamespacedResourceQuota(params: CreateCoreV1NamespacedResourceQuotaRequest, opts?: APIClientRequestOpts): Promise<ResourceQuota> {
     const path = `/api/v1/namespaces/${params.namespace}/resourcequotas`;
@@ -33755,7 +33755,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedResourceQuota(params: PatchCoreV1NamespacedResourceQuotaRequest, opts?: APIClientRequestOpts): Promise<ResourceQuota> {
     const path = `/api/v1/namespaces/${params.namespace}/resourcequotas/${params.name}`;
-    return await this.patch<ResourceQuota>(path, params.query, params.body, opts);
+    return await this.patch<ResourceQuota>(path, params.query, null, opts);
   }
   async readCoreV1NamespacedResourceQuotaStatus(params: ReadCoreV1NamespacedResourceQuotaStatusRequest, opts?: APIClientRequestOpts): Promise<ResourceQuota> {
     const path = `/api/v1/namespaces/${params.namespace}/resourcequotas/${params.name}/status`;
@@ -33767,11 +33767,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedResourceQuotaStatus(params: PatchCoreV1NamespacedResourceQuotaStatusRequest, opts?: APIClientRequestOpts): Promise<ResourceQuota> {
     const path = `/api/v1/namespaces/${params.namespace}/resourcequotas/${params.name}/status`;
-    return await this.patch<ResourceQuota>(path, params.query, params.body, opts);
+    return await this.patch<ResourceQuota>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedSecret(params: ListCoreV1NamespacedSecretRequest, opts?: APIClientRequestOpts): Promise<SecretList> {
     const path = `/api/v1/namespaces/${params.namespace}/secrets`;
-    return await this.get<SecretList>(path, params.query, null, opts);
+    return await this.get<SecretList>(path, null, null, opts);
   }
   async createCoreV1NamespacedSecret(params: CreateCoreV1NamespacedSecretRequest, opts?: APIClientRequestOpts): Promise<Secret> {
     const path = `/api/v1/namespaces/${params.namespace}/secrets`;
@@ -33795,11 +33795,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedSecret(params: PatchCoreV1NamespacedSecretRequest, opts?: APIClientRequestOpts): Promise<Secret> {
     const path = `/api/v1/namespaces/${params.namespace}/secrets/${params.name}`;
-    return await this.patch<Secret>(path, params.query, params.body, opts);
+    return await this.patch<Secret>(path, params.query, null, opts);
   }
   async listCoreV1NamespacedServiceAccount(params: ListCoreV1NamespacedServiceAccountRequest, opts?: APIClientRequestOpts): Promise<ServiceAccountList> {
     const path = `/api/v1/namespaces/${params.namespace}/serviceaccounts`;
-    return await this.get<ServiceAccountList>(path, params.query, null, opts);
+    return await this.get<ServiceAccountList>(path, null, null, opts);
   }
   async createCoreV1NamespacedServiceAccount(params: CreateCoreV1NamespacedServiceAccountRequest, opts?: APIClientRequestOpts): Promise<ServiceAccount> {
     const path = `/api/v1/namespaces/${params.namespace}/serviceaccounts`;
@@ -33823,7 +33823,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedServiceAccount(params: PatchCoreV1NamespacedServiceAccountRequest, opts?: APIClientRequestOpts): Promise<ServiceAccount> {
     const path = `/api/v1/namespaces/${params.namespace}/serviceaccounts/${params.name}`;
-    return await this.patch<ServiceAccount>(path, params.query, params.body, opts);
+    return await this.patch<ServiceAccount>(path, params.query, null, opts);
   }
   async createCoreV1NamespacedServiceAccountToken(params: CreateCoreV1NamespacedServiceAccountTokenRequest, opts?: APIClientRequestOpts): Promise<AuthenticationK8sIoV1TokenRequest> {
     const path = `/api/v1/namespaces/${params.namespace}/serviceaccounts/${params.name}/token`;
@@ -33831,7 +33831,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCoreV1NamespacedService(params: ListCoreV1NamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<ServiceList> {
     const path = `/api/v1/namespaces/${params.namespace}/services`;
-    return await this.get<ServiceList>(path, params.query, null, opts);
+    return await this.get<ServiceList>(path, null, null, opts);
   }
   async createCoreV1NamespacedService(params: CreateCoreV1NamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<Service> {
     const path = `/api/v1/namespaces/${params.namespace}/services`;
@@ -33855,7 +33855,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedService(params: PatchCoreV1NamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<Service> {
     const path = `/api/v1/namespaces/${params.namespace}/services/${params.name}`;
-    return await this.patch<Service>(path, params.query, params.body, opts);
+    return await this.patch<Service>(path, params.query, null, opts);
   }
   async connectCoreV1GetNamespacedServiceProxy(params: ConnectCoreV1GetNamespacedServiceProxyRequest, opts?: APIClientRequestOpts): Promise<string> {
     const path = `/api/v1/namespaces/${params.namespace}/services/${params.name}/proxy`;
@@ -33907,7 +33907,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespacedServiceStatus(params: PatchCoreV1NamespacedServiceStatusRequest, opts?: APIClientRequestOpts): Promise<Service> {
     const path = `/api/v1/namespaces/${params.namespace}/services/${params.name}/status`;
-    return await this.patch<Service>(path, params.query, params.body, opts);
+    return await this.patch<Service>(path, params.query, null, opts);
   }
   async readCoreV1Namespace(params: ReadCoreV1NamespaceRequest, opts?: APIClientRequestOpts): Promise<Namespace> {
     const path = `/api/v1/namespaces/${params.name}`;
@@ -33923,7 +33923,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1Namespace(params: PatchCoreV1NamespaceRequest, opts?: APIClientRequestOpts): Promise<Namespace> {
     const path = `/api/v1/namespaces/${params.name}`;
-    return await this.patch<Namespace>(path, params.query, params.body, opts);
+    return await this.patch<Namespace>(path, params.query, null, opts);
   }
   async replaceCoreV1NamespaceFinalize(params: ReplaceCoreV1NamespaceFinalizeRequest, opts?: APIClientRequestOpts): Promise<Namespace> {
     const path = `/api/v1/namespaces/${params.name}/finalize`;
@@ -33939,11 +33939,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NamespaceStatus(params: PatchCoreV1NamespaceStatusRequest, opts?: APIClientRequestOpts): Promise<Namespace> {
     const path = `/api/v1/namespaces/${params.name}/status`;
-    return await this.patch<Namespace>(path, params.query, params.body, opts);
+    return await this.patch<Namespace>(path, params.query, null, opts);
   }
   async listCoreV1Node(params: ListCoreV1NodeRequest, opts?: APIClientRequestOpts): Promise<NodeList> {
     const path = `/api/v1/nodes`;
-    return await this.get<NodeList>(path, params.query, null, opts);
+    return await this.get<NodeList>(path, null, null, opts);
   }
   async createCoreV1Node(params: CreateCoreV1NodeRequest, opts?: APIClientRequestOpts): Promise<Node> {
     const path = `/api/v1/nodes`;
@@ -33967,7 +33967,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1Node(params: PatchCoreV1NodeRequest, opts?: APIClientRequestOpts): Promise<Node> {
     const path = `/api/v1/nodes/${params.name}`;
-    return await this.patch<Node>(path, params.query, params.body, opts);
+    return await this.patch<Node>(path, params.query, null, opts);
   }
   async connectCoreV1GetNodeProxy(params: ConnectCoreV1GetNodeProxyRequest, opts?: APIClientRequestOpts): Promise<string> {
     const path = `/api/v1/nodes/${params.name}/proxy`;
@@ -34019,7 +34019,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1NodeStatus(params: PatchCoreV1NodeStatusRequest, opts?: APIClientRequestOpts): Promise<Node> {
     const path = `/api/v1/nodes/${params.name}/status`;
-    return await this.patch<Node>(path, params.query, params.body, opts);
+    return await this.patch<Node>(path, params.query, null, opts);
   }
   async listCoreV1PersistentVolumeClaimForAllNamespaces(params: ListCoreV1PersistentVolumeClaimForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<PersistentVolumeClaimList> {
     const path = `/api/v1/persistentvolumeclaims`;
@@ -34027,7 +34027,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCoreV1PersistentVolume(params: ListCoreV1PersistentVolumeRequest, opts?: APIClientRequestOpts): Promise<PersistentVolumeList> {
     const path = `/api/v1/persistentvolumes`;
-    return await this.get<PersistentVolumeList>(path, params.query, null, opts);
+    return await this.get<PersistentVolumeList>(path, null, null, opts);
   }
   async createCoreV1PersistentVolume(params: CreateCoreV1PersistentVolumeRequest, opts?: APIClientRequestOpts): Promise<PersistentVolume> {
     const path = `/api/v1/persistentvolumes`;
@@ -34051,7 +34051,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1PersistentVolume(params: PatchCoreV1PersistentVolumeRequest, opts?: APIClientRequestOpts): Promise<PersistentVolume> {
     const path = `/api/v1/persistentvolumes/${params.name}`;
-    return await this.patch<PersistentVolume>(path, params.query, params.body, opts);
+    return await this.patch<PersistentVolume>(path, params.query, null, opts);
   }
   async readCoreV1PersistentVolumeStatus(params: ReadCoreV1PersistentVolumeStatusRequest, opts?: APIClientRequestOpts): Promise<PersistentVolume> {
     const path = `/api/v1/persistentvolumes/${params.name}/status`;
@@ -34063,7 +34063,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoreV1PersistentVolumeStatus(params: PatchCoreV1PersistentVolumeStatusRequest, opts?: APIClientRequestOpts): Promise<PersistentVolume> {
     const path = `/api/v1/persistentvolumes/${params.name}/status`;
-    return await this.patch<PersistentVolume>(path, params.query, params.body, opts);
+    return await this.patch<PersistentVolume>(path, params.query, null, opts);
   }
   async listCoreV1PodForAllNamespaces(params: ListCoreV1PodForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<PodList> {
     const path = `/api/v1/pods`;
@@ -34271,7 +34271,7 @@ export class KubernetesClient extends APIClient {
   }
   async listAcmeCertManagerIoV1NamespacedChallenge(params: ListAcmeCertManagerIoV1NamespacedChallengeRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1ChallengeList> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges`;
-    return await this.get<AcmeCertManagerIoV1ChallengeList>(path, params.query, null, opts);
+    return await this.get<AcmeCertManagerIoV1ChallengeList>(path, null, null, opts);
   }
   async createAcmeCertManagerIoV1NamespacedChallenge(params: CreateAcmeCertManagerIoV1NamespacedChallengeRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Challenge> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges`;
@@ -34279,11 +34279,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteAcmeCertManagerIoV1CollectionNamespacedChallenge(params: DeleteAcmeCertManagerIoV1CollectionNamespacedChallengeRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readAcmeCertManagerIoV1NamespacedChallenge(params: ReadAcmeCertManagerIoV1NamespacedChallengeRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Challenge> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges/${params.name}`;
-    return await this.get<AcmeCertManagerIoV1Challenge>(path, params.query, null, opts);
+    return await this.get<AcmeCertManagerIoV1Challenge>(path, null, null, opts);
   }
   async replaceAcmeCertManagerIoV1NamespacedChallenge(params: ReplaceAcmeCertManagerIoV1NamespacedChallengeRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Challenge> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges/${params.name}`;
@@ -34295,11 +34295,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAcmeCertManagerIoV1NamespacedChallenge(params: PatchAcmeCertManagerIoV1NamespacedChallengeRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Challenge> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges/${params.name}`;
-    return await this.patch<AcmeCertManagerIoV1Challenge>(path, params.query, params.body, opts);
+    return await this.patch<AcmeCertManagerIoV1Challenge>(path, params.query, null, opts);
   }
   async readAcmeCertManagerIoV1NamespacedChallengeStatus(params: ReadAcmeCertManagerIoV1NamespacedChallengeStatusRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Challenge> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges/${params.name}/status`;
-    return await this.get<AcmeCertManagerIoV1Challenge>(path, params.query, null, opts);
+    return await this.get<AcmeCertManagerIoV1Challenge>(path, null, null, opts);
   }
   async replaceAcmeCertManagerIoV1NamespacedChallengeStatus(params: ReplaceAcmeCertManagerIoV1NamespacedChallengeStatusRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Challenge> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges/${params.name}/status`;
@@ -34307,11 +34307,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAcmeCertManagerIoV1NamespacedChallengeStatus(params: PatchAcmeCertManagerIoV1NamespacedChallengeStatusRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Challenge> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/challenges/${params.name}/status`;
-    return await this.patch<AcmeCertManagerIoV1Challenge>(path, params.query, params.body, opts);
+    return await this.patch<AcmeCertManagerIoV1Challenge>(path, params.query, null, opts);
   }
   async listAcmeCertManagerIoV1NamespacedOrder(params: ListAcmeCertManagerIoV1NamespacedOrderRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1OrderList> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders`;
-    return await this.get<AcmeCertManagerIoV1OrderList>(path, params.query, null, opts);
+    return await this.get<AcmeCertManagerIoV1OrderList>(path, null, null, opts);
   }
   async createAcmeCertManagerIoV1NamespacedOrder(params: CreateAcmeCertManagerIoV1NamespacedOrderRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Order> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders`;
@@ -34319,11 +34319,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteAcmeCertManagerIoV1CollectionNamespacedOrder(params: DeleteAcmeCertManagerIoV1CollectionNamespacedOrderRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readAcmeCertManagerIoV1NamespacedOrder(params: ReadAcmeCertManagerIoV1NamespacedOrderRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Order> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders/${params.name}`;
-    return await this.get<AcmeCertManagerIoV1Order>(path, params.query, null, opts);
+    return await this.get<AcmeCertManagerIoV1Order>(path, null, null, opts);
   }
   async replaceAcmeCertManagerIoV1NamespacedOrder(params: ReplaceAcmeCertManagerIoV1NamespacedOrderRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Order> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders/${params.name}`;
@@ -34335,11 +34335,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAcmeCertManagerIoV1NamespacedOrder(params: PatchAcmeCertManagerIoV1NamespacedOrderRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Order> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders/${params.name}`;
-    return await this.patch<AcmeCertManagerIoV1Order>(path, params.query, params.body, opts);
+    return await this.patch<AcmeCertManagerIoV1Order>(path, params.query, null, opts);
   }
   async readAcmeCertManagerIoV1NamespacedOrderStatus(params: ReadAcmeCertManagerIoV1NamespacedOrderStatusRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Order> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders/${params.name}/status`;
-    return await this.get<AcmeCertManagerIoV1Order>(path, params.query, null, opts);
+    return await this.get<AcmeCertManagerIoV1Order>(path, null, null, opts);
   }
   async replaceAcmeCertManagerIoV1NamespacedOrderStatus(params: ReplaceAcmeCertManagerIoV1NamespacedOrderStatusRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Order> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders/${params.name}/status`;
@@ -34347,7 +34347,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAcmeCertManagerIoV1NamespacedOrderStatus(params: PatchAcmeCertManagerIoV1NamespacedOrderStatusRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1Order> {
     const path = `/apis/acme.cert-manager.io/v1/namespaces/${params.namespace}/orders/${params.name}/status`;
-    return await this.patch<AcmeCertManagerIoV1Order>(path, params.query, params.body, opts);
+    return await this.patch<AcmeCertManagerIoV1Order>(path, params.query, null, opts);
   }
   async listAcmeCertManagerIoV1OrderForAllNamespaces(params: ListAcmeCertManagerIoV1OrderForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<AcmeCertManagerIoV1OrderList> {
     const path = `/apis/acme.cert-manager.io/v1/orders`;
@@ -34363,7 +34363,7 @@ export class KubernetesClient extends APIClient {
   }
   async listAdmissionregistrationV1MutatingWebhookConfiguration(params: ListAdmissionregistrationV1MutatingWebhookConfigurationRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1MutatingWebhookConfigurationList> {
     const path = `/apis/admissionregistration.k8s.io/v1/mutatingwebhookconfigurations`;
-    return await this.get<AdmissionregistrationK8sIoV1MutatingWebhookConfigurationList>(path, params.query, null, opts);
+    return await this.get<AdmissionregistrationK8sIoV1MutatingWebhookConfigurationList>(path, null, null, opts);
   }
   async createAdmissionregistrationV1MutatingWebhookConfiguration(params: CreateAdmissionregistrationV1MutatingWebhookConfigurationRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1MutatingWebhookConfiguration> {
     const path = `/apis/admissionregistration.k8s.io/v1/mutatingwebhookconfigurations`;
@@ -34387,11 +34387,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAdmissionregistrationV1MutatingWebhookConfiguration(params: PatchAdmissionregistrationV1MutatingWebhookConfigurationRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1MutatingWebhookConfiguration> {
     const path = `/apis/admissionregistration.k8s.io/v1/mutatingwebhookconfigurations/${params.name}`;
-    return await this.patch<AdmissionregistrationK8sIoV1MutatingWebhookConfiguration>(path, params.query, params.body, opts);
+    return await this.patch<AdmissionregistrationK8sIoV1MutatingWebhookConfiguration>(path, params.query, null, opts);
   }
   async listAdmissionregistrationV1ValidatingAdmissionPolicy(params: ListAdmissionregistrationV1ValidatingAdmissionPolicyRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyList> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingadmissionpolicies`;
-    return await this.get<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyList>(path, params.query, null, opts);
+    return await this.get<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyList>(path, null, null, opts);
   }
   async createAdmissionregistrationV1ValidatingAdmissionPolicy(params: CreateAdmissionregistrationV1ValidatingAdmissionPolicyRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicy> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingadmissionpolicies`;
@@ -34415,7 +34415,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAdmissionregistrationV1ValidatingAdmissionPolicy(params: PatchAdmissionregistrationV1ValidatingAdmissionPolicyRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicy> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingadmissionpolicies/${params.name}`;
-    return await this.patch<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicy>(path, params.query, params.body, opts);
+    return await this.patch<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicy>(path, params.query, null, opts);
   }
   async readAdmissionregistrationV1ValidatingAdmissionPolicyStatus(params: ReadAdmissionregistrationV1ValidatingAdmissionPolicyStatusRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicy> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingadmissionpolicies/${params.name}/status`;
@@ -34427,11 +34427,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAdmissionregistrationV1ValidatingAdmissionPolicyStatus(params: PatchAdmissionregistrationV1ValidatingAdmissionPolicyStatusRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicy> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingadmissionpolicies/${params.name}/status`;
-    return await this.patch<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicy>(path, params.query, params.body, opts);
+    return await this.patch<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicy>(path, params.query, null, opts);
   }
   async listAdmissionregistrationV1ValidatingAdmissionPolicyBinding(params: ListAdmissionregistrationV1ValidatingAdmissionPolicyBindingRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyBindingList> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingadmissionpolicybindings`;
-    return await this.get<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyBindingList>(path, params.query, null, opts);
+    return await this.get<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyBindingList>(path, null, null, opts);
   }
   async createAdmissionregistrationV1ValidatingAdmissionPolicyBinding(params: CreateAdmissionregistrationV1ValidatingAdmissionPolicyBindingRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyBinding> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingadmissionpolicybindings`;
@@ -34455,11 +34455,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAdmissionregistrationV1ValidatingAdmissionPolicyBinding(params: PatchAdmissionregistrationV1ValidatingAdmissionPolicyBindingRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyBinding> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingadmissionpolicybindings/${params.name}`;
-    return await this.patch<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyBinding>(path, params.query, params.body, opts);
+    return await this.patch<AdmissionregistrationK8sIoV1ValidatingAdmissionPolicyBinding>(path, params.query, null, opts);
   }
   async listAdmissionregistrationV1ValidatingWebhookConfiguration(params: ListAdmissionregistrationV1ValidatingWebhookConfigurationRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingWebhookConfigurationList> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurations`;
-    return await this.get<AdmissionregistrationK8sIoV1ValidatingWebhookConfigurationList>(path, params.query, null, opts);
+    return await this.get<AdmissionregistrationK8sIoV1ValidatingWebhookConfigurationList>(path, null, null, opts);
   }
   async createAdmissionregistrationV1ValidatingWebhookConfiguration(params: CreateAdmissionregistrationV1ValidatingWebhookConfigurationRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingWebhookConfiguration> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurations`;
@@ -34483,7 +34483,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAdmissionregistrationV1ValidatingWebhookConfiguration(params: PatchAdmissionregistrationV1ValidatingWebhookConfigurationRequest, opts?: APIClientRequestOpts): Promise<AdmissionregistrationK8sIoV1ValidatingWebhookConfiguration> {
     const path = `/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurations/${params.name}`;
-    return await this.patch<AdmissionregistrationK8sIoV1ValidatingWebhookConfiguration>(path, params.query, params.body, opts);
+    return await this.patch<AdmissionregistrationK8sIoV1ValidatingWebhookConfiguration>(path, params.query, null, opts);
   }
   async watchAdmissionregistrationV1MutatingWebhookConfigurationList(params: WatchAdmissionregistrationV1MutatingWebhookConfigurationListRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/admissionregistration.k8s.io/v1/watch/mutatingwebhookconfigurations`;
@@ -34527,7 +34527,7 @@ export class KubernetesClient extends APIClient {
   }
   async listApiextensionsV1CustomResourceDefinition(params: ListApiextensionsV1CustomResourceDefinitionRequest, opts?: APIClientRequestOpts): Promise<ApiextensionsK8sIoV1CustomResourceDefinitionList> {
     const path = `/apis/apiextensions.k8s.io/v1/customresourcedefinitions`;
-    return await this.get<ApiextensionsK8sIoV1CustomResourceDefinitionList>(path, params.query, null, opts);
+    return await this.get<ApiextensionsK8sIoV1CustomResourceDefinitionList>(path, null, null, opts);
   }
   async createApiextensionsV1CustomResourceDefinition(params: CreateApiextensionsV1CustomResourceDefinitionRequest, opts?: APIClientRequestOpts): Promise<ApiextensionsK8sIoV1CustomResourceDefinition> {
     const path = `/apis/apiextensions.k8s.io/v1/customresourcedefinitions`;
@@ -34551,7 +34551,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchApiextensionsV1CustomResourceDefinition(params: PatchApiextensionsV1CustomResourceDefinitionRequest, opts?: APIClientRequestOpts): Promise<ApiextensionsK8sIoV1CustomResourceDefinition> {
     const path = `/apis/apiextensions.k8s.io/v1/customresourcedefinitions/${params.name}`;
-    return await this.patch<ApiextensionsK8sIoV1CustomResourceDefinition>(path, params.query, params.body, opts);
+    return await this.patch<ApiextensionsK8sIoV1CustomResourceDefinition>(path, params.query, null, opts);
   }
   async readApiextensionsV1CustomResourceDefinitionStatus(params: ReadApiextensionsV1CustomResourceDefinitionStatusRequest, opts?: APIClientRequestOpts): Promise<ApiextensionsK8sIoV1CustomResourceDefinition> {
     const path = `/apis/apiextensions.k8s.io/v1/customresourcedefinitions/${params.name}/status`;
@@ -34563,7 +34563,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchApiextensionsV1CustomResourceDefinitionStatus(params: PatchApiextensionsV1CustomResourceDefinitionStatusRequest, opts?: APIClientRequestOpts): Promise<ApiextensionsK8sIoV1CustomResourceDefinition> {
     const path = `/apis/apiextensions.k8s.io/v1/customresourcedefinitions/${params.name}/status`;
-    return await this.patch<ApiextensionsK8sIoV1CustomResourceDefinition>(path, params.query, params.body, opts);
+    return await this.patch<ApiextensionsK8sIoV1CustomResourceDefinition>(path, params.query, null, opts);
   }
   async watchApiextensionsV1CustomResourceDefinitionList(params: WatchApiextensionsV1CustomResourceDefinitionListRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/apiextensions.k8s.io/v1/watch/customresourcedefinitions`;
@@ -34583,7 +34583,7 @@ export class KubernetesClient extends APIClient {
   }
   async listApiregistrationV1APIService(params: ListApiregistrationV1APIServiceRequest, opts?: APIClientRequestOpts): Promise<ApiregistrationK8sIoV1APIServiceList> {
     const path = `/apis/apiregistration.k8s.io/v1/apiservices`;
-    return await this.get<ApiregistrationK8sIoV1APIServiceList>(path, params.query, null, opts);
+    return await this.get<ApiregistrationK8sIoV1APIServiceList>(path, null, null, opts);
   }
   async createApiregistrationV1APIService(params: CreateApiregistrationV1APIServiceRequest, opts?: APIClientRequestOpts): Promise<ApiregistrationK8sIoV1APIService> {
     const path = `/apis/apiregistration.k8s.io/v1/apiservices`;
@@ -34607,7 +34607,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchApiregistrationV1APIService(params: PatchApiregistrationV1APIServiceRequest, opts?: APIClientRequestOpts): Promise<ApiregistrationK8sIoV1APIService> {
     const path = `/apis/apiregistration.k8s.io/v1/apiservices/${params.name}`;
-    return await this.patch<ApiregistrationK8sIoV1APIService>(path, params.query, params.body, opts);
+    return await this.patch<ApiregistrationK8sIoV1APIService>(path, params.query, null, opts);
   }
   async readApiregistrationV1APIServiceStatus(params: ReadApiregistrationV1APIServiceStatusRequest, opts?: APIClientRequestOpts): Promise<ApiregistrationK8sIoV1APIService> {
     const path = `/apis/apiregistration.k8s.io/v1/apiservices/${params.name}/status`;
@@ -34619,7 +34619,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchApiregistrationV1APIServiceStatus(params: PatchApiregistrationV1APIServiceStatusRequest, opts?: APIClientRequestOpts): Promise<ApiregistrationK8sIoV1APIService> {
     const path = `/apis/apiregistration.k8s.io/v1/apiservices/${params.name}/status`;
-    return await this.patch<ApiregistrationK8sIoV1APIService>(path, params.query, params.body, opts);
+    return await this.patch<ApiregistrationK8sIoV1APIService>(path, params.query, null, opts);
   }
   async watchApiregistrationV1APIServiceList(params: WatchApiregistrationV1APIServiceListRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/apiregistration.k8s.io/v1/watch/apiservices`;
@@ -34651,7 +34651,7 @@ export class KubernetesClient extends APIClient {
   }
   async listAppsV1NamespacedControllerRevision(params: ListAppsV1NamespacedControllerRevisionRequest, opts?: APIClientRequestOpts): Promise<AppsV1ControllerRevisionList> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/controllerrevisions`;
-    return await this.get<AppsV1ControllerRevisionList>(path, params.query, null, opts);
+    return await this.get<AppsV1ControllerRevisionList>(path, null, null, opts);
   }
   async createAppsV1NamespacedControllerRevision(params: CreateAppsV1NamespacedControllerRevisionRequest, opts?: APIClientRequestOpts): Promise<AppsV1ControllerRevision> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/controllerrevisions`;
@@ -34675,11 +34675,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedControllerRevision(params: PatchAppsV1NamespacedControllerRevisionRequest, opts?: APIClientRequestOpts): Promise<AppsV1ControllerRevision> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/controllerrevisions/${params.name}`;
-    return await this.patch<AppsV1ControllerRevision>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1ControllerRevision>(path, params.query, null, opts);
   }
   async listAppsV1NamespacedDaemonSet(params: ListAppsV1NamespacedDaemonSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1DaemonSetList> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/daemonsets`;
-    return await this.get<AppsV1DaemonSetList>(path, params.query, null, opts);
+    return await this.get<AppsV1DaemonSetList>(path, null, null, opts);
   }
   async createAppsV1NamespacedDaemonSet(params: CreateAppsV1NamespacedDaemonSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1DaemonSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/daemonsets`;
@@ -34703,7 +34703,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedDaemonSet(params: PatchAppsV1NamespacedDaemonSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1DaemonSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/daemonsets/${params.name}`;
-    return await this.patch<AppsV1DaemonSet>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1DaemonSet>(path, params.query, null, opts);
   }
   async readAppsV1NamespacedDaemonSetStatus(params: ReadAppsV1NamespacedDaemonSetStatusRequest, opts?: APIClientRequestOpts): Promise<AppsV1DaemonSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/daemonsets/${params.name}/status`;
@@ -34715,11 +34715,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedDaemonSetStatus(params: PatchAppsV1NamespacedDaemonSetStatusRequest, opts?: APIClientRequestOpts): Promise<AppsV1DaemonSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/daemonsets/${params.name}/status`;
-    return await this.patch<AppsV1DaemonSet>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1DaemonSet>(path, params.query, null, opts);
   }
   async listAppsV1NamespacedDeployment(params: ListAppsV1NamespacedDeploymentRequest, opts?: APIClientRequestOpts): Promise<AppsV1DeploymentList> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/deployments`;
-    return await this.get<AppsV1DeploymentList>(path, params.query, null, opts);
+    return await this.get<AppsV1DeploymentList>(path, null, null, opts);
   }
   async createAppsV1NamespacedDeployment(params: CreateAppsV1NamespacedDeploymentRequest, opts?: APIClientRequestOpts): Promise<AppsV1Deployment> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/deployments`;
@@ -34743,7 +34743,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedDeployment(params: PatchAppsV1NamespacedDeploymentRequest, opts?: APIClientRequestOpts): Promise<AppsV1Deployment> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/deployments/${params.name}`;
-    return await this.patch<AppsV1Deployment>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1Deployment>(path, params.query, null, opts);
   }
   async readAppsV1NamespacedDeploymentScale(params: ReadAppsV1NamespacedDeploymentScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/deployments/${params.name}/scale`;
@@ -34755,7 +34755,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedDeploymentScale(params: PatchAppsV1NamespacedDeploymentScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/deployments/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readAppsV1NamespacedDeploymentStatus(params: ReadAppsV1NamespacedDeploymentStatusRequest, opts?: APIClientRequestOpts): Promise<AppsV1Deployment> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/deployments/${params.name}/status`;
@@ -34767,11 +34767,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedDeploymentStatus(params: PatchAppsV1NamespacedDeploymentStatusRequest, opts?: APIClientRequestOpts): Promise<AppsV1Deployment> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/deployments/${params.name}/status`;
-    return await this.patch<AppsV1Deployment>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1Deployment>(path, params.query, null, opts);
   }
   async listAppsV1NamespacedReplicaSet(params: ListAppsV1NamespacedReplicaSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1ReplicaSetList> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/replicasets`;
-    return await this.get<AppsV1ReplicaSetList>(path, params.query, null, opts);
+    return await this.get<AppsV1ReplicaSetList>(path, null, null, opts);
   }
   async createAppsV1NamespacedReplicaSet(params: CreateAppsV1NamespacedReplicaSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1ReplicaSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/replicasets`;
@@ -34795,7 +34795,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedReplicaSet(params: PatchAppsV1NamespacedReplicaSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1ReplicaSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/replicasets/${params.name}`;
-    return await this.patch<AppsV1ReplicaSet>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1ReplicaSet>(path, params.query, null, opts);
   }
   async readAppsV1NamespacedReplicaSetScale(params: ReadAppsV1NamespacedReplicaSetScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/replicasets/${params.name}/scale`;
@@ -34807,7 +34807,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedReplicaSetScale(params: PatchAppsV1NamespacedReplicaSetScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/replicasets/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readAppsV1NamespacedReplicaSetStatus(params: ReadAppsV1NamespacedReplicaSetStatusRequest, opts?: APIClientRequestOpts): Promise<AppsV1ReplicaSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/replicasets/${params.name}/status`;
@@ -34819,11 +34819,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedReplicaSetStatus(params: PatchAppsV1NamespacedReplicaSetStatusRequest, opts?: APIClientRequestOpts): Promise<AppsV1ReplicaSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/replicasets/${params.name}/status`;
-    return await this.patch<AppsV1ReplicaSet>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1ReplicaSet>(path, params.query, null, opts);
   }
   async listAppsV1NamespacedStatefulSet(params: ListAppsV1NamespacedStatefulSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1StatefulSetList> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/statefulsets`;
-    return await this.get<AppsV1StatefulSetList>(path, params.query, null, opts);
+    return await this.get<AppsV1StatefulSetList>(path, null, null, opts);
   }
   async createAppsV1NamespacedStatefulSet(params: CreateAppsV1NamespacedStatefulSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1StatefulSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/statefulsets`;
@@ -34847,7 +34847,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedStatefulSet(params: PatchAppsV1NamespacedStatefulSetRequest, opts?: APIClientRequestOpts): Promise<AppsV1StatefulSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/statefulsets/${params.name}`;
-    return await this.patch<AppsV1StatefulSet>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1StatefulSet>(path, params.query, null, opts);
   }
   async readAppsV1NamespacedStatefulSetScale(params: ReadAppsV1NamespacedStatefulSetScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/statefulsets/${params.name}/scale`;
@@ -34859,7 +34859,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedStatefulSetScale(params: PatchAppsV1NamespacedStatefulSetScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/statefulsets/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readAppsV1NamespacedStatefulSetStatus(params: ReadAppsV1NamespacedStatefulSetStatusRequest, opts?: APIClientRequestOpts): Promise<AppsV1StatefulSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/statefulsets/${params.name}/status`;
@@ -34871,7 +34871,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAppsV1NamespacedStatefulSetStatus(params: PatchAppsV1NamespacedStatefulSetStatusRequest, opts?: APIClientRequestOpts): Promise<AppsV1StatefulSet> {
     const path = `/apis/apps/v1/namespaces/${params.namespace}/statefulsets/${params.name}/status`;
-    return await this.patch<AppsV1StatefulSet>(path, params.query, params.body, opts);
+    return await this.patch<AppsV1StatefulSet>(path, params.query, null, opts);
   }
   async listAppsV1ReplicaSetForAllNamespaces(params: ListAppsV1ReplicaSetForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<AppsV1ReplicaSetList> {
     const path = `/apis/apps/v1/replicasets`;
@@ -34987,7 +34987,7 @@ export class KubernetesClient extends APIClient {
   }
   async listAutoscalingInternalKnativeDevV1alpha1NamespacedMetric(params: ListAutoscalingInternalKnativeDevV1alpha1NamespacedMetricRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1MetricList> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics`;
-    return await this.get<AutoscalingInternalKnativeDevV1alpha1MetricList>(path, params.query, null, opts);
+    return await this.get<AutoscalingInternalKnativeDevV1alpha1MetricList>(path, null, null, opts);
   }
   async createAutoscalingInternalKnativeDevV1alpha1NamespacedMetric(params: CreateAutoscalingInternalKnativeDevV1alpha1NamespacedMetricRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1Metric> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics`;
@@ -34995,11 +34995,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteAutoscalingInternalKnativeDevV1alpha1CollectionNamespacedMetric(params: DeleteAutoscalingInternalKnativeDevV1alpha1CollectionNamespacedMetricRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readAutoscalingInternalKnativeDevV1alpha1NamespacedMetric(params: ReadAutoscalingInternalKnativeDevV1alpha1NamespacedMetricRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1Metric> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics/${params.name}`;
-    return await this.get<AutoscalingInternalKnativeDevV1alpha1Metric>(path, params.query, null, opts);
+    return await this.get<AutoscalingInternalKnativeDevV1alpha1Metric>(path, null, null, opts);
   }
   async replaceAutoscalingInternalKnativeDevV1alpha1NamespacedMetric(params: ReplaceAutoscalingInternalKnativeDevV1alpha1NamespacedMetricRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1Metric> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics/${params.name}`;
@@ -35011,11 +35011,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAutoscalingInternalKnativeDevV1alpha1NamespacedMetric(params: PatchAutoscalingInternalKnativeDevV1alpha1NamespacedMetricRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1Metric> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics/${params.name}`;
-    return await this.patch<AutoscalingInternalKnativeDevV1alpha1Metric>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingInternalKnativeDevV1alpha1Metric>(path, params.query, null, opts);
   }
   async readAutoscalingInternalKnativeDevV1alpha1NamespacedMetricStatus(params: ReadAutoscalingInternalKnativeDevV1alpha1NamespacedMetricStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1Metric> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics/${params.name}/status`;
-    return await this.get<AutoscalingInternalKnativeDevV1alpha1Metric>(path, params.query, null, opts);
+    return await this.get<AutoscalingInternalKnativeDevV1alpha1Metric>(path, null, null, opts);
   }
   async replaceAutoscalingInternalKnativeDevV1alpha1NamespacedMetricStatus(params: ReplaceAutoscalingInternalKnativeDevV1alpha1NamespacedMetricStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1Metric> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics/${params.name}/status`;
@@ -35023,11 +35023,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAutoscalingInternalKnativeDevV1alpha1NamespacedMetricStatus(params: PatchAutoscalingInternalKnativeDevV1alpha1NamespacedMetricStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1Metric> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/metrics/${params.name}/status`;
-    return await this.patch<AutoscalingInternalKnativeDevV1alpha1Metric>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingInternalKnativeDevV1alpha1Metric>(path, params.query, null, opts);
   }
   async listAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscaler(params: ListAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscalerList> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers`;
-    return await this.get<AutoscalingInternalKnativeDevV1alpha1PodAutoscalerList>(path, params.query, null, opts);
+    return await this.get<AutoscalingInternalKnativeDevV1alpha1PodAutoscalerList>(path, null, null, opts);
   }
   async createAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscaler(params: CreateAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers`;
@@ -35035,11 +35035,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteAutoscalingInternalKnativeDevV1alpha1CollectionNamespacedPodAutoscaler(params: DeleteAutoscalingInternalKnativeDevV1alpha1CollectionNamespacedPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscaler(params: ReadAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers/${params.name}`;
-    return await this.get<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler>(path, params.query, null, opts);
+    return await this.get<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler>(path, null, null, opts);
   }
   async replaceAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscaler(params: ReplaceAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers/${params.name}`;
@@ -35051,11 +35051,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscaler(params: PatchAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers/${params.name}`;
-    return await this.patch<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler>(path, params.query, null, opts);
   }
   async readAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerStatus(params: ReadAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers/${params.name}/status`;
-    return await this.get<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler>(path, params.query, null, opts);
+    return await this.get<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler>(path, null, null, opts);
   }
   async replaceAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerStatus(params: ReplaceAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers/${params.name}/status`;
@@ -35063,7 +35063,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerStatus(params: PatchAutoscalingInternalKnativeDevV1alpha1NamespacedPodAutoscalerStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/podautoscalers/${params.name}/status`;
-    return await this.patch<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingInternalKnativeDevV1alpha1PodAutoscaler>(path, params.query, null, opts);
   }
   async listAutoscalingInternalKnativeDevV1alpha1PodAutoscalerForAllNamespaces(params: ListAutoscalingInternalKnativeDevV1alpha1PodAutoscalerForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<AutoscalingInternalKnativeDevV1alpha1PodAutoscalerList> {
     const path = `/apis/autoscaling.internal.knative.dev/v1alpha1/podautoscalers`;
@@ -35083,7 +35083,7 @@ export class KubernetesClient extends APIClient {
   }
   async listAutoscalingV1NamespacedHorizontalPodAutoscaler(params: ListAutoscalingV1NamespacedHorizontalPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1HorizontalPodAutoscalerList> {
     const path = `/apis/autoscaling/v1/namespaces/${params.namespace}/horizontalpodautoscalers`;
-    return await this.get<AutoscalingV1HorizontalPodAutoscalerList>(path, params.query, null, opts);
+    return await this.get<AutoscalingV1HorizontalPodAutoscalerList>(path, null, null, opts);
   }
   async createAutoscalingV1NamespacedHorizontalPodAutoscaler(params: CreateAutoscalingV1NamespacedHorizontalPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1HorizontalPodAutoscaler> {
     const path = `/apis/autoscaling/v1/namespaces/${params.namespace}/horizontalpodautoscalers`;
@@ -35107,7 +35107,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAutoscalingV1NamespacedHorizontalPodAutoscaler(params: PatchAutoscalingV1NamespacedHorizontalPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1HorizontalPodAutoscaler> {
     const path = `/apis/autoscaling/v1/namespaces/${params.namespace}/horizontalpodautoscalers/${params.name}`;
-    return await this.patch<AutoscalingV1HorizontalPodAutoscaler>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1HorizontalPodAutoscaler>(path, params.query, null, opts);
   }
   async readAutoscalingV1NamespacedHorizontalPodAutoscalerStatus(params: ReadAutoscalingV1NamespacedHorizontalPodAutoscalerStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1HorizontalPodAutoscaler> {
     const path = `/apis/autoscaling/v1/namespaces/${params.namespace}/horizontalpodautoscalers/${params.name}/status`;
@@ -35119,7 +35119,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAutoscalingV1NamespacedHorizontalPodAutoscalerStatus(params: PatchAutoscalingV1NamespacedHorizontalPodAutoscalerStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1HorizontalPodAutoscaler> {
     const path = `/apis/autoscaling/v1/namespaces/${params.namespace}/horizontalpodautoscalers/${params.name}/status`;
-    return await this.patch<AutoscalingV1HorizontalPodAutoscaler>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1HorizontalPodAutoscaler>(path, params.query, null, opts);
   }
   async watchAutoscalingV1HorizontalPodAutoscalerListForAllNamespaces(params: WatchAutoscalingV1HorizontalPodAutoscalerListForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/autoscaling/v1/watch/horizontalpodautoscalers`;
@@ -35143,7 +35143,7 @@ export class KubernetesClient extends APIClient {
   }
   async listAutoscalingV2NamespacedHorizontalPodAutoscaler(params: ListAutoscalingV2NamespacedHorizontalPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV2HorizontalPodAutoscalerList> {
     const path = `/apis/autoscaling/v2/namespaces/${params.namespace}/horizontalpodautoscalers`;
-    return await this.get<AutoscalingV2HorizontalPodAutoscalerList>(path, params.query, null, opts);
+    return await this.get<AutoscalingV2HorizontalPodAutoscalerList>(path, null, null, opts);
   }
   async createAutoscalingV2NamespacedHorizontalPodAutoscaler(params: CreateAutoscalingV2NamespacedHorizontalPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV2HorizontalPodAutoscaler> {
     const path = `/apis/autoscaling/v2/namespaces/${params.namespace}/horizontalpodautoscalers`;
@@ -35167,7 +35167,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAutoscalingV2NamespacedHorizontalPodAutoscaler(params: PatchAutoscalingV2NamespacedHorizontalPodAutoscalerRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV2HorizontalPodAutoscaler> {
     const path = `/apis/autoscaling/v2/namespaces/${params.namespace}/horizontalpodautoscalers/${params.name}`;
-    return await this.patch<AutoscalingV2HorizontalPodAutoscaler>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV2HorizontalPodAutoscaler>(path, params.query, null, opts);
   }
   async readAutoscalingV2NamespacedHorizontalPodAutoscalerStatus(params: ReadAutoscalingV2NamespacedHorizontalPodAutoscalerStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV2HorizontalPodAutoscaler> {
     const path = `/apis/autoscaling/v2/namespaces/${params.namespace}/horizontalpodautoscalers/${params.name}/status`;
@@ -35179,7 +35179,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchAutoscalingV2NamespacedHorizontalPodAutoscalerStatus(params: PatchAutoscalingV2NamespacedHorizontalPodAutoscalerStatusRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV2HorizontalPodAutoscaler> {
     const path = `/apis/autoscaling/v2/namespaces/${params.namespace}/horizontalpodautoscalers/${params.name}/status`;
-    return await this.patch<AutoscalingV2HorizontalPodAutoscaler>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV2HorizontalPodAutoscaler>(path, params.query, null, opts);
   }
   async watchAutoscalingV2HorizontalPodAutoscalerListForAllNamespaces(params: WatchAutoscalingV2HorizontalPodAutoscalerListForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/autoscaling/v2/watch/horizontalpodautoscalers`;
@@ -35211,7 +35211,7 @@ export class KubernetesClient extends APIClient {
   }
   async listBatchV1NamespacedCronJob(params: ListBatchV1NamespacedCronJobRequest, opts?: APIClientRequestOpts): Promise<BatchV1CronJobList> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/cronjobs`;
-    return await this.get<BatchV1CronJobList>(path, params.query, null, opts);
+    return await this.get<BatchV1CronJobList>(path, null, null, opts);
   }
   async createBatchV1NamespacedCronJob(params: CreateBatchV1NamespacedCronJobRequest, opts?: APIClientRequestOpts): Promise<BatchV1CronJob> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/cronjobs`;
@@ -35235,7 +35235,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchBatchV1NamespacedCronJob(params: PatchBatchV1NamespacedCronJobRequest, opts?: APIClientRequestOpts): Promise<BatchV1CronJob> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/cronjobs/${params.name}`;
-    return await this.patch<BatchV1CronJob>(path, params.query, params.body, opts);
+    return await this.patch<BatchV1CronJob>(path, params.query, null, opts);
   }
   async readBatchV1NamespacedCronJobStatus(params: ReadBatchV1NamespacedCronJobStatusRequest, opts?: APIClientRequestOpts): Promise<BatchV1CronJob> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/cronjobs/${params.name}/status`;
@@ -35247,11 +35247,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchBatchV1NamespacedCronJobStatus(params: PatchBatchV1NamespacedCronJobStatusRequest, opts?: APIClientRequestOpts): Promise<BatchV1CronJob> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/cronjobs/${params.name}/status`;
-    return await this.patch<BatchV1CronJob>(path, params.query, params.body, opts);
+    return await this.patch<BatchV1CronJob>(path, params.query, null, opts);
   }
   async listBatchV1NamespacedJob(params: ListBatchV1NamespacedJobRequest, opts?: APIClientRequestOpts): Promise<BatchV1JobList> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/jobs`;
-    return await this.get<BatchV1JobList>(path, params.query, null, opts);
+    return await this.get<BatchV1JobList>(path, null, null, opts);
   }
   async createBatchV1NamespacedJob(params: CreateBatchV1NamespacedJobRequest, opts?: APIClientRequestOpts): Promise<BatchV1Job> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/jobs`;
@@ -35275,7 +35275,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchBatchV1NamespacedJob(params: PatchBatchV1NamespacedJobRequest, opts?: APIClientRequestOpts): Promise<BatchV1Job> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/jobs/${params.name}`;
-    return await this.patch<BatchV1Job>(path, params.query, params.body, opts);
+    return await this.patch<BatchV1Job>(path, params.query, null, opts);
   }
   async readBatchV1NamespacedJobStatus(params: ReadBatchV1NamespacedJobStatusRequest, opts?: APIClientRequestOpts): Promise<BatchV1Job> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/jobs/${params.name}/status`;
@@ -35287,7 +35287,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchBatchV1NamespacedJobStatus(params: PatchBatchV1NamespacedJobStatusRequest, opts?: APIClientRequestOpts): Promise<BatchV1Job> {
     const path = `/apis/batch/v1/namespaces/${params.namespace}/jobs/${params.name}/status`;
-    return await this.patch<BatchV1Job>(path, params.query, params.body, opts);
+    return await this.patch<BatchV1Job>(path, params.query, null, opts);
   }
   async watchBatchV1CronJobListForAllNamespaces(params: WatchBatchV1CronJobListForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/batch/v1/watch/cronjobs`;
@@ -35319,7 +35319,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCachingInternalKnativeDevV1alpha1NamespacedImage(params: ListCachingInternalKnativeDevV1alpha1NamespacedImageRequest, opts?: APIClientRequestOpts): Promise<CachingInternalKnativeDevV1alpha1ImageList> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images`;
-    return await this.get<CachingInternalKnativeDevV1alpha1ImageList>(path, params.query, null, opts);
+    return await this.get<CachingInternalKnativeDevV1alpha1ImageList>(path, null, null, opts);
   }
   async createCachingInternalKnativeDevV1alpha1NamespacedImage(params: CreateCachingInternalKnativeDevV1alpha1NamespacedImageRequest, opts?: APIClientRequestOpts): Promise<CachingInternalKnativeDevV1alpha1Image> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images`;
@@ -35327,11 +35327,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteCachingInternalKnativeDevV1alpha1CollectionNamespacedImage(params: DeleteCachingInternalKnativeDevV1alpha1CollectionNamespacedImageRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readCachingInternalKnativeDevV1alpha1NamespacedImage(params: ReadCachingInternalKnativeDevV1alpha1NamespacedImageRequest, opts?: APIClientRequestOpts): Promise<CachingInternalKnativeDevV1alpha1Image> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images/${params.name}`;
-    return await this.get<CachingInternalKnativeDevV1alpha1Image>(path, params.query, null, opts);
+    return await this.get<CachingInternalKnativeDevV1alpha1Image>(path, null, null, opts);
   }
   async replaceCachingInternalKnativeDevV1alpha1NamespacedImage(params: ReplaceCachingInternalKnativeDevV1alpha1NamespacedImageRequest, opts?: APIClientRequestOpts): Promise<CachingInternalKnativeDevV1alpha1Image> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images/${params.name}`;
@@ -35343,11 +35343,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCachingInternalKnativeDevV1alpha1NamespacedImage(params: PatchCachingInternalKnativeDevV1alpha1NamespacedImageRequest, opts?: APIClientRequestOpts): Promise<CachingInternalKnativeDevV1alpha1Image> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images/${params.name}`;
-    return await this.patch<CachingInternalKnativeDevV1alpha1Image>(path, params.query, params.body, opts);
+    return await this.patch<CachingInternalKnativeDevV1alpha1Image>(path, params.query, null, opts);
   }
   async readCachingInternalKnativeDevV1alpha1NamespacedImageStatus(params: ReadCachingInternalKnativeDevV1alpha1NamespacedImageStatusRequest, opts?: APIClientRequestOpts): Promise<CachingInternalKnativeDevV1alpha1Image> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images/${params.name}/status`;
-    return await this.get<CachingInternalKnativeDevV1alpha1Image>(path, params.query, null, opts);
+    return await this.get<CachingInternalKnativeDevV1alpha1Image>(path, null, null, opts);
   }
   async replaceCachingInternalKnativeDevV1alpha1NamespacedImageStatus(params: ReplaceCachingInternalKnativeDevV1alpha1NamespacedImageStatusRequest, opts?: APIClientRequestOpts): Promise<CachingInternalKnativeDevV1alpha1Image> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images/${params.name}/status`;
@@ -35355,7 +35355,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCachingInternalKnativeDevV1alpha1NamespacedImageStatus(params: PatchCachingInternalKnativeDevV1alpha1NamespacedImageStatusRequest, opts?: APIClientRequestOpts): Promise<CachingInternalKnativeDevV1alpha1Image> {
     const path = `/apis/caching.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/images/${params.name}/status`;
-    return await this.patch<CachingInternalKnativeDevV1alpha1Image>(path, params.query, params.body, opts);
+    return await this.patch<CachingInternalKnativeDevV1alpha1Image>(path, params.query, null, opts);
   }
   async listCertManagerIoV1CertificateRequestForAllNamespaces(params: ListCertManagerIoV1CertificateRequestForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequestList> {
     const path = `/apis/cert-manager.io/v1/certificaterequests`;
@@ -35367,7 +35367,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCertManagerIoV1ClusterIssuer(params: ListCertManagerIoV1ClusterIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1ClusterIssuerList> {
     const path = `/apis/cert-manager.io/v1/clusterissuers`;
-    return await this.get<CertManagerIoV1ClusterIssuerList>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1ClusterIssuerList>(path, null, null, opts);
   }
   async createCertManagerIoV1ClusterIssuer(params: CreateCertManagerIoV1ClusterIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1ClusterIssuer> {
     const path = `/apis/cert-manager.io/v1/clusterissuers`;
@@ -35375,11 +35375,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteCertManagerIoV1CollectionClusterIssuer(params: DeleteCertManagerIoV1CollectionClusterIssuerRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/cert-manager.io/v1/clusterissuers`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readCertManagerIoV1ClusterIssuer(params: ReadCertManagerIoV1ClusterIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1ClusterIssuer> {
     const path = `/apis/cert-manager.io/v1/clusterissuers/${params.name}`;
-    return await this.get<CertManagerIoV1ClusterIssuer>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1ClusterIssuer>(path, null, null, opts);
   }
   async replaceCertManagerIoV1ClusterIssuer(params: ReplaceCertManagerIoV1ClusterIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1ClusterIssuer> {
     const path = `/apis/cert-manager.io/v1/clusterissuers/${params.name}`;
@@ -35391,11 +35391,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertManagerIoV1ClusterIssuer(params: PatchCertManagerIoV1ClusterIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1ClusterIssuer> {
     const path = `/apis/cert-manager.io/v1/clusterissuers/${params.name}`;
-    return await this.patch<CertManagerIoV1ClusterIssuer>(path, params.query, params.body, opts);
+    return await this.patch<CertManagerIoV1ClusterIssuer>(path, params.query, null, opts);
   }
   async readCertManagerIoV1ClusterIssuerStatus(params: ReadCertManagerIoV1ClusterIssuerStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1ClusterIssuer> {
     const path = `/apis/cert-manager.io/v1/clusterissuers/${params.name}/status`;
-    return await this.get<CertManagerIoV1ClusterIssuer>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1ClusterIssuer>(path, null, null, opts);
   }
   async replaceCertManagerIoV1ClusterIssuerStatus(params: ReplaceCertManagerIoV1ClusterIssuerStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1ClusterIssuer> {
     const path = `/apis/cert-manager.io/v1/clusterissuers/${params.name}/status`;
@@ -35403,7 +35403,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertManagerIoV1ClusterIssuerStatus(params: PatchCertManagerIoV1ClusterIssuerStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1ClusterIssuer> {
     const path = `/apis/cert-manager.io/v1/clusterissuers/${params.name}/status`;
-    return await this.patch<CertManagerIoV1ClusterIssuer>(path, params.query, params.body, opts);
+    return await this.patch<CertManagerIoV1ClusterIssuer>(path, params.query, null, opts);
   }
   async listCertManagerIoV1IssuerForAllNamespaces(params: ListCertManagerIoV1IssuerForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1IssuerList> {
     const path = `/apis/cert-manager.io/v1/issuers`;
@@ -35411,7 +35411,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCertManagerIoV1NamespacedCertificateRequest(params: ListCertManagerIoV1NamespacedCertificateRequestRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequestList> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests`;
-    return await this.get<CertManagerIoV1CertificateRequestList>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1CertificateRequestList>(path, null, null, opts);
   }
   async createCertManagerIoV1NamespacedCertificateRequest(params: CreateCertManagerIoV1NamespacedCertificateRequestRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequest> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests`;
@@ -35419,11 +35419,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteCertManagerIoV1CollectionNamespacedCertificateRequest(params: DeleteCertManagerIoV1CollectionNamespacedCertificateRequestRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readCertManagerIoV1NamespacedCertificateRequest(params: ReadCertManagerIoV1NamespacedCertificateRequestRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequest> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests/${params.name}`;
-    return await this.get<CertManagerIoV1CertificateRequest>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1CertificateRequest>(path, null, null, opts);
   }
   async replaceCertManagerIoV1NamespacedCertificateRequest(params: ReplaceCertManagerIoV1NamespacedCertificateRequestRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequest> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests/${params.name}`;
@@ -35435,11 +35435,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertManagerIoV1NamespacedCertificateRequest(params: PatchCertManagerIoV1NamespacedCertificateRequestRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequest> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests/${params.name}`;
-    return await this.patch<CertManagerIoV1CertificateRequest>(path, params.query, params.body, opts);
+    return await this.patch<CertManagerIoV1CertificateRequest>(path, params.query, null, opts);
   }
   async readCertManagerIoV1NamespacedCertificateRequestStatus(params: ReadCertManagerIoV1NamespacedCertificateRequestStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequest> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests/${params.name}/status`;
-    return await this.get<CertManagerIoV1CertificateRequest>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1CertificateRequest>(path, null, null, opts);
   }
   async replaceCertManagerIoV1NamespacedCertificateRequestStatus(params: ReplaceCertManagerIoV1NamespacedCertificateRequestStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequest> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests/${params.name}/status`;
@@ -35447,11 +35447,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertManagerIoV1NamespacedCertificateRequestStatus(params: PatchCertManagerIoV1NamespacedCertificateRequestStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateRequest> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificaterequests/${params.name}/status`;
-    return await this.patch<CertManagerIoV1CertificateRequest>(path, params.query, params.body, opts);
+    return await this.patch<CertManagerIoV1CertificateRequest>(path, params.query, null, opts);
   }
   async listCertManagerIoV1NamespacedCertificate(params: ListCertManagerIoV1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1CertificateList> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates`;
-    return await this.get<CertManagerIoV1CertificateList>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1CertificateList>(path, null, null, opts);
   }
   async createCertManagerIoV1NamespacedCertificate(params: CreateCertManagerIoV1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Certificate> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates`;
@@ -35459,11 +35459,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteCertManagerIoV1CollectionNamespacedCertificate(params: DeleteCertManagerIoV1CollectionNamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readCertManagerIoV1NamespacedCertificate(params: ReadCertManagerIoV1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Certificate> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates/${params.name}`;
-    return await this.get<CertManagerIoV1Certificate>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1Certificate>(path, null, null, opts);
   }
   async replaceCertManagerIoV1NamespacedCertificate(params: ReplaceCertManagerIoV1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Certificate> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates/${params.name}`;
@@ -35475,11 +35475,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertManagerIoV1NamespacedCertificate(params: PatchCertManagerIoV1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Certificate> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates/${params.name}`;
-    return await this.patch<CertManagerIoV1Certificate>(path, params.query, params.body, opts);
+    return await this.patch<CertManagerIoV1Certificate>(path, params.query, null, opts);
   }
   async readCertManagerIoV1NamespacedCertificateStatus(params: ReadCertManagerIoV1NamespacedCertificateStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Certificate> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates/${params.name}/status`;
-    return await this.get<CertManagerIoV1Certificate>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1Certificate>(path, null, null, opts);
   }
   async replaceCertManagerIoV1NamespacedCertificateStatus(params: ReplaceCertManagerIoV1NamespacedCertificateStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Certificate> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates/${params.name}/status`;
@@ -35487,11 +35487,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertManagerIoV1NamespacedCertificateStatus(params: PatchCertManagerIoV1NamespacedCertificateStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Certificate> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/certificates/${params.name}/status`;
-    return await this.patch<CertManagerIoV1Certificate>(path, params.query, params.body, opts);
+    return await this.patch<CertManagerIoV1Certificate>(path, params.query, null, opts);
   }
   async listCertManagerIoV1NamespacedIssuer(params: ListCertManagerIoV1NamespacedIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1IssuerList> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers`;
-    return await this.get<CertManagerIoV1IssuerList>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1IssuerList>(path, null, null, opts);
   }
   async createCertManagerIoV1NamespacedIssuer(params: CreateCertManagerIoV1NamespacedIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Issuer> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers`;
@@ -35499,11 +35499,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteCertManagerIoV1CollectionNamespacedIssuer(params: DeleteCertManagerIoV1CollectionNamespacedIssuerRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readCertManagerIoV1NamespacedIssuer(params: ReadCertManagerIoV1NamespacedIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Issuer> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers/${params.name}`;
-    return await this.get<CertManagerIoV1Issuer>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1Issuer>(path, null, null, opts);
   }
   async replaceCertManagerIoV1NamespacedIssuer(params: ReplaceCertManagerIoV1NamespacedIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Issuer> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers/${params.name}`;
@@ -35515,11 +35515,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertManagerIoV1NamespacedIssuer(params: PatchCertManagerIoV1NamespacedIssuerRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Issuer> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers/${params.name}`;
-    return await this.patch<CertManagerIoV1Issuer>(path, params.query, params.body, opts);
+    return await this.patch<CertManagerIoV1Issuer>(path, params.query, null, opts);
   }
   async readCertManagerIoV1NamespacedIssuerStatus(params: ReadCertManagerIoV1NamespacedIssuerStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Issuer> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers/${params.name}/status`;
-    return await this.get<CertManagerIoV1Issuer>(path, params.query, null, opts);
+    return await this.get<CertManagerIoV1Issuer>(path, null, null, opts);
   }
   async replaceCertManagerIoV1NamespacedIssuerStatus(params: ReplaceCertManagerIoV1NamespacedIssuerStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Issuer> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers/${params.name}/status`;
@@ -35527,7 +35527,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertManagerIoV1NamespacedIssuerStatus(params: PatchCertManagerIoV1NamespacedIssuerStatusRequest, opts?: APIClientRequestOpts): Promise<CertManagerIoV1Issuer> {
     const path = `/apis/cert-manager.io/v1/namespaces/${params.namespace}/issuers/${params.name}/status`;
-    return await this.patch<CertManagerIoV1Issuer>(path, params.query, params.body, opts);
+    return await this.patch<CertManagerIoV1Issuer>(path, params.query, null, opts);
   }
   async getCertificatesAPIGroup(params: GetCertificatesAPIGroupRequest, opts?: APIClientRequestOpts): Promise<APIGroup> {
     const path = `/apis/certificates.k8s.io/`;
@@ -35539,7 +35539,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCertificatesV1CertificateSigningRequest(params: ListCertificatesV1CertificateSigningRequestRequest, opts?: APIClientRequestOpts): Promise<CertificatesK8sIoV1CertificateSigningRequestList> {
     const path = `/apis/certificates.k8s.io/v1/certificatesigningrequests`;
-    return await this.get<CertificatesK8sIoV1CertificateSigningRequestList>(path, params.query, null, opts);
+    return await this.get<CertificatesK8sIoV1CertificateSigningRequestList>(path, null, null, opts);
   }
   async createCertificatesV1CertificateSigningRequest(params: CreateCertificatesV1CertificateSigningRequestRequest, opts?: APIClientRequestOpts): Promise<CertificatesK8sIoV1CertificateSigningRequest> {
     const path = `/apis/certificates.k8s.io/v1/certificatesigningrequests`;
@@ -35563,7 +35563,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertificatesV1CertificateSigningRequest(params: PatchCertificatesV1CertificateSigningRequestRequest, opts?: APIClientRequestOpts): Promise<CertificatesK8sIoV1CertificateSigningRequest> {
     const path = `/apis/certificates.k8s.io/v1/certificatesigningrequests/${params.name}`;
-    return await this.patch<CertificatesK8sIoV1CertificateSigningRequest>(path, params.query, params.body, opts);
+    return await this.patch<CertificatesK8sIoV1CertificateSigningRequest>(path, params.query, null, opts);
   }
   async readCertificatesV1CertificateSigningRequestApproval(params: ReadCertificatesV1CertificateSigningRequestApprovalRequest, opts?: APIClientRequestOpts): Promise<CertificatesK8sIoV1CertificateSigningRequest> {
     const path = `/apis/certificates.k8s.io/v1/certificatesigningrequests/${params.name}/approval`;
@@ -35575,7 +35575,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertificatesV1CertificateSigningRequestApproval(params: PatchCertificatesV1CertificateSigningRequestApprovalRequest, opts?: APIClientRequestOpts): Promise<CertificatesK8sIoV1CertificateSigningRequest> {
     const path = `/apis/certificates.k8s.io/v1/certificatesigningrequests/${params.name}/approval`;
-    return await this.patch<CertificatesK8sIoV1CertificateSigningRequest>(path, params.query, params.body, opts);
+    return await this.patch<CertificatesK8sIoV1CertificateSigningRequest>(path, params.query, null, opts);
   }
   async readCertificatesV1CertificateSigningRequestStatus(params: ReadCertificatesV1CertificateSigningRequestStatusRequest, opts?: APIClientRequestOpts): Promise<CertificatesK8sIoV1CertificateSigningRequest> {
     const path = `/apis/certificates.k8s.io/v1/certificatesigningrequests/${params.name}/status`;
@@ -35587,7 +35587,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCertificatesV1CertificateSigningRequestStatus(params: PatchCertificatesV1CertificateSigningRequestStatusRequest, opts?: APIClientRequestOpts): Promise<CertificatesK8sIoV1CertificateSigningRequest> {
     const path = `/apis/certificates.k8s.io/v1/certificatesigningrequests/${params.name}/status`;
-    return await this.patch<CertificatesK8sIoV1CertificateSigningRequest>(path, params.query, params.body, opts);
+    return await this.patch<CertificatesK8sIoV1CertificateSigningRequest>(path, params.query, null, opts);
   }
   async watchCertificatesV1CertificateSigningRequestList(params: WatchCertificatesV1CertificateSigningRequestListRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/certificates.k8s.io/v1/watch/certificatesigningrequests`;
@@ -35611,7 +35611,7 @@ export class KubernetesClient extends APIClient {
   }
   async listCoordinationV1NamespacedLease(params: ListCoordinationV1NamespacedLeaseRequest, opts?: APIClientRequestOpts): Promise<CoordinationK8sIoV1LeaseList> {
     const path = `/apis/coordination.k8s.io/v1/namespaces/${params.namespace}/leases`;
-    return await this.get<CoordinationK8sIoV1LeaseList>(path, params.query, null, opts);
+    return await this.get<CoordinationK8sIoV1LeaseList>(path, null, null, opts);
   }
   async createCoordinationV1NamespacedLease(params: CreateCoordinationV1NamespacedLeaseRequest, opts?: APIClientRequestOpts): Promise<CoordinationK8sIoV1Lease> {
     const path = `/apis/coordination.k8s.io/v1/namespaces/${params.namespace}/leases`;
@@ -35635,7 +35635,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchCoordinationV1NamespacedLease(params: PatchCoordinationV1NamespacedLeaseRequest, opts?: APIClientRequestOpts): Promise<CoordinationK8sIoV1Lease> {
     const path = `/apis/coordination.k8s.io/v1/namespaces/${params.namespace}/leases/${params.name}`;
-    return await this.patch<CoordinationK8sIoV1Lease>(path, params.query, params.body, opts);
+    return await this.patch<CoordinationK8sIoV1Lease>(path, params.query, null, opts);
   }
   async watchCoordinationV1LeaseListForAllNamespaces(params: WatchCoordinationV1LeaseListForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/coordination.k8s.io/v1/watch/leases`;
@@ -35663,7 +35663,7 @@ export class KubernetesClient extends APIClient {
   }
   async listDiscoveryV1NamespacedEndpointSlice(params: ListDiscoveryV1NamespacedEndpointSliceRequest, opts?: APIClientRequestOpts): Promise<DiscoveryK8sIoV1EndpointSliceList> {
     const path = `/apis/discovery.k8s.io/v1/namespaces/${params.namespace}/endpointslices`;
-    return await this.get<DiscoveryK8sIoV1EndpointSliceList>(path, params.query, null, opts);
+    return await this.get<DiscoveryK8sIoV1EndpointSliceList>(path, null, null, opts);
   }
   async createDiscoveryV1NamespacedEndpointSlice(params: CreateDiscoveryV1NamespacedEndpointSliceRequest, opts?: APIClientRequestOpts): Promise<DiscoveryK8sIoV1EndpointSlice> {
     const path = `/apis/discovery.k8s.io/v1/namespaces/${params.namespace}/endpointslices`;
@@ -35687,7 +35687,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchDiscoveryV1NamespacedEndpointSlice(params: PatchDiscoveryV1NamespacedEndpointSliceRequest, opts?: APIClientRequestOpts): Promise<DiscoveryK8sIoV1EndpointSlice> {
     const path = `/apis/discovery.k8s.io/v1/namespaces/${params.namespace}/endpointslices/${params.name}`;
-    return await this.patch<DiscoveryK8sIoV1EndpointSlice>(path, params.query, params.body, opts);
+    return await this.patch<DiscoveryK8sIoV1EndpointSlice>(path, params.query, null, opts);
   }
   async watchDiscoveryV1EndpointSliceListForAllNamespaces(params: WatchDiscoveryV1EndpointSliceListForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/discovery.k8s.io/v1/watch/endpointslices`;
@@ -35715,7 +35715,7 @@ export class KubernetesClient extends APIClient {
   }
   async listEventsV1NamespacedEvent(params: ListEventsV1NamespacedEventRequest, opts?: APIClientRequestOpts): Promise<EventsK8sIoV1EventList> {
     const path = `/apis/events.k8s.io/v1/namespaces/${params.namespace}/events`;
-    return await this.get<EventsK8sIoV1EventList>(path, params.query, null, opts);
+    return await this.get<EventsK8sIoV1EventList>(path, null, null, opts);
   }
   async createEventsV1NamespacedEvent(params: CreateEventsV1NamespacedEventRequest, opts?: APIClientRequestOpts): Promise<EventsK8sIoV1Event> {
     const path = `/apis/events.k8s.io/v1/namespaces/${params.namespace}/events`;
@@ -35739,7 +35739,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchEventsV1NamespacedEvent(params: PatchEventsV1NamespacedEventRequest, opts?: APIClientRequestOpts): Promise<EventsK8sIoV1Event> {
     const path = `/apis/events.k8s.io/v1/namespaces/${params.namespace}/events/${params.name}`;
-    return await this.patch<EventsK8sIoV1Event>(path, params.query, params.body, opts);
+    return await this.patch<EventsK8sIoV1Event>(path, params.query, null, opts);
   }
   async watchEventsV1EventListForAllNamespaces(params: WatchEventsV1EventListForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/events.k8s.io/v1/watch/events`;
@@ -35763,7 +35763,7 @@ export class KubernetesClient extends APIClient {
   }
   async listFlowcontrolApiserverV1FlowSchema(params: ListFlowcontrolApiserverV1FlowSchemaRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1FlowSchemaList> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/flowschemas`;
-    return await this.get<FlowcontrolApiserverK8sIoV1FlowSchemaList>(path, params.query, null, opts);
+    return await this.get<FlowcontrolApiserverK8sIoV1FlowSchemaList>(path, null, null, opts);
   }
   async createFlowcontrolApiserverV1FlowSchema(params: CreateFlowcontrolApiserverV1FlowSchemaRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1FlowSchema> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/flowschemas`;
@@ -35787,7 +35787,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchFlowcontrolApiserverV1FlowSchema(params: PatchFlowcontrolApiserverV1FlowSchemaRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1FlowSchema> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/flowschemas/${params.name}`;
-    return await this.patch<FlowcontrolApiserverK8sIoV1FlowSchema>(path, params.query, params.body, opts);
+    return await this.patch<FlowcontrolApiserverK8sIoV1FlowSchema>(path, params.query, null, opts);
   }
   async readFlowcontrolApiserverV1FlowSchemaStatus(params: ReadFlowcontrolApiserverV1FlowSchemaStatusRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1FlowSchema> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/flowschemas/${params.name}/status`;
@@ -35799,11 +35799,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchFlowcontrolApiserverV1FlowSchemaStatus(params: PatchFlowcontrolApiserverV1FlowSchemaStatusRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1FlowSchema> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/flowschemas/${params.name}/status`;
-    return await this.patch<FlowcontrolApiserverK8sIoV1FlowSchema>(path, params.query, params.body, opts);
+    return await this.patch<FlowcontrolApiserverK8sIoV1FlowSchema>(path, params.query, null, opts);
   }
   async listFlowcontrolApiserverV1PriorityLevelConfiguration(params: ListFlowcontrolApiserverV1PriorityLevelConfigurationRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1PriorityLevelConfigurationList> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/prioritylevelconfigurations`;
-    return await this.get<FlowcontrolApiserverK8sIoV1PriorityLevelConfigurationList>(path, params.query, null, opts);
+    return await this.get<FlowcontrolApiserverK8sIoV1PriorityLevelConfigurationList>(path, null, null, opts);
   }
   async createFlowcontrolApiserverV1PriorityLevelConfiguration(params: CreateFlowcontrolApiserverV1PriorityLevelConfigurationRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1PriorityLevelConfiguration> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/prioritylevelconfigurations`;
@@ -35827,7 +35827,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchFlowcontrolApiserverV1PriorityLevelConfiguration(params: PatchFlowcontrolApiserverV1PriorityLevelConfigurationRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1PriorityLevelConfiguration> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/prioritylevelconfigurations/${params.name}`;
-    return await this.patch<FlowcontrolApiserverK8sIoV1PriorityLevelConfiguration>(path, params.query, params.body, opts);
+    return await this.patch<FlowcontrolApiserverK8sIoV1PriorityLevelConfiguration>(path, params.query, null, opts);
   }
   async readFlowcontrolApiserverV1PriorityLevelConfigurationStatus(params: ReadFlowcontrolApiserverV1PriorityLevelConfigurationStatusRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1PriorityLevelConfiguration> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/prioritylevelconfigurations/${params.name}/status`;
@@ -35839,7 +35839,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchFlowcontrolApiserverV1PriorityLevelConfigurationStatus(params: PatchFlowcontrolApiserverV1PriorityLevelConfigurationStatusRequest, opts?: APIClientRequestOpts): Promise<FlowcontrolApiserverK8sIoV1PriorityLevelConfiguration> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/prioritylevelconfigurations/${params.name}/status`;
-    return await this.patch<FlowcontrolApiserverK8sIoV1PriorityLevelConfiguration>(path, params.query, params.body, opts);
+    return await this.patch<FlowcontrolApiserverK8sIoV1PriorityLevelConfiguration>(path, params.query, null, opts);
   }
   async watchFlowcontrolApiserverV1FlowSchemaList(params: WatchFlowcontrolApiserverV1FlowSchemaListRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/flowcontrol.apiserver.k8s.io/v1/watch/flowschemas`;
@@ -35863,7 +35863,7 @@ export class KubernetesClient extends APIClient {
   }
   async listMonitoringCoreosComV1NamespacedAlertmanager(params: ListMonitoringCoreosComV1NamespacedAlertmanagerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1AlertmanagerList> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers`;
-    return await this.get<MonitoringCoreosComV1AlertmanagerList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1AlertmanagerList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1NamespacedAlertmanager(params: CreateMonitoringCoreosComV1NamespacedAlertmanagerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Alertmanager> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers`;
@@ -35871,11 +35871,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1CollectionNamespacedAlertmanager(params: DeleteMonitoringCoreosComV1CollectionNamespacedAlertmanagerRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedAlertmanager(params: ReadMonitoringCoreosComV1NamespacedAlertmanagerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Alertmanager> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}`;
-    return await this.get<MonitoringCoreosComV1Alertmanager>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1Alertmanager>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedAlertmanager(params: ReplaceMonitoringCoreosComV1NamespacedAlertmanagerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Alertmanager> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}`;
@@ -35887,11 +35887,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedAlertmanager(params: PatchMonitoringCoreosComV1NamespacedAlertmanagerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Alertmanager> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1Alertmanager>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1Alertmanager>(path, params.query, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedAlertmanagerScale(params: ReadMonitoringCoreosComV1NamespacedAlertmanagerScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}/scale`;
-    return await this.get<AutoscalingV1Scale>(path, params.query, null, opts);
+    return await this.get<AutoscalingV1Scale>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedAlertmanagerScale(params: ReplaceMonitoringCoreosComV1NamespacedAlertmanagerScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}/scale`;
@@ -35899,11 +35899,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedAlertmanagerScale(params: PatchMonitoringCoreosComV1NamespacedAlertmanagerScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedAlertmanagerStatus(params: ReadMonitoringCoreosComV1NamespacedAlertmanagerStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Alertmanager> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}/status`;
-    return await this.get<MonitoringCoreosComV1Alertmanager>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1Alertmanager>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedAlertmanagerStatus(params: ReplaceMonitoringCoreosComV1NamespacedAlertmanagerStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Alertmanager> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}/status`;
@@ -35911,11 +35911,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedAlertmanagerStatus(params: PatchMonitoringCoreosComV1NamespacedAlertmanagerStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Alertmanager> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/alertmanagers/${params.name}/status`;
-    return await this.patch<MonitoringCoreosComV1Alertmanager>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1Alertmanager>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1NamespacedPodMonitor(params: ListMonitoringCoreosComV1NamespacedPodMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PodMonitorList> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/podmonitors`;
-    return await this.get<MonitoringCoreosComV1PodMonitorList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1PodMonitorList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1NamespacedPodMonitor(params: CreateMonitoringCoreosComV1NamespacedPodMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PodMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/podmonitors`;
@@ -35923,11 +35923,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1CollectionNamespacedPodMonitor(params: DeleteMonitoringCoreosComV1CollectionNamespacedPodMonitorRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/podmonitors`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedPodMonitor(params: ReadMonitoringCoreosComV1NamespacedPodMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PodMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/podmonitors/${params.name}`;
-    return await this.get<MonitoringCoreosComV1PodMonitor>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1PodMonitor>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedPodMonitor(params: ReplaceMonitoringCoreosComV1NamespacedPodMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PodMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/podmonitors/${params.name}`;
@@ -35939,11 +35939,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedPodMonitor(params: PatchMonitoringCoreosComV1NamespacedPodMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PodMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/podmonitors/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1PodMonitor>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1PodMonitor>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1NamespacedProbe(params: ListMonitoringCoreosComV1NamespacedProbeRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ProbeList> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/probes`;
-    return await this.get<MonitoringCoreosComV1ProbeList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1ProbeList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1NamespacedProbe(params: CreateMonitoringCoreosComV1NamespacedProbeRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Probe> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/probes`;
@@ -35951,11 +35951,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1CollectionNamespacedProbe(params: DeleteMonitoringCoreosComV1CollectionNamespacedProbeRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/probes`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedProbe(params: ReadMonitoringCoreosComV1NamespacedProbeRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Probe> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/probes/${params.name}`;
-    return await this.get<MonitoringCoreosComV1Probe>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1Probe>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedProbe(params: ReplaceMonitoringCoreosComV1NamespacedProbeRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Probe> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/probes/${params.name}`;
@@ -35967,11 +35967,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedProbe(params: PatchMonitoringCoreosComV1NamespacedProbeRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Probe> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/probes/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1Probe>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1Probe>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1NamespacedPrometheus(params: ListMonitoringCoreosComV1NamespacedPrometheusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PrometheusList> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses`;
-    return await this.get<MonitoringCoreosComV1PrometheusList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1PrometheusList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1NamespacedPrometheus(params: CreateMonitoringCoreosComV1NamespacedPrometheusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Prometheus> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses`;
@@ -35979,11 +35979,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1CollectionNamespacedPrometheus(params: DeleteMonitoringCoreosComV1CollectionNamespacedPrometheusRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedPrometheus(params: ReadMonitoringCoreosComV1NamespacedPrometheusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Prometheus> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}`;
-    return await this.get<MonitoringCoreosComV1Prometheus>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1Prometheus>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedPrometheus(params: ReplaceMonitoringCoreosComV1NamespacedPrometheusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Prometheus> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}`;
@@ -35995,11 +35995,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedPrometheus(params: PatchMonitoringCoreosComV1NamespacedPrometheusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Prometheus> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1Prometheus>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1Prometheus>(path, params.query, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedPrometheusScale(params: ReadMonitoringCoreosComV1NamespacedPrometheusScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}/scale`;
-    return await this.get<AutoscalingV1Scale>(path, params.query, null, opts);
+    return await this.get<AutoscalingV1Scale>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedPrometheusScale(params: ReplaceMonitoringCoreosComV1NamespacedPrometheusScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}/scale`;
@@ -36007,11 +36007,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedPrometheusScale(params: PatchMonitoringCoreosComV1NamespacedPrometheusScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedPrometheusStatus(params: ReadMonitoringCoreosComV1NamespacedPrometheusStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Prometheus> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}/status`;
-    return await this.get<MonitoringCoreosComV1Prometheus>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1Prometheus>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedPrometheusStatus(params: ReplaceMonitoringCoreosComV1NamespacedPrometheusStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Prometheus> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}/status`;
@@ -36019,11 +36019,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedPrometheusStatus(params: PatchMonitoringCoreosComV1NamespacedPrometheusStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1Prometheus> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheuses/${params.name}/status`;
-    return await this.patch<MonitoringCoreosComV1Prometheus>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1Prometheus>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1NamespacedPrometheusRule(params: ListMonitoringCoreosComV1NamespacedPrometheusRuleRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PrometheusRuleList> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheusrules`;
-    return await this.get<MonitoringCoreosComV1PrometheusRuleList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1PrometheusRuleList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1NamespacedPrometheusRule(params: CreateMonitoringCoreosComV1NamespacedPrometheusRuleRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PrometheusRule> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheusrules`;
@@ -36031,11 +36031,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1CollectionNamespacedPrometheusRule(params: DeleteMonitoringCoreosComV1CollectionNamespacedPrometheusRuleRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheusrules`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedPrometheusRule(params: ReadMonitoringCoreosComV1NamespacedPrometheusRuleRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PrometheusRule> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheusrules/${params.name}`;
-    return await this.get<MonitoringCoreosComV1PrometheusRule>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1PrometheusRule>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedPrometheusRule(params: ReplaceMonitoringCoreosComV1NamespacedPrometheusRuleRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PrometheusRule> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheusrules/${params.name}`;
@@ -36047,11 +36047,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedPrometheusRule(params: PatchMonitoringCoreosComV1NamespacedPrometheusRuleRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PrometheusRule> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/prometheusrules/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1PrometheusRule>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1PrometheusRule>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1NamespacedServiceMonitor(params: ListMonitoringCoreosComV1NamespacedServiceMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ServiceMonitorList> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors`;
-    return await this.get<MonitoringCoreosComV1ServiceMonitorList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1ServiceMonitorList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1NamespacedServiceMonitor(params: CreateMonitoringCoreosComV1NamespacedServiceMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ServiceMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors`;
@@ -36059,11 +36059,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1CollectionNamespacedServiceMonitor(params: DeleteMonitoringCoreosComV1CollectionNamespacedServiceMonitorRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedServiceMonitor(params: ReadMonitoringCoreosComV1NamespacedServiceMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ServiceMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors/${params.name}`;
-    return await this.get<MonitoringCoreosComV1ServiceMonitor>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1ServiceMonitor>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedServiceMonitor(params: ReplaceMonitoringCoreosComV1NamespacedServiceMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ServiceMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors/${params.name}`;
@@ -36075,11 +36075,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedServiceMonitor(params: PatchMonitoringCoreosComV1NamespacedServiceMonitorRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ServiceMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1ServiceMonitor>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1ServiceMonitor>(path, params.query, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedServiceMonitorStatus(params: ReadMonitoringCoreosComV1NamespacedServiceMonitorStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ServiceMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors/${params.name}/status`;
-    return await this.get<MonitoringCoreosComV1ServiceMonitor>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1ServiceMonitor>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedServiceMonitorStatus(params: ReplaceMonitoringCoreosComV1NamespacedServiceMonitorStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ServiceMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors/${params.name}/status`;
@@ -36087,11 +36087,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedServiceMonitorStatus(params: PatchMonitoringCoreosComV1NamespacedServiceMonitorStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ServiceMonitor> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/servicemonitors/${params.name}/status`;
-    return await this.patch<MonitoringCoreosComV1ServiceMonitor>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1ServiceMonitor>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1NamespacedThanosRuler(params: ListMonitoringCoreosComV1NamespacedThanosRulerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ThanosRulerList> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers`;
-    return await this.get<MonitoringCoreosComV1ThanosRulerList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1ThanosRulerList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1NamespacedThanosRuler(params: CreateMonitoringCoreosComV1NamespacedThanosRulerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ThanosRuler> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers`;
@@ -36099,11 +36099,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1CollectionNamespacedThanosRuler(params: DeleteMonitoringCoreosComV1CollectionNamespacedThanosRulerRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedThanosRuler(params: ReadMonitoringCoreosComV1NamespacedThanosRulerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ThanosRuler> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers/${params.name}`;
-    return await this.get<MonitoringCoreosComV1ThanosRuler>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1ThanosRuler>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedThanosRuler(params: ReplaceMonitoringCoreosComV1NamespacedThanosRulerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ThanosRuler> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers/${params.name}`;
@@ -36115,11 +36115,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedThanosRuler(params: PatchMonitoringCoreosComV1NamespacedThanosRulerRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ThanosRuler> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1ThanosRuler>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1ThanosRuler>(path, params.query, null, opts);
   }
   async readMonitoringCoreosComV1NamespacedThanosRulerStatus(params: ReadMonitoringCoreosComV1NamespacedThanosRulerStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ThanosRuler> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers/${params.name}/status`;
-    return await this.get<MonitoringCoreosComV1ThanosRuler>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1ThanosRuler>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1NamespacedThanosRulerStatus(params: ReplaceMonitoringCoreosComV1NamespacedThanosRulerStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ThanosRuler> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers/${params.name}/status`;
@@ -36127,7 +36127,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1NamespacedThanosRulerStatus(params: PatchMonitoringCoreosComV1NamespacedThanosRulerStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1ThanosRuler> {
     const path = `/apis/monitoring.coreos.com/v1/namespaces/${params.namespace}/thanosrulers/${params.name}/status`;
-    return await this.patch<MonitoringCoreosComV1ThanosRuler>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1ThanosRuler>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1PodMonitorForAllNamespaces(params: ListMonitoringCoreosComV1PodMonitorForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1PodMonitorList> {
     const path = `/apis/monitoring.coreos.com/v1/podmonitors`;
@@ -36159,7 +36159,7 @@ export class KubernetesClient extends APIClient {
   }
   async listMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfig(params: ListMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1AlertmanagerConfigList> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/alertmanagerconfigs`;
-    return await this.get<MonitoringCoreosComV1alpha1AlertmanagerConfigList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1alpha1AlertmanagerConfigList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfig(params: CreateMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1AlertmanagerConfig> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/alertmanagerconfigs`;
@@ -36167,11 +36167,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1alpha1CollectionNamespacedAlertmanagerConfig(params: DeleteMonitoringCoreosComV1alpha1CollectionNamespacedAlertmanagerConfigRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/alertmanagerconfigs`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfig(params: ReadMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1AlertmanagerConfig> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/alertmanagerconfigs/${params.name}`;
-    return await this.get<MonitoringCoreosComV1alpha1AlertmanagerConfig>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1alpha1AlertmanagerConfig>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfig(params: ReplaceMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1AlertmanagerConfig> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/alertmanagerconfigs/${params.name}`;
@@ -36183,11 +36183,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfig(params: PatchMonitoringCoreosComV1alpha1NamespacedAlertmanagerConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1AlertmanagerConfig> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/alertmanagerconfigs/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1alpha1AlertmanagerConfig>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1alpha1AlertmanagerConfig>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1alpha1NamespacedPrometheusAgent(params: ListMonitoringCoreosComV1alpha1NamespacedPrometheusAgentRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgentList> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents`;
-    return await this.get<MonitoringCoreosComV1alpha1PrometheusAgentList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1alpha1PrometheusAgentList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1alpha1NamespacedPrometheusAgent(params: CreateMonitoringCoreosComV1alpha1NamespacedPrometheusAgentRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgent> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents`;
@@ -36195,11 +36195,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1alpha1CollectionNamespacedPrometheusAgent(params: DeleteMonitoringCoreosComV1alpha1CollectionNamespacedPrometheusAgentRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1alpha1NamespacedPrometheusAgent(params: ReadMonitoringCoreosComV1alpha1NamespacedPrometheusAgentRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgent> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}`;
-    return await this.get<MonitoringCoreosComV1alpha1PrometheusAgent>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1alpha1PrometheusAgent>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1alpha1NamespacedPrometheusAgent(params: ReplaceMonitoringCoreosComV1alpha1NamespacedPrometheusAgentRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgent> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}`;
@@ -36211,11 +36211,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1alpha1NamespacedPrometheusAgent(params: PatchMonitoringCoreosComV1alpha1NamespacedPrometheusAgentRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgent> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1alpha1PrometheusAgent>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1alpha1PrometheusAgent>(path, params.query, null, opts);
   }
   async readMonitoringCoreosComV1alpha1NamespacedPrometheusAgentScale(params: ReadMonitoringCoreosComV1alpha1NamespacedPrometheusAgentScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}/scale`;
-    return await this.get<AutoscalingV1Scale>(path, params.query, null, opts);
+    return await this.get<AutoscalingV1Scale>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1alpha1NamespacedPrometheusAgentScale(params: ReplaceMonitoringCoreosComV1alpha1NamespacedPrometheusAgentScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}/scale`;
@@ -36223,11 +36223,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1alpha1NamespacedPrometheusAgentScale(params: PatchMonitoringCoreosComV1alpha1NamespacedPrometheusAgentScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readMonitoringCoreosComV1alpha1NamespacedPrometheusAgentStatus(params: ReadMonitoringCoreosComV1alpha1NamespacedPrometheusAgentStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgent> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}/status`;
-    return await this.get<MonitoringCoreosComV1alpha1PrometheusAgent>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1alpha1PrometheusAgent>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1alpha1NamespacedPrometheusAgentStatus(params: ReplaceMonitoringCoreosComV1alpha1NamespacedPrometheusAgentStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgent> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}/status`;
@@ -36235,11 +36235,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1alpha1NamespacedPrometheusAgentStatus(params: PatchMonitoringCoreosComV1alpha1NamespacedPrometheusAgentStatusRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgent> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/prometheusagents/${params.name}/status`;
-    return await this.patch<MonitoringCoreosComV1alpha1PrometheusAgent>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1alpha1PrometheusAgent>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1alpha1NamespacedScrapeConfig(params: ListMonitoringCoreosComV1alpha1NamespacedScrapeConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1ScrapeConfigList> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/scrapeconfigs`;
-    return await this.get<MonitoringCoreosComV1alpha1ScrapeConfigList>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1alpha1ScrapeConfigList>(path, null, null, opts);
   }
   async createMonitoringCoreosComV1alpha1NamespacedScrapeConfig(params: CreateMonitoringCoreosComV1alpha1NamespacedScrapeConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1ScrapeConfig> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/scrapeconfigs`;
@@ -36247,11 +36247,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteMonitoringCoreosComV1alpha1CollectionNamespacedScrapeConfig(params: DeleteMonitoringCoreosComV1alpha1CollectionNamespacedScrapeConfigRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/scrapeconfigs`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readMonitoringCoreosComV1alpha1NamespacedScrapeConfig(params: ReadMonitoringCoreosComV1alpha1NamespacedScrapeConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1ScrapeConfig> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/scrapeconfigs/${params.name}`;
-    return await this.get<MonitoringCoreosComV1alpha1ScrapeConfig>(path, params.query, null, opts);
+    return await this.get<MonitoringCoreosComV1alpha1ScrapeConfig>(path, null, null, opts);
   }
   async replaceMonitoringCoreosComV1alpha1NamespacedScrapeConfig(params: ReplaceMonitoringCoreosComV1alpha1NamespacedScrapeConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1ScrapeConfig> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/scrapeconfigs/${params.name}`;
@@ -36263,7 +36263,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchMonitoringCoreosComV1alpha1NamespacedScrapeConfig(params: PatchMonitoringCoreosComV1alpha1NamespacedScrapeConfigRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1ScrapeConfig> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/namespaces/${params.namespace}/scrapeconfigs/${params.name}`;
-    return await this.patch<MonitoringCoreosComV1alpha1ScrapeConfig>(path, params.query, params.body, opts);
+    return await this.patch<MonitoringCoreosComV1alpha1ScrapeConfig>(path, params.query, null, opts);
   }
   async listMonitoringCoreosComV1alpha1PrometheusAgentForAllNamespaces(params: ListMonitoringCoreosComV1alpha1PrometheusAgentForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<MonitoringCoreosComV1alpha1PrometheusAgentList> {
     const path = `/apis/monitoring.coreos.com/v1alpha1/prometheusagents`;
@@ -36279,7 +36279,7 @@ export class KubernetesClient extends APIClient {
   }
   async listNetworkingInternalKnativeDevV1alpha1ClusterDomainClaim(params: ListNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaimList> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaimList>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaimList>(path, null, null, opts);
   }
   async createNetworkingInternalKnativeDevV1alpha1ClusterDomainClaim(params: CreateNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims`;
@@ -36287,11 +36287,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteNetworkingInternalKnativeDevV1alpha1CollectionClusterDomainClaim(params: DeleteNetworkingInternalKnativeDevV1alpha1CollectionClusterDomainClaimRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readNetworkingInternalKnativeDevV1alpha1ClusterDomainClaim(params: ReadNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims/${params.name}`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim>(path, null, null, opts);
   }
   async replaceNetworkingInternalKnativeDevV1alpha1ClusterDomainClaim(params: ReplaceNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims/${params.name}`;
@@ -36303,11 +36303,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingInternalKnativeDevV1alpha1ClusterDomainClaim(params: PatchNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims/${params.name}`;
-    return await this.patch<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim>(path, params.query, null, opts);
   }
   async readNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimStatus(params: ReadNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims/${params.name}/status`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim>(path, null, null, opts);
   }
   async replaceNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimStatus(params: ReplaceNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims/${params.name}/status`;
@@ -36315,7 +36315,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimStatus(params: PatchNetworkingInternalKnativeDevV1alpha1ClusterDomainClaimStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/clusterdomainclaims/${params.name}/status`;
-    return await this.patch<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingInternalKnativeDevV1alpha1ClusterDomainClaim>(path, params.query, null, opts);
   }
   async listNetworkingInternalKnativeDevV1alpha1IngressForAllNamespaces(params: ListNetworkingInternalKnativeDevV1alpha1IngressForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1IngressList> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/ingresses`;
@@ -36323,7 +36323,7 @@ export class KubernetesClient extends APIClient {
   }
   async listNetworkingInternalKnativeDevV1alpha1NamespacedCertificate(params: ListNetworkingInternalKnativeDevV1alpha1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1CertificateList> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1CertificateList>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1CertificateList>(path, null, null, opts);
   }
   async createNetworkingInternalKnativeDevV1alpha1NamespacedCertificate(params: CreateNetworkingInternalKnativeDevV1alpha1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Certificate> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates`;
@@ -36331,11 +36331,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteNetworkingInternalKnativeDevV1alpha1CollectionNamespacedCertificate(params: DeleteNetworkingInternalKnativeDevV1alpha1CollectionNamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readNetworkingInternalKnativeDevV1alpha1NamespacedCertificate(params: ReadNetworkingInternalKnativeDevV1alpha1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Certificate> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates/${params.name}`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1Certificate>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1Certificate>(path, null, null, opts);
   }
   async replaceNetworkingInternalKnativeDevV1alpha1NamespacedCertificate(params: ReplaceNetworkingInternalKnativeDevV1alpha1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Certificate> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates/${params.name}`;
@@ -36347,11 +36347,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingInternalKnativeDevV1alpha1NamespacedCertificate(params: PatchNetworkingInternalKnativeDevV1alpha1NamespacedCertificateRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Certificate> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates/${params.name}`;
-    return await this.patch<NetworkingInternalKnativeDevV1alpha1Certificate>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingInternalKnativeDevV1alpha1Certificate>(path, params.query, null, opts);
   }
   async readNetworkingInternalKnativeDevV1alpha1NamespacedCertificateStatus(params: ReadNetworkingInternalKnativeDevV1alpha1NamespacedCertificateStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Certificate> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates/${params.name}/status`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1Certificate>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1Certificate>(path, null, null, opts);
   }
   async replaceNetworkingInternalKnativeDevV1alpha1NamespacedCertificateStatus(params: ReplaceNetworkingInternalKnativeDevV1alpha1NamespacedCertificateStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Certificate> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates/${params.name}/status`;
@@ -36359,11 +36359,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingInternalKnativeDevV1alpha1NamespacedCertificateStatus(params: PatchNetworkingInternalKnativeDevV1alpha1NamespacedCertificateStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Certificate> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/certificates/${params.name}/status`;
-    return await this.patch<NetworkingInternalKnativeDevV1alpha1Certificate>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingInternalKnativeDevV1alpha1Certificate>(path, params.query, null, opts);
   }
   async listNetworkingInternalKnativeDevV1alpha1NamespacedIngress(params: ListNetworkingInternalKnativeDevV1alpha1NamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1IngressList> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1IngressList>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1IngressList>(path, null, null, opts);
   }
   async createNetworkingInternalKnativeDevV1alpha1NamespacedIngress(params: CreateNetworkingInternalKnativeDevV1alpha1NamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Ingress> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses`;
@@ -36371,11 +36371,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteNetworkingInternalKnativeDevV1alpha1CollectionNamespacedIngress(params: DeleteNetworkingInternalKnativeDevV1alpha1CollectionNamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readNetworkingInternalKnativeDevV1alpha1NamespacedIngress(params: ReadNetworkingInternalKnativeDevV1alpha1NamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Ingress> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses/${params.name}`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1Ingress>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1Ingress>(path, null, null, opts);
   }
   async replaceNetworkingInternalKnativeDevV1alpha1NamespacedIngress(params: ReplaceNetworkingInternalKnativeDevV1alpha1NamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Ingress> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses/${params.name}`;
@@ -36387,11 +36387,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingInternalKnativeDevV1alpha1NamespacedIngress(params: PatchNetworkingInternalKnativeDevV1alpha1NamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Ingress> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses/${params.name}`;
-    return await this.patch<NetworkingInternalKnativeDevV1alpha1Ingress>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingInternalKnativeDevV1alpha1Ingress>(path, params.query, null, opts);
   }
   async readNetworkingInternalKnativeDevV1alpha1NamespacedIngressStatus(params: ReadNetworkingInternalKnativeDevV1alpha1NamespacedIngressStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Ingress> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses/${params.name}/status`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1Ingress>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1Ingress>(path, null, null, opts);
   }
   async replaceNetworkingInternalKnativeDevV1alpha1NamespacedIngressStatus(params: ReplaceNetworkingInternalKnativeDevV1alpha1NamespacedIngressStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Ingress> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses/${params.name}/status`;
@@ -36399,11 +36399,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingInternalKnativeDevV1alpha1NamespacedIngressStatus(params: PatchNetworkingInternalKnativeDevV1alpha1NamespacedIngressStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1Ingress> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/ingresses/${params.name}/status`;
-    return await this.patch<NetworkingInternalKnativeDevV1alpha1Ingress>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingInternalKnativeDevV1alpha1Ingress>(path, params.query, null, opts);
   }
   async listNetworkingInternalKnativeDevV1alpha1NamespacedServerlessService(params: ListNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessServiceList> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1ServerlessServiceList>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1ServerlessServiceList>(path, null, null, opts);
   }
   async createNetworkingInternalKnativeDevV1alpha1NamespacedServerlessService(params: CreateNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessService> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices`;
@@ -36411,11 +36411,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteNetworkingInternalKnativeDevV1alpha1CollectionNamespacedServerlessService(params: DeleteNetworkingInternalKnativeDevV1alpha1CollectionNamespacedServerlessServiceRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readNetworkingInternalKnativeDevV1alpha1NamespacedServerlessService(params: ReadNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessService> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices/${params.name}`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1ServerlessService>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1ServerlessService>(path, null, null, opts);
   }
   async replaceNetworkingInternalKnativeDevV1alpha1NamespacedServerlessService(params: ReplaceNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessService> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices/${params.name}`;
@@ -36427,11 +36427,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingInternalKnativeDevV1alpha1NamespacedServerlessService(params: PatchNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessService> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices/${params.name}`;
-    return await this.patch<NetworkingInternalKnativeDevV1alpha1ServerlessService>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingInternalKnativeDevV1alpha1ServerlessService>(path, params.query, null, opts);
   }
   async readNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceStatus(params: ReadNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessService> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices/${params.name}/status`;
-    return await this.get<NetworkingInternalKnativeDevV1alpha1ServerlessService>(path, params.query, null, opts);
+    return await this.get<NetworkingInternalKnativeDevV1alpha1ServerlessService>(path, null, null, opts);
   }
   async replaceNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceStatus(params: ReplaceNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessService> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices/${params.name}/status`;
@@ -36439,7 +36439,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceStatus(params: PatchNetworkingInternalKnativeDevV1alpha1NamespacedServerlessServiceStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessService> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/namespaces/${params.namespace}/serverlessservices/${params.name}/status`;
-    return await this.patch<NetworkingInternalKnativeDevV1alpha1ServerlessService>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingInternalKnativeDevV1alpha1ServerlessService>(path, params.query, null, opts);
   }
   async listNetworkingInternalKnativeDevV1alpha1ServerlessServiceForAllNamespaces(params: ListNetworkingInternalKnativeDevV1alpha1ServerlessServiceForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<NetworkingInternalKnativeDevV1alpha1ServerlessServiceList> {
     const path = `/apis/networking.internal.knative.dev/v1alpha1/serverlessservices`;
@@ -36455,7 +36455,7 @@ export class KubernetesClient extends APIClient {
   }
   async listNetworkingV1IngressClass(params: ListNetworkingV1IngressClassRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1IngressClassList> {
     const path = `/apis/networking.k8s.io/v1/ingressclasses`;
-    return await this.get<NetworkingK8sIoV1IngressClassList>(path, params.query, null, opts);
+    return await this.get<NetworkingK8sIoV1IngressClassList>(path, null, null, opts);
   }
   async createNetworkingV1IngressClass(params: CreateNetworkingV1IngressClassRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1IngressClass> {
     const path = `/apis/networking.k8s.io/v1/ingressclasses`;
@@ -36479,7 +36479,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingV1IngressClass(params: PatchNetworkingV1IngressClassRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1IngressClass> {
     const path = `/apis/networking.k8s.io/v1/ingressclasses/${params.name}`;
-    return await this.patch<NetworkingK8sIoV1IngressClass>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingK8sIoV1IngressClass>(path, params.query, null, opts);
   }
   async listNetworkingV1IngressForAllNamespaces(params: ListNetworkingV1IngressForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1IngressList> {
     const path = `/apis/networking.k8s.io/v1/ingresses`;
@@ -36487,7 +36487,7 @@ export class KubernetesClient extends APIClient {
   }
   async listNetworkingV1NamespacedIngress(params: ListNetworkingV1NamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1IngressList> {
     const path = `/apis/networking.k8s.io/v1/namespaces/${params.namespace}/ingresses`;
-    return await this.get<NetworkingK8sIoV1IngressList>(path, params.query, null, opts);
+    return await this.get<NetworkingK8sIoV1IngressList>(path, null, null, opts);
   }
   async createNetworkingV1NamespacedIngress(params: CreateNetworkingV1NamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1Ingress> {
     const path = `/apis/networking.k8s.io/v1/namespaces/${params.namespace}/ingresses`;
@@ -36511,7 +36511,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingV1NamespacedIngress(params: PatchNetworkingV1NamespacedIngressRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1Ingress> {
     const path = `/apis/networking.k8s.io/v1/namespaces/${params.namespace}/ingresses/${params.name}`;
-    return await this.patch<NetworkingK8sIoV1Ingress>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingK8sIoV1Ingress>(path, params.query, null, opts);
   }
   async readNetworkingV1NamespacedIngressStatus(params: ReadNetworkingV1NamespacedIngressStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1Ingress> {
     const path = `/apis/networking.k8s.io/v1/namespaces/${params.namespace}/ingresses/${params.name}/status`;
@@ -36523,11 +36523,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingV1NamespacedIngressStatus(params: PatchNetworkingV1NamespacedIngressStatusRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1Ingress> {
     const path = `/apis/networking.k8s.io/v1/namespaces/${params.namespace}/ingresses/${params.name}/status`;
-    return await this.patch<NetworkingK8sIoV1Ingress>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingK8sIoV1Ingress>(path, params.query, null, opts);
   }
   async listNetworkingV1NamespacedNetworkPolicy(params: ListNetworkingV1NamespacedNetworkPolicyRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1NetworkPolicyList> {
     const path = `/apis/networking.k8s.io/v1/namespaces/${params.namespace}/networkpolicies`;
-    return await this.get<NetworkingK8sIoV1NetworkPolicyList>(path, params.query, null, opts);
+    return await this.get<NetworkingK8sIoV1NetworkPolicyList>(path, null, null, opts);
   }
   async createNetworkingV1NamespacedNetworkPolicy(params: CreateNetworkingV1NamespacedNetworkPolicyRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1NetworkPolicy> {
     const path = `/apis/networking.k8s.io/v1/namespaces/${params.namespace}/networkpolicies`;
@@ -36551,7 +36551,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchNetworkingV1NamespacedNetworkPolicy(params: PatchNetworkingV1NamespacedNetworkPolicyRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1NetworkPolicy> {
     const path = `/apis/networking.k8s.io/v1/namespaces/${params.namespace}/networkpolicies/${params.name}`;
-    return await this.patch<NetworkingK8sIoV1NetworkPolicy>(path, params.query, params.body, opts);
+    return await this.patch<NetworkingK8sIoV1NetworkPolicy>(path, params.query, null, opts);
   }
   async listNetworkingV1NetworkPolicyForAllNamespaces(params: ListNetworkingV1NetworkPolicyForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<NetworkingK8sIoV1NetworkPolicyList> {
     const path = `/apis/networking.k8s.io/v1/networkpolicies`;
@@ -36599,7 +36599,7 @@ export class KubernetesClient extends APIClient {
   }
   async listNodeV1RuntimeClass(params: ListNodeV1RuntimeClassRequest, opts?: APIClientRequestOpts): Promise<NodeK8sIoV1RuntimeClassList> {
     const path = `/apis/node.k8s.io/v1/runtimeclasses`;
-    return await this.get<NodeK8sIoV1RuntimeClassList>(path, params.query, null, opts);
+    return await this.get<NodeK8sIoV1RuntimeClassList>(path, null, null, opts);
   }
   async createNodeV1RuntimeClass(params: CreateNodeV1RuntimeClassRequest, opts?: APIClientRequestOpts): Promise<NodeK8sIoV1RuntimeClass> {
     const path = `/apis/node.k8s.io/v1/runtimeclasses`;
@@ -36623,7 +36623,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchNodeV1RuntimeClass(params: PatchNodeV1RuntimeClassRequest, opts?: APIClientRequestOpts): Promise<NodeK8sIoV1RuntimeClass> {
     const path = `/apis/node.k8s.io/v1/runtimeclasses/${params.name}`;
-    return await this.patch<NodeK8sIoV1RuntimeClass>(path, params.query, params.body, opts);
+    return await this.patch<NodeK8sIoV1RuntimeClass>(path, params.query, null, opts);
   }
   async watchNodeV1RuntimeClassList(params: WatchNodeV1RuntimeClassListRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/node.k8s.io/v1/watch/runtimeclasses`;
@@ -36643,7 +36643,7 @@ export class KubernetesClient extends APIClient {
   }
   async listPolicyV1NamespacedPodDisruptionBudget(params: ListPolicyV1NamespacedPodDisruptionBudgetRequest, opts?: APIClientRequestOpts): Promise<PolicyV1PodDisruptionBudgetList> {
     const path = `/apis/policy/v1/namespaces/${params.namespace}/poddisruptionbudgets`;
-    return await this.get<PolicyV1PodDisruptionBudgetList>(path, params.query, null, opts);
+    return await this.get<PolicyV1PodDisruptionBudgetList>(path, null, null, opts);
   }
   async createPolicyV1NamespacedPodDisruptionBudget(params: CreatePolicyV1NamespacedPodDisruptionBudgetRequest, opts?: APIClientRequestOpts): Promise<PolicyV1PodDisruptionBudget> {
     const path = `/apis/policy/v1/namespaces/${params.namespace}/poddisruptionbudgets`;
@@ -36667,7 +36667,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchPolicyV1NamespacedPodDisruptionBudget(params: PatchPolicyV1NamespacedPodDisruptionBudgetRequest, opts?: APIClientRequestOpts): Promise<PolicyV1PodDisruptionBudget> {
     const path = `/apis/policy/v1/namespaces/${params.namespace}/poddisruptionbudgets/${params.name}`;
-    return await this.patch<PolicyV1PodDisruptionBudget>(path, params.query, params.body, opts);
+    return await this.patch<PolicyV1PodDisruptionBudget>(path, params.query, null, opts);
   }
   async readPolicyV1NamespacedPodDisruptionBudgetStatus(params: ReadPolicyV1NamespacedPodDisruptionBudgetStatusRequest, opts?: APIClientRequestOpts): Promise<PolicyV1PodDisruptionBudget> {
     const path = `/apis/policy/v1/namespaces/${params.namespace}/poddisruptionbudgets/${params.name}/status`;
@@ -36679,7 +36679,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchPolicyV1NamespacedPodDisruptionBudgetStatus(params: PatchPolicyV1NamespacedPodDisruptionBudgetStatusRequest, opts?: APIClientRequestOpts): Promise<PolicyV1PodDisruptionBudget> {
     const path = `/apis/policy/v1/namespaces/${params.namespace}/poddisruptionbudgets/${params.name}/status`;
-    return await this.patch<PolicyV1PodDisruptionBudget>(path, params.query, params.body, opts);
+    return await this.patch<PolicyV1PodDisruptionBudget>(path, params.query, null, opts);
   }
   async listPolicyV1PodDisruptionBudgetForAllNamespaces(params: ListPolicyV1PodDisruptionBudgetForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<PolicyV1PodDisruptionBudgetList> {
     const path = `/apis/policy/v1/poddisruptionbudgets`;
@@ -36703,7 +36703,7 @@ export class KubernetesClient extends APIClient {
   }
   async listPostgresqlCnpgIoV1ClusterImageCatalog(params: ListPostgresqlCnpgIoV1ClusterImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ClusterImageCatalogList> {
     const path = `/apis/postgresql.cnpg.io/v1/clusterimagecatalogs`;
-    return await this.get<PostgresqlCnpgIoV1ClusterImageCatalogList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1ClusterImageCatalogList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1ClusterImageCatalog(params: CreatePostgresqlCnpgIoV1ClusterImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ClusterImageCatalog> {
     const path = `/apis/postgresql.cnpg.io/v1/clusterimagecatalogs`;
@@ -36711,11 +36711,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionClusterImageCatalog(params: DeletePostgresqlCnpgIoV1CollectionClusterImageCatalogRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/clusterimagecatalogs`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1ClusterImageCatalog(params: ReadPostgresqlCnpgIoV1ClusterImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ClusterImageCatalog> {
     const path = `/apis/postgresql.cnpg.io/v1/clusterimagecatalogs/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1ClusterImageCatalog>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1ClusterImageCatalog>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1ClusterImageCatalog(params: ReplacePostgresqlCnpgIoV1ClusterImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ClusterImageCatalog> {
     const path = `/apis/postgresql.cnpg.io/v1/clusterimagecatalogs/${params.name}`;
@@ -36727,7 +36727,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1ClusterImageCatalog(params: PatchPostgresqlCnpgIoV1ClusterImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ClusterImageCatalog> {
     const path = `/apis/postgresql.cnpg.io/v1/clusterimagecatalogs/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1ClusterImageCatalog>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1ClusterImageCatalog>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1ClusterForAllNamespaces(params: ListPostgresqlCnpgIoV1ClusterForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ClusterList> {
     const path = `/apis/postgresql.cnpg.io/v1/clusters`;
@@ -36743,7 +36743,7 @@ export class KubernetesClient extends APIClient {
   }
   async listPostgresqlCnpgIoV1NamespacedBackup(params: ListPostgresqlCnpgIoV1NamespacedBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1BackupList> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups`;
-    return await this.get<PostgresqlCnpgIoV1BackupList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1BackupList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1NamespacedBackup(params: CreatePostgresqlCnpgIoV1NamespacedBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Backup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups`;
@@ -36751,11 +36751,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionNamespacedBackup(params: DeletePostgresqlCnpgIoV1CollectionNamespacedBackupRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedBackup(params: ReadPostgresqlCnpgIoV1NamespacedBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Backup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1Backup>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Backup>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedBackup(params: ReplacePostgresqlCnpgIoV1NamespacedBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Backup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups/${params.name}`;
@@ -36767,11 +36767,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedBackup(params: PatchPostgresqlCnpgIoV1NamespacedBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Backup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1Backup>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Backup>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedBackupStatus(params: ReadPostgresqlCnpgIoV1NamespacedBackupStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Backup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups/${params.name}/status`;
-    return await this.get<PostgresqlCnpgIoV1Backup>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Backup>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedBackupStatus(params: ReplacePostgresqlCnpgIoV1NamespacedBackupStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Backup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups/${params.name}/status`;
@@ -36779,11 +36779,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedBackupStatus(params: PatchPostgresqlCnpgIoV1NamespacedBackupStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Backup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/backups/${params.name}/status`;
-    return await this.patch<PostgresqlCnpgIoV1Backup>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Backup>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1NamespacedCluster(params: ListPostgresqlCnpgIoV1NamespacedClusterRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ClusterList> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters`;
-    return await this.get<PostgresqlCnpgIoV1ClusterList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1ClusterList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1NamespacedCluster(params: CreatePostgresqlCnpgIoV1NamespacedClusterRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Cluster> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters`;
@@ -36791,11 +36791,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionNamespacedCluster(params: DeletePostgresqlCnpgIoV1CollectionNamespacedClusterRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedCluster(params: ReadPostgresqlCnpgIoV1NamespacedClusterRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Cluster> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1Cluster>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Cluster>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedCluster(params: ReplacePostgresqlCnpgIoV1NamespacedClusterRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Cluster> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}`;
@@ -36807,11 +36807,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedCluster(params: PatchPostgresqlCnpgIoV1NamespacedClusterRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Cluster> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1Cluster>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Cluster>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedClusterScale(params: ReadPostgresqlCnpgIoV1NamespacedClusterScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}/scale`;
-    return await this.get<AutoscalingV1Scale>(path, params.query, null, opts);
+    return await this.get<AutoscalingV1Scale>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedClusterScale(params: ReplacePostgresqlCnpgIoV1NamespacedClusterScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}/scale`;
@@ -36819,11 +36819,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedClusterScale(params: PatchPostgresqlCnpgIoV1NamespacedClusterScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedClusterStatus(params: ReadPostgresqlCnpgIoV1NamespacedClusterStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Cluster> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}/status`;
-    return await this.get<PostgresqlCnpgIoV1Cluster>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Cluster>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedClusterStatus(params: ReplacePostgresqlCnpgIoV1NamespacedClusterStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Cluster> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}/status`;
@@ -36831,11 +36831,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedClusterStatus(params: PatchPostgresqlCnpgIoV1NamespacedClusterStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Cluster> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/clusters/${params.name}/status`;
-    return await this.patch<PostgresqlCnpgIoV1Cluster>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Cluster>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1NamespacedDatabase(params: ListPostgresqlCnpgIoV1NamespacedDatabaseRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1DatabaseList> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases`;
-    return await this.get<PostgresqlCnpgIoV1DatabaseList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1DatabaseList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1NamespacedDatabase(params: CreatePostgresqlCnpgIoV1NamespacedDatabaseRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Database> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases`;
@@ -36843,11 +36843,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionNamespacedDatabase(params: DeletePostgresqlCnpgIoV1CollectionNamespacedDatabaseRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedDatabase(params: ReadPostgresqlCnpgIoV1NamespacedDatabaseRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Database> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1Database>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Database>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedDatabase(params: ReplacePostgresqlCnpgIoV1NamespacedDatabaseRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Database> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases/${params.name}`;
@@ -36859,11 +36859,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedDatabase(params: PatchPostgresqlCnpgIoV1NamespacedDatabaseRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Database> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1Database>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Database>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedDatabaseStatus(params: ReadPostgresqlCnpgIoV1NamespacedDatabaseStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Database> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases/${params.name}/status`;
-    return await this.get<PostgresqlCnpgIoV1Database>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Database>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedDatabaseStatus(params: ReplacePostgresqlCnpgIoV1NamespacedDatabaseStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Database> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases/${params.name}/status`;
@@ -36871,11 +36871,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedDatabaseStatus(params: PatchPostgresqlCnpgIoV1NamespacedDatabaseStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Database> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/databases/${params.name}/status`;
-    return await this.patch<PostgresqlCnpgIoV1Database>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Database>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1NamespacedImageCatalog(params: ListPostgresqlCnpgIoV1NamespacedImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ImageCatalogList> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/imagecatalogs`;
-    return await this.get<PostgresqlCnpgIoV1ImageCatalogList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1ImageCatalogList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1NamespacedImageCatalog(params: CreatePostgresqlCnpgIoV1NamespacedImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ImageCatalog> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/imagecatalogs`;
@@ -36883,11 +36883,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionNamespacedImageCatalog(params: DeletePostgresqlCnpgIoV1CollectionNamespacedImageCatalogRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/imagecatalogs`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedImageCatalog(params: ReadPostgresqlCnpgIoV1NamespacedImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ImageCatalog> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/imagecatalogs/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1ImageCatalog>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1ImageCatalog>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedImageCatalog(params: ReplacePostgresqlCnpgIoV1NamespacedImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ImageCatalog> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/imagecatalogs/${params.name}`;
@@ -36899,11 +36899,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedImageCatalog(params: PatchPostgresqlCnpgIoV1NamespacedImageCatalogRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ImageCatalog> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/imagecatalogs/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1ImageCatalog>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1ImageCatalog>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1NamespacedPooler(params: ListPostgresqlCnpgIoV1NamespacedPoolerRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1PoolerList> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers`;
-    return await this.get<PostgresqlCnpgIoV1PoolerList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1PoolerList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1NamespacedPooler(params: CreatePostgresqlCnpgIoV1NamespacedPoolerRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Pooler> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers`;
@@ -36911,11 +36911,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionNamespacedPooler(params: DeletePostgresqlCnpgIoV1CollectionNamespacedPoolerRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedPooler(params: ReadPostgresqlCnpgIoV1NamespacedPoolerRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Pooler> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1Pooler>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Pooler>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedPooler(params: ReplacePostgresqlCnpgIoV1NamespacedPoolerRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Pooler> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}`;
@@ -36927,11 +36927,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedPooler(params: PatchPostgresqlCnpgIoV1NamespacedPoolerRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Pooler> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1Pooler>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Pooler>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedPoolerScale(params: ReadPostgresqlCnpgIoV1NamespacedPoolerScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}/scale`;
-    return await this.get<AutoscalingV1Scale>(path, params.query, null, opts);
+    return await this.get<AutoscalingV1Scale>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedPoolerScale(params: ReplacePostgresqlCnpgIoV1NamespacedPoolerScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}/scale`;
@@ -36939,11 +36939,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedPoolerScale(params: PatchPostgresqlCnpgIoV1NamespacedPoolerScaleRequest, opts?: APIClientRequestOpts): Promise<AutoscalingV1Scale> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}/scale`;
-    return await this.patch<AutoscalingV1Scale>(path, params.query, params.body, opts);
+    return await this.patch<AutoscalingV1Scale>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedPoolerStatus(params: ReadPostgresqlCnpgIoV1NamespacedPoolerStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Pooler> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}/status`;
-    return await this.get<PostgresqlCnpgIoV1Pooler>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Pooler>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedPoolerStatus(params: ReplacePostgresqlCnpgIoV1NamespacedPoolerStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Pooler> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}/status`;
@@ -36951,11 +36951,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedPoolerStatus(params: PatchPostgresqlCnpgIoV1NamespacedPoolerStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Pooler> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/poolers/${params.name}/status`;
-    return await this.patch<PostgresqlCnpgIoV1Pooler>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Pooler>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1NamespacedPublication(params: ListPostgresqlCnpgIoV1NamespacedPublicationRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1PublicationList> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications`;
-    return await this.get<PostgresqlCnpgIoV1PublicationList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1PublicationList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1NamespacedPublication(params: CreatePostgresqlCnpgIoV1NamespacedPublicationRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Publication> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications`;
@@ -36963,11 +36963,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionNamespacedPublication(params: DeletePostgresqlCnpgIoV1CollectionNamespacedPublicationRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedPublication(params: ReadPostgresqlCnpgIoV1NamespacedPublicationRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Publication> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1Publication>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Publication>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedPublication(params: ReplacePostgresqlCnpgIoV1NamespacedPublicationRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Publication> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications/${params.name}`;
@@ -36979,11 +36979,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedPublication(params: PatchPostgresqlCnpgIoV1NamespacedPublicationRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Publication> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1Publication>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Publication>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedPublicationStatus(params: ReadPostgresqlCnpgIoV1NamespacedPublicationStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Publication> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications/${params.name}/status`;
-    return await this.get<PostgresqlCnpgIoV1Publication>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Publication>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedPublicationStatus(params: ReplacePostgresqlCnpgIoV1NamespacedPublicationStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Publication> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications/${params.name}/status`;
@@ -36991,11 +36991,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedPublicationStatus(params: PatchPostgresqlCnpgIoV1NamespacedPublicationStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Publication> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/publications/${params.name}/status`;
-    return await this.patch<PostgresqlCnpgIoV1Publication>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Publication>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1NamespacedScheduledBackup(params: ListPostgresqlCnpgIoV1NamespacedScheduledBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ScheduledBackupList> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups`;
-    return await this.get<PostgresqlCnpgIoV1ScheduledBackupList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1ScheduledBackupList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1NamespacedScheduledBackup(params: CreatePostgresqlCnpgIoV1NamespacedScheduledBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ScheduledBackup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups`;
@@ -37003,11 +37003,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionNamespacedScheduledBackup(params: DeletePostgresqlCnpgIoV1CollectionNamespacedScheduledBackupRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedScheduledBackup(params: ReadPostgresqlCnpgIoV1NamespacedScheduledBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ScheduledBackup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1ScheduledBackup>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1ScheduledBackup>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedScheduledBackup(params: ReplacePostgresqlCnpgIoV1NamespacedScheduledBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ScheduledBackup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups/${params.name}`;
@@ -37019,11 +37019,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedScheduledBackup(params: PatchPostgresqlCnpgIoV1NamespacedScheduledBackupRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ScheduledBackup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1ScheduledBackup>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1ScheduledBackup>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedScheduledBackupStatus(params: ReadPostgresqlCnpgIoV1NamespacedScheduledBackupStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ScheduledBackup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups/${params.name}/status`;
-    return await this.get<PostgresqlCnpgIoV1ScheduledBackup>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1ScheduledBackup>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedScheduledBackupStatus(params: ReplacePostgresqlCnpgIoV1NamespacedScheduledBackupStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ScheduledBackup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups/${params.name}/status`;
@@ -37031,11 +37031,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedScheduledBackupStatus(params: PatchPostgresqlCnpgIoV1NamespacedScheduledBackupStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1ScheduledBackup> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/scheduledbackups/${params.name}/status`;
-    return await this.patch<PostgresqlCnpgIoV1ScheduledBackup>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1ScheduledBackup>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1NamespacedSubscription(params: ListPostgresqlCnpgIoV1NamespacedSubscriptionRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1SubscriptionList> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions`;
-    return await this.get<PostgresqlCnpgIoV1SubscriptionList>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1SubscriptionList>(path, null, null, opts);
   }
   async createPostgresqlCnpgIoV1NamespacedSubscription(params: CreatePostgresqlCnpgIoV1NamespacedSubscriptionRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Subscription> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions`;
@@ -37043,11 +37043,11 @@ export class KubernetesClient extends APIClient {
   }
   async deletePostgresqlCnpgIoV1CollectionNamespacedSubscription(params: DeletePostgresqlCnpgIoV1CollectionNamespacedSubscriptionRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedSubscription(params: ReadPostgresqlCnpgIoV1NamespacedSubscriptionRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Subscription> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions/${params.name}`;
-    return await this.get<PostgresqlCnpgIoV1Subscription>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Subscription>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedSubscription(params: ReplacePostgresqlCnpgIoV1NamespacedSubscriptionRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Subscription> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions/${params.name}`;
@@ -37059,11 +37059,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedSubscription(params: PatchPostgresqlCnpgIoV1NamespacedSubscriptionRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Subscription> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions/${params.name}`;
-    return await this.patch<PostgresqlCnpgIoV1Subscription>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Subscription>(path, params.query, null, opts);
   }
   async readPostgresqlCnpgIoV1NamespacedSubscriptionStatus(params: ReadPostgresqlCnpgIoV1NamespacedSubscriptionStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Subscription> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions/${params.name}/status`;
-    return await this.get<PostgresqlCnpgIoV1Subscription>(path, params.query, null, opts);
+    return await this.get<PostgresqlCnpgIoV1Subscription>(path, null, null, opts);
   }
   async replacePostgresqlCnpgIoV1NamespacedSubscriptionStatus(params: ReplacePostgresqlCnpgIoV1NamespacedSubscriptionStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Subscription> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions/${params.name}/status`;
@@ -37071,7 +37071,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchPostgresqlCnpgIoV1NamespacedSubscriptionStatus(params: PatchPostgresqlCnpgIoV1NamespacedSubscriptionStatusRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1Subscription> {
     const path = `/apis/postgresql.cnpg.io/v1/namespaces/${params.namespace}/subscriptions/${params.name}/status`;
-    return await this.patch<PostgresqlCnpgIoV1Subscription>(path, params.query, params.body, opts);
+    return await this.patch<PostgresqlCnpgIoV1Subscription>(path, params.query, null, opts);
   }
   async listPostgresqlCnpgIoV1PoolerForAllNamespaces(params: ListPostgresqlCnpgIoV1PoolerForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<PostgresqlCnpgIoV1PoolerList> {
     const path = `/apis/postgresql.cnpg.io/v1/poolers`;
@@ -37099,7 +37099,7 @@ export class KubernetesClient extends APIClient {
   }
   async listRbacAuthorizationV1ClusterRoleBinding(params: ListRbacAuthorizationV1ClusterRoleBindingRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1ClusterRoleBindingList> {
     const path = `/apis/rbac.authorization.k8s.io/v1/clusterrolebindings`;
-    return await this.get<RbacAuthorizationK8sIoV1ClusterRoleBindingList>(path, params.query, null, opts);
+    return await this.get<RbacAuthorizationK8sIoV1ClusterRoleBindingList>(path, null, null, opts);
   }
   async createRbacAuthorizationV1ClusterRoleBinding(params: CreateRbacAuthorizationV1ClusterRoleBindingRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1ClusterRoleBinding> {
     const path = `/apis/rbac.authorization.k8s.io/v1/clusterrolebindings`;
@@ -37123,11 +37123,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchRbacAuthorizationV1ClusterRoleBinding(params: PatchRbacAuthorizationV1ClusterRoleBindingRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1ClusterRoleBinding> {
     const path = `/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/${params.name}`;
-    return await this.patch<RbacAuthorizationK8sIoV1ClusterRoleBinding>(path, params.query, params.body, opts);
+    return await this.patch<RbacAuthorizationK8sIoV1ClusterRoleBinding>(path, params.query, null, opts);
   }
   async listRbacAuthorizationV1ClusterRole(params: ListRbacAuthorizationV1ClusterRoleRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1ClusterRoleList> {
     const path = `/apis/rbac.authorization.k8s.io/v1/clusterroles`;
-    return await this.get<RbacAuthorizationK8sIoV1ClusterRoleList>(path, params.query, null, opts);
+    return await this.get<RbacAuthorizationK8sIoV1ClusterRoleList>(path, null, null, opts);
   }
   async createRbacAuthorizationV1ClusterRole(params: CreateRbacAuthorizationV1ClusterRoleRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1ClusterRole> {
     const path = `/apis/rbac.authorization.k8s.io/v1/clusterroles`;
@@ -37151,11 +37151,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchRbacAuthorizationV1ClusterRole(params: PatchRbacAuthorizationV1ClusterRoleRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1ClusterRole> {
     const path = `/apis/rbac.authorization.k8s.io/v1/clusterroles/${params.name}`;
-    return await this.patch<RbacAuthorizationK8sIoV1ClusterRole>(path, params.query, params.body, opts);
+    return await this.patch<RbacAuthorizationK8sIoV1ClusterRole>(path, params.query, null, opts);
   }
   async listRbacAuthorizationV1NamespacedRoleBinding(params: ListRbacAuthorizationV1NamespacedRoleBindingRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1RoleBindingList> {
     const path = `/apis/rbac.authorization.k8s.io/v1/namespaces/${params.namespace}/rolebindings`;
-    return await this.get<RbacAuthorizationK8sIoV1RoleBindingList>(path, params.query, null, opts);
+    return await this.get<RbacAuthorizationK8sIoV1RoleBindingList>(path, null, null, opts);
   }
   async createRbacAuthorizationV1NamespacedRoleBinding(params: CreateRbacAuthorizationV1NamespacedRoleBindingRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1RoleBinding> {
     const path = `/apis/rbac.authorization.k8s.io/v1/namespaces/${params.namespace}/rolebindings`;
@@ -37179,11 +37179,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchRbacAuthorizationV1NamespacedRoleBinding(params: PatchRbacAuthorizationV1NamespacedRoleBindingRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1RoleBinding> {
     const path = `/apis/rbac.authorization.k8s.io/v1/namespaces/${params.namespace}/rolebindings/${params.name}`;
-    return await this.patch<RbacAuthorizationK8sIoV1RoleBinding>(path, params.query, params.body, opts);
+    return await this.patch<RbacAuthorizationK8sIoV1RoleBinding>(path, params.query, null, opts);
   }
   async listRbacAuthorizationV1NamespacedRole(params: ListRbacAuthorizationV1NamespacedRoleRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1RoleList> {
     const path = `/apis/rbac.authorization.k8s.io/v1/namespaces/${params.namespace}/roles`;
-    return await this.get<RbacAuthorizationK8sIoV1RoleList>(path, params.query, null, opts);
+    return await this.get<RbacAuthorizationK8sIoV1RoleList>(path, null, null, opts);
   }
   async createRbacAuthorizationV1NamespacedRole(params: CreateRbacAuthorizationV1NamespacedRoleRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1Role> {
     const path = `/apis/rbac.authorization.k8s.io/v1/namespaces/${params.namespace}/roles`;
@@ -37207,7 +37207,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchRbacAuthorizationV1NamespacedRole(params: PatchRbacAuthorizationV1NamespacedRoleRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1Role> {
     const path = `/apis/rbac.authorization.k8s.io/v1/namespaces/${params.namespace}/roles/${params.name}`;
-    return await this.patch<RbacAuthorizationK8sIoV1Role>(path, params.query, params.body, opts);
+    return await this.patch<RbacAuthorizationK8sIoV1Role>(path, params.query, null, opts);
   }
   async listRbacAuthorizationV1RoleBindingForAllNamespaces(params: ListRbacAuthorizationV1RoleBindingForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<RbacAuthorizationK8sIoV1RoleBindingList> {
     const path = `/apis/rbac.authorization.k8s.io/v1/rolebindings`;
@@ -37267,7 +37267,7 @@ export class KubernetesClient extends APIClient {
   }
   async listSchedulingV1PriorityClass(params: ListSchedulingV1PriorityClassRequest, opts?: APIClientRequestOpts): Promise<SchedulingK8sIoV1PriorityClassList> {
     const path = `/apis/scheduling.k8s.io/v1/priorityclasses`;
-    return await this.get<SchedulingK8sIoV1PriorityClassList>(path, params.query, null, opts);
+    return await this.get<SchedulingK8sIoV1PriorityClassList>(path, null, null, opts);
   }
   async createSchedulingV1PriorityClass(params: CreateSchedulingV1PriorityClassRequest, opts?: APIClientRequestOpts): Promise<SchedulingK8sIoV1PriorityClass> {
     const path = `/apis/scheduling.k8s.io/v1/priorityclasses`;
@@ -37291,7 +37291,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchSchedulingV1PriorityClass(params: PatchSchedulingV1PriorityClassRequest, opts?: APIClientRequestOpts): Promise<SchedulingK8sIoV1PriorityClass> {
     const path = `/apis/scheduling.k8s.io/v1/priorityclasses/${params.name}`;
-    return await this.patch<SchedulingK8sIoV1PriorityClass>(path, params.query, params.body, opts);
+    return await this.patch<SchedulingK8sIoV1PriorityClass>(path, params.query, null, opts);
   }
   async watchSchedulingV1PriorityClassList(params: WatchSchedulingV1PriorityClassListRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/scheduling.k8s.io/v1/watch/priorityclasses`;
@@ -37307,7 +37307,7 @@ export class KubernetesClient extends APIClient {
   }
   async listServingKnativeDevV1NamespacedConfiguration(params: ListServingKnativeDevV1NamespacedConfigurationRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1ConfigurationList> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations`;
-    return await this.get<ServingKnativeDevV1ConfigurationList>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1ConfigurationList>(path, null, null, opts);
   }
   async createServingKnativeDevV1NamespacedConfiguration(params: CreateServingKnativeDevV1NamespacedConfigurationRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Configuration> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations`;
@@ -37315,11 +37315,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteServingKnativeDevV1CollectionNamespacedConfiguration(params: DeleteServingKnativeDevV1CollectionNamespacedConfigurationRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readServingKnativeDevV1NamespacedConfiguration(params: ReadServingKnativeDevV1NamespacedConfigurationRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Configuration> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations/${params.name}`;
-    return await this.get<ServingKnativeDevV1Configuration>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1Configuration>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1NamespacedConfiguration(params: ReplaceServingKnativeDevV1NamespacedConfigurationRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Configuration> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations/${params.name}`;
@@ -37331,11 +37331,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1NamespacedConfiguration(params: PatchServingKnativeDevV1NamespacedConfigurationRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Configuration> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations/${params.name}`;
-    return await this.patch<ServingKnativeDevV1Configuration>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1Configuration>(path, params.query, null, opts);
   }
   async readServingKnativeDevV1NamespacedConfigurationStatus(params: ReadServingKnativeDevV1NamespacedConfigurationStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Configuration> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations/${params.name}/status`;
-    return await this.get<ServingKnativeDevV1Configuration>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1Configuration>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1NamespacedConfigurationStatus(params: ReplaceServingKnativeDevV1NamespacedConfigurationStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Configuration> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations/${params.name}/status`;
@@ -37343,11 +37343,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1NamespacedConfigurationStatus(params: PatchServingKnativeDevV1NamespacedConfigurationStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Configuration> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/configurations/${params.name}/status`;
-    return await this.patch<ServingKnativeDevV1Configuration>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1Configuration>(path, params.query, null, opts);
   }
   async listServingKnativeDevV1NamespacedRevision(params: ListServingKnativeDevV1NamespacedRevisionRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1RevisionList> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions`;
-    return await this.get<ServingKnativeDevV1RevisionList>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1RevisionList>(path, null, null, opts);
   }
   async createServingKnativeDevV1NamespacedRevision(params: CreateServingKnativeDevV1NamespacedRevisionRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Revision> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions`;
@@ -37355,11 +37355,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteServingKnativeDevV1CollectionNamespacedRevision(params: DeleteServingKnativeDevV1CollectionNamespacedRevisionRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readServingKnativeDevV1NamespacedRevision(params: ReadServingKnativeDevV1NamespacedRevisionRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Revision> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions/${params.name}`;
-    return await this.get<ServingKnativeDevV1Revision>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1Revision>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1NamespacedRevision(params: ReplaceServingKnativeDevV1NamespacedRevisionRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Revision> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions/${params.name}`;
@@ -37371,11 +37371,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1NamespacedRevision(params: PatchServingKnativeDevV1NamespacedRevisionRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Revision> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions/${params.name}`;
-    return await this.patch<ServingKnativeDevV1Revision>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1Revision>(path, params.query, null, opts);
   }
   async readServingKnativeDevV1NamespacedRevisionStatus(params: ReadServingKnativeDevV1NamespacedRevisionStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Revision> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions/${params.name}/status`;
-    return await this.get<ServingKnativeDevV1Revision>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1Revision>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1NamespacedRevisionStatus(params: ReplaceServingKnativeDevV1NamespacedRevisionStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Revision> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions/${params.name}/status`;
@@ -37383,11 +37383,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1NamespacedRevisionStatus(params: PatchServingKnativeDevV1NamespacedRevisionStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Revision> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/revisions/${params.name}/status`;
-    return await this.patch<ServingKnativeDevV1Revision>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1Revision>(path, params.query, null, opts);
   }
   async listServingKnativeDevV1NamespacedRoute(params: ListServingKnativeDevV1NamespacedRouteRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1RouteList> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes`;
-    return await this.get<ServingKnativeDevV1RouteList>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1RouteList>(path, null, null, opts);
   }
   async createServingKnativeDevV1NamespacedRoute(params: CreateServingKnativeDevV1NamespacedRouteRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Route> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes`;
@@ -37395,11 +37395,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteServingKnativeDevV1CollectionNamespacedRoute(params: DeleteServingKnativeDevV1CollectionNamespacedRouteRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readServingKnativeDevV1NamespacedRoute(params: ReadServingKnativeDevV1NamespacedRouteRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Route> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes/${params.name}`;
-    return await this.get<ServingKnativeDevV1Route>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1Route>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1NamespacedRoute(params: ReplaceServingKnativeDevV1NamespacedRouteRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Route> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes/${params.name}`;
@@ -37411,11 +37411,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1NamespacedRoute(params: PatchServingKnativeDevV1NamespacedRouteRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Route> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes/${params.name}`;
-    return await this.patch<ServingKnativeDevV1Route>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1Route>(path, params.query, null, opts);
   }
   async readServingKnativeDevV1NamespacedRouteStatus(params: ReadServingKnativeDevV1NamespacedRouteStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Route> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes/${params.name}/status`;
-    return await this.get<ServingKnativeDevV1Route>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1Route>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1NamespacedRouteStatus(params: ReplaceServingKnativeDevV1NamespacedRouteStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Route> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes/${params.name}/status`;
@@ -37423,11 +37423,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1NamespacedRouteStatus(params: PatchServingKnativeDevV1NamespacedRouteStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Route> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/routes/${params.name}/status`;
-    return await this.patch<ServingKnativeDevV1Route>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1Route>(path, params.query, null, opts);
   }
   async listServingKnativeDevV1NamespacedService(params: ListServingKnativeDevV1NamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1ServiceList> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services`;
-    return await this.get<ServingKnativeDevV1ServiceList>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1ServiceList>(path, null, null, opts);
   }
   async createServingKnativeDevV1NamespacedService(params: CreateServingKnativeDevV1NamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Service> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services`;
@@ -37435,11 +37435,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteServingKnativeDevV1CollectionNamespacedService(params: DeleteServingKnativeDevV1CollectionNamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readServingKnativeDevV1NamespacedService(params: ReadServingKnativeDevV1NamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Service> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services/${params.name}`;
-    return await this.get<ServingKnativeDevV1Service>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1Service>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1NamespacedService(params: ReplaceServingKnativeDevV1NamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Service> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services/${params.name}`;
@@ -37451,11 +37451,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1NamespacedService(params: PatchServingKnativeDevV1NamespacedServiceRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Service> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services/${params.name}`;
-    return await this.patch<ServingKnativeDevV1Service>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1Service>(path, params.query, null, opts);
   }
   async readServingKnativeDevV1NamespacedServiceStatus(params: ReadServingKnativeDevV1NamespacedServiceStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Service> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services/${params.name}/status`;
-    return await this.get<ServingKnativeDevV1Service>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1Service>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1NamespacedServiceStatus(params: ReplaceServingKnativeDevV1NamespacedServiceStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Service> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services/${params.name}/status`;
@@ -37463,7 +37463,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1NamespacedServiceStatus(params: PatchServingKnativeDevV1NamespacedServiceStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1Service> {
     const path = `/apis/serving.knative.dev/v1/namespaces/${params.namespace}/services/${params.name}/status`;
-    return await this.patch<ServingKnativeDevV1Service>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1Service>(path, params.query, null, opts);
   }
   async listServingKnativeDevV1RevisionForAllNamespaces(params: ListServingKnativeDevV1RevisionForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1RevisionList> {
     const path = `/apis/serving.knative.dev/v1/revisions`;
@@ -37483,7 +37483,7 @@ export class KubernetesClient extends APIClient {
   }
   async listServingKnativeDevV1beta1NamespacedDomainMapping(params: ListServingKnativeDevV1beta1NamespacedDomainMappingRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1beta1DomainMappingList> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings`;
-    return await this.get<ServingKnativeDevV1beta1DomainMappingList>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1beta1DomainMappingList>(path, null, null, opts);
   }
   async createServingKnativeDevV1beta1NamespacedDomainMapping(params: CreateServingKnativeDevV1beta1NamespacedDomainMappingRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1beta1DomainMapping> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings`;
@@ -37491,11 +37491,11 @@ export class KubernetesClient extends APIClient {
   }
   async deleteServingKnativeDevV1beta1CollectionNamespacedDomainMapping(params: DeleteServingKnativeDevV1beta1CollectionNamespacedDomainMappingRequest, opts?: APIClientRequestOpts): Promise<Status> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings`;
-    return await this.delete<Status>(path, params.query, null, opts);
+    return await this.delete<Status>(path, null, null, opts);
   }
   async readServingKnativeDevV1beta1NamespacedDomainMapping(params: ReadServingKnativeDevV1beta1NamespacedDomainMappingRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1beta1DomainMapping> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings/${params.name}`;
-    return await this.get<ServingKnativeDevV1beta1DomainMapping>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1beta1DomainMapping>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1beta1NamespacedDomainMapping(params: ReplaceServingKnativeDevV1beta1NamespacedDomainMappingRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1beta1DomainMapping> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings/${params.name}`;
@@ -37507,11 +37507,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1beta1NamespacedDomainMapping(params: PatchServingKnativeDevV1beta1NamespacedDomainMappingRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1beta1DomainMapping> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings/${params.name}`;
-    return await this.patch<ServingKnativeDevV1beta1DomainMapping>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1beta1DomainMapping>(path, params.query, null, opts);
   }
   async readServingKnativeDevV1beta1NamespacedDomainMappingStatus(params: ReadServingKnativeDevV1beta1NamespacedDomainMappingStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1beta1DomainMapping> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings/${params.name}/status`;
-    return await this.get<ServingKnativeDevV1beta1DomainMapping>(path, params.query, null, opts);
+    return await this.get<ServingKnativeDevV1beta1DomainMapping>(path, null, null, opts);
   }
   async replaceServingKnativeDevV1beta1NamespacedDomainMappingStatus(params: ReplaceServingKnativeDevV1beta1NamespacedDomainMappingStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1beta1DomainMapping> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings/${params.name}/status`;
@@ -37519,7 +37519,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchServingKnativeDevV1beta1NamespacedDomainMappingStatus(params: PatchServingKnativeDevV1beta1NamespacedDomainMappingStatusRequest, opts?: APIClientRequestOpts): Promise<ServingKnativeDevV1beta1DomainMapping> {
     const path = `/apis/serving.knative.dev/v1beta1/namespaces/${params.namespace}/domainmappings/${params.name}/status`;
-    return await this.patch<ServingKnativeDevV1beta1DomainMapping>(path, params.query, params.body, opts);
+    return await this.patch<ServingKnativeDevV1beta1DomainMapping>(path, params.query, null, opts);
   }
   async getStorageAPIGroup(params: GetStorageAPIGroupRequest, opts?: APIClientRequestOpts): Promise<APIGroup> {
     const path = `/apis/storage.k8s.io/`;
@@ -37531,7 +37531,7 @@ export class KubernetesClient extends APIClient {
   }
   async listStorageV1CSIDriver(params: ListStorageV1CSIDriverRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSIDriverList> {
     const path = `/apis/storage.k8s.io/v1/csidrivers`;
-    return await this.get<StorageK8sIoV1CSIDriverList>(path, params.query, null, opts);
+    return await this.get<StorageK8sIoV1CSIDriverList>(path, null, null, opts);
   }
   async createStorageV1CSIDriver(params: CreateStorageV1CSIDriverRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSIDriver> {
     const path = `/apis/storage.k8s.io/v1/csidrivers`;
@@ -37555,11 +37555,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchStorageV1CSIDriver(params: PatchStorageV1CSIDriverRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSIDriver> {
     const path = `/apis/storage.k8s.io/v1/csidrivers/${params.name}`;
-    return await this.patch<StorageK8sIoV1CSIDriver>(path, params.query, params.body, opts);
+    return await this.patch<StorageK8sIoV1CSIDriver>(path, params.query, null, opts);
   }
   async listStorageV1CSINode(params: ListStorageV1CSINodeRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSINodeList> {
     const path = `/apis/storage.k8s.io/v1/csinodes`;
-    return await this.get<StorageK8sIoV1CSINodeList>(path, params.query, null, opts);
+    return await this.get<StorageK8sIoV1CSINodeList>(path, null, null, opts);
   }
   async createStorageV1CSINode(params: CreateStorageV1CSINodeRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSINode> {
     const path = `/apis/storage.k8s.io/v1/csinodes`;
@@ -37583,7 +37583,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchStorageV1CSINode(params: PatchStorageV1CSINodeRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSINode> {
     const path = `/apis/storage.k8s.io/v1/csinodes/${params.name}`;
-    return await this.patch<StorageK8sIoV1CSINode>(path, params.query, params.body, opts);
+    return await this.patch<StorageK8sIoV1CSINode>(path, params.query, null, opts);
   }
   async listStorageV1CSIStorageCapacityForAllNamespaces(params: ListStorageV1CSIStorageCapacityForAllNamespacesRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSIStorageCapacityList> {
     const path = `/apis/storage.k8s.io/v1/csistoragecapacities`;
@@ -37591,7 +37591,7 @@ export class KubernetesClient extends APIClient {
   }
   async listStorageV1NamespacedCSIStorageCapacity(params: ListStorageV1NamespacedCSIStorageCapacityRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSIStorageCapacityList> {
     const path = `/apis/storage.k8s.io/v1/namespaces/${params.namespace}/csistoragecapacities`;
-    return await this.get<StorageK8sIoV1CSIStorageCapacityList>(path, params.query, null, opts);
+    return await this.get<StorageK8sIoV1CSIStorageCapacityList>(path, null, null, opts);
   }
   async createStorageV1NamespacedCSIStorageCapacity(params: CreateStorageV1NamespacedCSIStorageCapacityRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSIStorageCapacity> {
     const path = `/apis/storage.k8s.io/v1/namespaces/${params.namespace}/csistoragecapacities`;
@@ -37615,11 +37615,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchStorageV1NamespacedCSIStorageCapacity(params: PatchStorageV1NamespacedCSIStorageCapacityRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1CSIStorageCapacity> {
     const path = `/apis/storage.k8s.io/v1/namespaces/${params.namespace}/csistoragecapacities/${params.name}`;
-    return await this.patch<StorageK8sIoV1CSIStorageCapacity>(path, params.query, params.body, opts);
+    return await this.patch<StorageK8sIoV1CSIStorageCapacity>(path, params.query, null, opts);
   }
   async listStorageV1StorageClass(params: ListStorageV1StorageClassRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1StorageClassList> {
     const path = `/apis/storage.k8s.io/v1/storageclasses`;
-    return await this.get<StorageK8sIoV1StorageClassList>(path, params.query, null, opts);
+    return await this.get<StorageK8sIoV1StorageClassList>(path, null, null, opts);
   }
   async createStorageV1StorageClass(params: CreateStorageV1StorageClassRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1StorageClass> {
     const path = `/apis/storage.k8s.io/v1/storageclasses`;
@@ -37643,11 +37643,11 @@ export class KubernetesClient extends APIClient {
   }
   async patchStorageV1StorageClass(params: PatchStorageV1StorageClassRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1StorageClass> {
     const path = `/apis/storage.k8s.io/v1/storageclasses/${params.name}`;
-    return await this.patch<StorageK8sIoV1StorageClass>(path, params.query, params.body, opts);
+    return await this.patch<StorageK8sIoV1StorageClass>(path, params.query, null, opts);
   }
   async listStorageV1VolumeAttachment(params: ListStorageV1VolumeAttachmentRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1VolumeAttachmentList> {
     const path = `/apis/storage.k8s.io/v1/volumeattachments`;
-    return await this.get<StorageK8sIoV1VolumeAttachmentList>(path, params.query, null, opts);
+    return await this.get<StorageK8sIoV1VolumeAttachmentList>(path, null, null, opts);
   }
   async createStorageV1VolumeAttachment(params: CreateStorageV1VolumeAttachmentRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1VolumeAttachment> {
     const path = `/apis/storage.k8s.io/v1/volumeattachments`;
@@ -37671,7 +37671,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchStorageV1VolumeAttachment(params: PatchStorageV1VolumeAttachmentRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1VolumeAttachment> {
     const path = `/apis/storage.k8s.io/v1/volumeattachments/${params.name}`;
-    return await this.patch<StorageK8sIoV1VolumeAttachment>(path, params.query, params.body, opts);
+    return await this.patch<StorageK8sIoV1VolumeAttachment>(path, params.query, null, opts);
   }
   async readStorageV1VolumeAttachmentStatus(params: ReadStorageV1VolumeAttachmentStatusRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1VolumeAttachment> {
     const path = `/apis/storage.k8s.io/v1/volumeattachments/${params.name}/status`;
@@ -37683,7 +37683,7 @@ export class KubernetesClient extends APIClient {
   }
   async patchStorageV1VolumeAttachmentStatus(params: PatchStorageV1VolumeAttachmentStatusRequest, opts?: APIClientRequestOpts): Promise<StorageK8sIoV1VolumeAttachment> {
     const path = `/apis/storage.k8s.io/v1/volumeattachments/${params.name}/status`;
-    return await this.patch<StorageK8sIoV1VolumeAttachment>(path, params.query, params.body, opts);
+    return await this.patch<StorageK8sIoV1VolumeAttachment>(path, params.query, null, opts);
   }
   async watchStorageV1CSIDriverList(params: WatchStorageV1CSIDriverListRequest, opts?: APIClientRequestOpts): Promise<WatchEvent> {
     const path = `/apis/storage.k8s.io/v1/watch/csidrivers`;
