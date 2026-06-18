@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.4](https://github.com/constructive-io/dev-utils/compare/schema-sdk@0.16.3...schema-sdk@0.16.4) (2026-06-18)
+
+### Bug Fixes
+
+- **schema-sdk:** resolve $ref parameters before checking hasBody in createOperation ([88c602b](https://github.com/constructive-io/dev-utils/commit/88c602b2b17acf1974a888aa94c05791b3f65584))
+
 ## [0.16.3](https://github.com/constructive-io/dev-utils/compare/schema-sdk@0.16.2...schema-sdk@0.16.3) (2026-03-27)
 
 **Note:** Version bump only for package schema-sdk
