@@ -196,7 +196,7 @@ export class PromptTimeoutError extends Error {
   }
 }
 
-const DEFAULT_NON_TTY_TIMEOUT = 30_000;
+const DEFAULT_NON_TTY_TIMEOUT = 15_000;
 
 export interface InquirererOptions {
   noTty?: boolean;
