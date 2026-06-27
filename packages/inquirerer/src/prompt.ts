@@ -184,6 +184,20 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
   return lines.join('\n') + '\n';
 }
 
+export class PromptTimeoutError extends Error {
+  public readonly currentQuestion: Question;
+  public readonly allQuestions: Question[];
+
+  constructor(message: string, currentQuestion: Question, allQuestions: Question[]) {
+    super(message);
+    this.name = 'PromptTimeoutError';
+    this.currentQuestion = currentQuestion;
+    this.allQuestions = allQuestions;
+  }
+}
+
+const DEFAULT_NON_TTY_TIMEOUT = 30_000;
+
 export interface InquirererOptions {
   noTty?: boolean;
   input?: Readable;
@@ -192,6 +206,7 @@ export interface InquirererOptions {
   globalMaxLines?: number;
   mutateArgs?: boolean;
   resolverRegistry?: DefaultResolverRegistry;
+  timeout?: number;
 }
 export class Inquirerer {
   private rl: readline.Interface | null;
@@ -203,6 +218,7 @@ export class Inquirerer {
   private globalMaxLines: number;
   private mutateArgs: boolean;
   private resolverRegistry: DefaultResolverRegistry;
+  private timeout: number | undefined;
 
   private handledKeys: Set<string> = new Set();
 
@@ -216,7 +232,8 @@ export class Inquirerer {
       useDefaults = false,
       globalMaxLines = 10,
       mutateArgs = true,
-      resolverRegistry = globalResolverRegistry
+      resolverRegistry = globalResolverRegistry,
+      timeout
     } = options ?? {}
 
     this.useDefaults = useDefaults;
@@ -226,6 +243,12 @@ export class Inquirerer {
     this.input = input;
     this.globalMaxLines = globalMaxLines;
     this.resolverRegistry = resolverRegistry;
+
+    if (timeout !== undefined) {
+      this.timeout = timeout;
+    } else if (!noTty && !(input as any).isTTY) {
+      this.timeout = DEFAULT_NON_TTY_TIMEOUT;
+    }
 
     if (!noTty) {
       this.rl = readline.createInterface({
@@ -501,7 +524,11 @@ export class Inquirerer {
       }
 
       while (ctx.needsInput) {
-        obj[question.name] = await this.handleQuestionType(question, ctx);
+        obj[question.name] = await this.withTimeout(
+          this.handleQuestionType(question, ctx),
+          question,
+          ordered
+        );
 
         if (!this.isValid(question, obj, ctx)) {
           if (this.noTty) {
@@ -1373,6 +1400,83 @@ export class Inquirerer {
     //   return Math.max(rows, defaultLength);
     // }
     return Math.min(this.globalMaxLines, defaultLength);
+  }
+
+  private withTimeout<T>(promise: Promise<T>, currentQuestion: Question, allQuestions: Question[]): Promise<T> {
+    if (this.timeout === undefined) {
+      return promise;
+    }
+
+    const ms = this.timeout;
+
+    return new Promise<T>((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject(new PromptTimeoutError(
+          this.formatTimeoutError(currentQuestion, allQuestions, ms),
+          currentQuestion,
+          allQuestions
+        ));
+      }, ms);
+
+      promise.then(
+        value => { clearTimeout(timer); resolve(value); },
+        err   => { clearTimeout(timer); reject(err); }
+      );
+    });
+  }
+
+  private formatTimeoutError(currentQuestion: Question, allQuestions: Question[], ms: number): string {
+    const seconds = Math.round(ms / 1000);
+    const lines: string[] = [];
+
+    lines.push('');
+    lines.push(`PROMPT TIMEOUT: No input received for "${currentQuestion.name}" after ${seconds}s.`);
+    lines.push('');
+    lines.push('This usually happens when running in a non-interactive environment');
+    lines.push('(CI, scripts, AI agents) without the proper flags.');
+    lines.push('');
+    lines.push('REQUIRED ARGUMENTS:');
+
+    for (const q of allQuestions) {
+      const flag = `--${q.name}`;
+      const aliases = q.alias
+        ? (Array.isArray(q.alias) ? q.alias : [q.alias])
+            .map(a => a.length === 1 ? `-${a}` : `--${a}`)
+            .join(', ')
+        : '';
+      const aliasStr = aliases ? ` (${aliases})` : '';
+      const label = q.message || q.name;
+      const req = q.required ? ' [REQUIRED]' : '';
+      const def = 'default' in q && q.default !== undefined ? ` (default: ${JSON.stringify(q.default)})` : '';
+      lines.push(`  ${flag}${aliasStr}  ${label}${req}${def}`);
+    }
+
+    lines.push('');
+    lines.push('HOW TO FIX:');
+    lines.push('  1. Pass all required arguments as CLI flags:');
+
+    const requiredFlags = allQuestions
+      .filter(q => q.required)
+      .map(q => `--${q.name} <value>`);
+    if (requiredFlags.length > 0) {
+      lines.push(`     $ command ${requiredFlags.join(' ')}`);
+    } else {
+      lines.push('     $ command --flag1 <value> --flag2 <value>');
+    }
+
+    lines.push('');
+    lines.push('  2. Or enable non-interactive mode:');
+    lines.push('     new Inquirerer({ noTty: true, useDefaults: true })');
+    lines.push('');
+    lines.push('  3. Or pass --no-tty if the CLI supports it.');
+    lines.push('');
+    lines.push('WHY THIS HAPPENED:');
+    lines.push('  The prompt expected interactive TTY input (keyboard), but no input');
+    lines.push('  was received. AI agents and CI pipelines must pass arguments via');
+    lines.push('  CLI flags instead of interactive prompts.');
+    lines.push('');
+
+    return lines.join('\n');
   }
 
   // Method to cleanly close the readline interface
