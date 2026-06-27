@@ -220,6 +220,10 @@ export class Inquirerer {
   private resolverRegistry: DefaultResolverRegistry;
   private timeout: number | undefined;
 
+  private _inactivityTimer: ReturnType<typeof setTimeout> | null = null;
+  private _inactivityReject: ((err: PromptTimeoutError) => void) | null = null;
+  private _inactivityContext: { question: Question; allQuestions: Question[]; ms: number } | null = null;
+
   private handledKeys: Set<string> = new Set();
 
   constructor(
@@ -524,11 +528,17 @@ export class Inquirerer {
       }
 
       while (ctx.needsInput) {
-        obj[question.name] = await this.withTimeout(
-          this.handleQuestionType(question, ctx),
-          question,
-          ordered
-        );
+        const timeoutPromise = this.startInactivityTimeout(question, ordered);
+        const removeActivityListener = this.setupInputActivityListener();
+        try {
+          const questionPromise = this.handleQuestionType(question, ctx);
+          obj[question.name] = timeoutPromise
+            ? await Promise.race([questionPromise, timeoutPromise])
+            : await questionPromise;
+        } finally {
+          removeActivityListener();
+          this.clearInactivityTimeout();
+        }
 
         if (!this.isValid(question, obj, ctx)) {
           if (this.noTty) {
@@ -1402,27 +1412,54 @@ export class Inquirerer {
     return Math.min(this.globalMaxLines, defaultLength);
   }
 
-  private withTimeout<T>(promise: Promise<T>, currentQuestion: Question, allQuestions: Question[]): Promise<T> {
-    if (this.timeout === undefined) {
-      return promise;
-    }
+  private startInactivityTimeout(question: Question, allQuestions: Question[]): Promise<never> | null {
+    if (this.timeout === undefined) return null;
 
     const ms = this.timeout;
+    this._inactivityContext = { question, allQuestions, ms };
 
-    return new Promise<T>((resolve, reject) => {
-      const timer = setTimeout(() => {
+    return new Promise<never>((_, reject) => {
+      this._inactivityReject = reject;
+      this._inactivityTimer = setTimeout(() => {
         reject(new PromptTimeoutError(
-          this.formatTimeoutError(currentQuestion, allQuestions, ms),
-          currentQuestion,
+          this.formatTimeoutError(question, allQuestions, ms),
+          question,
           allQuestions
         ));
       }, ms);
-
-      promise.then(
-        value => { clearTimeout(timer); resolve(value); },
-        err   => { clearTimeout(timer); reject(err); }
-      );
     });
+  }
+
+  private resetInactivityTimeout(): void {
+    if (this._inactivityTimer === null || this._inactivityReject === null || this._inactivityContext === null) return;
+
+    clearTimeout(this._inactivityTimer);
+    const { question, allQuestions, ms } = this._inactivityContext;
+    const rejectFn = this._inactivityReject;
+    this._inactivityTimer = setTimeout(() => {
+      rejectFn(new PromptTimeoutError(
+        this.formatTimeoutError(question, allQuestions, ms),
+        question,
+        allQuestions
+      ));
+    }, ms);
+  }
+
+  private clearInactivityTimeout(): void {
+    if (this._inactivityTimer !== null) {
+      clearTimeout(this._inactivityTimer);
+      this._inactivityTimer = null;
+    }
+    this._inactivityReject = null;
+    this._inactivityContext = null;
+  }
+
+  private setupInputActivityListener(): () => void {
+    if (this.timeout === undefined) return () => {};
+
+    const onData = () => this.resetInactivityTimeout();
+    this.input.on('data', onData);
+    return () => this.input.removeListener('data', onData);
   }
 
   private formatTimeoutError(currentQuestion: Question, allQuestions: Question[], ms: number): string {
