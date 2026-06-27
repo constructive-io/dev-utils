@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.8.1...inquirerer@4.9.0) (2026-06-27)
+
+### Features
+
+- **inquirerer:** add prompt timeout for non-TTY environments ([fc7fc51](https://github.com/constructive-io/dev-utils/commit/fc7fc515391dc8c48a98a35aedeb01a4770ec9c0))
+- make timeout resettable — resets on every user interaction ([f75330f](https://github.com/constructive-io/dev-utils/commit/f75330f045abe3b94bb441a2cd2286a17bb335e1))
+
 ## [4.8.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.8.0...inquirerer@4.8.1) (2026-04-26)
 
 ### Bug Fixes
