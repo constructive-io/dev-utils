@@ -1,6 +1,6 @@
 {
   "name": "toml-ast",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "TypeScript TOML parser and deparser with full AST support",
   "main": "index.js",
