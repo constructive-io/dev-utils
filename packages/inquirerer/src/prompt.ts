@@ -250,7 +250,7 @@ export class Inquirerer {
 
     if (timeout !== undefined) {
       this.timeout = timeout;
-    } else if (!noTty && !(input as any).isTTY) {
+    } else if (!noTty) {
       this.timeout = DEFAULT_NON_TTY_TIMEOUT;
     }
 
@@ -1469,8 +1469,7 @@ export class Inquirerer {
     lines.push('');
     lines.push(`PROMPT TIMEOUT: No input received for "${currentQuestion.name}" after ${seconds}s.`);
     lines.push('');
-    lines.push('This usually happens when running in a non-interactive environment');
-    lines.push('(CI, scripts, AI agents) without the proper flags.');
+    lines.push('No input was received before the inactivity timeout.');
     lines.push('');
     lines.push('REQUIRED ARGUMENTS:');
 
@@ -1508,9 +1507,9 @@ export class Inquirerer {
     lines.push('  3. Or pass --no-tty if the CLI supports it.');
     lines.push('');
     lines.push('WHY THIS HAPPENED:');
-    lines.push('  The prompt expected interactive TTY input (keyboard), but no input');
-    lines.push('  was received. AI agents and CI pipelines must pass arguments via');
-    lines.push('  CLI flags instead of interactive prompts.');
+    lines.push('  The prompt waited for input but none was received within the');
+    lines.push('  timeout window. Pass the required arguments as CLI flags');
+    lines.push('  to avoid interactive prompts.');
     lines.push('');
 
     return lines.join('\n');
