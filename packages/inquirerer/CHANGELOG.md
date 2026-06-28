@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.0...inquirerer@4.9.1) (2026-06-28)
+
+### Bug Fixes
+
+- **inquirerer:** apply inactivity timeout to all environments, not just non-TTY ([5535688](https://github.com/constructive-io/dev-utils/commit/55356882991df1148f2198fa7e618a4808910c8e))
+
 # [4.9.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.8.1...inquirerer@4.9.0) (2026-06-27)
 
 ### Features
