@@ -66,6 +66,7 @@ jobs:
           - bash-ast
           - docker-parser
           - nginx-ast
+          - yamlize
 
     steps:
     - name: Checkout code

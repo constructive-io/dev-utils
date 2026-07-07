@@ -1,0 +1,51 @@
+{
+  "name": "@yamlize/cli",
+  "version": "0.10.0",
+  "description": "yamlize CLI — generate YAML from templates with imports and variable substitution",
+  "author": "Dan Lynch <pyramation@gmail.com>",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "yamlize": "index.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "keywords": [
+    "yaml",
+    "cli",
+    "template",
+    "generate"
+  ],
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "dependencies": {
+    "inquirerer": "workspace:*",
+    "js-yaml": "^4.1.0",
+    "minimist": "1.2.8",
+    "yamlize": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/minimist": "^1.2.5",
+    "makage": "0.1.10"
+  }
+}
