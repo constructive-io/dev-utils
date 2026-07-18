@@ -51,6 +51,47 @@ export function nre(name: string, value: string): LabelMatcher {
   return { name, op: '!~', value };
 }
 
+/**
+ * A PromQL duration string (e.g. `5m`, `1h30m`, `500ms`). Produced by the
+ * duration builders so callers never assemble the syntax by hand.
+ */
+export type Duration = string & { readonly __promqlDuration?: unique symbol };
+
+/** Compose a PromQL duration from unit components, e.g. `duration({ h: 1, m: 30 })` → `1h30m`. */
+export function duration(parts: {
+  y?: number;
+  w?: number;
+  d?: number;
+  h?: number;
+  m?: number;
+  s?: number;
+  ms?: number;
+}): Duration {
+  const order: Array<[keyof typeof parts, string]> = [
+    ['y', 'y'],
+    ['w', 'w'],
+    ['d', 'd'],
+    ['h', 'h'],
+    ['m', 'm'],
+    ['s', 's'],
+    ['ms', 'ms'],
+  ];
+  const out = order
+    .filter(([k]) => parts[k] != null)
+    .map(([k, unit]) => `${parts[k]}${unit}`)
+    .join('');
+  if (out === '') throw new Error('duration() requires at least one non-null unit');
+  return out as Duration;
+}
+
+export const milliseconds = (n: number): Duration => duration({ ms: n });
+export const seconds = (n: number): Duration => duration({ s: n });
+export const minutes = (n: number): Duration => duration({ m: n });
+export const hours = (n: number): Duration => duration({ h: n });
+export const days = (n: number): Duration => duration({ d: n });
+export const weeks = (n: number): Duration => duration({ w: n });
+export const years = (n: number): Duration => duration({ y: n });
+
 /** Instant vector selector with a metric name, e.g. `metric('up', { job: 'api' })`. */
 export function metric(name: string, matchers?: MatchersInput): VectorSelector {
   return { type: 'VectorSelector', name, matchers: toMatchers(matchers) };
@@ -61,13 +102,13 @@ export function selector(matchers: MatchersInput): VectorSelector {
   return { type: 'VectorSelector', matchers: toMatchers(matchers) };
 }
 
-/** Range vector, e.g. `range(metric('x'), '5m')` → `x[5m]`. */
-export function range(vectorSelector: VectorSelector, window: string): MatrixSelector {
+/** Range vector, e.g. `range(metric('x'), minutes(5))` → `x[5m]`. */
+export function range(vectorSelector: VectorSelector, window: Duration): MatrixSelector {
   return { type: 'MatrixSelector', vectorSelector, range: window };
 }
 
-/** Subquery, e.g. `subquery(rate(range(metric('x'), '5m')), '1h', '1m')`. */
-export function subquery(expr: Expr, window: string, step?: string): SubqueryExpr {
+/** Subquery, e.g. `subquery(rate(range(metric('x'), minutes(5))), hours(1), minutes(1))`. */
+export function subquery(expr: Expr, window: Duration, step?: Duration): SubqueryExpr {
   return { type: 'SubqueryExpr', expr, range: window, ...(step ? { step } : {}) };
 }
 
@@ -84,12 +125,12 @@ export function pos(expr: Expr): UnaryExpr {
   return { type: 'UnaryExpr', op: '+', expr };
 }
 
-/** Attach an `offset` modifier (accepts a signed duration string, e.g. `-5m`). */
+/** Attach an `offset` modifier, e.g. `offset(sel, minutes(5))` (accepts signed durations). */
 export function offset<T extends VectorSelector | MatrixSelector | SubqueryExpr>(
   expr: T,
-  duration: string
+  window: Duration
 ): T {
-  return { ...expr, offset: duration };
+  return { ...expr, offset: window };
 }
 
 /** Attach an `@` modifier. */
@@ -105,7 +146,7 @@ export function at<T extends VectorSelector | MatrixSelector | SubqueryExpr>(
   return { ...expr, at: mod };
 }
 
-/** Generic function call, e.g. `call('rate', range(metric('x'), '5m'))`. */
+/** Generic function call, e.g. `call('rate', range(metric('x'), minutes(5)))`. */
 export function call(func: string, ...args: Expr[]): Call {
   return { type: 'Call', func, args };
 }
