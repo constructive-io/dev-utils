@@ -56,8 +56,9 @@ The deparser inserts parentheses based on operator precedence, so ASTs built by 
 | `metric('up', { job: 'api' })` | `up{job="api"}` |
 | `selector({ __name__: 'up' })` | `{__name__="up"}` |
 | `eq / neq / re / nre` | `=` `!=` `=~` `!~` matchers |
-| `range(sel, '5m')` | `sel[5m]` |
-| `subquery(expr, '1h', '1m')` | `expr[1h:1m]` |
+| `seconds/minutes/hours/days/... / duration({h:1,m:30})` | typed durations (`60s`, `1h30m`) |
+| `range(sel, minutes(5))` | `sel[5m]` |
+| `subquery(expr, hours(1), minutes(1))` | `expr[1h:1m]` |
 | `rate / irate / increase / *_over_time` | function calls |
 | `sum / min / max / avg / count / ...` | aggregations |
 | `topk / bottomk / quantile / countValues` | aggregations with a parameter |

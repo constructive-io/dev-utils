@@ -41,6 +41,23 @@ describe('promql builders', () => {
     expect(reparsed.matchers[0].value).toBe('a"b\\c');
   });
 
+  it('composes durations without string interpolation', () => {
+    expect(b.seconds(60)).toBe('60s');
+    expect(b.minutes(5)).toBe('5m');
+    expect(b.hours(1)).toBe('1h');
+    expect(b.days(2)).toBe('2d');
+    expect(b.milliseconds(500)).toBe('500ms');
+    expect(b.duration({ h: 1, m: 30 })).toBe('1h30m');
+  });
+
+  it('duration() rejects an empty spec', () => {
+    expect(() => b.duration({})).toThrow();
+  });
+
+  it('range accepts a built duration', () => {
+    expect(deparse(b.rate(b.range(b.metric('x'), b.seconds(60))))).toBe('rate(x[60s])');
+  });
+
   it('at() accepts start/end/number', () => {
     expect(deparse(b.at(b.metric('x'), 'start'))).toBe('x @ start()');
     expect(deparse(b.at(b.metric('x'), 'end'))).toBe('x @ end()');
