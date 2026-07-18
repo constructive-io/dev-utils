@@ -66,7 +66,7 @@ jobs:
           - bash-ast
           - docker-parser
           - nginx-ast
-          - promql
+          - promql-ast
           - yamlize
 
     steps:

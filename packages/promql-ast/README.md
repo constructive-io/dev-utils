@@ -1,4 +1,4 @@
-# promql
+# promql-ast
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/constructive-io/constructive/refs/heads/main/assets/outline-logo.svg" height="150">
@@ -11,7 +11,7 @@ A dependency-free toolkit for working with [PromQL](https://prometheus.io/docs/p
 ## Install
 
 ```sh
-npm install promql
+npm install promql-ast
 ```
 
 ## Why
@@ -19,7 +19,7 @@ npm install promql
 Composing PromQL with template strings is error-prone (label escaping, precedence, parentheses). This package lets you build queries as typed values and render them safely:
 
 ```ts
-import { sum, rate, range, metric, neq, by, deparse } from 'promql';
+import { sum, rate, range, metric, neq, by, deparse } from 'promql-ast';
 
 const query = deparse(
   sum(
@@ -33,7 +33,7 @@ const query = deparse(
 ## Parse
 
 ```ts
-import { parse } from 'promql';
+import { parse } from 'promql-ast';
 
 const ast = parse('sum by (namespace) (rate(x[5m]))');
 // { type: 'AggregateExpr', op: 'sum', grouping: { modifier: 'by', labels: ['namespace'] }, ... }
@@ -42,7 +42,7 @@ const ast = parse('sum by (namespace) (rate(x[5m]))');
 ## Deparse
 
 ```ts
-import { parse, deparse } from 'promql';
+import { parse, deparse } from 'promql-ast';
 
 deparse(parse('a+b*c')); // 'a + b * c'
 ```
