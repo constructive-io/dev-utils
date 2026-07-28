@@ -21,6 +21,7 @@ A comprehensive collection of TypeScript utilities for working with schemas, JSO
 |---------|-----|--------|-------------|
 | **appstash** | [![npm](https://img.shields.io/npm/v/appstash.svg)](https://www.npmjs.com/package/appstash) | [GitHub](./packages/appstash) | Simple, clean application directory resolution |
 | **clean-ansi** | [![npm](https://img.shields.io/npm/v/clean-ansi.svg)](https://www.npmjs.com/package/clean-ansi) | [GitHub](./packages/clean-ansi) | Remove ANSI escape codes from strings |
+| **confstash** | [![npm](https://img.shields.io/npm/v/confstash.svg)](https://www.npmjs.com/package/confstash) | [GitHub](./packages/confstash) | Standardized project configuration loading — config files, rc files, presets, and layered merge with provenance |
 | **create-gen-app** | [![npm](https://img.shields.io/npm/v/create-gen-app.svg)](https://www.npmjs.com/package/create-gen-app) | [GitHub](./packages/create-gen-app) | Clone and customize template repositories with variable replacement |
 | **inquirerer** | [![npm](https://img.shields.io/npm/v/inquirerer.svg)](https://www.npmjs.com/package/inquirerer) | [GitHub](./packages/inquirerer) | TypeScript-first library for building beautiful CLI interfaces with interactive prompts |
 | **jsonldjs** | [![npm](https://img.shields.io/npm/v/jsonldjs.svg)](https://www.npmjs.com/package/jsonldjs) | [GitHub](./packages/jsonld-tools) | Powerful JSON-LD builder with comprehensive filtering and subgraph extraction |
