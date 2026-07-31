@@ -15,7 +15,8 @@
   "files": [
     "index.mjs",
     "index.d.ts",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",

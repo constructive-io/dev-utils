@@ -33,6 +33,12 @@ export const rules = {
     { argsIgnorePattern: 'React|res|next|^_' }
   ],
 
+  // empty interfaces are used as extension points / named aliases
+  '@typescript-eslint/no-empty-object-type': [
+    'error',
+    { allowInterfaces: 'always' }
+  ],
+
   '@typescript-eslint/no-explicit-any': 'off',
   '@typescript-eslint/no-require-imports': 'off',
   '@typescript-eslint/no-var-requires': 'off',
