@@ -1,6 +1,6 @@
 {
   "name": "@constructive-io/visual-diff",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Constructive <developers@constructive.io>",
   "description": "Beautiful visual diff with syntax highlighting for terminal and HTML output",
   "main": "index.js",

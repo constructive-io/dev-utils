@@ -1,6 +1,6 @@
 {
   "name": "@constructive-io/http-errors",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Constructive <developers@constructive.io>",
   "description": "HTTP error handling utilities for API clients",
   "main": "index.js",

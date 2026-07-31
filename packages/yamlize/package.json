@@ -1,6 +1,6 @@
 {
   "name": "yamlize",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "YAML templating engine with import resolution, variable substitution, and deep merge",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "homepage": "https://github.com/constructive-io/dev-utils",

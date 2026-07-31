@@ -1,6 +1,6 @@
 {
   "name": "confstash",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Constructive <developers@constructive.io>",
   "description": "Standardized project configuration loading — config files, rc files, presets, and layered merge with provenance",
   "main": "index.js",

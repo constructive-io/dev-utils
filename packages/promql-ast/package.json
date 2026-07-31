@@ -1,6 +1,6 @@
 {
   "name": "promql-ast",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Constructive <developers@constructive.io>",
   "description": "TypeScript PromQL parser, AST builders, and deparser",
   "main": "index.js",

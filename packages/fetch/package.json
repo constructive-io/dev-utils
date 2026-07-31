@@ -1,6 +1,6 @@
 {
   "name": "@constructive-io/fetch",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": "Constructive <developers@constructive.io>",
   "description": "Isomorphic fetch wrapper — resolves *.localhost subdomains and preserves Host headers across Node.js and browsers",
   "main": "index.js",

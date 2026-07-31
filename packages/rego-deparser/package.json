@@ -1,6 +1,6 @@
 {
   "name": "rego-deparser",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Rego (OPA policy language) AST types and deparser for TypeScript",
   "author": "Constructive <developers@constructive.io>",
   "homepage": "https://github.com/constructive-io/dev-utils",

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/constructive-io/dev-utils/compare/cel-proto-parser@0.3.2...cel-proto-parser@0.3.3) (2026-07-31)
+
+**Note:** Version bump only for package cel-proto-parser
+
 ## [0.3.2](https://github.com/constructive-io/dev-utils/compare/cel-proto-parser@0.3.1...cel-proto-parser@0.3.2) (2026-05-09)
 
 **Note:** Version bump only for package cel-proto-parser

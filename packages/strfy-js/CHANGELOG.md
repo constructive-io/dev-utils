@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.3](https://github.com/constructive-io/dev-utils/compare/strfy-js@3.2.2...strfy-js@3.2.3) (2026-07-31)
+
+**Note:** Version bump only for package strfy-js
+
 ## [3.2.2](https://github.com/constructive-io/dev-utils/compare/strfy-js@3.2.1...strfy-js@3.2.2) (2026-05-09)
 
 **Note:** Version bump only for package strfy-js

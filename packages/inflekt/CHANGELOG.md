@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/constructive-io/dev-utils/compare/inflekt@0.7.1...inflekt@0.7.2) (2026-07-31)
+
+### Bug Fixes
+
+- **inflekt:** correct -ves singularization and audit rules against a 104k-word dictionary ([8143f1c](https://github.com/constructive-io/dev-utils/commit/8143f1c00f5c653b2b2c3a47e249907829bdd3b0))
+
 ## [0.7.1](https://github.com/constructive-io/dev-utils/compare/inflekt@0.7.0...inflekt@0.7.1) (2026-03-30)
 
 ### Bug Fixes
