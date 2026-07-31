@@ -52,6 +52,7 @@ jobs:
           - fetch-api-client
           - find-and-require-package-json
           - http-errors
+          - inflekt
           - jsonld-tools
           - komoji
           - nested-obj
