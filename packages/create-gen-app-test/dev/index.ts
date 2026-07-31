@@ -1,9 +1,8 @@
 import * as fs from 'fs';
+import { cloneRepo, extractVariables, promptUser, replaceVariables } from 'genomic';
 import { Inquirerer, ListQuestion } from 'inquirerer';
 import minimist from 'minimist';
 import * as path from 'path';
-
-import { cloneRepo, extractVariables, promptUser, replaceVariables } from 'genomic';
 
 const DEFAULT_REPO = 'https://github.com/constructive-io/pgpm-boilerplates/';
 const OUTPUT_DIR = './test-output';
@@ -37,13 +36,13 @@ async function main() {
     const autoDir =
       argv.path === undefined && fs.existsSync(configPath)
         ? (() => {
-            try {
-              const parsed = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-              return typeof parsed?.dir === 'string' ? parsed.dir : undefined;
-            } catch {
-              return undefined;
-            }
-          })()
+          try {
+            const parsed = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            return typeof parsed?.dir === 'string' ? parsed.dir : undefined;
+          } catch {
+            return undefined;
+          }
+        })()
         : undefined;
     const effectivePath = argv.path ?? autoDir ?? '.';
 

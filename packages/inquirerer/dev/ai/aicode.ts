@@ -11,12 +11,13 @@
  * Based on the terminal UI spec for building interactive coding tools.
  */
 
-import { Readable, Writable } from 'stream';
-import { cyan, dim, green, white, yellow, blue, inverse, magenta } from 'yanse';
-import { TerminalKeypress, KEY_CODES } from '../../src/keypress';
-import { ViewportRenderer, createViewport } from './viewport';
-import stringWidth from 'string-width';
 import { cleanAnsi } from 'clean-ansi';
+import { Readable, Writable } from 'stream';
+import stringWidth from 'string-width';
+import { cyan, dim, green, inverse, magenta, yellow } from 'yanse';
+
+import { KEY_CODES,TerminalKeypress } from '../../src/keypress';
+import { createViewport,ViewportRenderer } from './viewport';
 
 // Box drawing characters
 const BOX = {
@@ -418,14 +419,14 @@ export class AICodeUI {
    */
   private getRolePrefix(role: MessageRole): string {
     switch (role) {
-      case 'user':
-        return cyan('You: ');
-      case 'assistant':
-        return green('AI: ');
-      case 'system':
-        return yellow('System: ');
-      default:
-        return '';
+    case 'user':
+      return cyan('You: ');
+    case 'assistant':
+      return green('AI: ');
+    case 'system':
+      return yellow('System: ');
+    default:
+      return '';
     }
   }
   
@@ -434,14 +435,14 @@ export class AICodeUI {
    */
   private getRolePrefixLength(role: MessageRole): number {
     switch (role) {
-      case 'user':
-        return 5; // "You: "
-      case 'assistant':
-        return 4; // "AI: "
-      case 'system':
-        return 8; // "System: "
-      default:
-        return 0;
+    case 'user':
+      return 5; // "You: "
+    case 'assistant':
+      return 4; // "AI: "
+    case 'system':
+      return 8; // "System: "
+    default:
+      return 0;
     }
   }
   

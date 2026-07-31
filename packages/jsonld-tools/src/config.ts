@@ -6,6 +6,7 @@
  * configuration object for safe reuse and extension.
  */
 
+import { mergeConfigs, mergeFilterOptions } from './builder-utils';
 import type {
   IJsonLdConfigBuilder,
   JsonLdConfig,
@@ -18,7 +19,6 @@ import type {
   PropertyFilterByIdRule,
   PropertyFilterByTypeRule,
 } from './types';
-import { mergeConfigs, mergeFilterOptions } from './builder-utils';
 
 /**
  * Immutable configuration builder class

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import yaml from 'js-yaml';
+import * as path from 'path';
 
 import type { FoundConfig } from './discover';
 
@@ -30,31 +30,31 @@ export function loadFileSync(found: FoundConfig): Record<string, unknown> {
 
   const ext = path.extname(filepath);
   switch (ext) {
-    case '.json':
-      return asObject(parseJsonFile(filepath), filepath, 'JSON config');
-    case '.yaml':
-    case '.yml':
-      return asObject(parseYamlFile(filepath), filepath, 'YAML config');
-    case '.js':
-    case '.cjs':
-    case '.ts':
-      return requireModule(filepath);
-    case '.mjs':
-      throw new ConfigLoadError(
-        `Cannot load ESM config "${filepath}" synchronously — use the async loader (load()) instead.`,
-        filepath
-      );
-    case '': {
-      // extensionless rc file: try JSON first, then YAML
-      const raw = fs.readFileSync(filepath, 'utf8');
-      try {
-        return asObject(JSON.parse(raw), filepath, 'rc config');
-      } catch {
-        return asObject(yaml.load(raw), filepath, 'rc config');
-      }
+  case '.json':
+    return asObject(parseJsonFile(filepath), filepath, 'JSON config');
+  case '.yaml':
+  case '.yml':
+    return asObject(parseYamlFile(filepath), filepath, 'YAML config');
+  case '.js':
+  case '.cjs':
+  case '.ts':
+    return requireModule(filepath);
+  case '.mjs':
+    throw new ConfigLoadError(
+      `Cannot load ESM config "${filepath}" synchronously — use the async loader (load()) instead.`,
+      filepath
+    );
+  case '': {
+    // extensionless rc file: try JSON first, then YAML
+    const raw = fs.readFileSync(filepath, 'utf8');
+    try {
+      return asObject(JSON.parse(raw), filepath, 'rc config');
+    } catch {
+      return asObject(yaml.load(raw), filepath, 'rc config');
     }
-    default:
-      throw new ConfigLoadError(`Unsupported config file type: ${ext}`, filepath);
+  }
+  default:
+    throw new ConfigLoadError(`Unsupported config file type: ${ext}`, filepath);
   }
 }
 
@@ -89,7 +89,7 @@ function isEsmRequireError(err: unknown): boolean {
 function requireModule(filepath: string): Record<string, unknown> {
   try {
     delete require.cache[require.resolve(filepath)];
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+     
     const mod = require(filepath);
     return asObject(mod?.default ?? mod, filepath, 'module config');
   } catch (err) {

@@ -1,10 +1,9 @@
+export { merge, mergeNullable } from './merge';
+export { parse } from './parse';
 export type {
+  MergeOptions,
   YamlizeContext,
   YamlizeOptions,
-  MergeOptions,
   YamlNode,
 } from './types';
-
-export { yamlize, yamlizeString, yamlizeObject, toYaml, fromYaml } from './yamlize';
-export { parse } from './parse';
-export { merge, mergeNullable } from './merge';
+export { fromYaml,toYaml, yamlize, yamlizeObject, yamlizeString } from './yamlize';

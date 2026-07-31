@@ -1,7 +1,7 @@
 import deepmerge from 'deepmerge';
+import type { Operation } from 'fast-json-patch';
 import type { DeepPartial } from 'schema-typescript';
 import { defaultSchemaTSOptions, SchemaTSOptions } from 'schema-typescript';
-import type { Operation } from 'fast-json-patch';
 
 export interface OpenAPIOptions extends SchemaTSOptions {
   clientName: string;

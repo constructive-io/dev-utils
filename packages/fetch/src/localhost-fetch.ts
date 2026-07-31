@@ -133,9 +133,9 @@ export function createFetch(): FetchFunction {
   // In Node.js, build a fetch that handles *.localhost via node:http
   if (typeof process !== 'undefined' && process.versions?.node) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
+       
       const http = require('node:http');
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
+       
       const https = require('node:https');
       _fetch = buildNodeFetch(http, https);
       return _fetch;

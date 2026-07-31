@@ -1,11 +1,10 @@
+import { appstash, resolve } from 'appstash';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
-import { appstash, resolve } from 'appstash';
-
-import { createFromTemplate, CacheManager, GitCloner } from '../index';
-import { buildAnswers, TEST_REPO, resolveTemplateBaseDir, TEST_BRANCH, TEST_TEMPLATE } from '../test-utils/integration-helpers';
+import { CacheManager, createFromTemplate, GitCloner } from '../index';
+import { buildAnswers, resolveTemplateBaseDir, TEST_BRANCH, TEST_REPO, TEST_TEMPLATE } from '../test-utils/integration-helpers';
 
 const DEFAULT_TEMPLATE_URL = TEST_REPO;
 

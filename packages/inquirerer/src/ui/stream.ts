@@ -6,6 +6,7 @@
 
 import { Writable } from 'stream';
 import { cyan } from 'yanse';
+
 import { StreamConfig } from './types';
 
 interface StreamState {

@@ -280,10 +280,10 @@ export class _RIPEMD160 extends HashMD<_RIPEMD160> {
     for (let i = 0; i < 16; i++, offset += 4) BUF_160[i] = view.getUint32(offset, true);
     // prettier-ignore
     let al = this.h0 | 0, ar = al,
-        bl = this.h1 | 0, br = bl,
-        cl = this.h2 | 0, cr = cl,
-        dl = this.h3 | 0, dr = dl,
-        el = this.h4 | 0, er = el;
+      bl = this.h1 | 0, br = bl,
+      cl = this.h2 | 0, cr = cl,
+      dl = this.h3 | 0, dr = dl,
+      el = this.h4 | 0, er = el;
 
     // Instead of iterating 0 to 80, we split it into 5 groups
     // And use the groups in constants, functions, etc. Much simpler

@@ -10,24 +10,23 @@
  */
 
 import {
-  Module,
-  Package,
-  Import,
-  Rule,
-  Head,
-  Body,
-  Expr,
-  Term,
-  With,
-  Else,
-  ObjectItem,
   ArrayComprehension,
-  SetComprehension,
-  ObjectComprehension,
+  Body,
+  Else,
   Every,
+  Expr,
+  Head,
+  Import,
+  InfixOperators,
+  Module,
+  ObjectComprehension,
+  ObjectItem,
+  Package,
+  Rule,
+  SetComprehension,
+  Term,
   TermType,
-  InfixOperators
-} from './types';
+  With} from './types';
 
 export interface DeparserOptions {
   indent?: string;
@@ -277,47 +276,47 @@ export function deparseTerm(
   const value = term.value;
 
   switch (type) {
-    case TermType.NULL:
-      return 'null';
+  case TermType.NULL:
+    return 'null';
 
-    case TermType.BOOLEAN:
-      return value ? 'true' : 'false';
+  case TermType.BOOLEAN:
+    return value ? 'true' : 'false';
 
-    case TermType.NUMBER:
-      return String(value);
+  case TermType.NUMBER:
+    return String(value);
 
-    case TermType.STRING:
-      return deparseString(value as string);
+  case TermType.STRING:
+    return deparseString(value as string);
 
-    case TermType.VAR:
-      return value as string;
+  case TermType.VAR:
+    return value as string;
 
-    case TermType.REF:
-      return deparseRef(value as Term[], opts);
+  case TermType.REF:
+    return deparseRef(value as Term[], opts);
 
-    case TermType.CALL:
-      return deparseCall(value as Term[], opts);
+  case TermType.CALL:
+    return deparseCall(value as Term[], opts);
 
-    case TermType.ARRAY:
-      return deparseArray(value as Term[], opts);
+  case TermType.ARRAY:
+    return deparseArray(value as Term[], opts);
 
-    case TermType.SET:
-      return deparseSet(value as Term[], opts);
+  case TermType.SET:
+    return deparseSet(value as Term[], opts);
 
-    case TermType.OBJECT:
-      return deparseObject(value as ObjectItem[], opts);
+  case TermType.OBJECT:
+    return deparseObject(value as ObjectItem[], opts);
 
-    case TermType.ARRAY_COMPREHENSION:
-      return deparseArrayComprehension(value as ArrayComprehension, opts);
+  case TermType.ARRAY_COMPREHENSION:
+    return deparseArrayComprehension(value as ArrayComprehension, opts);
 
-    case TermType.SET_COMPREHENSION:
-      return deparseSetComprehension(value as SetComprehension, opts);
+  case TermType.SET_COMPREHENSION:
+    return deparseSetComprehension(value as SetComprehension, opts);
 
-    case TermType.OBJECT_COMPREHENSION:
-      return deparseObjectComprehension(value as ObjectComprehension, opts);
+  case TermType.OBJECT_COMPREHENSION:
+    return deparseObjectComprehension(value as ObjectComprehension, opts);
 
-    default:
-      return deparseTermValue(term, opts);
+  default:
+    return deparseTermValue(term, opts);
   }
 }
 

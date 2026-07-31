@@ -1,7 +1,7 @@
-import * as path from 'path';
 import { CacheManager } from 'genomic';
 import { GitCloner } from 'genomic';
 import { Templatizer } from 'genomic';
+import * as path from 'path';
 
 // Configuration constants (top-most layer owns defaults)
 const DEFAULT_TOOL_NAME = 'pgpm';

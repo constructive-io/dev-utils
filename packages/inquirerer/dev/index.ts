@@ -2,7 +2,6 @@
 import minimist from 'minimist';
 
 import { Prompter } from '../src';
-import { AutocompleteQuestion, ConfirmQuestion, Question } from '../src/question';
 import { displayVersion } from '../src/utils';
 
 const argv = minimist(process.argv.slice(2), {
@@ -69,9 +68,9 @@ const main = async () => {
         return !!(res && res.selected);
       }
     }
-  ])
-  console.log(JSON.stringify(massive, null, 2))
-  console.log(JSON.stringify(after, null, 2))
+  ]);
+  console.log(JSON.stringify(massive, null, 2));
+  console.log(JSON.stringify(after, null, 2));
   prompter.close();
 };
 

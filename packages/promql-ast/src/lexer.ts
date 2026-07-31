@@ -127,88 +127,88 @@ export class Lexer {
 
     // Multi-char operators
     switch (two) {
-      case '==':
-        this.advance(2);
-        return this.makeToken(TokenType.EQLC, '==', start);
-      case '!=':
-        this.advance(2);
-        return this.makeToken(TokenType.NEQ, '!=', start);
-      case '<=':
-        this.advance(2);
-        return this.makeToken(TokenType.LTE, '<=', start);
-      case '>=':
-        this.advance(2);
-        return this.makeToken(TokenType.GTE, '>=', start);
-      case '=~':
-        this.advance(2);
-        return this.makeToken(TokenType.EQL_REGEX, '=~', start);
-      case '!~':
-        this.advance(2);
-        return this.makeToken(TokenType.NEQ_REGEX, '!~', start);
-      default:
-        break;
+    case '==':
+      this.advance(2);
+      return this.makeToken(TokenType.EQLC, '==', start);
+    case '!=':
+      this.advance(2);
+      return this.makeToken(TokenType.NEQ, '!=', start);
+    case '<=':
+      this.advance(2);
+      return this.makeToken(TokenType.LTE, '<=', start);
+    case '>=':
+      this.advance(2);
+      return this.makeToken(TokenType.GTE, '>=', start);
+    case '=~':
+      this.advance(2);
+      return this.makeToken(TokenType.EQL_REGEX, '=~', start);
+    case '!~':
+      this.advance(2);
+      return this.makeToken(TokenType.NEQ_REGEX, '!~', start);
+    default:
+      break;
     }
 
     // Single-char structural / operators
     switch (ch) {
-      case '(':
-        this.advance();
-        return this.makeToken(TokenType.LEFT_PAREN, '(', start);
-      case ')':
-        this.advance();
-        return this.makeToken(TokenType.RIGHT_PAREN, ')', start);
-      case '{':
-        this.advance();
-        return this.makeToken(TokenType.LEFT_BRACE, '{', start);
-      case '}':
-        this.advance();
-        return this.makeToken(TokenType.RIGHT_BRACE, '}', start);
-      case '[':
-        this.bracketDepth++;
-        this.advance();
-        return this.makeToken(TokenType.LEFT_BRACKET, '[', start);
-      case ']':
-        if (this.bracketDepth > 0) this.bracketDepth--;
-        this.advance();
-        return this.makeToken(TokenType.RIGHT_BRACKET, ']', start);
-      case ',':
-        this.advance();
-        return this.makeToken(TokenType.COMMA, ',', start);
-      case ':':
-        this.advance();
-        return this.makeToken(TokenType.COLON, ':', start);
-      case '@':
-        this.advance();
-        return this.makeToken(TokenType.AT, '@', start);
-      case '+':
-        this.advance();
-        return this.makeToken(TokenType.ADD, '+', start);
-      case '-':
-        this.advance();
-        return this.makeToken(TokenType.SUB, '-', start);
-      case '*':
-        this.advance();
-        return this.makeToken(TokenType.MUL, '*', start);
-      case '/':
-        this.advance();
-        return this.makeToken(TokenType.DIV, '/', start);
-      case '%':
-        this.advance();
-        return this.makeToken(TokenType.MOD, '%', start);
-      case '^':
-        this.advance();
-        return this.makeToken(TokenType.POW, '^', start);
-      case '=':
-        this.advance();
-        return this.makeToken(TokenType.EQL, '=', start);
-      case '<':
-        this.advance();
-        return this.makeToken(TokenType.LT, '<', start);
-      case '>':
-        this.advance();
-        return this.makeToken(TokenType.GT, '>', start);
-      default:
-        break;
+    case '(':
+      this.advance();
+      return this.makeToken(TokenType.LEFT_PAREN, '(', start);
+    case ')':
+      this.advance();
+      return this.makeToken(TokenType.RIGHT_PAREN, ')', start);
+    case '{':
+      this.advance();
+      return this.makeToken(TokenType.LEFT_BRACE, '{', start);
+    case '}':
+      this.advance();
+      return this.makeToken(TokenType.RIGHT_BRACE, '}', start);
+    case '[':
+      this.bracketDepth++;
+      this.advance();
+      return this.makeToken(TokenType.LEFT_BRACKET, '[', start);
+    case ']':
+      if (this.bracketDepth > 0) this.bracketDepth--;
+      this.advance();
+      return this.makeToken(TokenType.RIGHT_BRACKET, ']', start);
+    case ',':
+      this.advance();
+      return this.makeToken(TokenType.COMMA, ',', start);
+    case ':':
+      this.advance();
+      return this.makeToken(TokenType.COLON, ':', start);
+    case '@':
+      this.advance();
+      return this.makeToken(TokenType.AT, '@', start);
+    case '+':
+      this.advance();
+      return this.makeToken(TokenType.ADD, '+', start);
+    case '-':
+      this.advance();
+      return this.makeToken(TokenType.SUB, '-', start);
+    case '*':
+      this.advance();
+      return this.makeToken(TokenType.MUL, '*', start);
+    case '/':
+      this.advance();
+      return this.makeToken(TokenType.DIV, '/', start);
+    case '%':
+      this.advance();
+      return this.makeToken(TokenType.MOD, '%', start);
+    case '^':
+      this.advance();
+      return this.makeToken(TokenType.POW, '^', start);
+    case '=':
+      this.advance();
+      return this.makeToken(TokenType.EQL, '=', start);
+    case '<':
+      this.advance();
+      return this.makeToken(TokenType.LT, '<', start);
+    case '>':
+      this.advance();
+      return this.makeToken(TokenType.GT, '>', start);
+    default:
+      break;
     }
 
     if (ch === '"' || ch === "'" || ch === '`') return this.readString(start, ch);
@@ -230,26 +230,26 @@ export class Lexer {
         const esc = this.input[this.pos + 1];
         this.advance(2);
         switch (esc) {
-          case 'n':
-            value += '\n';
-            break;
-          case 't':
-            value += '\t';
-            break;
-          case 'r':
-            value += '\r';
-            break;
-          case '\\':
-            value += '\\';
-            break;
-          case '"':
-            value += '"';
-            break;
-          case "'":
-            value += "'";
-            break;
-          default:
-            value += esc ?? '';
+        case 'n':
+          value += '\n';
+          break;
+        case 't':
+          value += '\t';
+          break;
+        case 'r':
+          value += '\r';
+          break;
+        case '\\':
+          value += '\\';
+          break;
+        case '"':
+          value += '"';
+          break;
+        case "'":
+          value += "'";
+          break;
+        default:
+          value += esc ?? '';
         }
       } else {
         value += c;

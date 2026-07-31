@@ -21,28 +21,28 @@ const ATOM_PREC = 100;
 
 function binOpPrec(op: BinaryOp): number {
   switch (op) {
-    case 'or':
-      return 1;
-    case 'and':
-    case 'unless':
-      return 2;
-    case '==':
-    case '!=':
-    case '<=':
-    case '<':
-    case '>=':
-    case '>':
-      return 3;
-    case '+':
-    case '-':
-      return 4;
-    case '*':
-    case '/':
-    case '%':
-    case 'atan2':
-      return 5;
-    case '^':
-      return 6;
+  case 'or':
+    return 1;
+  case 'and':
+  case 'unless':
+    return 2;
+  case '==':
+  case '!=':
+  case '<=':
+  case '<':
+  case '>=':
+  case '>':
+    return 3;
+  case '+':
+  case '-':
+    return 4;
+  case '*':
+  case '/':
+  case '%':
+  case 'atan2':
+    return 5;
+  case '^':
+    return 6;
   }
 }
 
@@ -66,26 +66,26 @@ function nodePrec(e: Expr): number {
 export class Deparser {
   deparse(node: Expr): string {
     switch (node.type) {
-      case 'NumberLiteral':
-        return this.number(node);
-      case 'StringLiteral':
-        return this.string(node);
-      case 'VectorSelector':
-        return this.vectorSelector(node);
-      case 'MatrixSelector':
-        return this.matrixSelector(node);
-      case 'SubqueryExpr':
-        return this.subquery(node);
-      case 'ParenExpr':
-        return this.paren(node);
-      case 'UnaryExpr':
-        return this.unary(node);
-      case 'BinaryExpr':
-        return this.binary(node);
-      case 'AggregateExpr':
-        return this.aggregate(node);
-      case 'Call':
-        return this.call(node);
+    case 'NumberLiteral':
+      return this.number(node);
+    case 'StringLiteral':
+      return this.string(node);
+    case 'VectorSelector':
+      return this.vectorSelector(node);
+    case 'MatrixSelector':
+      return this.matrixSelector(node);
+    case 'SubqueryExpr':
+      return this.subquery(node);
+    case 'ParenExpr':
+      return this.paren(node);
+    case 'UnaryExpr':
+      return this.unary(node);
+    case 'BinaryExpr':
+      return this.binary(node);
+    case 'AggregateExpr':
+      return this.aggregate(node);
+    case 'Call':
+      return this.call(node);
     }
   }
 
@@ -116,12 +116,12 @@ export class Deparser {
 
   private atModifier(at: AtModifier): string {
     switch (at.kind) {
-      case 'start':
-        return ' @ start()';
-      case 'end':
-        return ' @ end()';
-      case 'timestamp':
-        return ` @ ${at.value}`;
+    case 'start':
+      return ' @ start()';
+    case 'end':
+      return ' @ end()';
+    case 'timestamp':
+      return ` @ ${at.value}`;
     }
   }
 

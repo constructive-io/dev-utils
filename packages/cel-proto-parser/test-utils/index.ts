@@ -8,10 +8,10 @@
  */
 
 import { parse } from '@marcbachmann/cel-js';
-import { deparse, Expr } from '../src/deparser';
-import { convertToProtoExpr, MarcAstNode } from '../src/converter';
 import { readFileSync } from 'fs';
-import { join } from 'path';
+
+import { convertToProtoExpr, MarcAstNode } from '../src/converter';
+import { deparse, Expr } from '../src/deparser';
 
 export interface RoundTripResult {
   original: string;
@@ -156,11 +156,11 @@ export function expectRoundTrip(
       '',
       result.redeparsed !== null
         ? [
-            'Re-deparsed CEL:',
-            '──────────────────────────────────────────────────────────────────────────────',
-            result.redeparsed,
-            ''
-          ].join('\n')
+          'Re-deparsed CEL:',
+          '──────────────────────────────────────────────────────────────────────────────',
+          result.redeparsed,
+          ''
+        ].join('\n')
         : '',
       'Error:',
       '──────────────────────────────────────────────────────────────────────────────',
@@ -271,4 +271,4 @@ export class CelTest {
   }
 }
 
-export { Expr, deparse, parseCel as parse };
+export { deparse, Expr, parseCel as parse };

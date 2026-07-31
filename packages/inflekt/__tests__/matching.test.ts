@@ -1,8 +1,8 @@
 import {
-  normalizeName,
-  normalizeNameSingular,
   fuzzyFindByName,
   namesMatch,
+  normalizeName,
+  normalizeNameSingular,
 } from '../src';
 
 describe('normalizeName', () => {

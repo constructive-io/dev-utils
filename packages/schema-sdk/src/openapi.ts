@@ -12,7 +12,7 @@ import {
   Response,
 } from './openapi.types';
 import { OpenAPIOptions } from './types';
-import { createPathTemplateLiteral, applyJsonPatch } from './utils';
+import { applyJsonPatch,createPathTemplateLiteral } from './utils';
 
 /**
 includes: {
@@ -796,7 +796,7 @@ export const createOperation = (
 
   const hasBody = resolvedParams.some(
     (param) => param.in === 'body' || param.in === 'formData'
-  ) && ['post', 'put', 'patch'].includes(method)
+  ) && ['post', 'put', 'patch'].includes(method);
 
   const hasQuery = resolvedParams.some(
     (param) => param.in === 'query'
@@ -1236,16 +1236,16 @@ export function collectReactQueryHookComponents(
         // Build enabled expression: require all path params to be defined
         const enabledExpr = pathParams.length > 0
           ? pathParams.reduce((acc, param) => {
-              const cmp = t.binaryExpression(
-                '!==',
-                t.memberExpression(
-                  t.memberExpression(t.identifier(paramName), t.identifier('path')),
-                  t.identifier(param)
-                ),
-                t.identifier('undefined')
-              );
-              return acc ? t.logicalExpression('&&', acc, cmp) : cmp;
-            }, null as t.Expression | null) || t.booleanLiteral(true)
+            const cmp = t.binaryExpression(
+              '!==',
+              t.memberExpression(
+                t.memberExpression(t.identifier(paramName), t.identifier('path')),
+                t.identifier(param)
+              ),
+              t.identifier('undefined')
+            );
+            return acc ? t.logicalExpression('&&', acc, cmp) : cmp;
+          }, null as t.Expression | null) || t.booleanLiteral(true)
           : t.booleanLiteral(true);
         const queryCall = t.callExpression(t.identifier('useQuery'), [
           t.objectExpression([
@@ -1386,7 +1386,7 @@ export function generateReactQueryHooks(
   const patchedSchema = applyJsonPatch(schema, options);
   
   const components = collectReactQueryHookComponents(options, patchedSchema);
-  if (!components.length) return ''
+  if (!components.length) return '';
   // Group imports
   const importMap = new Map<string, Set<string>>();
   // Collect unique imports and consts

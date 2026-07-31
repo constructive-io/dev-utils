@@ -1,12 +1,13 @@
+import { stripAnsi } from 'clean-ansi';
 import readline from 'readline';
 import { Readable, Transform, Writable } from 'stream';
-import { stripAnsi } from 'clean-ansi';
-import { Inquirerer, DefaultResolverRegistry } from '../src';
+
+import { DefaultResolverRegistry,Inquirerer } from '../src';
 import { Question } from '../src/question';
 
 jest.mock('readline');
 jest.mock('child_process', () => ({
-    execSync: jest.fn()
+  execSync: jest.fn()
 }));
 
 import { execSync } from 'child_process';

@@ -3,13 +3,13 @@ import * as path from 'path';
 
 import { runCli } from '../cli';
 import {
-  TEST_BRANCH,
-  TEST_REPO,
-  TEST_TEMPLATE,
   buildAnswers,
   cleanupWorkspace,
   createTempWorkspace,
   resolveTemplateBaseDir,
+  TEST_BRANCH,
+  TEST_REPO,
+  TEST_TEMPLATE,
 } from '../test-utils/integration-helpers';
 
 jest.setTimeout(180_000);

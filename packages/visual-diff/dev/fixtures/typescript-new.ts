@@ -37,4 +37,4 @@ class UserService {
   }
 }
 
-export { UserService, User, UserCreateInput };
+export { User, UserCreateInput,UserService };

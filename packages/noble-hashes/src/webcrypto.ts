@@ -3,10 +3,10 @@ import {
   abytes,
   ahash,
   anumber,
-  checkOpts,
-  kdfInputToBytes,
   type CHash,
+  checkOpts,
   type KDFInput,
+  kdfInputToBytes,
   type TArg,
   type TRet,
 } from './utils';

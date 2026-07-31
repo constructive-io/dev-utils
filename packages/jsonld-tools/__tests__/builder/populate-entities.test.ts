@@ -5,8 +5,8 @@
  * populateConfig, and script tag ID handling.
  */
 
-import { createJsonLdBuilder, createJsonLdConfig } from '../../src';
 import type { JsonLdGraph, PopulateConfig } from '../../src';
+import { createJsonLdBuilder, createJsonLdConfig } from '../../src';
 
 // Test data
 const testGraph: JsonLdGraph = [

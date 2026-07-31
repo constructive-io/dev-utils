@@ -1,7 +1,8 @@
-import * as t from '@babel/types';
 import generate from '@babel/generator';
+import * as t from '@babel/types';
 import { mkdirSync, writeFileSync } from 'fs';
 import { dirname } from 'path';
+
 import { ResolvedCelProtoParserOptions } from '../options';
 
 /**

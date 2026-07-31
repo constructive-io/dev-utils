@@ -9,14 +9,13 @@ import * as u64 from './_u64';
 // prettier-ignore
 import {
   abytes, aexists, anumber, aoutput,
-  clean, createHasher,
-  swap32IfBE, swap8IfBE,
-  u32,
   type CHash,
+  clean, createHasher,
   type Hash,
-  type TArg,
-  type TRet
-} from './utils';
+  swap8IfBE,
+  swap32IfBE,   type TArg,
+  type TRet,
+  u32} from './utils';
 
 /**
  * Blake hash options.
@@ -288,7 +287,7 @@ export class _BLAKE2b extends _BLAKE2<_BLAKE2b> {
   protected get(): [
     number, number, number, number, number, number, number, number,
     number, number, number, number, number, number, number, number
-  ] {
+    ] {
     let { v0l, v0h, v1l, v1h, v2l, v2h, v3l, v3h, v4l, v4h, v5l, v5h, v6l, v6h, v7l, v7h } = this;
     return [v0l, v0h, v1l, v1h, v2l, v2h, v3l, v3h, v4l, v4h, v5l, v5h, v6l, v6h, v7l, v7h];
   }

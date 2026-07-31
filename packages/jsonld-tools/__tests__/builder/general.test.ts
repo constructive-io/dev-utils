@@ -5,9 +5,9 @@
  * using real fixture data and extensive snapshot testing
  */
 
-import { createJsonLdBuilder, createJsonLdConfig } from '../../src';
-import type { JsonLdEntity, JsonLdGraph } from '../../src';
 import graph from '../../../../__fixtures__/jsonld-tools/graph.json';
+import type { JsonLdEntity, JsonLdGraph } from '../../src';
+import { createJsonLdBuilder, createJsonLdConfig } from '../../src';
 
 describe('JsonLdConfigBuilder', () => {
   test('creates empty config', () => {

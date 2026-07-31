@@ -1,5 +1,5 @@
-import type { DiffLine, DiffHunk, DiffResult, DiffOptions, Language } from './types';
 import { detectLanguage } from './highlight';
+import type { DiffHunk, DiffLine, DiffOptions, DiffResult } from './types';
 
 interface LCSResult {
   oldIndices: number[];
@@ -231,15 +231,15 @@ export function createUnifiedDiff(result: DiffResult): string {
 
     for (const line of hunk.lines) {
       switch (line.type) {
-        case 'added':
-          lines.push(`+${line.content}`);
-          break;
-        case 'removed':
-          lines.push(`-${line.content}`);
-          break;
-        case 'unchanged':
-          lines.push(` ${line.content}`);
-          break;
+      case 'added':
+        lines.push(`+${line.content}`);
+        break;
+      case 'removed':
+        lines.push(`-${line.content}`);
+        break;
+      case 'unchanged':
+        lines.push(` ${line.content}`);
+        break;
       }
     }
   }

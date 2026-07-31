@@ -6,15 +6,16 @@
  * Or: npx ts-node dev/demo-chat.ts
  */
 
-import { createStream, createSpinner } from '../src/ui';
 import { cyan, dim, green, white } from 'yanse';
+
+import { createSpinner,createStream } from '../src/ui';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Simulated AI responses
 const AI_RESPONSES = [
   "Hello! I'm an AI assistant. I can help you with coding questions, explain concepts, or assist with various tasks. What would you like to know?",
-  "TypeScript is a strongly typed programming language that builds on JavaScript. It adds optional static typing and class-based object-oriented programming to the language. Here are some key benefits:\n\n1. **Type Safety**: Catch errors at compile time rather than runtime\n2. **Better IDE Support**: Enhanced autocomplete and refactoring\n3. **Improved Readability**: Types serve as documentation\n4. **Modern Features**: Access to latest ECMAScript features",
+  'TypeScript is a strongly typed programming language that builds on JavaScript. It adds optional static typing and class-based object-oriented programming to the language. Here are some key benefits:\n\n1. **Type Safety**: Catch errors at compile time rather than runtime\n2. **Better IDE Support**: Enhanced autocomplete and refactoring\n3. **Improved Readability**: Types serve as documentation\n4. **Modern Features**: Access to latest ECMAScript features',
   "Here's a simple example of a TypeScript function:\n\n```typescript\nfunction greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n\nconst message = greet('World');\nconsole.log(message); // Output: Hello, World!\n```\n\nThe `: string` after the parameter and function declaration specifies the types.",
 ];
 

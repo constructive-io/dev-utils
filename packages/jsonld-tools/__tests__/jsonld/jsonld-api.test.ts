@@ -1,13 +1,11 @@
 import {
-  findEntity,
-  findEntities,
-  findEntitiesByType,
   extractSubgraph,
   extractSubgraphs,
-  findReferencingEntities,
   extractSubgraphWithDepth,
-  extractReferences,
-  type JsonLdEntity,
+  findEntities,
+  findEntitiesByType,
+  findEntity,
+  findReferencingEntities,
   type JsonLdGraph
 } from '../../src/index';
 
@@ -477,10 +475,10 @@ describe('JSON-LD Graph Library', () => {
 describe('extractSubgraphWithDepth', () => {
   it('should extract entities up to specified depth', () => {
     const graph: JsonLdGraph = [
-      { '@id': 'root', 'ref': { '@id': 'level1' } },
-      { '@id': 'level1', 'ref': { '@id': 'level2' } },
-      { '@id': 'level2', 'ref': { '@id': 'level3' } },
-      { '@id': 'level3', 'ref': { '@id': 'level4' } },
+      { '@id': 'root', ref: { '@id': 'level1' } },
+      { '@id': 'level1', ref: { '@id': 'level2' } },
+      { '@id': 'level2', ref: { '@id': 'level3' } },
+      { '@id': 'level3', ref: { '@id': 'level4' } },
       { '@id': 'level4' }
     ];
     
@@ -496,9 +494,9 @@ describe('extractSubgraphWithDepth', () => {
   
   it('should handle circular references at depth limit', () => {
     const graph: JsonLdGraph = [
-      { '@id': 'a', 'ref': { '@id': 'b' } },
-      { '@id': 'b', 'ref': { '@id': 'c' } },
-      { '@id': 'c', 'ref': { '@id': 'a' } }
+      { '@id': 'a', ref: { '@id': 'b' } },
+      { '@id': 'b', ref: { '@id': 'c' } },
+      { '@id': 'c', ref: { '@id': 'a' } }
     ];
     
     const depth2 = extractSubgraphWithDepth(graph, 'a', 2);

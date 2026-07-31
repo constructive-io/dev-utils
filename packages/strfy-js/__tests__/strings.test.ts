@@ -1,9 +1,9 @@
-import { jsStringify, chooseQuotes } from '../src';
+import { chooseQuotes,jsStringify } from '../src';
 
 it('handles strings with newlines and other special chars', () => {
   const obj = {
-    'title': 'AIOZ Network is a DePIN for Web3 AI, Storage and Streaming.\n\nAIOZ empowers a faster, secure and decentralized future.\n\nPowered by a global network of DePINs, AIOZ rewards you for sharing your computational resources for storing, transcoding, and streaming digital media content and powering decentralized AI computation.',
-    'description': 'AIOZ Network is a DePIN for Web3 AI, Storage and Streaming.\n\t\rAIOZ empowers a faster, secure and decentralized future.\n\nPowered by a global network of DePINs, AIOZ rewards you for sharing your computational resources for storing, transcoding, and streaming digital media content and powering decentralized AI computation.'
+    title: 'AIOZ Network is a DePIN for Web3 AI, Storage and Streaming.\n\nAIOZ empowers a faster, secure and decentralized future.\n\nPowered by a global network of DePINs, AIOZ rewards you for sharing your computational resources for storing, transcoding, and streaming digital media content and powering decentralized AI computation.',
+    description: 'AIOZ Network is a DePIN for Web3 AI, Storage and Streaming.\n\t\rAIOZ empowers a faster, secure and decentralized future.\n\nPowered by a global network of DePINs, AIOZ rewards you for sharing your computational resources for storing, transcoding, and streaming digital media content and powering decentralized AI computation.'
   };
   const options = {};
   const output = jsStringify(obj, options);

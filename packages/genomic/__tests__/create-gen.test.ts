@@ -1,9 +1,9 @@
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import { execSync } from 'child_process';
 
-import { extractVariables, promptUser, replaceVariables, ExtractedVariables, GitCloner } from '../src/index';
+import { ExtractedVariables, extractVariables, GitCloner,promptUser, replaceVariables } from '../src/index';
 
 jest.mock('child_process', () => {
   return {

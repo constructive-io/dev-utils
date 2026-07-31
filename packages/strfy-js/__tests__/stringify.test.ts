@@ -1,4 +1,4 @@
-import { jsStringify, JSStringifyPropertyReplacerOptions, JSStringifyReplacer } from '../src';
+import { jsStringify, JSStringifyPropertyReplacerOptions } from '../src';
 
 it('serializes simple objects without quotes on keys where possible', () => {
   const obj = {

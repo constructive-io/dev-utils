@@ -1,14 +1,13 @@
 import {
+  createTheme,
   defaultTheme,
-  githubTheme,
-  monokaiTheme,
   draculaTheme,
-  nordTheme,
-  minimalTheme,
-  themes,
   getTheme,
-  createTheme
-} from '../src/themes';
+  githubTheme,
+  minimalTheme,
+  monokaiTheme,
+  nordTheme,
+  themes} from '../src/themes';
 
 describe('themes', () => {
   describe('built-in themes', () => {

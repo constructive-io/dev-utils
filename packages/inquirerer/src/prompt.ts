@@ -1,9 +1,9 @@
-import yanse, { red, whiteBright, yellow, gray, dim, green, cyan, white, blue } from 'yanse';
 import readline from 'readline';
 import { Readable, Writable } from 'stream';
+import { blue, dim, gray, red, white, whiteBright, yellow } from 'yanse';
 
 import { KEY_CODES, TerminalKeypress } from './keypress';
-import { AutocompleteQuestion, BooleanQuestion, CheckboxQuestion, ConfirmQuestion, JsonQuestion, ListQuestion, NumberQuestion, OptionValue, PasswordQuestion, Question, TextQuestion, Validation, Value } from './question';
+import { AutocompleteQuestion, CheckboxQuestion, ConfirmQuestion, JsonQuestion, ListQuestion, NumberQuestion, OptionValue, PasswordQuestion, Question, TextQuestion, Validation } from './question';
 import { DefaultResolverRegistry, globalResolverRegistry } from './resolvers';
 // import { writeFileSync } from 'fs';
 
@@ -67,12 +67,12 @@ const validationMessage = (question: Question, ctx: PromptContext): string => {
   }
 
   switch (ctx.validation.type) {
-    case 'required':
-      return red(`The field "${question.name}" is required. Please provide a value.\n`);
-    case 'pattern':
-      return red(`The field "${question.name}" does not match the pattern: ${question.pattern}.\n`);
-    default:
-      return red(`The field "${question.name}" is invalid. Please try again.\n`);
+  case 'required':
+    return red(`The field "${question.name}" is required. Please provide a value.\n`);
+  case 'pattern':
+    return red(`The field "${question.name}" does not match the pattern: ${question.pattern}.\n`);
+  default:
+    return red(`The field "${question.name}" is invalid. Please try again.\n`);
   }
 };
 class PromptContext {
@@ -128,44 +128,44 @@ function generatePromptMessage(question: Question, ctx: PromptContext): string {
   // 1. Main prompt label with --name inline (and aliases if present)
   const aliasInfo = question.alias
     ? `, ${(Array.isArray(question.alias) ? question.alias : [question.alias])
-        .map(a => a.length === 1 ? `-${a}` : `--${a}`)
-        .join(', ')}`
+      .map(a => a.length === 1 ? `-${a}` : `--${a}`)
+      .join(', ')}`
     : '';
   let promptLine = whiteBright.bold(message || `${name}?`) + ' ' + dim(`(--${name}${aliasInfo})`);
 
   // 2. Append default inline (only if present)
   switch (type) {
-    case 'confirm':
-    case 'boolean':
-      promptLine += ' (y/n)';
-      if (def !== undefined) {
-        promptLine += ` ${yellow(`[${def ? 'y' : 'n'}]`)}`;
-      }
-      break;
+  case 'confirm':
+  case 'boolean':
+    promptLine += ' (y/n)';
+    if (def !== undefined) {
+      promptLine += ` ${yellow(`[${def ? 'y' : 'n'}]`)}`;
+    }
+    break;
 
-    case 'json':
-      promptLine += dim(' (JSON)');
-      if (def !== undefined) {
-        promptLine += ` ${yellow(`[${JSON.stringify(def)}]`)}`;
-      }
-      break;
+  case 'json':
+    promptLine += dim(' (JSON)');
+    if (def !== undefined) {
+      promptLine += ` ${yellow(`[${JSON.stringify(def)}]`)}`;
+    }
+    break;
 
-    case 'text':
-    case 'number':
-      if (def !== undefined) {
-        promptLine += ` ${yellow(`[${def}]`)}`;
-      }
-      break;
+  case 'text':
+  case 'number':
+    if (def !== undefined) {
+      promptLine += ` ${yellow(`[${def}]`)}`;
+    }
+    break;
 
-    case 'autocomplete':
-    case 'list':
-    case 'checkbox':
-      if (def !== undefined) {
-        const defaults = Array.isArray(def) ? def : [def];
-        const rendered = defaults.map(d => yellow(d)).join(gray(', '));
-        promptLine += ` ${yellow(`[${rendered}]`)}`;
-      }
-      break;
+  case 'autocomplete':
+  case 'list':
+  case 'checkbox':
+    if (def !== undefined) {
+      const defaults = Array.isArray(def) ? def : [def];
+      const rendered = defaults.map(d => yellow(d)).join(gray(', '));
+      promptLine += ` ${yellow(`[${rendered}]`)}`;
+    }
+    break;
   }
 
   lines.push(promptLine);
@@ -238,7 +238,7 @@ export class Inquirerer {
       mutateArgs = true,
       resolverRegistry = globalResolverRegistry,
       timeout
-    } = options ?? {}
+    } = options ?? {};
 
     this.useDefaults = useDefaults;
     this.noTty = noTty;
@@ -390,27 +390,27 @@ export class Inquirerer {
       if (success) {
         return {
           success
-        }
+        };
       } else {
         return {
           type: 'pattern',
           success: false,
           reason: question.pattern
-        }
+        };
       }
     }
     return {
       success: true
-    }
+    };
   }
 
   private isEmptyAnswer(answer: any): boolean {
     switch (true) {
-      case answer === undefined:
-      case answer === null:
-      case answer === '':
-      case Array.isArray(answer) && answer.length === 0:
-        return true;
+    case answer === undefined:
+    case answer === null:
+    case answer === '':
+    case Array.isArray(answer) && answer.length === 0:
+      return true;
     }
     return false;
   }
@@ -749,21 +749,21 @@ export class Inquirerer {
     this.handledKeys.add(question.name);
 
     switch (question.type) {
-      case 'text':
-      case 'number':
-      case 'confirm':
-        // do nothing, already set!
-        break;
-      case 'checkbox':
-        this.handleOverridesForCheckboxOptions(argv, obj, question);
-        break;
-      case 'autocomplete':
-      case 'list':
-        // get the value from options :)
-        this.handleOverridesWithOptions(argv, obj, question);
-        break;
-      default:
-        return;
+    case 'text':
+    case 'number':
+    case 'confirm':
+      // do nothing, already set!
+      break;
+    case 'checkbox':
+      this.handleOverridesForCheckboxOptions(argv, obj, question);
+      break;
+    case 'autocomplete':
+    case 'list':
+      // get the value from options :)
+      this.handleOverridesWithOptions(argv, obj, question);
+      break;
+    default:
+      return;
     }
   }
 
@@ -832,26 +832,26 @@ export class Inquirerer {
   private async handleQuestionType(question: Question, ctx: PromptContext): Promise<any> {
     this.keypress?.clearHandlers();
     switch (question.type) {
-      case 'confirm':
-        return this.confirm(question as ConfirmQuestion, ctx);
-      case 'boolean':
-        return this.confirm(question as unknown as ConfirmQuestion, ctx);
-      case 'json':
-        return this.json(question as JsonQuestion, ctx);
-      case 'checkbox':
-        return this.checkbox(question as CheckboxQuestion, ctx);
-      case 'list':
-        return this.list(question as ListQuestion, ctx);
-      case 'autocomplete':
-        return this.autocomplete(question as AutocompleteQuestion, ctx);
-      case 'number':
-        return this.number(question as NumberQuestion, ctx);
-      case 'password':
-        return this.password(question as PasswordQuestion, ctx);
-      case 'text':
-        return this.text(question as TextQuestion, ctx);
-      default:
-        return this.text(question as TextQuestion, ctx);
+    case 'confirm':
+      return this.confirm(question as ConfirmQuestion, ctx);
+    case 'boolean':
+      return this.confirm(question as unknown as ConfirmQuestion, ctx);
+    case 'json':
+      return this.json(question as JsonQuestion, ctx);
+    case 'checkbox':
+      return this.checkbox(question as CheckboxQuestion, ctx);
+    case 'list':
+      return this.list(question as ListQuestion, ctx);
+    case 'autocomplete':
+      return this.autocomplete(question as AutocompleteQuestion, ctx);
+    case 'number':
+      return this.number(question as NumberQuestion, ctx);
+    case 'password':
+      return this.password(question as PasswordQuestion, ctx);
+    case 'text':
+      return this.text(question as TextQuestion, ctx);
+    default:
+      return this.text(question as TextQuestion, ctx);
     }
   }
 
@@ -1045,7 +1045,7 @@ export class Inquirerer {
     let filteredOptions = options;
     let selectedIndex = 0;
     let startIndex = 0; // Start index for visible options
-    const maxLines = this.getMaxLines(question, options.length) // Use provided max or total options
+    const maxLines = this.getMaxLines(question, options.length); // Use provided max or total options
     // const selections: boolean[] = new Array(options.length).fill(false);
 
     const selections: boolean[] = options.map(opt => {
@@ -1198,7 +1198,7 @@ export class Inquirerer {
     let filteredOptions = options;
     let selectedIndex = 0;
     let startIndex = 0;  // Start index for visible options
-    const maxLines = this.getMaxLines(question, options.length) // Use provided max or total options
+    const maxLines = this.getMaxLines(question, options.length); // Use provided max or total options
 
     const display = (): void => {
       this.clearScreen();
@@ -1302,7 +1302,7 @@ export class Inquirerer {
     let input = '';
     let selectedIndex = 0;
     let startIndex = 0;  // Start index for visible options
-    const maxLines = this.getMaxLines(question, options.length) // Use provided max or total options
+    const maxLines = this.getMaxLines(question, options.length); // Use provided max or total options
 
     const display = (): void => {
       this.clearScreen();
@@ -1477,8 +1477,8 @@ export class Inquirerer {
       const flag = `--${q.name}`;
       const aliases = q.alias
         ? (Array.isArray(q.alias) ? q.alias : [q.alias])
-            .map(a => a.length === 1 ? `-${a}` : `--${a}`)
-            .join(', ')
+          .map(a => a.length === 1 ? `-${a}` : `--${a}`)
+          .join(', ')
         : '';
       const aliasStr = aliases ? ` (${aliases})` : '';
       const label = q.message || q.name;

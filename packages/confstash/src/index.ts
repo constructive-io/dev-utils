@@ -9,7 +9,7 @@
 
 export { defaultSearchPlaces, findConfigSync, findUpDir, type FoundConfig } from './discover';
 export { expandExtends, type ExtendsContext } from './extends';
-export { createConfigLoader, defineConfig, type ConfigLoader } from './loader';
+export { type ConfigLoader,createConfigLoader, defineConfig } from './loader';
 export { ConfigLoadError, loadFile, loadFileSync } from './loaders';
 export { deepMerge, explainLayers, mergeLayers } from './merge';
 export type {

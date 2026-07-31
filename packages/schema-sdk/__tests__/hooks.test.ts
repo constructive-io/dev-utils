@@ -1,9 +1,10 @@
-import schema from '../../../__fixtures__/openapi/swagger.json';
-import { defaultSchemaSDKOptions } from '../src/types';
-import { generateReactQueryHooks } from '../src/openapi';
 import { writeFileSync } from 'fs';
+
+import schema from '../../../__fixtures__/openapi/swagger.json';
 import { OpenAPIOptions } from '../dist';
 import { generateContext } from '../src';
+import { generateReactQueryHooks } from '../src/openapi';
+import { defaultSchemaSDKOptions } from '../src/types';
 
 /**
  * Return a new schema object filtered to only include the given paths.

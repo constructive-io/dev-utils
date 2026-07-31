@@ -10,11 +10,12 @@
  */
 
 import { parse } from '@marcbachmann/cel-js';
-import { deparse, Expr } from '../src/deparser';
-import { convertToProtoExpr, MarcAstNode } from '../src/converter';
 import { readFileSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { dirname,resolve } from 'path';
 import { fileURLToPath } from 'url';
+
+import { convertToProtoExpr, MarcAstNode } from '../src/converter';
+import { deparse, Expr } from '../src/deparser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

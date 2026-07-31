@@ -1,5 +1,5 @@
-import { jsStringify, JSStringifyOptions, JSStringifyPropertyReplacerOptions, JSStringifySetterOptions } from '../src';
 import assetList from '../__fixtures__/assetlist.schema.json';
+import { jsStringify, JSStringifyOptions, JSStringifyPropertyReplacerOptions } from '../src';
 
 it('AssetList Modification', () => {
   const options: JSStringifyOptions = {
@@ -10,7 +10,7 @@ it('AssetList Modification', () => {
     },
     valueReplacer: {
       '/$defs/asset/if/required': (opts: JSStringifyPropertyReplacerOptions<any, any>) => {
-        return ['asset_type']
+        return ['asset_type'];
       },
     }
   };

@@ -1,86 +1,86 @@
-import { gitResolvers } from './git';
 import { dateResolvers } from './date';
+import { gitResolvers } from './git';
 import { npmResolvers } from './npm';
-import { workspaceResolvers } from './workspace';
 import type { DefaultResolver, ResolverRegistry } from './types';
+import { workspaceResolvers } from './workspace';
 
 /**
  * A registry for managing default value resolvers.
  * Allows registration of custom resolvers and provides resolution logic.
  */
 export class DefaultResolverRegistry {
-    private resolvers: ResolverRegistry;
+  private resolvers: ResolverRegistry;
 
-    constructor(initialResolvers: ResolverRegistry = {}) {
-        this.resolvers = { ...initialResolvers };
-    }
+  constructor(initialResolvers: ResolverRegistry = {}) {
+    this.resolvers = { ...initialResolvers };
+  }
 
-    /**
+  /**
      * Register a custom resolver.
      * @param key The resolver key (e.g., 'git.user.name')
      * @param resolver The resolver function
      */
-    register(key: string, resolver: DefaultResolver): void {
-        this.resolvers[key] = resolver;
-    }
+  register(key: string, resolver: DefaultResolver): void {
+    this.resolvers[key] = resolver;
+  }
 
-    /**
+  /**
      * Unregister a resolver.
      * @param key The resolver key to remove
      */
-    unregister(key: string): void {
-        delete this.resolvers[key];
-    }
+  unregister(key: string): void {
+    delete this.resolvers[key];
+  }
 
-    /**
+  /**
      * Resolve a key to its value.
      * Returns undefined if the resolver doesn't exist or if it throws an error.
      * @param key The resolver key
      * @returns The resolved value or undefined
      */
-    async resolve(key: string): Promise<any> {
-        const resolver = this.resolvers[key];
-        if (!resolver) {
-            return undefined;
-        }
-
-        try {
-            const result = await Promise.resolve(resolver());
-            // Treat empty strings as undefined
-            return result === '' ? undefined : result;
-        } catch (error) {
-            // Silent failure - log only in debug mode
-            if (process.env.DEBUG === 'genomic') {
-                console.error(`[genomic] Resolver '${key}' failed:`, error);
-            }
-            return undefined;
-        }
+  async resolve(key: string): Promise<any> {
+    const resolver = this.resolvers[key];
+    if (!resolver) {
+      return undefined;
     }
 
-    /**
+    try {
+      const result = await Promise.resolve(resolver());
+      // Treat empty strings as undefined
+      return result === '' ? undefined : result;
+    } catch (error) {
+      // Silent failure - log only in debug mode
+      if (process.env.DEBUG === 'genomic') {
+        console.error(`[genomic] Resolver '${key}' failed:`, error);
+      }
+      return undefined;
+    }
+  }
+
+  /**
      * Check if a resolver exists for the given key.
      * @param key The resolver key
      * @returns True if the resolver exists
      */
-    has(key: string): boolean {
-        return key in this.resolvers;
-    }
+  has(key: string): boolean {
+    return key in this.resolvers;
+  }
 
-    /**
+  /**
      * Get all registered resolver keys.
      * @returns Array of resolver keys
      */
-    keys(): string[] {
-        return Object.keys(this.resolvers);
-    }
+  keys(): string[] {
+    return Object.keys(this.resolvers);
+  }
 
-    /**
+  /**
      * Create a copy of this registry with all current resolvers.
      * @returns A new DefaultResolverRegistry instance
      */
-    clone(): DefaultResolverRegistry {
-        return new DefaultResolverRegistry({ ...this.resolvers });
-    }
+  clone(): DefaultResolverRegistry {
+    return new DefaultResolverRegistry({ ...this.resolvers });
+  }
 }
 
 /**
@@ -88,10 +88,10 @@ export class DefaultResolverRegistry {
  * This is the default registry used by Inquirerer unless a custom one is provided.
  */
 export const globalResolverRegistry = new DefaultResolverRegistry({
-    ...gitResolvers,
-    ...dateResolvers,
-    ...npmResolvers,
-    ...workspaceResolvers,
+  ...gitResolvers,
+  ...dateResolvers,
+  ...npmResolvers,
+  ...workspaceResolvers,
 });
 
 /**
@@ -100,7 +100,7 @@ export const globalResolverRegistry = new DefaultResolverRegistry({
  * @param resolver The resolver function
  */
 export function registerDefaultResolver(key: string, resolver: DefaultResolver): void {
-    globalResolverRegistry.register(key, resolver);
+  globalResolverRegistry.register(key, resolver);
 }
 
 /**
@@ -109,10 +109,10 @@ export function registerDefaultResolver(key: string, resolver: DefaultResolver):
  * @returns The resolved value or undefined
  */
 export function resolveDefault(key: string): Promise<any> {
-    return globalResolverRegistry.resolve(key);
+  return globalResolverRegistry.resolve(key);
 }
 
 // Re-export types and utilities
-export type { DefaultResolver, ResolverRegistry } from './types';
 export { getGitConfig } from './git';
 export { getNpmWhoami } from './npm';
+export type { DefaultResolver, ResolverRegistry } from './types';

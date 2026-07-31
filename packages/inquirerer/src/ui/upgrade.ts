@@ -4,9 +4,10 @@
  * pnpm-style interactive dependency upgrade interface
  */
 
+import { cyan, dim,green, white } from 'yanse';
+
 import { UIEngine } from './engine';
-import { Key, UIEvent, EventResult, PackageInfo, UpgradeSelection } from './types';
-import { cyan, green, yellow, red, dim, white, blue, gray } from 'yanse';
+import { EventResult, Key, PackageInfo, UpgradeSelection } from './types';
 
 interface UpgradeState {
   packages: PackageInfo[];
@@ -174,176 +175,176 @@ export async function interactiveUpgrade(
       
       if (event.type === 'key') {
         switch (event.key) {
-          case Key.UP: {
-            if (filteredPackages.length === 0) return { state };
+        case Key.UP: {
+          if (filteredPackages.length === 0) return { state };
             
-            let newIndex = state.selectedIndex - 1;
-            let newStartIndex = state.startIndex;
+          let newIndex = state.selectedIndex - 1;
+          let newStartIndex = state.startIndex;
             
-            if (newIndex < 0) {
-              newIndex = filteredPackages.length - 1;
-              newStartIndex = Math.max(0, filteredPackages.length - state.maxLines);
-            } else if (newIndex < state.startIndex) {
-              newStartIndex = newIndex;
+          if (newIndex < 0) {
+            newIndex = filteredPackages.length - 1;
+            newStartIndex = Math.max(0, filteredPackages.length - state.maxLines);
+          } else if (newIndex < state.startIndex) {
+            newStartIndex = newIndex;
+          }
+            
+          return {
+            state: {
+              ...state,
+              selectedIndex: newIndex,
+              startIndex: newStartIndex,
+              mode: 'select',
             }
+          };
+        }
+          
+        case Key.DOWN: {
+          if (filteredPackages.length === 0) return { state };
             
+          let newIndex = (state.selectedIndex + 1) % filteredPackages.length;
+          let newStartIndex = state.startIndex;
+            
+          if (newIndex === 0) {
+            newStartIndex = 0;
+          } else if (newIndex >= state.startIndex + state.maxLines) {
+            newStartIndex = newIndex - state.maxLines + 1;
+          }
+            
+          return {
+            state: {
+              ...state,
+              selectedIndex: newIndex,
+              startIndex: newStartIndex,
+              mode: 'select',
+            }
+          };
+        }
+          
+        case Key.SPACE: {
+          if (filteredPackages.length === 0) return { state };
+            
+          const pkg = filteredPackages[state.selectedIndex];
+          const newSelections = new Map(state.selections);
+          const current = newSelections.get(pkg.name)!;
+          newSelections.set(pkg.name, {
+            ...current,
+            selected: !current.selected,
+          });
+            
+          return {
+            state: {
+              ...state,
+              selections: newSelections,
+            }
+          };
+        }
+          
+        case Key.RIGHT: {
+          if (filteredPackages.length === 0) return { state };
+            
+          const pkg = filteredPackages[state.selectedIndex];
+          // Generate version options (simplified - in real use, these would come from npm)
+          const versionOptions = [
+            pkg.latest,
+            `^${pkg.latest}`,
+            `~${pkg.latest}`,
+            pkg.current,
+          ];
+            
+          return {
+            state: {
+              ...state,
+              mode: 'version',
+              versionOptions,
+              versionIndex: 0,
+            }
+          };
+        }
+          
+        case Key.LEFT: {
+          if (state.mode === 'version') {
+            const newIndex = (state.versionIndex - 1 + state.versionOptions.length) % state.versionOptions.length;
             return {
               state: {
                 ...state,
-                selectedIndex: newIndex,
-                startIndex: newStartIndex,
-                mode: 'select',
+                versionIndex: newIndex,
               }
             };
           }
+          return { state };
+        }
           
-          case Key.DOWN: {
-            if (filteredPackages.length === 0) return { state };
-            
-            let newIndex = (state.selectedIndex + 1) % filteredPackages.length;
-            let newStartIndex = state.startIndex;
-            
-            if (newIndex === 0) {
-              newStartIndex = 0;
-            } else if (newIndex >= state.startIndex + state.maxLines) {
-              newStartIndex = newIndex - state.maxLines + 1;
-            }
-            
-            return {
-              state: {
-                ...state,
-                selectedIndex: newIndex,
-                startIndex: newStartIndex,
-                mode: 'select',
-              }
-            };
-          }
-          
-          case Key.SPACE: {
-            if (filteredPackages.length === 0) return { state };
-            
+        case Key.ENTER: {
+          if (state.mode === 'version') {
+            // Apply selected version
             const pkg = filteredPackages[state.selectedIndex];
             const newSelections = new Map(state.selections);
             const current = newSelections.get(pkg.name)!;
             newSelections.set(pkg.name, {
               ...current,
-              selected: !current.selected,
+              selected: true,
+              targetVersion: state.versionOptions[state.versionIndex],
             });
-            
+              
             return {
               state: {
                 ...state,
                 selections: newSelections,
+                mode: 'select',
               }
             };
           }
+            
+          // Confirm and return results
+          const updates: UpgradeResult['updates'] = [];
+          state.selections.forEach((selection, name) => {
+            if (selection.selected) {
+              const pkg = state.packages.find(p => p.name === name)!;
+              updates.push({
+                name,
+                from: pkg.current,
+                to: selection.targetVersion,
+              });
+            }
+          });
+            
+          return {
+            state,
+            done: true,
+            value: { updates },
+          };
+        }
           
-          case Key.RIGHT: {
-            if (filteredPackages.length === 0) return { state };
-            
-            const pkg = filteredPackages[state.selectedIndex];
-            // Generate version options (simplified - in real use, these would come from npm)
-            const versionOptions = [
-              pkg.latest,
-              `^${pkg.latest}`,
-              `~${pkg.latest}`,
-              pkg.current,
-            ];
-            
+        case Key.ESCAPE: {
+          if (state.mode === 'version') {
             return {
               state: {
                 ...state,
-                mode: 'version',
-                versionOptions,
-                versionIndex: 0,
+                mode: 'select',
               }
             };
           }
+          // Cancel
+          return {
+            state,
+            done: true,
+            value: { updates: [] },
+          };
+        }
           
-          case Key.LEFT: {
-            if (state.mode === 'version') {
-              const newIndex = (state.versionIndex - 1 + state.versionOptions.length) % state.versionOptions.length;
-              return {
-                state: {
-                  ...state,
-                  versionIndex: newIndex,
-                }
-              };
-            }
-            return { state };
-          }
-          
-          case Key.ENTER: {
-            if (state.mode === 'version') {
-              // Apply selected version
-              const pkg = filteredPackages[state.selectedIndex];
-              const newSelections = new Map(state.selections);
-              const current = newSelections.get(pkg.name)!;
-              newSelections.set(pkg.name, {
-                ...current,
-                selected: true,
-                targetVersion: state.versionOptions[state.versionIndex],
-              });
-              
-              return {
-                state: {
-                  ...state,
-                  selections: newSelections,
-                  mode: 'select',
-                }
-              };
-            }
-            
-            // Confirm and return results
-            const updates: UpgradeResult['updates'] = [];
-            state.selections.forEach((selection, name) => {
-              if (selection.selected) {
-                const pkg = state.packages.find(p => p.name === name)!;
-                updates.push({
-                  name,
-                  from: pkg.current,
-                  to: selection.targetVersion,
-                });
+        case Key.BACKSPACE: {
+          if (state.filter.length > 0) {
+            return {
+              state: {
+                ...state,
+                filter: state.filter.slice(0, -1),
+                selectedIndex: 0,
+                startIndex: 0,
               }
-            });
-            
-            return {
-              state,
-              done: true,
-              value: { updates },
             };
           }
-          
-          case Key.ESCAPE: {
-            if (state.mode === 'version') {
-              return {
-                state: {
-                  ...state,
-                  mode: 'select',
-                }
-              };
-            }
-            // Cancel
-            return {
-              state,
-              done: true,
-              value: { updates: [] },
-            };
-          }
-          
-          case Key.BACKSPACE: {
-            if (state.filter.length > 0) {
-              return {
-                state: {
-                  ...state,
-                  filter: state.filter.slice(0, -1),
-                  selectedIndex: 0,
-                  startIndex: 0,
-                }
-              };
-            }
-            return { state };
-          }
+          return { state };
+        }
         }
       }
       

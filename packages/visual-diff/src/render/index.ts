@@ -1,11 +1,9 @@
 export {
+  renderHtml,
+  renderHtmlDocument,
+  renderHtmlSideBySide} from './html';
+export {
   renderTerminal,
   renderTerminalCompact,
   renderTerminalSummary
 } from './terminal';
-
-export {
-  renderHtml,
-  renderHtmlSideBySide,
-  renderHtmlDocument
-} from './html';

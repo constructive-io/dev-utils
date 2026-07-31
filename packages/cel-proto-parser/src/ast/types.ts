@@ -1,6 +1,7 @@
 import * as t from '@babel/types';
+
 import { ResolvedCelProtoParserOptions } from '../options';
-import { toCamelCase, getFieldName, createNamedImport } from '../utils';
+import { createNamedImport,getFieldName, toCamelCase } from '../utils';
 
 // Type mapping from protobuf to TypeScript
 const PROTO_TO_TS_TYPE: Record<string, string> = {
@@ -35,16 +36,16 @@ export function resolveTypeName(typeName: string): t.TSType {
   const tsType = PROTO_TO_TS_TYPE[typeName];
   if (tsType) {
     switch (tsType) {
-      case 'string':
-        return t.tsStringKeyword();
-      case 'boolean':
-        return t.tsBooleanKeyword();
-      case 'number':
-        return t.tsNumberKeyword();
-      case 'bigint':
-        return t.tsBigIntKeyword();
-      default:
-        return t.tsTypeReference(t.identifier(tsType));
+    case 'string':
+      return t.tsStringKeyword();
+    case 'boolean':
+      return t.tsBooleanKeyword();
+    case 'number':
+      return t.tsNumberKeyword();
+    case 'bigint':
+      return t.tsBigIntKeyword();
+    default:
+      return t.tsTypeReference(t.identifier(tsType));
     }
   }
 

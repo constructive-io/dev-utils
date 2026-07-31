@@ -74,7 +74,7 @@ it('applies replacer function if provided', () => {
       lastName: 'Johnson',
       age: 30
     }
-  ]
+  ];
   const output = jsonStringify(obj, {
     valueReplacer: {
       '*': (opts: JSStringifyPropertyReplacerOptions<Person, Person[]>) => {

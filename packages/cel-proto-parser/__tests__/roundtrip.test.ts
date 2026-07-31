@@ -10,8 +10,8 @@
  * manually constructed ASTs that match the @marcbachmann/cel-js format.
  */
 
-import { deparse, Expr } from '../src/deparser';
 import { convertToProtoExpr, MarcAstNode } from '../src/converter';
+import { deparse } from '../src/deparser';
 
 describe('CEL AST Converter', () => {
   describe('Value Conversion', () => {

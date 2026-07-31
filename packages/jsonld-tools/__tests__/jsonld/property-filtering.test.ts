@@ -2,8 +2,8 @@ import {
   extractSubgraphs,
   filterEntityProperties,
   filterGraphProperties,
-  matchesSelector,
   type JsonLdEntity,
+  matchesSelector,
   type PropertyFilterConfig,
 } from '../../src/jsonld-utils';
 

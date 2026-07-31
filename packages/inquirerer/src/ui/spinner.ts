@@ -5,9 +5,10 @@
  */
 
 import { Writable } from 'stream';
+import { cyan,green, red, yellow } from 'yanse';
+
 import { UIEngine } from './engine';
 import { SpinnerConfig } from './types';
-import { green, red, yellow, cyan } from 'yanse';
 
 /**
  * Default spinner frames (dots style)
@@ -160,24 +161,24 @@ export class Spinner {
     let displayText = finalText ?? text;
     
     switch (status) {
-      case 'success':
-        icon = green('✔');
-        displayText = green(displayText);
-        break;
-      case 'error':
-        icon = red('✖');
-        displayText = red(displayText);
-        break;
-      case 'warning':
-        icon = yellow('⚠');
-        displayText = yellow(displayText);
-        break;
-      case 'info':
-        icon = cyan('ℹ');
-        displayText = cyan(displayText);
-        break;
-      default:
-        icon = cyan(this.frames[frame]);
+    case 'success':
+      icon = green('✔');
+      displayText = green(displayText);
+      break;
+    case 'error':
+      icon = red('✖');
+      displayText = red(displayText);
+      break;
+    case 'warning':
+      icon = yellow('⚠');
+      displayText = yellow(displayText);
+      break;
+    case 'info':
+      icon = cyan('ℹ');
+      displayText = cyan(displayText);
+      break;
+    default:
+      icon = cyan(this.frames[frame]);
     }
     
     // Clear line and write

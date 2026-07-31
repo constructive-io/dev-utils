@@ -1,15 +1,11 @@
-export { createJsonLdConfig, JsonLdConfigBuilder } from './config';
 export { createJsonLdBuilder, JsonLdBuilder } from './builder';
-
-export type { JsonLdConfig, JsonLdFilterOptions, BuildOptions, PopulateConfig } from './types';
-
+export { filterJsonLdGraph } from './builder-utils';
+export { createJsonLdConfig, JsonLdConfigBuilder } from './config';
 export {
-  type JsonLdEntity,
-  type JsonLdGraph,
   extractReferences,
   extractSubgraph,
-  extractSubgraphWithDepth,
   extractSubgraphs,
+  extractSubgraphWithDepth,
   filterEntityProperties,
   filterGraphProperties,
   findEntities,
@@ -20,6 +16,7 @@ export {
   findOrphans,
   findReferencingEntities,
   inlineReferences,
+  type JsonLdEntity,
+  type JsonLdGraph,
 } from './jsonld-utils';
-
-export { filterJsonLdGraph } from './builder-utils';
+export type { BuildOptions, JsonLdConfig, JsonLdFilterOptions, PopulateConfig } from './types';

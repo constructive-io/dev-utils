@@ -1,8 +1,9 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
+import { createSpinner } from 'inquirerer';
 import * as os from 'os';
 import * as path from 'path';
-import { createSpinner } from 'inquirerer';
+
 import { GitCloneOptions, GitCloneResult } from './types';
 
 export class GitCloner {

@@ -31,10 +31,10 @@ export function toCamelCase(
     key = key.replace(/^[^a-zA-Z0-9]+/, '');
   }
   return key
-        // Convert what follows a separator into upper case
-        .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '')
-        // Ensure the first character of the result is always lowercase
-        .replace(/^./, (c) => c.toLowerCase());
+  // Convert what follows a separator into upper case
+    .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '')
+  // Ensure the first character of the result is always lowercase
+    .replace(/^./, (c) => c.toLowerCase());
 }
 
 // // Determine if the key is a valid JavaScript identifier

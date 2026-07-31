@@ -1,8 +1,9 @@
 import fs from 'fs';
+import { CLIOptions,Inquirerer } from 'inquirerer';
+import { ParsedArgs } from 'minimist';
 import os from 'os';
 import path from 'path';
-import { Inquirerer, CLIOptions } from 'inquirerer';
-import { ParsedArgs } from 'minimist';
+
 import { createTestEnvironment, TestEnvironment } from './harness';
 
 const { mkdtempSync, rmSync, cpSync } = fs;

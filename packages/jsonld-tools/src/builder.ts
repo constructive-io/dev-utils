@@ -6,15 +6,15 @@
  * the current head-manager system.
  */
 
-import { JsonLdConfigBuilder } from './config';
-import { extractSubgraphs, filterGraphProperties, type JsonLdGraph } from './jsonld-utils';
-import type { BuildOptions, JsonLdConfig } from './types';
 import {
   applyPopulateConfig,
   buildPropertyFilterConfig,
   filterJsonLdGraph,
   validateRuntimeConfig,
 } from './builder-utils';
+import { JsonLdConfigBuilder } from './config';
+import { extractSubgraphs, filterGraphProperties, type JsonLdGraph } from './jsonld-utils';
+import type { BuildOptions, JsonLdConfig } from './types';
 
 /**
  * Mutable builder class that extends config builder with automatic method delegation

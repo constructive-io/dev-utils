@@ -35,4 +35,4 @@ export const extractFirst = (argv: Partial<ParsedArgs>) => {
   return { first, newArgv };
 };
 
-export type { ParsedArgs, Opts as ParseArgvOptions } from 'minimist';
+export type { Opts as ParseArgvOptions,ParsedArgs } from 'minimist';

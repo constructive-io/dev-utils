@@ -1,8 +1,8 @@
+import { existsSync, readFileSync, unlinkSync } from 'fs';
 import { join } from 'path';
-import { readFileSync, existsSync, unlinkSync } from 'fs';
 
-import { yamlize, yamlizeString, yamlizeObject, toYaml, fromYaml } from '../src';
 import type { YamlNode } from '../src';
+import { fromYaml,toYaml, yamlize, yamlizeObject, yamlizeString } from '../src';
 
 const fixturesDir = join(__dirname, '../__fixtures__');
 const metaYaml = join(fixturesDir, 'meta/meta.yaml');

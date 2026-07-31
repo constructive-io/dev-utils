@@ -4,7 +4,7 @@
  * Tests the new consistent merging behavior and clear methods
  */
 
-import { createJsonLdConfig, createJsonLdBuilder } from '../../src';
+import { createJsonLdBuilder,createJsonLdConfig } from '../../src';
 
 describe('Config Merging Behavior', () => {
   describe('Default Merging', () => {

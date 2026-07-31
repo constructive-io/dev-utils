@@ -48,45 +48,45 @@ interface BinaryInfo {
 
 function tokenBinaryInfo(tok: Token): BinaryInfo | null {
   switch (tok.type) {
-    case TokenType.ADD:
-      return { op: '+', prec: 4, rightAssoc: false };
-    case TokenType.SUB:
-      return { op: '-', prec: 4, rightAssoc: false };
-    case TokenType.MUL:
-      return { op: '*', prec: 5, rightAssoc: false };
-    case TokenType.DIV:
-      return { op: '/', prec: 5, rightAssoc: false };
-    case TokenType.MOD:
-      return { op: '%', prec: 5, rightAssoc: false };
-    case TokenType.POW:
-      return { op: '^', prec: 6, rightAssoc: true };
-    case TokenType.EQLC:
-      return { op: '==', prec: 3, rightAssoc: false };
-    case TokenType.NEQ:
-      return { op: '!=', prec: 3, rightAssoc: false };
-    case TokenType.LTE:
-      return { op: '<=', prec: 3, rightAssoc: false };
-    case TokenType.LT:
-      return { op: '<', prec: 3, rightAssoc: false };
-    case TokenType.GTE:
-      return { op: '>=', prec: 3, rightAssoc: false };
-    case TokenType.GT:
-      return { op: '>', prec: 3, rightAssoc: false };
-    case TokenType.IDENTIFIER:
-      switch (tok.value) {
-        case 'or':
-          return { op: 'or', prec: 1, rightAssoc: false };
-        case 'and':
-          return { op: 'and', prec: 2, rightAssoc: false };
-        case 'unless':
-          return { op: 'unless', prec: 2, rightAssoc: false };
-        case 'atan2':
-          return { op: 'atan2', prec: 5, rightAssoc: false };
-        default:
-          return null;
-      }
+  case TokenType.ADD:
+    return { op: '+', prec: 4, rightAssoc: false };
+  case TokenType.SUB:
+    return { op: '-', prec: 4, rightAssoc: false };
+  case TokenType.MUL:
+    return { op: '*', prec: 5, rightAssoc: false };
+  case TokenType.DIV:
+    return { op: '/', prec: 5, rightAssoc: false };
+  case TokenType.MOD:
+    return { op: '%', prec: 5, rightAssoc: false };
+  case TokenType.POW:
+    return { op: '^', prec: 6, rightAssoc: true };
+  case TokenType.EQLC:
+    return { op: '==', prec: 3, rightAssoc: false };
+  case TokenType.NEQ:
+    return { op: '!=', prec: 3, rightAssoc: false };
+  case TokenType.LTE:
+    return { op: '<=', prec: 3, rightAssoc: false };
+  case TokenType.LT:
+    return { op: '<', prec: 3, rightAssoc: false };
+  case TokenType.GTE:
+    return { op: '>=', prec: 3, rightAssoc: false };
+  case TokenType.GT:
+    return { op: '>', prec: 3, rightAssoc: false };
+  case TokenType.IDENTIFIER:
+    switch (tok.value) {
+    case 'or':
+      return { op: 'or', prec: 1, rightAssoc: false };
+    case 'and':
+      return { op: 'and', prec: 2, rightAssoc: false };
+    case 'unless':
+      return { op: 'unless', prec: 2, rightAssoc: false };
+    case 'atan2':
+      return { op: 'atan2', prec: 5, rightAssoc: false };
     default:
       return null;
+    }
+  default:
+    return null;
   }
 }
 
@@ -283,28 +283,28 @@ export class Parser {
     const t = this.peek();
 
     switch (t.type) {
-      case TokenType.NUMBER:
-        this.advance();
-        return { type: 'NumberLiteral', value: parseNumber(t.value) };
-      case TokenType.STRING:
-        this.advance();
-        return { type: 'StringLiteral', value: t.value };
-      case TokenType.LEFT_PAREN: {
-        this.advance();
-        const inner = this.parseExpr(0);
-        this.expect(TokenType.RIGHT_PAREN);
-        return { type: 'ParenExpr', expr: inner };
-      }
-      case TokenType.LEFT_BRACE: {
-        const matchers = this.parseMatchers();
-        return { type: 'VectorSelector', matchers };
-      }
-      case TokenType.IDENTIFIER:
-        return this.parseIdentifierExpr();
-      default:
-        throw new Error(
-          `Unexpected token ${t.type} ('${t.value}') at line ${t.range.start.line}:${t.range.start.column}`
-        );
+    case TokenType.NUMBER:
+      this.advance();
+      return { type: 'NumberLiteral', value: parseNumber(t.value) };
+    case TokenType.STRING:
+      this.advance();
+      return { type: 'StringLiteral', value: t.value };
+    case TokenType.LEFT_PAREN: {
+      this.advance();
+      const inner = this.parseExpr(0);
+      this.expect(TokenType.RIGHT_PAREN);
+      return { type: 'ParenExpr', expr: inner };
+    }
+    case TokenType.LEFT_BRACE: {
+      const matchers = this.parseMatchers();
+      return { type: 'VectorSelector', matchers };
+    }
+    case TokenType.IDENTIFIER:
+      return this.parseIdentifierExpr();
+    default:
+      throw new Error(
+        `Unexpected token ${t.type} ('${t.value}') at line ${t.range.start.line}:${t.range.start.column}`
+      );
     }
   }
 
@@ -475,18 +475,18 @@ export class Parser {
   private parseMatchOp(): MatchOp {
     const t = this.advance();
     switch (t.type) {
-      case TokenType.EQL:
-        return '=';
-      case TokenType.NEQ:
-        return '!=';
-      case TokenType.EQL_REGEX:
-        return '=~';
-      case TokenType.NEQ_REGEX:
-        return '!~';
-      default:
-        throw new Error(
-          `Expected label matcher operator but found '${t.value}' at line ${t.range.start.line}:${t.range.start.column}`
-        );
+    case TokenType.EQL:
+      return '=';
+    case TokenType.NEQ:
+      return '!=';
+    case TokenType.EQL_REGEX:
+      return '=~';
+    case TokenType.NEQ_REGEX:
+      return '!~';
+    default:
+      throw new Error(
+        `Expected label matcher operator but found '${t.value}' at line ${t.range.start.line}:${t.range.start.column}`
+      );
     }
   }
 }

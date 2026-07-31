@@ -1,6 +1,6 @@
 import { diff, diffFiles } from '../src/diff';
+import { renderHtml, renderHtmlDocument,renderHtmlSideBySide } from '../src/render/html';
 import { renderTerminal, renderTerminalCompact, renderTerminalSummary } from '../src/render/terminal';
-import { renderHtml, renderHtmlSideBySide, renderHtmlDocument } from '../src/render/html';
 
 describe('renderTerminal', () => {
   const oldContent = 'line 1\nold line\nline 3';

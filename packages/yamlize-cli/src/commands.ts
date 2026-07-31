@@ -2,8 +2,8 @@ import { readFileSync } from 'fs';
 import type { CLIOptions, Inquirerer } from 'inquirerer';
 import yaml from 'js-yaml';
 import type { ParsedArgs } from 'minimist';
-import { yamlize } from 'yamlize';
 import type { YamlizeContext } from 'yamlize';
+import { yamlize } from 'yamlize';
 
 import { help } from './usage';
 

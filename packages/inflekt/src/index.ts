@@ -5,8 +5,8 @@
  * It uses the 'inflection' package with custom overrides for Latin plural suffixes
  * that PostGraphile handles differently than standard English pluralization.
  */
-export * from './pluralize';
 export * from './case';
-export * from './naming';
 export * from './matching';
+export * from './naming';
+export * from './pluralize';
 export * from './transform-keys';

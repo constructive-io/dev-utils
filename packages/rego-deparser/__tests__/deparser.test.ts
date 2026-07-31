@@ -1,16 +1,15 @@
 import {
   deparse,
-  deparseModule,
-  deparsePackage,
-  deparseImport,
-  deparseRule,
   deparseExpr,
+  deparseImport,
+  deparsePackage,
+  deparseRule,
   deparseTerm,
+  Expr,
+  Import,
   Module,
   Package,
-  Import,
   Rule,
-  Expr,
   Term,
   TermType
 } from '../src';

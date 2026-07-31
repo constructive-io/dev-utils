@@ -1,5 +1,5 @@
-import { writeFileSync } from 'fs';
 import type { Operation } from 'fast-json-patch';
+import { writeFileSync } from 'fs';
 import { diff } from 'jest-diff';
 
 import schema from '../../../__fixtures__/openapi/swagger.json';

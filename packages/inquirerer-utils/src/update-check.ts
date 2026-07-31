@@ -79,7 +79,9 @@ export function clearUpdateCache(toolName: string): boolean {
       fs.unlinkSync(cacheFile);
       return true;
     }
-  } catch {}
+  } catch {
+    // ignore
+  }
   return false;
 }
 
