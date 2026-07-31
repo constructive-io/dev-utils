@@ -2,74 +2,47 @@
  * Pluralization utilities with PostGraphile-compatible Latin suffix handling
  *
  * Uses the 'inflection' package with custom overrides for Latin plural suffixes
- * that PostGraphile handles differently than standard English pluralization.
+ * that PostGraphile handles differently than standard English pluralization,
+ * plus a dictionary-proven exception table for the words where no suffix rule
+ * is right (see exceptions.ts).
  */
 import * as inflection from 'inflection';
 
-/**
- * Latin plural suffixes that inflection handles differently than PostGraphile.
- *
- * The inflection library correctly singularizes Latin words (schemata -> schematum),
- * but PostGraphile uses English-style naming (schemata -> schema).
- *
- * Format: [pluralSuffix, singularSuffix]
- */
-const LATIN_SUFFIX_OVERRIDES: Array<[string, string]> = [
-  ['schemata', 'schema'],
-  ['criteria', 'criterion'],
-  ['phenomena', 'phenomenon'],
-  ['media', 'medium'],
-  ['memoranda', 'memorandum'],
-  ['strata', 'stratum'],
-  ['curricula', 'curriculum'],
-  ['data', 'datum'],
-];
+import { SINGULAR_EXCEPTIONS } from './exceptions';
+import {
+  enforceDoubleSPlural,
+  normalizeMalformedDoubleS,
+  pluralizeFStem,
+  restoreWordCase,
+  singularizeByRules,
+} from './rules';
+
+const LAST_SEGMENT_REGEX = /([A-Z]|_[a-z0-9])[a-z0-9]*_*$/;
 
 /**
- * Compound words ending in "base" that the inflection library incorrectly
- * singularizes via its (b)a branch in the ses$ rule (e.g. codebases -> codebasis).
- * We intercept these before delegating to inflection.singularize().
+ * Locate the final word segment of a compound name ("user_cookies" -> "cookies",
+ * "UserCookies" -> "Cookies") so the exception table applies to compounds too.
  */
-const COMPOUND_BASE_REGEX = /(database|codebase|firebase|knowledgebase)s$/i;
-
-const TRAILING_TRIPLE_S_REGEX = /[sS]{3,}$/;
-const TRAILING_TRIPLE_S_BEFORE_ES_REGEX = /[sS]{3,}(?=e[sS]$)/;
-
-function normalizeTrailingSRun(suffix: string): string {
-  return suffix === suffix.toUpperCase() ? 'SS' : 'ss';
-}
-
-function normalizeTripleSBeforeEs(word: string): string {
-  return word.replace(TRAILING_TRIPLE_S_BEFORE_ES_REGEX, normalizeTrailingSRun);
-}
-
-function normalizeTrailingTripleS(word: string): string {
-  const match = word.match(TRAILING_TRIPLE_S_REGEX);
-  if (!match) {
-    return word;
+function splitLastSegment(
+  str: string
+): { prefix: string; word: string } | null {
+  const matches = str.match(LAST_SEGMENT_REGEX);
+  if (!matches) {
+    return null;
   }
-
-  const suffix = match[0];
-  const prefix = word.slice(0, -suffix.length);
-  const normalizedSuffix = normalizeTrailingSRun(suffix);
-  return `${prefix}${normalizedSuffix}`;
+  const index = (matches.index ?? 0) + matches[1].length - 1;
+  if (index <= 0) {
+    return null;
+  }
+  return { prefix: str.slice(0, index), word: str.slice(index) };
 }
 
-function normalizeMalformedDoubleS(word: string): string {
-  return normalizeTrailingTripleS(normalizeTripleSBeforeEs(word));
-}
-
-function enforceDoubleSPlural(singularWord: string, pluralWord: string): string {
-  if (!singularWord.toLowerCase().endsWith('ss')) {
-    return pluralWord;
+function lookupException(word: string): string | null {
+  const key = word.toLowerCase();
+  if (!Object.prototype.hasOwnProperty.call(SINGULAR_EXCEPTIONS, key)) {
+    return null;
   }
-
-  // Defensive normalization for malformed outputs like "hazardClasss".
-  if (pluralWord === `${singularWord}s`) {
-    return `${singularWord}es`;
-  }
-
-  return pluralWord;
+  return restoreWordCase(word, SINGULAR_EXCEPTIONS[key]);
 }
 
 /**
@@ -78,44 +51,47 @@ function enforceDoubleSPlural(singularWord: string, pluralWord: string): string 
  */
 export function singularize(word: string): string {
   const normalizedWord = normalizeMalformedDoubleS(word);
-  const lowerWord = normalizedWord.toLowerCase();
 
-  for (const [pluralSuffix, singularSuffix] of LATIN_SUFFIX_OVERRIDES) {
-    if (lowerWord.endsWith(pluralSuffix)) {
-      const suffixStart = normalizedWord.length - pluralSuffix.length;
-      const prefix = normalizedWord.slice(0, suffixStart);
-      const originalSuffix = normalizedWord.slice(suffixStart);
+  const exception = lookupException(normalizedWord);
+  if (exception) {
+    return exception;
+  }
 
-      const isAllCaps = originalSuffix === originalSuffix.toUpperCase();
-      const isUpperSuffix =
-        originalSuffix[0] === originalSuffix[0].toUpperCase();
-
-      let newSuffix: string;
-      if (isAllCaps) {
-        newSuffix = singularSuffix.toUpperCase();
-      } else if (isUpperSuffix) {
-        newSuffix = singularSuffix.charAt(0).toUpperCase() + singularSuffix.slice(1);
-      } else {
-        newSuffix = singularSuffix;
-      }
-
-      return prefix + newSuffix;
+  const segment = splitLastSegment(normalizedWord);
+  if (segment) {
+    const segmentException = lookupException(segment.word);
+    if (segmentException) {
+      return segment.prefix + segmentException;
     }
   }
 
-  // Compound *base words: the inflection library's (b)a branch in the ses$
-  // rule incorrectly produces "codebasis" instead of "codebase".
-  const baseMatch = normalizedWord.match(COMPOUND_BASE_REGEX);
-  if (baseMatch) {
-    return normalizedWord.slice(0, -1);
-  }
-
-  return normalizeMalformedDoubleS(inflection.singularize(normalizedWord));
+  return singularizeByRules(normalizedWord);
 }
+
+const F_OR_FE_REGEX = /(?:f|fe)$/i;
 
 function pluralizeCanonical(word: string): string {
   const normalizedWord = normalizeMalformedDoubleS(word);
-  const pluralWord = normalizeMalformedDoubleS(inflection.pluralize(normalizedWord));
+
+  // -f/-fe words: only the f-stem nouns take -ves; the rest take a plain "s".
+  const fStem = pluralizeFStem(normalizedWord);
+  if (fStem) {
+    return fStem;
+  }
+  if (F_OR_FE_REGEX.test(normalizedWord)) {
+    return `${normalizedWord}s`;
+  }
+
+  const pluralWord = normalizeMalformedDoubleS(
+    inflection.pluralize(normalizedWord)
+  );
+
+  // -is nouns the inflection library leaves untouched (iris, chassis) rather
+  // than treating as Greek/Latin (analysis -> analyses).
+  if (pluralWord === normalizedWord && /is$/i.test(normalizedWord)) {
+    return `${normalizedWord}es`;
+  }
+
   return enforceDoubleSPlural(singularize(normalizedWord), pluralWord);
 }
 
@@ -135,11 +111,8 @@ export function pluralize(word: string): string {
  * @param str - The string to transform
  * @returns The transformed string with only the final segment changed
  */
-function changeLastWord(
-  fn: (word: string) => string,
-  str: string
-): string {
-  const matches = str.match(/([A-Z]|_[a-z0-9])[a-z0-9]*_*$/);
+function changeLastWord(fn: (word: string) => string, str: string): string {
+  const matches = str.match(LAST_SEGMENT_REGEX);
   const index = matches ? (matches.index ?? 0) + matches[1].length - 1 : 0;
   const suffixMatches = str.match(/_*$/);
   const suffixIndex =
