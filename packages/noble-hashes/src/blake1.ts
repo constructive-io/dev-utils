@@ -28,9 +28,9 @@ import * as u64 from './_u64';
 // prettier-ignore
 import {
   abytes, aexists, aoutput,
+  type CHash,
   clean, createHasher,
   createView,
-  type CHash,
   type Hash,
   type TArg,
   type TRet
@@ -443,7 +443,7 @@ class BLAKE1_64B extends BLAKE1<BLAKE1_64B> {
   protected get(): [
     number, number, number, number, number, number, number, number,
     number, number, number, number, number, number, number, number
-  ] {
+    ] {
     let { v0l, v0h, v1l, v1h, v2l, v2h, v3l, v3h, v4l, v4h, v5l, v5h, v6l, v6h, v7l, v7h } = this;
     return [v0l, v0h, v1l, v1h, v2l, v2h, v3l, v3h, v4l, v4h, v5l, v5h, v6l, v6h, v7l, v7h];
   }

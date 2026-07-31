@@ -9,7 +9,7 @@ export function isSimpleKey(key: string): boolean {
 }
 
 export function dirname(path: string): string {
-  return path.replace(/\/[^\/]*$/, ''); // Removes last segment after the last '/'
+  return path.replace(/\/[^/]*$/, ''); // Removes last segment after the last '/'
 }
 
 export function escapeStringForSingleQuotes(str: string): string {
@@ -50,7 +50,7 @@ export function escapeStringForBacktickQuotes(str: string): string {
 }
 
 
-const globPattern = /\*+([^+@!?\*\[\(]*)/;
+const globPattern = /\*+([^+@!?*[(]*)/;
 
 interface ShouldIncludeOptions {
   include: string[];
@@ -137,4 +137,4 @@ export const shouldInclude = (type: string, options: ShouldIncludeOptions): bool
 
   // Default behavior if neither is effectively set
   return true;
-}
+};

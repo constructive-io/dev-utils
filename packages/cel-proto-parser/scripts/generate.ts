@@ -1,4 +1,5 @@
 import { join, resolve } from 'path';
+
 import { CelProtoParser, CelProtoParserOptions } from '../src';
 
 const inFile: string = join(__dirname, '../__fixtures__/syntax.proto');

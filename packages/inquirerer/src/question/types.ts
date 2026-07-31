@@ -35,36 +35,36 @@ export interface BaseQuestion {
     skipPrompt?: boolean;
   }
   
-  export interface ConfirmQuestion extends BaseQuestion {
+export interface ConfirmQuestion extends BaseQuestion {
     type: 'confirm';
     default?: boolean;  // Defaults are typically boolean for confirm types
   }
 
-  export interface BooleanQuestion extends BaseQuestion {
+export interface BooleanQuestion extends BaseQuestion {
     type: 'boolean';
     default?: boolean;  // Alias for confirm — same behavior, semantic name
   }
 
-  export interface JsonQuestion extends BaseQuestion {
+export interface JsonQuestion extends BaseQuestion {
     type: 'json';
     default?: Record<string, unknown>;  // Default JSON value
   }
   
-  export interface AutocompleteQuestion extends BaseQuestion {
+export interface AutocompleteQuestion extends BaseQuestion {
     type: 'autocomplete';
     options: (string|OptionValue)[];
     maxDisplayLines?: number;
     allowCustomOptions?: boolean;
   }
 
-  export interface ListQuestion extends BaseQuestion {
+export interface ListQuestion extends BaseQuestion {
     type: 'list';
     options: (string|OptionValue)[];
     maxDisplayLines?: number;
     allowCustomOptions?: boolean;
   }
   
-  export interface CheckboxQuestion extends BaseQuestion {
+export interface CheckboxQuestion extends BaseQuestion {
     type: 'checkbox';
     options: (string|OptionValue)[];
     maxDisplayLines?: number;
@@ -73,19 +73,19 @@ export interface BaseQuestion {
     default?: string[];
   }
   
-  export interface TextQuestion extends BaseQuestion {
+export interface TextQuestion extends BaseQuestion {
     type: 'text';
     default?: string;
   }
 
-  export interface NumberQuestion extends BaseQuestion {
+export interface NumberQuestion extends BaseQuestion {
     type: 'number';
     default?: number;
   }
 
-  export interface PasswordQuestion extends BaseQuestion {
+export interface PasswordQuestion extends BaseQuestion {
     type: 'password';
     mask?: string;  // Character to use for masking (default: '*')
   }
   
-  export type Question = ConfirmQuestion | BooleanQuestion | JsonQuestion | ListQuestion | AutocompleteQuestion | CheckboxQuestion | TextQuestion | NumberQuestion | PasswordQuestion;
+export type Question = ConfirmQuestion | BooleanQuestion | JsonQuestion | ListQuestion | AutocompleteQuestion | CheckboxQuestion | TextQuestion | NumberQuestion | PasswordQuestion;

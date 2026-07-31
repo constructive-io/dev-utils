@@ -5,7 +5,8 @@
  */
 
 import { Writable } from 'stream';
-import { green, cyan, dim, white } from 'yanse';
+import { cyan, dim, green, white } from 'yanse';
+
 import { ProgressConfig } from './types';
 
 interface ProgressState {
@@ -120,17 +121,17 @@ export class ProgressBar {
     let icon: string;
     
     switch (status) {
-      case 'complete':
-        bar = green('█'.repeat(this.width));
-        icon = green('✔');
-        break;
-      case 'error':
-        bar = dim('█'.repeat(filled) + '░'.repeat(empty));
-        icon = '\x1B[31m✖\x1B[0m'; // red
-        break;
-      default:
-        bar = cyan('█'.repeat(filled)) + dim('░'.repeat(empty));
-        icon = cyan('◐');
+    case 'complete':
+      bar = green('█'.repeat(this.width));
+      icon = green('✔');
+      break;
+    case 'error':
+      bar = dim('█'.repeat(filled) + '░'.repeat(empty));
+      icon = '\x1B[31m✖\x1B[0m'; // red
+      break;
+    default:
+      bar = cyan('█'.repeat(filled)) + dim('░'.repeat(empty));
+      icon = cyan('◐');
     }
     
     let line = `${icon} ${text} [${bar}]`;

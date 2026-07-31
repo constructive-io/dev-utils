@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs';
-import * as path from 'path';
-
+import { CacheManager, checkNpmVersion,GitCloner } from 'genomic';
 import { Inquirerer, ListQuestion } from 'inquirerer';
 import minimist, { ParsedArgs } from 'minimist';
+import * as path from 'path';
 
-import { CacheManager, GitCloner, checkNpmVersion } from 'genomic';
 import { createFromTemplate } from './index';
 
 const DEFAULT_REPO = 'https://github.com/constructive-io/pgpm-boilerplates.git';
@@ -150,99 +149,95 @@ export async function runCli(
     console.log('Template cached for future runs');
   }
 
-  try {
-    const userProvidedPath = typeof args.path === 'string';
-    const configPath = path.join(templateDir, '.boilerplates.json');
-    const autoDir =
-      !userProvidedPath && fs.existsSync(configPath)
-        ? (() => {
-            try {
-              const parsed = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-              return typeof parsed?.dir === 'string' ? parsed.dir : undefined;
-            } catch {
-              return undefined;
-            }
-          })()
-        : undefined;
-    const effectivePath =
-      (userProvidedPath ? args.path : undefined) ?? autoDir ?? '.';
+  const userProvidedPath = typeof args.path === 'string';
+  const configPath = path.join(templateDir, '.boilerplates.json');
+  const autoDir =
+    !userProvidedPath && fs.existsSync(configPath)
+      ? (() => {
+        try {
+          const parsed = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+          return typeof parsed?.dir === 'string' ? parsed.dir : undefined;
+        } catch {
+          return undefined;
+        }
+      })()
+      : undefined;
+  const effectivePath =
+    (userProvidedPath ? args.path : undefined) ?? autoDir ?? '.';
 
-    const selectionRoot = path.join(templateDir, effectivePath);
-    if (
-      !fs.existsSync(selectionRoot) ||
-      !fs.statSync(selectionRoot).isDirectory()
-    ) {
+  const selectionRoot = path.join(templateDir, effectivePath);
+  if (
+    !fs.existsSync(selectionRoot) ||
+    !fs.statSync(selectionRoot).isDirectory()
+  ) {
+    throw new Error(
+      `Template path "${effectivePath}" does not exist in ${args.repo}`
+    );
+  }
+
+  const templates = fs
+    .readdirSync(selectionRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
+    .map((entry) => entry.name)
+    .sort();
+
+  if (templates.length === 0) {
+    throw new Error('No template folders found in repository');
+  }
+
+  let selectedTemplate: string | undefined = args.template;
+
+  if (selectedTemplate) {
+    if (!templates.includes(selectedTemplate)) {
       throw new Error(
-        `Template path "${effectivePath}" does not exist in ${args.repo}`
+        `Template "${selectedTemplate}" not found in ${args.repo}${
+          effectivePath === '.' ? '' : `/${effectivePath}`
+        }`
       );
     }
-
-    const templates = fs
-      .readdirSync(selectionRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
-      .map((entry) => entry.name)
-      .sort();
-
-    if (templates.length === 0) {
-      throw new Error('No template folders found in repository');
-    }
-
-    let selectedTemplate: string | undefined = args.template;
-
-    if (selectedTemplate) {
-      if (!templates.includes(selectedTemplate)) {
-        throw new Error(
-          `Template "${selectedTemplate}" not found in ${args.repo}${
-            effectivePath === '.' ? '' : `/${effectivePath}`
-          }`
-        );
-      }
-    } else if (templates.length === 1) {
-      selectedTemplate = templates[0];
-      console.log(`Using the only available template: ${selectedTemplate}`);
-    } else {
-      selectedTemplate = await promptForTemplate(templates);
-    }
-
-    if (!selectedTemplate) {
-      throw new Error('Template selection failed');
-    }
-
-    const normalizedBasePath =
-      effectivePath === '.' || effectivePath === './'
-        ? ''
-        : effectivePath.replace(/^[./]+/, '').replace(/\/+$/, '');
-    const fromPath = normalizedBasePath
-      ? path.join(normalizedBasePath, selectedTemplate)
-      : selectedTemplate;
-
-    const outputDir = resolveOutputDir(args.output, selectedTemplate);
-    ensureOutputDir(outputDir, Boolean(args.force));
-
-    const answerOverrides = extractAnswerOverrides(args);
-    const noTty = Boolean(
-      args['no-tty'] ??
-      (args as Record<string, unknown>).noTty ??
-      (args as Record<string, unknown>).tty === false
-    );
-
-    // Use the createFromTemplate function which will use the same cache
-    await createFromTemplate({
-      templateUrl: args.repo,
-      branch: args.branch,
-      fromPath,
-      outputDir,
-      answers: answerOverrides,
-      noTty,
-      toolName: DEFAULT_TOOL_NAME,
-      ttl,
-    });
-
-    console.log(`\n✨ Done! Project ready at ${outputDir}`);
-    return { outputDir, template: selectedTemplate };
-  } catch (error) {
-    throw error;
+  } else if (templates.length === 1) {
+    selectedTemplate = templates[0];
+    console.log(`Using the only available template: ${selectedTemplate}`);
+  } else {
+    selectedTemplate = await promptForTemplate(templates);
   }
+
+  if (!selectedTemplate) {
+    throw new Error('Template selection failed');
+  }
+
+  const normalizedBasePath =
+    effectivePath === '.' || effectivePath === './'
+      ? ''
+      : effectivePath.replace(/^[./]+/, '').replace(/\/+$/, '');
+  const fromPath = normalizedBasePath
+    ? path.join(normalizedBasePath, selectedTemplate)
+    : selectedTemplate;
+
+  const outputDir = resolveOutputDir(args.output, selectedTemplate);
+  ensureOutputDir(outputDir, Boolean(args.force));
+
+  const answerOverrides = extractAnswerOverrides(args);
+  const noTty = Boolean(
+    args['no-tty'] ??
+    (args as Record<string, unknown>).noTty ??
+    (args as Record<string, unknown>).tty === false
+  );
+
+  // Use the createFromTemplate function which will use the same cache
+  await createFromTemplate({
+    templateUrl: args.repo,
+    branch: args.branch,
+    fromPath,
+    outputDir,
+    answers: answerOverrides,
+    noTty,
+    toolName: DEFAULT_TOOL_NAME,
+    ttl,
+  });
+
+  console.log(`\n✨ Done! Project ready at ${outputDir}`);
+  return { outputDir, template: selectedTemplate };
 }
 
 function printHelp(): void {

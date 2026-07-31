@@ -1,7 +1,13 @@
+export { astEqual, cleanTree, printAst } from './clean';
+export type { DeparseOptions } from './deparser';
+export { deparse, Deparser } from './deparser';
+export type { Token } from './lexer';
+export { Lexer, TokenType } from './lexer';
+export { parse, Parser } from './parser';
 export type {
-  AstNode,
   ArrayOfTables,
   ArrayValue,
+  AstNode,
   BaseNode,
   BooleanValue,
   Comment,
@@ -21,13 +27,3 @@ export type {
   TomlDocument,
   Value,
 } from './types';
-
-export type { Token } from './lexer';
-export { Lexer, TokenType } from './lexer';
-
-export { parse, Parser } from './parser';
-
-export type { DeparseOptions } from './deparser';
-export { deparse, Deparser } from './deparser';
-
-export { astEqual, cleanTree, printAst } from './clean';

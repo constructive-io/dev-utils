@@ -1,4 +1,4 @@
-import { detectLanguage, tokenize, highlightLine } from '../src/highlight';
+import { detectLanguage, highlightLine,tokenize } from '../src/highlight';
 
 describe('detectLanguage', () => {
   it('should detect JavaScript files', () => {

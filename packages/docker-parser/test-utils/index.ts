@@ -102,11 +102,7 @@ export class FixtureTestUtils extends TestUtils {
     }
     const entries = this.getTestEntries(filters);
     for (const [relativePath, source] of entries) {
-      try {
-        await this.expectAstMatch(relativePath, source);
-      } catch (err) {
-        throw err;
-      }
+      await this.expectAstMatch(relativePath, source);
     }
   }
 }

@@ -1,4 +1,3 @@
-import { readFileSync } from 'fs';
 import type { Operation } from 'fast-json-patch';
 import * as jsonpatch from 'fast-json-patch';
 

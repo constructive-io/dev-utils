@@ -13,15 +13,15 @@ import { blake2b } from './blake2';
 import {
   anumber,
   clean,
+  type KDFInput,
   kdfInputToBytes,
   nextTick,
-  swap32IfBE,
   swap8IfBE,
-  u32,
-  u8,
-  type KDFInput,
+  swap32IfBE,
   type TArg,
   type TRet,
+  u8,
+  u32,
 } from './utils';
 
 // RFC 9106 §3.1 type `y`: 0 = Argon2d, 1 = Argon2i, 2 = Argon2id. The numeric values are the

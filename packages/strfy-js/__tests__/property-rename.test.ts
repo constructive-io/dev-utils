@@ -1,7 +1,7 @@
 import { minimatch } from 'minimatch';
-import { jsStringify, JSStringifyOptions, JSStringifyReplacer, JSStringifyPropertyReplacerOptions, JSStringifySetterOptions } from '../src';
 
 import assetList from '../__fixtures__/assets.json';
+import { jsStringify, JSStringifyOptions, JSStringifyPropertyReplacerOptions } from '../src';
 
 it('assetlist', () => {
 

@@ -8,7 +8,7 @@ import yaml from 'js-yaml';
 import { dirname, join } from 'path';
 
 // nested-obj uses `export default` which requires runtime resolution
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+ 
 const objectPath = require('nested-obj').default ?? require('nested-obj');
 
 import type { YamlizeContext, YamlNode } from './types';

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { CLI } from 'inquirerer';
 import type { CLIOptions } from 'inquirerer';
+import { CLI } from 'inquirerer';
 
 import { commands } from './commands';
 

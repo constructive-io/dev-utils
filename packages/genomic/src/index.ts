@@ -1,12 +1,10 @@
-import * as fs from 'fs';
-import * as path from 'path';
 
 import { registerDefaultResolver } from 'inquirerer';
 
+import { listSupportedLicenses } from './licenses';
 import { extractVariables } from './template/extract';
 import { promptUser } from './template/prompt';
 import { replaceVariables } from './template/replace';
-import { listSupportedLicenses } from './licenses';
 import { CreateGenOptions } from './types';
 
 // Register the 'licenses' resolver for optionsFrom support

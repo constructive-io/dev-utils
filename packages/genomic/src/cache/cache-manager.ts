@@ -1,8 +1,9 @@
+import { appstash, AppStashResult,resolve as resolveAppstash } from 'appstash';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
-import { appstash, resolve as resolveAppstash, AppStashResult } from 'appstash';
-import { CacheManagerConfig, CacheMetadata, CacheEntryInfo } from './types';
+
+import { CacheEntryInfo,CacheManagerConfig, CacheMetadata } from './types';
 
 export class CacheManager {
   private config: CacheManagerConfig;

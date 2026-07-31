@@ -6,8 +6,9 @@
  * Or: npx ts-node dev/demo-upgrade.ts
  */
 
-import { upgradePrompt, PackageInfo, createSpinner } from '../src/ui';
-import { cyan, green, yellow, dim, white } from 'yanse';
+import { cyan, dim, green, white,yellow } from 'yanse';
+
+import { createSpinner,PackageInfo, upgradePrompt } from '../src/ui';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

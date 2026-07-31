@@ -1,5 +1,5 @@
-import { merge, mergeNullable } from '../src';
 import type { YamlNode } from '../src';
+import { merge, mergeNullable } from '../src';
 
 describe('merge', () => {
   it('merges flat objects', () => {

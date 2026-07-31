@@ -1,4 +1,4 @@
-import { parseArgv, extractFirst, getPackageJson, getPackageVersion, getPackageName } from '../src';
+import { extractFirst, getPackageJson, getPackageName,getPackageVersion, parseArgv } from '../src';
 
 describe('CLI utilities', () => {
   describe('parseArgv', () => {

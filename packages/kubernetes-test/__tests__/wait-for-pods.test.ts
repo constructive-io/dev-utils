@@ -1,9 +1,9 @@
 import {
-  WaitForPodsTimeoutError,
+  PodStatusInfo,
   WaitForPodsError,
   WaitForPodsOptions,
   WaitForPodsProgress,
-  PodStatusInfo,
+  WaitForPodsTimeoutError,
 } from '../src/types';
 
 describe('kubernetes-test types', () => {

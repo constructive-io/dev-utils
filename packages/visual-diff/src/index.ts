@@ -1,57 +1,48 @@
-export type {
-  DiffLineType,
-  DiffLine,
-  DiffHunk,
-  DiffResult,
-  DiffOptions,
-  Language,
-  SyntaxToken,
-  TokenType,
-  Theme,
-  ThemeColors,
-  ColorConfig,
-  SyntaxColors,
-  RenderOptions,
-  TerminalRenderOptions,
-  HtmlRenderOptions,
-  PartialThemeColors
-} from './types';
-
 export {
+  countChanges,
+  createUnifiedDiff,
   diff,
   diffFiles,
-  createUnifiedDiff,
-  parseUnifiedDiff,
   hasDifferences,
-  countChanges
-} from './diff';
-
+  parseUnifiedDiff} from './diff';
 export {
   detectLanguage,
-  tokenize,
-  highlightLine
-} from './highlight';
-
+  highlightLine,
+  tokenize} from './highlight';
 export {
-  defaultTheme,
-  githubTheme,
-  monokaiTheme,
-  draculaTheme,
-  nordTheme,
-  minimalTheme,
-  themes,
-  getTheme,
-  createTheme
-} from './themes';
-
-export {
+  renderHtml,
+  renderHtmlDocument,
+  renderHtmlSideBySide,
   renderTerminal,
   renderTerminalCompact,
-  renderTerminalSummary,
-  renderHtml,
-  renderHtmlSideBySide,
-  renderHtmlDocument
-} from './render';
+  renderTerminalSummary} from './render';
+export {
+  createTheme,
+  defaultTheme,
+  draculaTheme,
+  getTheme,
+  githubTheme,
+  minimalTheme,
+  monokaiTheme,
+  nordTheme,
+  themes} from './themes';
+export type {
+  ColorConfig,
+  DiffHunk,
+  DiffLine,
+  DiffLineType,
+  DiffOptions,
+  DiffResult,
+  HtmlRenderOptions,
+  Language,
+  PartialThemeColors,
+  RenderOptions,
+  SyntaxColors,
+  SyntaxToken,
+  TerminalRenderOptions,
+  Theme,
+  ThemeColors,
+  TokenType} from './types';
 
 export function visualDiff(
   oldContent: string,
@@ -79,12 +70,12 @@ export function visualDiff(
   }
 
   switch (options.format) {
-    case 'html':
-      return renderHtml(result, { theme: options.theme });
-    case 'unified':
-      return createUnifiedDiff(result);
-    case 'terminal':
-    default:
-      return renderTerminal(result, { theme: options.theme });
+  case 'html':
+    return renderHtml(result, { theme: options.theme });
+  case 'unified':
+    return createUnifiedDiff(result);
+  case 'terminal':
+  default:
+    return renderTerminal(result, { theme: options.theme });
   }
 }

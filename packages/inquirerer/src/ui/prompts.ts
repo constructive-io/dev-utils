@@ -5,12 +5,13 @@
  * using the UIEngine for rendering and event handling.
  */
 
+import { Readable, Writable } from 'stream';
 import { blue } from 'yanse';
-import { UIEngine } from './engine';
-import { Key, UIEvent, EventResult } from './types';
+
 import { TerminalKeypress } from '../keypress';
 import { OptionValue } from '../question';
-import { Readable, Writable } from 'stream';
+import { UIEngine } from './engine';
+import { EventResult,Key, UIEvent } from './types';
 
 /**
  * Render the prompt header lines
@@ -97,30 +98,30 @@ function listOnEvent(event: UIEvent, state: ListState): EventResult<ListState, O
   
   if (event.type === 'key') {
     switch (event.key) {
-      case Key.UP:
-        selectedIndex = selectedIndex - 1 >= 0 ? selectedIndex - 1 : options.length - 1;
-        if (selectedIndex < startIndex) {
-          startIndex = selectedIndex;
-        } else if (selectedIndex === options.length - 1) {
-          startIndex = Math.max(0, options.length - maxLines);
-        }
-        break;
+    case Key.UP:
+      selectedIndex = selectedIndex - 1 >= 0 ? selectedIndex - 1 : options.length - 1;
+      if (selectedIndex < startIndex) {
+        startIndex = selectedIndex;
+      } else if (selectedIndex === options.length - 1) {
+        startIndex = Math.max(0, options.length - maxLines);
+      }
+      break;
         
-      case Key.DOWN:
-        selectedIndex = (selectedIndex + 1) % options.length;
-        if (selectedIndex >= startIndex + maxLines) {
-          startIndex = selectedIndex - maxLines + 1;
-        } else if (selectedIndex === 0) {
-          startIndex = 0;
-        }
-        break;
+    case Key.DOWN:
+      selectedIndex = (selectedIndex + 1) % options.length;
+      if (selectedIndex >= startIndex + maxLines) {
+        startIndex = selectedIndex - maxLines + 1;
+      } else if (selectedIndex === 0) {
+        startIndex = 0;
+      }
+      break;
         
-      case Key.ENTER:
-        return {
-          state: { ...state, selectedIndex, startIndex },
-          done: true,
-          value: options[selectedIndex]?.value
-        };
+    case Key.ENTER:
+      return {
+        state: { ...state, selectedIndex, startIndex },
+        done: true,
+        value: options[selectedIndex]?.value
+      };
     }
   }
   
@@ -216,43 +217,43 @@ function autocompleteOnEvent(event: UIEvent, state: AutocompleteState): EventRes
   
   if (event.type === 'key') {
     switch (event.key) {
-      case Key.UP:
-        if (filteredOptions.length === 0) break;
-        selectedIndex = selectedIndex - 1 >= 0 ? selectedIndex - 1 : filteredOptions.length - 1;
-        if (selectedIndex < startIndex) {
-          startIndex = selectedIndex;
-        } else if (selectedIndex === filteredOptions.length - 1) {
-          startIndex = Math.max(0, filteredOptions.length - maxLines);
-        }
-        break;
+    case Key.UP:
+      if (filteredOptions.length === 0) break;
+      selectedIndex = selectedIndex - 1 >= 0 ? selectedIndex - 1 : filteredOptions.length - 1;
+      if (selectedIndex < startIndex) {
+        startIndex = selectedIndex;
+      } else if (selectedIndex === filteredOptions.length - 1) {
+        startIndex = Math.max(0, filteredOptions.length - maxLines);
+      }
+      break;
         
-      case Key.DOWN:
-        if (filteredOptions.length === 0) break;
-        selectedIndex = (selectedIndex + 1) % filteredOptions.length;
-        if (selectedIndex >= startIndex + maxLines) {
-          startIndex = selectedIndex - maxLines + 1;
-        } else if (selectedIndex === 0) {
-          startIndex = 0;
-        }
-        break;
+    case Key.DOWN:
+      if (filteredOptions.length === 0) break;
+      selectedIndex = (selectedIndex + 1) % filteredOptions.length;
+      if (selectedIndex >= startIndex + maxLines) {
+        startIndex = selectedIndex - maxLines + 1;
+      } else if (selectedIndex === 0) {
+        startIndex = 0;
+      }
+      break;
         
-      case Key.BACKSPACE:
-        input = input.slice(0, -1);
-        updateFiltered();
-        break;
+    case Key.BACKSPACE:
+      input = input.slice(0, -1);
+      updateFiltered();
+      break;
         
-      case Key.SPACE:
-        // In autocomplete, space is part of input (unlike checkbox)
-        input += ' ';
-        updateFiltered();
-        break;
+    case Key.SPACE:
+      // In autocomplete, space is part of input (unlike checkbox)
+      input += ' ';
+      updateFiltered();
+      break;
         
-      case Key.ENTER:
-        return {
-          state: { ...state, input, filteredOptions, selectedIndex, startIndex },
-          done: true,
-          value: filteredOptions[selectedIndex]?.value || input
-        };
+    case Key.ENTER:
+      return {
+        state: { ...state, input, filteredOptions, selectedIndex, startIndex },
+        done: true,
+        value: filteredOptions[selectedIndex]?.value || input
+      };
     }
   } else if (event.type === 'char') {
     input += event.char;
@@ -364,68 +365,68 @@ function checkboxOnEvent(event: UIEvent, state: CheckboxState): EventResult<Chec
   
   if (event.type === 'key') {
     switch (event.key) {
-      case Key.UP:
-        if (filteredOptions.length === 0) break;
-        selectedIndex = selectedIndex > 0 ? selectedIndex - 1 : filteredOptions.length - 1;
-        if (selectedIndex < startIndex) {
-          startIndex = selectedIndex;
-        } else if (selectedIndex === filteredOptions.length - 1) {
-          startIndex = Math.max(0, filteredOptions.length - maxLines);
+    case Key.UP:
+      if (filteredOptions.length === 0) break;
+      selectedIndex = selectedIndex > 0 ? selectedIndex - 1 : filteredOptions.length - 1;
+      if (selectedIndex < startIndex) {
+        startIndex = selectedIndex;
+      } else if (selectedIndex === filteredOptions.length - 1) {
+        startIndex = Math.max(0, filteredOptions.length - maxLines);
+      }
+      break;
+        
+    case Key.DOWN:
+      if (filteredOptions.length === 0) break;
+      selectedIndex = (selectedIndex + 1) % filteredOptions.length;
+      if (selectedIndex >= startIndex + maxLines) {
+        startIndex = selectedIndex - maxLines + 1;
+      } else if (selectedIndex === 0) {
+        startIndex = 0;
+      }
+      break;
+        
+    case Key.BACKSPACE:
+      input = input.slice(0, -1);
+      updateFiltered();
+      break;
+        
+    case Key.SPACE:
+      // Toggle selection
+      if (filteredOptions.length > 0 && filteredOptions[selectedIndex]) {
+        const originalIndex = options.indexOf(filteredOptions[selectedIndex]);
+        if (originalIndex >= 0) {
+          selections = [...selections];
+          selections[originalIndex] = !selections[originalIndex];
         }
-        break;
+      }
+      break;
         
-      case Key.DOWN:
-        if (filteredOptions.length === 0) break;
-        selectedIndex = (selectedIndex + 1) % filteredOptions.length;
-        if (selectedIndex >= startIndex + maxLines) {
-          startIndex = selectedIndex - maxLines + 1;
-        } else if (selectedIndex === 0) {
-          startIndex = 0;
-        }
-        break;
-        
-      case Key.BACKSPACE:
-        input = input.slice(0, -1);
-        updateFiltered();
-        break;
-        
-      case Key.SPACE:
-        // Toggle selection
-        if (filteredOptions.length > 0 && filteredOptions[selectedIndex]) {
-          const originalIndex = options.indexOf(filteredOptions[selectedIndex]);
-          if (originalIndex >= 0) {
-            selections = [...selections];
-            selections[originalIndex] = !selections[originalIndex];
-          }
-        }
-        break;
-        
-      case Key.ENTER:
-        const result: OptionValue[] = [];
-        if (returnFullResults) {
-          options.forEach((option, index) => {
+    case Key.ENTER:
+      const result: OptionValue[] = [];
+      if (returnFullResults) {
+        options.forEach((option, index) => {
+          result.push({
+            name: option.name,
+            value: option.value,
+            selected: selections[index]
+          });
+        });
+      } else {
+        options.forEach((option, index) => {
+          if (selections[index]) {
             result.push({
               name: option.name,
               value: option.value,
-              selected: selections[index]
+              selected: true
             });
-          });
-        } else {
-          options.forEach((option, index) => {
-            if (selections[index]) {
-              result.push({
-                name: option.name,
-                value: option.value,
-                selected: true
-              });
-            }
-          });
-        }
-        return {
-          state: { ...state, input, filteredOptions, selections, selectedIndex, startIndex },
-          done: true,
-          value: result
-        };
+          }
+        });
+      }
+      return {
+        state: { ...state, input, filteredOptions, selections, selectedIndex, startIndex },
+        done: true,
+        value: result
+      };
     }
   } else if (event.type === 'char') {
     input += event.char;

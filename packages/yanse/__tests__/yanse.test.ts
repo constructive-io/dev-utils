@@ -1,4 +1,4 @@
-import yanse, { red, green, blue, bold, cyan, yellow, create } from '../src';
+import yanse, { blue, bold, create,cyan, green, red, yellow } from '../src';
 
 describe('yanse', () => {
   describe('Basic colors', () => {

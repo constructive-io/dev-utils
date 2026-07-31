@@ -1,5 +1,5 @@
-import { parse } from '../src/parser';
 import { cleanTree } from '../src/clean';
+import { parse } from '../src/parser';
 
 describe('toml parser', () => {
   describe('key-value pairs', () => {

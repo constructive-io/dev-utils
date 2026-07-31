@@ -2,8 +2,8 @@
 export * from './types';
 
 // Lexer
-export { Lexer, tokenize, TokenType } from './lexer';
 export type { Token } from './lexer';
+export { Lexer, tokenize, TokenType } from './lexer';
 
 // Parser
 export { parse, Parser } from './parser';

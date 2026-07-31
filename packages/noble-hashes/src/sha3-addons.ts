@@ -850,15 +850,15 @@ export type HopMAC = (
 ) => TRet<Uint8Array>;
 const genHopMAC =
   (hash: TArg<CHash<_KangarooTwelve, KangarooOpts>>): TRet<HopMAC> =>
-  (
-    key: TArg<Uint8Array>,
-    message: TArg<Uint8Array>,
-    personalization: TArg<Uint8Array>,
-    dkLen?: number
-  ) => {
-    const h = hash as unknown as CHash<_KangarooTwelve, KangarooOpts>;
-    return h(key, { personalization: h(message, { personalization }), dkLen }) as TRet<Uint8Array>;
-  };
+    (
+      key: TArg<Uint8Array>,
+      message: TArg<Uint8Array>,
+      personalization: TArg<Uint8Array>,
+      dkLen?: number
+    ) => {
+      const h = hash as unknown as CHash<_KangarooTwelve, KangarooOpts>;
+      return h(key, { personalization: h(message, { personalization }), dkLen }) as TRet<Uint8Array>;
+    };
 
 /**
  * 128-bit KangarooTwelve-based MAC.

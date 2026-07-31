@@ -1,6 +1,6 @@
+import { appstash, resolve as stashResolve } from 'appstash';
 import * as fs from 'fs';
 import * as path from 'path';
-import { appstash, resolve as stashResolve } from 'appstash';
 
 import { defaultSearchPlaces, findConfigSync, type FoundConfig } from './discover';
 import { expandExtends } from './extends';

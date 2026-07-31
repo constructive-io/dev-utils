@@ -1,4 +1,4 @@
-import { renderLicense, isSupportedLicense, listSupportedLicenses } from '../src/licenses';
+import { isSupportedLicense, listSupportedLicenses,renderLicense } from '../src/licenses';
 
 describe('license templates', () => {
   const context = {

@@ -1,13 +1,13 @@
 import {
-  lcFirst,
-  ucFirst,
   isValidIdentifier,
   isValidIdentifierCamelized,
+  lcFirst,
   toCamelCase,
+  toConstantCase,
+  toKebabCase,
   toPascalCase,
   toSnakeCase,
-  toKebabCase,
-  toConstantCase,
+  ucFirst,
 } from '../src';
 
 it('should convert strings to PascalCase', () => {

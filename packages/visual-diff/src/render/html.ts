@@ -1,15 +1,14 @@
-import type {
-  DiffResult,
-  DiffLine,
-  DiffHunk,
-  Theme,
-  ColorConfig,
-  SyntaxToken,
-  HtmlRenderOptions,
-  Language
-} from '../types';
-import { getTheme } from '../themes';
 import { highlightLine } from '../highlight';
+import { getTheme } from '../themes';
+import type {
+  ColorConfig,
+  DiffHunk,
+  DiffLine,
+  DiffResult,
+  HtmlRenderOptions,
+  Language,
+  SyntaxToken,
+  Theme} from '../types';
 
 const colorToHex: Record<string, string> = {
   black: '#000000',
@@ -264,20 +263,20 @@ function renderLineHtml(
   let prefix = ' ';
 
   switch (line.type) {
-    case 'added':
-      lineClass += ` ${className}-line-added`;
-      prefixClass += ` ${className}-prefix-added`;
-      prefix = '+';
-      break;
-    case 'removed':
-      lineClass += ` ${className}-line-removed`;
-      prefixClass += ` ${className}-prefix-removed`;
-      prefix = '-';
-      break;
-    case 'unchanged':
-    default:
-      lineClass += ` ${className}-line-unchanged`;
-      break;
+  case 'added':
+    lineClass += ` ${className}-line-added`;
+    prefixClass += ` ${className}-prefix-added`;
+    prefix = '+';
+    break;
+  case 'removed':
+    lineClass += ` ${className}-line-removed`;
+    prefixClass += ` ${className}-prefix-removed`;
+    prefix = '-';
+    break;
+  case 'unchanged':
+  default:
+    lineClass += ` ${className}-line-unchanged`;
+    break;
   }
 
   const parts: string[] = [];

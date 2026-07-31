@@ -1,6 +1,6 @@
-import type { Pod, PodList, PodCondition } from 'kubernetesjs';
+import type { Pod, PodCondition,PodList } from 'kubernetesjs';
 
-export type { Pod, PodList, PodCondition };
+export type { Pod, PodCondition,PodList };
 
 export interface WaitForPodsOptions {
   namespace?: string;

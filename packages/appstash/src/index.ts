@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import * as os from 'os';
+import * as path from 'path';
 
 /**
  * Result from appstash() containing all resolved directory paths
@@ -56,6 +56,7 @@ function getHomeDir(): string | null {
       return home;
     }
   } catch {
+    // ignore
   }
   return null;
 }
@@ -275,7 +276,6 @@ export function resolve(
   return path.join(dirs[kind], ...parts);
 }
 
-export { createConfigStore } from './config-store';
 export type {
   ClientConfig,
   ConfigStore,
@@ -286,3 +286,4 @@ export type {
   Credentials,
   GlobalSettings,
 } from './config-store';
+export { createConfigStore } from './config-store';

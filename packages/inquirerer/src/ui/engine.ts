@@ -6,8 +6,9 @@
  */
 
 import { Readable, Writable } from 'stream';
+
 import { KEY_CODES, TerminalKeypress } from '../keypress';
-import { Key, UIEvent, UIScreenConfig, EventResult } from './types';
+import {Key, UIEvent, UIScreenConfig } from './types';
 
 /**
  * Maps raw key codes to normalized Key enum

@@ -1,10 +1,10 @@
+import enrichedGraph from '../../../../__fixtures__/jsonld-tools/graph.json';
 import {
   findMissingReferences,
   findNestedEntities,
   findOrphans,
   type JsonLdGraph
 } from '../../src/index';
-import enrichedGraph from '../../../../__fixtures__/jsonld-tools/graph.json';
 
 describe('Graph Validation Methods', () => {
   describe('findMissingReferences', () => {
@@ -22,8 +22,8 @@ describe('Graph Validation Methods', () => {
     
     it('should handle graph with no missing references', () => {
       const completeGraph: JsonLdGraph = [
-        { '@id': 'a', 'ref': { '@id': 'b' } },
-        { '@id': 'b', 'ref': { '@id': 'a' } }
+        { '@id': 'a', ref: { '@id': 'b' } },
+        { '@id': 'b', ref: { '@id': 'a' } }
       ];
       
       const missing = findMissingReferences(completeGraph);
@@ -32,9 +32,9 @@ describe('Graph Validation Methods', () => {
     
     it('should find missing references in test graph', () => {
       const testGraph: JsonLdGraph = [
-        { '@id': 'entity:1', 'knows': 'person:missing' },
-        { '@id': 'entity:2', 'worksFor': { '@id': 'org:missing' } },
-        { '@id': 'entity:3', 'refs': ['ref:1', 'ref:missing', 'ref:2'] },
+        { '@id': 'entity:1', knows: 'person:missing' },
+        { '@id': 'entity:2', worksFor: { '@id': 'org:missing' } },
+        { '@id': 'entity:3', refs: ['ref:1', 'ref:missing', 'ref:2'] },
         { '@id': 'ref:1' },
         { '@id': 'ref:2' }
       ];
@@ -66,32 +66,32 @@ describe('Graph Validation Methods', () => {
       const testGraph: JsonLdGraph = [
         {
           '@id': 'person:1',
-          'name': 'John',
-          'address': {
+          name: 'John',
+          address: {
             '@type': 'PostalAddress',
-            'streetAddress': '123 Main St',
-            'addressLocality': 'Anytown'
+            streetAddress: '123 Main St',
+            addressLocality: 'Anytown'
           },
-          'worksFor': { '@id': 'org:1' }, // Just a reference, not nested
-          'knows': [
+          worksFor: { '@id': 'org:1' }, // Just a reference, not nested
+          knows: [
             { '@id': 'person:2' }, // Just a reference
             {
               '@type': 'Person',
-              'name': 'Jane',
-              'email': 'jane@example.com'
+              name: 'Jane',
+              email: 'jane@example.com'
             }
           ]
         },
         {
           '@id': 'org:1',
-          'location': {
+          location: {
             '@id': 'place:1',
             '@type': 'Place',
-            'name': 'HQ',
-            'geo': {
+            name: 'HQ',
+            geo: {
               '@type': 'GeoCoordinates',
-              'latitude': 37.7749,
-              'longitude': -122.4194
+              latitude: 37.7749,
+              longitude: -122.4194
             }
           }
         }
@@ -107,7 +107,7 @@ describe('Graph Validation Methods', () => {
         property: 'address',
         nestedEntity: expect.objectContaining({
           '@type': 'PostalAddress',
-          'streetAddress': '123 Main St'
+          streetAddress: '123 Main St'
         }),
         hasId: false
       });
@@ -118,7 +118,7 @@ describe('Graph Validation Methods', () => {
         property: 'knows[1]',
         nestedEntity: expect.objectContaining({
           '@type': 'Person',
-          'name': 'Jane'
+          name: 'Jane'
         }),
         hasId: false
       });
@@ -130,7 +130,7 @@ describe('Graph Validation Methods', () => {
         nestedEntity: expect.objectContaining({
           '@id': 'place:1',
           '@type': 'Place',
-          'name': 'HQ'
+          name: 'HQ'
         }),
         hasId: true
       });
@@ -141,7 +141,7 @@ describe('Graph Validation Methods', () => {
         property: 'location.geo',
         nestedEntity: expect.objectContaining({
           '@type': 'GeoCoordinates',
-          'latitude': 37.7749
+          latitude: 37.7749
         }),
         hasId: false
       });
@@ -151,9 +151,9 @@ describe('Graph Validation Methods', () => {
       const testGraph: JsonLdGraph = [
         {
           '@id': 'test:1',
-          'ref1': { '@id': 'other:1' },
-          'ref2': 'string:ref',
-          'refs': [{ '@id': 'array:1' }, { '@id': 'array:2' }]
+          ref1: { '@id': 'other:1' },
+          ref2: 'string:ref',
+          refs: [{ '@id': 'array:1' }, { '@id': 'array:2' }]
         }
       ];
       
@@ -187,9 +187,9 @@ describe('Graph Validation Methods', () => {
     
     it('should handle graph with no orphans', () => {
       const connectedGraph: JsonLdGraph = [
-        { '@id': 'root', 'child': { '@id': 'a' } },
-        { '@id': 'a', 'child': { '@id': 'b' } },
-        { '@id': 'b', 'parent': { '@id': 'a' } }
+        { '@id': 'root', child: { '@id': 'a' } },
+        { '@id': 'a', child: { '@id': 'b' } },
+        { '@id': 'b', parent: { '@id': 'a' } }
       ];
       
       const orphans = findOrphans(connectedGraph);
@@ -201,7 +201,7 @@ describe('Graph Validation Methods', () => {
       const testGraph: JsonLdGraph = [
         { '@id': 'orphan1', '@type': 'Thing' },
         { '@id': 'orphan2', '@type': 'Thing' },
-        { '@id': 'parent', 'child': { '@id': 'child' } },
+        { '@id': 'parent', child: { '@id': 'child' } },
         { '@id': 'child', '@type': 'Thing' }
       ];
       

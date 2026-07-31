@@ -3,14 +3,14 @@ import * as path from 'path';
 import { Transform } from 'stream';
 import { pipeline } from 'stream/promises';
 
-import { ExtractedVariables } from '../types';
 import {
-  renderLicense,
-  isSupportedLicense,
   findLicenseAuthor,
   findLicenseEmail,
   findLicenseValue,
+  isSupportedLicense,
+  renderLicense,
 } from '../licenses';
+import { ExtractedVariables } from '../types';
 
 /**
  * Replace variables in all files in the template directory

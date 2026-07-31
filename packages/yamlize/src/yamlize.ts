@@ -7,8 +7,8 @@ import yaml from 'js-yaml';
 import { sync as mkdirp } from 'mkdirp';
 import { dirname } from 'path';
 
-import type { YamlizeContext, YamlizeOptions, YamlNode } from './types';
 import { parse } from './parse';
+import type { YamlizeContext, YamlizeOptions, YamlNode } from './types';
 
 /**
  * Read a YAML template file, resolve imports and variables,

@@ -39,14 +39,14 @@ export interface JSStringifyOptions {
 
 export function chooseQuotes(str: string, preferred: 'single' | 'double' | 'backtick'): string {
   switch (preferred) {
-    case 'single':
-      return `'${escapeStringForSingleQuotes(str)}'`;
-    case 'double':
-      return `"${escapeStringForDoubleQuotes(str)}"`;
-    case 'backtick':
-      return `\`${escapeStringForBacktickQuotes(str)}\``;
-    default:
-      throw new Error('Invalid quote type specified.');
+  case 'single':
+    return `'${escapeStringForSingleQuotes(str)}'`;
+  case 'double':
+    return `"${escapeStringForDoubleQuotes(str)}"`;
+  case 'backtick':
+    return `\`${escapeStringForBacktickQuotes(str)}\``;
+  default:
+    throw new Error('Invalid quote type specified.');
   }
 }
 
@@ -161,54 +161,54 @@ export function jsStringify(obj: any, options?: JSStringifyOptions): string {
           if (matchesPattern(currentPath, dirname(pattern))) {
             const setter: JSStringifySetter = (defaultValuesSetter as { [path: string]: JSStringifySetter })[pattern];
             const property = pattern.split('/').pop(); // get the last segment as property name
-          if (property === '*') {
+            if (property === '*') {
             // Apply setter to all properties if needed
-            Object.keys(obj).forEach(prop => {
-              if (obj[prop] === undefined) {
-                const val = setter({
-                  currentKey: prop,
-                  currentPath: `${currentPath}/${prop}`,
-                  obj,
-                  value: obj[prop],
-                  root,
-                  defaultValuesMap
-                });
-                if (val !== undefined) {
-                  obj[prop] = val;
+              Object.keys(obj).forEach(prop => {
+                if (obj[prop] === undefined) {
+                  const val = setter({
+                    currentKey: prop,
+                    currentPath: `${currentPath}/${prop}`,
+                    obj,
+                    value: obj[prop],
+                    root,
+                    defaultValuesMap
+                  });
+                  if (val !== undefined) {
+                    obj[prop] = val;
+                  }
                 }
+              });
+            } else if (property && obj[property] === undefined) {
+              const val = setter({
+                currentKey: property,
+                currentPath,
+                obj,
+                value: obj[property],
+                root,
+                defaultValuesMap
+              });
+              if (val !== undefined) {
+                obj[property] = val;
               }
-            });
-          } else if (property && obj[property] === undefined) {
-            const val = setter({
-              currentKey: property,
-              currentPath,
-              obj,
-              value: obj[property],
-              root,
-              defaultValuesMap
-            });
-            if (val !== undefined) {
-              obj[property] = val;
             }
           }
-        }
-      });
+        });
 
-      // Apply default values based on currentPath
-      Object.keys(defaultValuesMap).forEach(pattern => {
-        if (matchesPattern(currentPath, pattern)) {
-          const property = pattern.split('/').pop(); // get the last segment as property name
-          if (property === '*') {
+        // Apply default values based on currentPath
+        Object.keys(defaultValuesMap).forEach(pattern => {
+          if (matchesPattern(currentPath, pattern)) {
+            const property = pattern.split('/').pop(); // get the last segment as property name
+            if (property === '*') {
             // Apply to all properties if needed
-            Object.keys(obj).forEach(prop => {
-              if (obj[prop] === undefined) {
-                obj[prop] = defaultValuesMap[pattern];
-              }
-            });
-          } else if (property && obj[property] === undefined) {
-            obj[property] = defaultValuesMap[pattern];
+              Object.keys(obj).forEach(prop => {
+                if (obj[prop] === undefined) {
+                  obj[prop] = defaultValuesMap[pattern];
+                }
+              });
+            } else if (property && obj[property] === undefined) {
+              obj[property] = defaultValuesMap[pattern];
+            }
           }
-        }
         });
       }
 
@@ -241,11 +241,11 @@ export function jsStringify(obj: any, options?: JSStringifyOptions): string {
 
         let replacedKey: string;
         switch (true) {
-          case propertyReplacer instanceof Function:
-            replacedKey = propertyReplacer({ root, obj, currentKey: key, currentPath: fullPath, propertyRenameMap });
-            break;
-          default:
-            replacedKey = defaultPropertyReplacer(key, fullPath, propertyRenameMap);
+        case propertyReplacer instanceof Function:
+          replacedKey = propertyReplacer({ root, obj, currentKey: key, currentPath: fullPath, propertyRenameMap });
+          break;
+        default:
+          replacedKey = defaultPropertyReplacer(key, fullPath, propertyRenameMap);
         }
 
         const finalKey = camelCase ? camelCaseFn(replacedKey) : replacedKey;

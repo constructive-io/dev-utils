@@ -4,8 +4,8 @@ import * as path from 'path';
 
 import {
   diffFiles,
-  renderTerminal,
   renderHtmlDocument,
+  renderTerminal,
   themes
 } from '../src';
 

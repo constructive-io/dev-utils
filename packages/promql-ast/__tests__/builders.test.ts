@@ -1,7 +1,7 @@
 import * as b from '../src/builders';
+import { cleanTree } from '../src/clean';
 import { deparse } from '../src/deparser';
 import { parse } from '../src/parser';
-import { cleanTree } from '../src/clean';
 
 describe('promql builders', () => {
   it('builds the namespace CPU query used by the collector', () => {

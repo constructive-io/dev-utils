@@ -7,17 +7,16 @@
  * Run with: pnpm dev:prompts
  */
 
-import { Inquirerer } from '../src';
+import { cyan, dim,green, white, yellow } from 'yanse';
+
+import { TerminalKeypress } from '../src/keypress';
 import { 
-  listPromptEngine, 
+  AutocompletePromptConfig,
   autocompletePromptEngine, 
+  CheckboxPromptConfig,
   checkboxPromptEngine,
   ListPromptConfig,
-  AutocompletePromptConfig,
-  CheckboxPromptConfig
-} from '../src/ui';
-import { TerminalKeypress } from '../src/keypress';
-import { white, green, cyan, yellow, dim } from 'yanse';
+  listPromptEngine} from '../src/ui';
 
 const COLORS = [
   { name: 'Red', value: 'red' },

@@ -1,7 +1,7 @@
-import { jsStringify, JSStringifyOptions, JSStringifySetterOptions } from '../src';
 import assetList from '../__fixtures__/assets.json';
-import { Asset, AssetList } from '../test-utils';
 import chain from '../__fixtures__/chain.json';
+import { jsStringify, JSStringifyOptions, JSStringifySetterOptions } from '../src';
+import { Asset, AssetList } from '../test-utils';
 
 it('AssetList Modification', () => {
   const options: JSStringifyOptions = {
@@ -14,23 +14,23 @@ it('AssetList Modification', () => {
       '/assets/*/type_asset': function (options: JSStringifySetterOptions<Asset, AssetList>): any {
         const asset = options.obj;
         switch (true) {
-          case asset.base.startsWith('factory/'):
-            return 'sdk.Factory';
+        case asset.base.startsWith('factory/'):
+          return 'sdk.Factory';
 
-          case asset.base.startsWith('ft') && options.root.chain_name === 'bitsong':
-            return 'bitsong';
+        case asset.base.startsWith('ft') && options.root.chain_name === 'bitsong':
+          return 'bitsong';
 
-          case asset.base.startsWith('erc20/'):
-            return 'erc.Token';
+        case asset.base.startsWith('erc20/'):
+          return 'erc.Token';
 
-          case asset.base.startsWith('ibc/'):
-            return 'ibc'
+        case asset.base.startsWith('ibc/'):
+          return 'ibc';
 
-          case asset.base.startsWith('cw20:'):
-            return 'cw20'
+        case asset.base.startsWith('cw20:'):
+          return 'cw20';
 
-          default:
-            return 'unknown'
+        default:
+          return 'unknown';
         }
       }
     },

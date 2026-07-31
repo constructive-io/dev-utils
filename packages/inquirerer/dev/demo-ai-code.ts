@@ -13,22 +13,23 @@
  * Run with: pnpm dev:ai-code
  */
 
+import { cyan, dim, green,white } from 'yanse';
+
 import { createAICodeUI } from './ai/aicode';
-import { white, dim, cyan, green } from 'yanse';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Simulated AI responses based on user input
 const AI_RESPONSES: Record<string, string> = {
-  'hello': "Hello! I'm your AI coding assistant. I can help you with:\n\n- Writing and explaining code\n- Debugging issues\n- Refactoring suggestions\n- Git workflows\n- And much more!\n\nWhat would you like help with today?",
+  hello: "Hello! I'm your AI coding assistant. I can help you with:\n\n- Writing and explaining code\n- Debugging issues\n- Refactoring suggestions\n- Git workflows\n- And much more!\n\nWhat would you like help with today?",
   
-  'help': "Here are some things you can ask me:\n\n1. 'explain [code]' - I'll explain how code works\n2. 'write [description]' - I'll write code for you\n3. 'debug [error]' - I'll help debug issues\n4. 'refactor [code]' - I'll suggest improvements\n\nJust type naturally and I'll do my best to help!",
+  help: "Here are some things you can ask me:\n\n1. 'explain [code]' - I'll explain how code works\n2. 'write [description]' - I'll write code for you\n3. 'debug [error]' - I'll help debug issues\n4. 'refactor [code]' - I'll suggest improvements\n\nJust type naturally and I'll do my best to help!",
   
-  'typescript': "TypeScript is a strongly typed programming language that builds on JavaScript. Here's a quick example:\n\n```typescript\ninterface User {\n  name: string;\n  age: number;\n}\n\nfunction greet(user: User): string {\n  return `Hello, ${user.name}!`;\n}\n```\n\nKey benefits:\n- Type safety catches errors at compile time\n- Better IDE support with autocomplete\n- Self-documenting code through types",
+  typescript: "TypeScript is a strongly typed programming language that builds on JavaScript. Here's a quick example:\n\n```typescript\ninterface User {\n  name: string;\n  age: number;\n}\n\nfunction greet(user: User): string {\n  return `Hello, ${user.name}!`;\n}\n```\n\nKey benefits:\n- Type safety catches errors at compile time\n- Better IDE support with autocomplete\n- Self-documenting code through types",
   
-  'git': "Here are some useful git commands:\n\n```bash\n# Create a new branch\ngit checkout -b feature/my-feature\n\n# Stage and commit changes\ngit add .\ngit commit -m \"feat: add new feature\"\n\n# Push to remote\ngit push origin feature/my-feature\n\n# Create a PR (using gh cli)\ngh pr create --title \"My Feature\" --body \"Description\"\n```\n\nWant me to explain any of these in more detail?",
+  git: 'Here are some useful git commands:\n\n```bash\n# Create a new branch\ngit checkout -b feature/my-feature\n\n# Stage and commit changes\ngit add .\ngit commit -m "feat: add new feature"\n\n# Push to remote\ngit push origin feature/my-feature\n\n# Create a PR (using gh cli)\ngh pr create --title "My Feature" --body "Description"\n```\n\nWant me to explain any of these in more detail?',
   
-  'default': "I understand you're asking about that. Let me think...\n\nBased on my analysis, here's what I can tell you:\n\n1. First, consider the context of your question\n2. Then, break down the problem into smaller parts\n3. Finally, apply the appropriate solution\n\nWould you like me to elaborate on any specific aspect?",
+  default: "I understand you're asking about that. Let me think...\n\nBased on my analysis, here's what I can tell you:\n\n1. First, consider the context of your question\n2. Then, break down the problem into smaller parts\n3. Finally, apply the appropriate solution\n\nWould you like me to elaborate on any specific aspect?",
 };
 
 /**

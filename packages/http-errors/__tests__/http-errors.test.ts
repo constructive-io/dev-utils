@@ -1,10 +1,9 @@
 import {
-  HTTPError,
-  NotFoundError,
   BadRequestError,
+  createHTTPError,
+  HTTPError,
   InternalServerError,
-  createHTTPError
-} from '../src';
+  NotFoundError} from '../src';
 
 describe('http-errors', () => {
   it('should create a NotFoundError with correct properties', () => {

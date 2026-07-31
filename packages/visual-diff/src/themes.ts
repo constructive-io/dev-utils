@@ -1,4 +1,4 @@
-import type { Theme, PartialThemeColors, SyntaxColors } from './types';
+import type { PartialThemeColors, SyntaxColors,Theme } from './types';
 
 const defaultSyntaxColors: SyntaxColors = {
   keyword: { fg: 'magenta', bold: true },

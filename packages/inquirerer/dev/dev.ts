@@ -2,7 +2,7 @@
 import minimist from 'minimist';
 
 import { Prompter } from '../src';
-import { AutocompleteQuestion, ConfirmQuestion, Question } from '../src/question';
+import { Question } from '../src/question';
 import { displayVersion } from '../src/utils';
 
 const argv = minimist(process.argv.slice(2), {
@@ -118,7 +118,7 @@ const main = async () => {
       'Xigua (Chinese Watermelon)',
       'Yellow Plum',
       'Zucchini'
-  ]
+    ]
   
   };
   const args3 = await prompter.prompt({}, [question]);
@@ -252,8 +252,8 @@ const main = async () => {
       ]
     }
     
-  ])
-  console.log(JSON.stringify(massive, null, 2))
+  ]);
+  console.log(JSON.stringify(massive, null, 2));
   prompter.close();
 };
 

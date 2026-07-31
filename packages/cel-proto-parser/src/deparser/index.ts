@@ -35,7 +35,7 @@ const BINARY_OPERATORS: Record<string, { symbol: string; precedence: number }> =
   '_>_': { symbol: '>', precedence: PRECEDENCE.RELATION },
   '_>=_': { symbol: '>=', precedence: PRECEDENCE.RELATION },
   '@in': { symbol: 'in', precedence: PRECEDENCE.RELATION },
-  '_in_': { symbol: 'in', precedence: PRECEDENCE.RELATION },
+  _in_: { symbol: 'in', precedence: PRECEDENCE.RELATION },
   '_+_': { symbol: '+', precedence: PRECEDENCE.ADDITION },
   '_-_': { symbol: '-', precedence: PRECEDENCE.ADDITION },
   '_*_': { symbol: '*', precedence: PRECEDENCE.MULTIPLICATION },

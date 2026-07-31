@@ -8,13 +8,12 @@ import { sha256 } from './sha2';
 import {
   anumber, asyncLoop,
   checkOpts, clean,
+  type KDFInput,
   rotl,
   swap32IfBE,
-  u32,
-  type KDFInput,
   type TArg,
-  type TRet
-} from './utils';
+  type TRet,
+  u32} from './utils';
 
 // The main Scrypt loop: uses Salsa extensively.
 // Six versions of the function were tried, this is the fastest one.
@@ -42,9 +41,9 @@ function XorAndSalsa(
   let y14 = prev[pi++] ^ input[ii++], y15 = prev[pi++] ^ input[ii++];
   // Save state to temporary variables (salsa)
   let x00 = y00, x01 = y01, x02 = y02, x03 = y03,
-      x04 = y04, x05 = y05, x06 = y06, x07 = y07,
-      x08 = y08, x09 = y09, x10 = y10, x11 = y11,
-      x12 = y12, x13 = y13, x14 = y14, x15 = y15;
+    x04 = y04, x05 = y05, x06 = y06, x07 = y07,
+    x08 = y08, x09 = y09, x10 = y10, x11 = y11,
+    x12 = y12, x13 = y13, x14 = y14, x15 = y15;
   // Main loop (salsa)
   for (let i = 0; i < 8; i += 2) {
     x04 ^= rotl(x00 + x12 | 0,  7); x08 ^= rotl(x04 + x00 | 0,  9);

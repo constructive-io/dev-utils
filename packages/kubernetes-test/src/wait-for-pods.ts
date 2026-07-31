@@ -1,14 +1,14 @@
-import { KubernetesClient, Pod, PodList, ContainerStatus } from 'kubernetesjs';
+import { ContainerStatus,KubernetesClient, Pod, PodList } from 'kubernetesjs';
 
 import {
+  ContainerStatusInfo,
+  PodConditionInfo,
+  PodStatusInfo,
+  WaitForPodsError,
   WaitForPodsOptions,
   WaitForPodsProgress,
   WaitForPodsResult,
-  PodStatusInfo,
-  ContainerStatusInfo,
-  PodConditionInfo,
   WaitForPodsTimeoutError,
-  WaitForPodsError,
 } from './types';
 
 const DEFAULT_TIMEOUT_MS = 300000; // 5 minutes

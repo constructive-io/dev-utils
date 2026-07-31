@@ -1,16 +1,17 @@
-import type { ResolverRegistry } from './types';
 import { findAndRequirePackageJson, PackageJson } from 'find-and-require-package-json';
+
+import type { ResolverRegistry } from './types';
 
 /**
  * Find and read the nearest package.json starting from cwd.
  * Returns undefined if not found (instead of throwing).
  */
 function findPackageJsonFromCwd(): PackageJson | undefined {
-    try {
-        return findAndRequirePackageJson(process.cwd());
-    } catch {
-        return undefined;
-    }
+  try {
+    return findAndRequirePackageJson(process.cwd());
+  } catch {
+    return undefined;
+  }
 }
 
 /**
@@ -22,23 +23,23 @@ function findPackageJsonFromCwd(): PackageJson | undefined {
  * - git://github.com/org/repo.git
  */
 function parseGitHubUrl(url: string): { organization?: string; name?: string } {
-    if (!url) {
-        return {};
-    }
-
-    // Handle git@github.com:org/repo.git format
-    const sshMatch = url.match(/git@github\.com:([^/]+)\/([^/.]+)(?:\.git)?/);
-    if (sshMatch) {
-        return { organization: sshMatch[1], name: sshMatch[2] };
-    }
-
-    // Handle https://github.com/org/repo or git://github.com/org/repo formats
-    const httpsMatch = url.match(/(?:https?|git):\/\/github\.com\/([^/]+)\/([^/.]+)(?:\.git)?/);
-    if (httpsMatch) {
-        return { organization: httpsMatch[1], name: httpsMatch[2] };
-    }
-
+  if (!url) {
     return {};
+  }
+
+  // Handle git@github.com:org/repo.git format
+  const sshMatch = url.match(/git@github\.com:([^/]+)\/([^/.]+)(?:\.git)?/);
+  if (sshMatch) {
+    return { organization: sshMatch[1], name: sshMatch[2] };
+  }
+
+  // Handle https://github.com/org/repo or git://github.com/org/repo formats
+  const httpsMatch = url.match(/(?:https?|git):\/\/github\.com\/([^/]+)\/([^/.]+)(?:\.git)?/);
+  if (httpsMatch) {
+    return { organization: httpsMatch[1], name: httpsMatch[2] };
+  }
+
+  return {};
 }
 
 /**
@@ -46,15 +47,15 @@ function parseGitHubUrl(url: string): { organization?: string; name?: string } {
  * Handles both string and object formats.
  */
 function getRepositoryUrl(pkg: PackageJson): string | undefined {
-    if (!pkg.repository) {
-        return undefined;
-    }
+  if (!pkg.repository) {
+    return undefined;
+  }
 
-    if (typeof pkg.repository === 'string') {
-        return pkg.repository;
-    }
+  if (typeof pkg.repository === 'string') {
+    return pkg.repository;
+  }
 
-    return pkg.repository.url;
+  return pkg.repository.url;
 }
 
 /**
@@ -65,22 +66,22 @@ function parseAuthor(author: string | { name?: string; email?: string; url?: str
     name?: string;
     email?: string;
 } {
-    if (!author) {
-        return {};
-    }
+  if (!author) {
+    return {};
+  }
 
-    if (typeof author === 'object') {
-        return { name: author.name, email: author.email };
-    }
+  if (typeof author === 'object') {
+    return { name: author.name, email: author.email };
+  }
 
-    // Parse string format: "Name <email> (url)"
-    const nameMatch = author.match(/^([^<(]+)/);
-    const emailMatch = author.match(/<([^>]+)>/);
+  // Parse string format: "Name <email> (url)"
+  const nameMatch = author.match(/^([^<(]+)/);
+  const emailMatch = author.match(/<([^>]+)>/);
 
-    return {
-        name: nameMatch ? nameMatch[1].trim() : undefined,
-        email: emailMatch ? emailMatch[1] : undefined,
-    };
+  return {
+    name: nameMatch ? nameMatch[1].trim() : undefined,
+    email: emailMatch ? emailMatch[1] : undefined,
+  };
 }
 
 /**
@@ -88,66 +89,66 @@ function parseAuthor(author: string | { name?: string; email?: string; url?: str
  * These resolve values from the nearest package.json in the current working directory.
  */
 export const workspaceResolvers: ResolverRegistry = {
-    'workspace.name': () => {
-        const pkg = findPackageJsonFromCwd();
-        if (!pkg) return undefined;
-        const url = getRepositoryUrl(pkg);
-        // Prefer repo slug when repository is set; fall back to package name
-        if (url) {
-            const parsed = parseGitHubUrl(url);
-            if (parsed.name) return parsed.name;
-        }
-        return pkg.name;
-    },
+  'workspace.name': () => {
+    const pkg = findPackageJsonFromCwd();
+    if (!pkg) return undefined;
+    const url = getRepositoryUrl(pkg);
+    // Prefer repo slug when repository is set; fall back to package name
+    if (url) {
+      const parsed = parseGitHubUrl(url);
+      if (parsed.name) return parsed.name;
+    }
+    return pkg.name;
+  },
 
-    'workspace.repo.name': () => {
-        const pkg = findPackageJsonFromCwd();
-        if (!pkg) return undefined;
-        const url = getRepositoryUrl(pkg);
-        if (!url) return undefined;
-        return parseGitHubUrl(url).name;
-    },
+  'workspace.repo.name': () => {
+    const pkg = findPackageJsonFromCwd();
+    if (!pkg) return undefined;
+    const url = getRepositoryUrl(pkg);
+    if (!url) return undefined;
+    return parseGitHubUrl(url).name;
+  },
 
-    'workspace.repo.organization': () => {
-        const pkg = findPackageJsonFromCwd();
-        if (!pkg) return undefined;
-        const url = getRepositoryUrl(pkg);
-        if (!url) return undefined;
-        return parseGitHubUrl(url).organization;
-    },
+  'workspace.repo.organization': () => {
+    const pkg = findPackageJsonFromCwd();
+    if (!pkg) return undefined;
+    const url = getRepositoryUrl(pkg);
+    if (!url) return undefined;
+    return parseGitHubUrl(url).organization;
+  },
 
-    // Alias for repo.organization for template readability
-    'workspace.organization.name': () => {
-        const pkg = findPackageJsonFromCwd();
-        if (!pkg) return undefined;
-        const url = getRepositoryUrl(pkg);
-        if (!url) return undefined;
-        return parseGitHubUrl(url).organization;
-    },
+  // Alias for repo.organization for template readability
+  'workspace.organization.name': () => {
+    const pkg = findPackageJsonFromCwd();
+    if (!pkg) return undefined;
+    const url = getRepositoryUrl(pkg);
+    if (!url) return undefined;
+    return parseGitHubUrl(url).organization;
+  },
 
-    'workspace.license': () => {
-        const pkg = findPackageJsonFromCwd();
-        return pkg?.license;
-    },
+  'workspace.license': () => {
+    const pkg = findPackageJsonFromCwd();
+    return pkg?.license;
+  },
 
-    'workspace.author': () => {
-        const pkg = findPackageJsonFromCwd();
-        if (!pkg) return undefined;
-        const parsed = parseAuthor(pkg.author);
-        return parsed.name;
-    },
+  'workspace.author': () => {
+    const pkg = findPackageJsonFromCwd();
+    if (!pkg) return undefined;
+    const parsed = parseAuthor(pkg.author);
+    return parsed.name;
+  },
 
-    'workspace.author.name': () => {
-        const pkg = findPackageJsonFromCwd();
-        if (!pkg) return undefined;
-        const parsed = parseAuthor(pkg.author);
-        return parsed.name;
-    },
+  'workspace.author.name': () => {
+    const pkg = findPackageJsonFromCwd();
+    if (!pkg) return undefined;
+    const parsed = parseAuthor(pkg.author);
+    return parsed.name;
+  },
 
-    'workspace.author.email': () => {
-        const pkg = findPackageJsonFromCwd();
-        if (!pkg) return undefined;
-        const parsed = parseAuthor(pkg.author);
-        return parsed.email;
-    },
+  'workspace.author.email': () => {
+    const pkg = findPackageJsonFromCwd();
+    if (!pkg) return undefined;
+    const parsed = parseAuthor(pkg.author);
+    return parsed.email;
+  },
 };

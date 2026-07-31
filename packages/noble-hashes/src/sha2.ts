@@ -206,7 +206,7 @@ abstract class SHA2_64B<T extends SHA2_64B<T>> extends HashMD<T> {
   protected get(): [
     number, number, number, number, number, number, number, number,
     number, number, number, number, number, number, number, number
-  ] {
+    ] {
     const { Ah, Al, Bh, Bl, Ch, Cl, Dh, Dl, Eh, El, Fh, Fl, Gh, Gl, Hh, Hl } = this;
     return [Ah, Al, Bh, Bl, Ch, Cl, Dh, Dl, Eh, El, Fh, Fl, Gh, Gl, Hh, Hl];
   }

@@ -5,20 +5,20 @@ import { CacheManager } from '../cache/cache-manager';
 import { GitCloner } from '../git/git-cloner';
 import { Templatizer } from '../template/templatizer';
 import {
-  TemplateScaffolderConfig,
-  ScaffoldOptions,
-  ScaffoldResult,
-  BoilerplatesConfig,
-  BoilerplateConfig,
-  InspectOptions,
-  InspectResult,
-} from './types';
-import {
-  ScannedBoilerplate,
+  findBoilerplateByPath,
   ScanBoilerplatesOptions,
   scanBoilerplatesRecursive,
-  findBoilerplateByPath,
+  ScannedBoilerplate,
 } from './scan-boilerplates';
+import {
+  BoilerplateConfig,
+  BoilerplatesConfig,
+  InspectOptions,
+  InspectResult,
+  ScaffoldOptions,
+  ScaffoldResult,
+  TemplateScaffolderConfig,
+} from './types';
 
 /**
  * High-level orchestrator for template scaffolding operations.

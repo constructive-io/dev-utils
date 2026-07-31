@@ -17,15 +17,15 @@ import { _BLAKE2, compress } from './blake2';
 // prettier-ignore
 import {
   abytes, aexists, anumber, aoutput,
+  type CHashXOF,
   clean,
   copyBytes,
-  createHasher, swap32IfBE,
-  u32, u8,
-  type CHashXOF,
-  type HashXOF,
+  createHasher,   type HashXOF,
+  swap32IfBE,
   type TArg,
-  type TRet
-} from './utils';
+  type TRet,
+  u8,
+  u32} from './utils';
 
 // Constructor-time mode flags (`KEYED_HASH`, `DERIVE_*`) plus per-node tree
 // flags (`CHUNK_*`, `PARENT`, `ROOT`).

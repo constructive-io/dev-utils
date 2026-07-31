@@ -1,14 +1,13 @@
 // Re-export core CLI utilities from inquirerer
+export type { CliExitOptions, PackageJson,ParseArgvOptions, ParsedArgs } from 'inquirerer';
 export {
-  parseArgv,
-  extractFirst,
   cliExitWithError,
+  extractFirst,
   getPackageJson,
+  getPackageName,
   getPackageVersion,
-  getPackageName
-} from 'inquirerer';
-export type { ParsedArgs, ParseArgvOptions, CliExitOptions, PackageJson } from 'inquirerer';
+  parseArgv} from 'inquirerer';
 
 // Update checking (requires appstash, not available in inquirerer)
-export { checkForUpdates, clearUpdateCache, shouldSkipUpdateCheck, suppressUpdateCheck } from './update-check';
 export type { UpdateCheckOptions, UpdateCheckResult } from './update-check';
+export { checkForUpdates, clearUpdateCache, shouldSkipUpdateCheck, suppressUpdateCheck } from './update-check';

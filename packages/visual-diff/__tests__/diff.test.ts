@@ -1,4 +1,4 @@
-import { diff, diffFiles, createUnifiedDiff, parseUnifiedDiff, hasDifferences, countChanges } from '../src/diff';
+import { countChanges,createUnifiedDiff, diff, diffFiles, hasDifferences, parseUnifiedDiff } from '../src/diff';
 
 describe('diff', () => {
   describe('basic diffing', () => {

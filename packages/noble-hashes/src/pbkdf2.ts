@@ -6,10 +6,10 @@ import { hmac } from './hmac';
 // prettier-ignore
 import {
   ahash, anumber,
-  asyncLoop, checkOpts, clean, createView, kdfInputToBytes,
-  type CHash,
-  type Hash,
+  asyncLoop,   type CHash,
+  checkOpts, clean, createView,   type Hash,
   type KDFInput,
+  kdfInputToBytes,
   type TArg,
   type TRet
 } from './utils';

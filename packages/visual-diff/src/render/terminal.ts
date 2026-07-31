@@ -1,16 +1,16 @@
 import yanse from 'yanse';
+
+import { highlightLine } from '../highlight';
+import {getTheme } from '../themes';
 import type {
-  DiffResult,
-  DiffLine,
-  DiffHunk,
-  Theme,
   ColorConfig,
+  DiffHunk,
+  DiffLine,
+  DiffResult,
+  Language,
   SyntaxToken,
   TerminalRenderOptions,
-  Language
-} from '../types';
-import { getTheme, defaultTheme } from '../themes';
-import { highlightLine } from '../highlight';
+  Theme} from '../types';
 
 type YanseColor = (str: string) => string;
 
@@ -61,19 +61,19 @@ function renderLineUnified(
   let lineColor: ColorConfig;
 
   switch (line.type) {
-    case 'added':
-      prefix = '+';
-      lineColor = theme.colors.added;
-      break;
-    case 'removed':
-      prefix = '-';
-      lineColor = theme.colors.removed;
-      break;
-    case 'unchanged':
-    default:
-      prefix = ' ';
-      lineColor = theme.colors.unchanged;
-      break;
+  case 'added':
+    prefix = '+';
+    lineColor = theme.colors.added;
+    break;
+  case 'removed':
+    prefix = '-';
+    lineColor = theme.colors.removed;
+    break;
+  case 'unchanged':
+  default:
+    prefix = ' ';
+    lineColor = theme.colors.unchanged;
+    break;
   }
 
   const parts: string[] = [];

@@ -1,0 +1,56 @@
+{
+  "name": "@constructive-io/eslint-config",
+  "version": "0.1.0",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Shared ESLint 9 flat config for Constructive repos",
+  "main": "index.mjs",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "scripts": {
+    "lint": "eslint . --fix"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.2",
+    "@typescript-eslint/eslint-plugin": "^8.53.1",
+    "@typescript-eslint/parser": "^8.53.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.3.0",
+    "globals": "^17.7.0"
+  },
+  "peerDependencies": {
+    "eslint": "^9"
+  },
+  "keywords": [
+    "eslint",
+    "eslintconfig",
+    "flat-config",
+    "typescript",
+    "prettier",
+    "lint"
+  ]
+}

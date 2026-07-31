@@ -15,17 +15,16 @@ import { rotlBH, rotlBL, rotlSH, rotlSL, split } from './_u64';
 // prettier-ignore
 import {
   abytes, aexists, anumber, aoutput,
-  clean, createHasher,
-  oidNist,
-  swap32IfBE,
-  u32,
   type CHash, type CHashXOF,
+  clean, createHasher,
   type Hash,
   type HashInfo,
   type HashXOF,
+  oidNist,
+  swap32IfBE,
   type TArg,
-  type TRet
-} from './utils';
+  type TRet,
+  u32} from './utils';
 
 // No __PURE__ annotations in sha3 header:
 // EVERYTHING is in fact used on every export.

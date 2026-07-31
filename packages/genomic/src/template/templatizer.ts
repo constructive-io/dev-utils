@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+
 import { ExtractedVariables } from '../types';
 import { extractVariables } from './extract';
 import { promptUser } from './prompt';
