@@ -168,14 +168,24 @@ describe('changedFiles', () => {
     expect(result.files.map((f) => f.relative)).toEqual(['dirty.sql']);
   });
 
-  it('ignores $GITHUB_BASE_REF when the remote ref is missing', () => {
+  it('accepts a bare $GITHUB_BASE_REF branch when the remote ref is missing', () => {
     const dir = track(makeRepo());
     process.env.GITHUB_BASE_REF = 'main';
     write(dir, 'dirty.sql');
 
     // `origin/main` does not exist here. A naive implementation hands back that
-    // ref anyway and every later git call rejects it; this falls through to the
-    // local default branch instead.
+    // ref anyway and every later git call rejects it; this falls back to the
+    // local branch of the same name.
+    const result = changedFiles({ cwd: dir });
+    expect(result.base).toBe('main');
+    expect(result.files.map((f) => f.relative)).toEqual(['dirty.sql']);
+  });
+
+  it('falls through to the default branch when $GITHUB_BASE_REF names nothing', () => {
+    const dir = track(makeRepo());
+    process.env.GITHUB_BASE_REF = 'release/9.9';
+    write(dir, 'dirty.sql');
+
     const result = changedFiles({ cwd: dir });
     expect(result.base).toBe('main');
     expect(result.files.map((f) => f.relative)).toEqual(['dirty.sql']);
