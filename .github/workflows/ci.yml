@@ -51,6 +51,7 @@ jobs:
           - confstash
           - fetch-api-client
           - find-and-require-package-json
+          - git-changed
           - http-errors
           - inflekt
           - jsonld-tools
