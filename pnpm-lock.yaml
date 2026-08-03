@@ -244,6 +244,13 @@ importers:
         version: 0.1.10
     publishDirectory: dist
 
+  packages/git-changed:
+    devDependencies:
+      makage:
+        specifier: 0.1.10
+        version: 0.1.10
+    publishDirectory: dist
+
   packages/http-errors:
     devDependencies:
       makage:
