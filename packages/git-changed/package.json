@@ -1,6 +1,6 @@
 {
   "name": "git-changed",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "List the files changed against a merge base, including working-tree and untracked changes",
   "main": "index.js",
