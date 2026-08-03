@@ -148,4 +148,84 @@ FROM alpine`;
       expect(result).toContain('# escape=`');
     });
   });
+
+  describe('mount flags', () => {
+    it('should keep a cache mount out of the command', () => {
+      const ast = parse(
+        'FROM alpine\nRUN --mount=type=cache,id=pnpm-store,target=/store pnpm install'
+      );
+      const run = ast.stages[0].instructions[0];
+
+      expect(run).toMatchObject({
+        type: 'RunInstruction',
+        command: 'pnpm install',
+        mount: [{ type: 'cache', id: 'pnpm-store', target: '/store' }]
+      });
+      expect(deparse(ast)).toBe(
+        'FROM alpine\nRUN --mount=type=cache,target=/store,id=pnpm-store pnpm install'
+      );
+    });
+  });
+
+  describe('comments', () => {
+    it('should emit a comment above the instruction it leads', () => {
+      const source = 'FROM alpine\n# why this copy is separate\nCOPY a.json ./';
+
+      expect(deparse(parse(source))).toBe(source);
+    });
+
+    it('should emit a comment block and keep the blank line below it', () => {
+      const source = 'FROM alpine\n\n# section header\n\nCOPY a.json ./\nCOPY b.json ./';
+
+      expect(deparse(parse(source))).toBe(source);
+    });
+
+    it('should emit comments that lead a later stage', () => {
+      const source = 'FROM alpine AS build\n\n# the runtime image\nFROM alpine\nCOPY --from=build /out /out';
+
+      expect(deparse(parse(source))).toBe(source);
+    });
+
+    it('should emit a trailing comment that leads nothing', () => {
+      const source = 'FROM alpine\nCOPY a.json ./\n# trailing note';
+
+      expect(deparse(parse(source))).toBe(source);
+    });
+
+    it('should attach comments to the node below, not the one above', () => {
+      const ast = parse('FROM alpine\nCOPY a.json ./\n# about b\nCOPY b.json ./');
+      const [copyA, copyB] = ast.stages[0].instructions;
+
+      expect(copyA.leadingComments).toBeUndefined();
+      expect(copyB.leadingComments).toEqual([
+        expect.objectContaining({ type: 'Comment', value: 'about b' })
+      ]);
+    });
+
+    it('should emit comments built by hand, without a parse', () => {
+      const result = deparse({
+        type: 'Dockerfile',
+        directives: [],
+        comments: [],
+        stages: [
+          {
+            type: 'Stage',
+            from: { type: 'FromInstruction', instruction: 'FROM', image: 'alpine' },
+            instructions: [
+              {
+                type: 'CopyInstruction',
+                instruction: 'COPY',
+                sources: ['a.json'],
+                destination: './',
+                blankBefore: true,
+                leadingComments: [{ type: 'Comment', value: 'generated: the handler manifest' }]
+              }
+            ]
+          }
+        ]
+      });
+
+      expect(result).toBe('FROM alpine\n# generated: the handler manifest\n\nCOPY a.json ./');
+    });
+  });
 });

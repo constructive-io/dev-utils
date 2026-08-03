@@ -21,6 +21,17 @@ export interface Range {
 export interface BaseNode {
   type: string;
   range?: Range;
+  /**
+   * Comment lines immediately above this node, in source order.
+   *
+   * A Dockerfile's comments explain the instruction they sit on — why a COPY is
+   * split out, what busts a cache layer — so they belong to that node rather
+   * than to the file. The deparser emits them, which is what lets a generated
+   * Dockerfile carry its reasoning and a parsed one survive a round-trip.
+   */
+  leadingComments?: Comment[];
+  /** Emit one blank line above this node (and above its leading comments). */
+  blankBefore?: boolean;
 }
 
 /**
@@ -30,7 +41,13 @@ export interface Dockerfile extends BaseNode {
   type: 'Dockerfile';
   directives: ParserDirective[];
   stages: Stage[];
+  /**
+   * Every comment in the file, in source order, whether or not it is also
+   * attached to a node as a leading comment.
+   */
   comments: Comment[];
+  /** Comments after the last instruction, which lead no node. */
+  trailingComments?: Comment[];
 }
 
 /**

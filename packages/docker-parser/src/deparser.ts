@@ -116,15 +116,54 @@ export class Deparser {
       lines.push(this.deparseDirective(directive));
     }
 
-    // Then stages
-    for (const stage of dockerfile.stages) {
-      if (lines.length > 0) {
+    // Then stages, separated by a blank line — unless the stage already places
+    // that separator itself via blankBefore (on the stage, or on the first of
+    // its leading comments). A separator is never inserted where the AST does
+    // not ask for one: an invented blank line would come back as blankBefore on
+    // the next parse and break the round-trip.
+    dockerfile.stages.forEach((stage, index) => {
+      if (index > 0 && !this.leadsWithBlank(stage)) {
         lines.push('');
       }
       lines.push(this.deparseStage(stage));
+    });
+
+    for (const comment of dockerfile.trailingComments ?? []) {
+      if (comment.blankBefore) {
+        lines.push('');
+      }
+      lines.push(this.deparseComment(comment));
     }
 
     return lines.join(this.options.newline);
+  }
+
+  /**
+   * Prefix a node's rendered lines with its blank line and leading comments
+   */
+  private withLeading(node: Node, rendered: string): string {
+    const lines: string[] = [];
+    // Each comment carries its own blank line, so a blank above the comment
+    // block and a blank between the block and the instruction stay distinct.
+    for (const comment of node.leadingComments ?? []) {
+      if (comment.blankBefore) {
+        lines.push('');
+      }
+      lines.push(this.deparseComment(comment));
+    }
+    if (node.blankBefore) {
+      lines.push('');
+    }
+    lines.push(rendered);
+    return lines.join(this.options.newline);
+  }
+
+  /**
+   * Whether a node already renders a blank line above itself
+   */
+  private leadsWithBlank(node: Node): boolean {
+    const first = node.leadingComments?.[0];
+    return first ? Boolean(first.blankBefore) : Boolean(node.blankBefore);
   }
 
   /**
@@ -141,21 +180,22 @@ export class Deparser {
     const lines: string[] = [];
 
     // FROM instruction
-    lines.push(this.deparseFrom(stage.from));
+    lines.push(this.withLeading(stage.from, this.deparseFrom(stage.from)));
 
     // Other instructions
     for (const instruction of stage.instructions) {
-      lines.push(this.deparseInstruction(instruction));
+      lines.push(this.withLeading(instruction, this.deparseInstruction(instruction)));
     }
 
-    return lines.join(this.options.newline);
+    return this.withLeading(stage, lines.join(this.options.newline));
   }
 
   /**
    * Deparse comment
    */
   private deparseComment(comment: Comment): string {
-    return `# ${comment.value}`;
+    // An empty comment is a bare `#`; `# ` would add trailing whitespace.
+    return comment.value ? `# ${comment.value}` : '#';
   }
 
   /**

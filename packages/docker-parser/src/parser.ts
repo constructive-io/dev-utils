@@ -4,6 +4,7 @@ import { Lexer, Token, TokenType } from './lexer';
 import {
   AddInstruction,
   ArgInstruction,
+  BaseNode,
   CmdInstruction,
   Comment,
   CopyInstruction,
@@ -46,6 +47,10 @@ export class Parser {
   private pos: number = 0;
   private escapeChar: string = '\\';
   private options: ParserOptions;
+  /** Comments read but not yet attached to the node they lead. */
+  private pendingComments: Comment[] = [];
+  /** Whether a blank line preceded the node about to be parsed. */
+  private pendingBlank: boolean = false;
 
   constructor(options: ParserOptions = {}) {
     this.options = {
@@ -98,7 +103,9 @@ export class Parser {
         dockerfile.directives.push(this.parseDirective());
       } else if (token.type === TokenType.COMMENT) {
         if (this.options.includeComments) {
-          dockerfile.comments.push(this.parseComment());
+          const comment = this.parseComment();
+          dockerfile.comments.push(comment);
+          this.pendingComments.push(comment);
         } else {
           this.advance();
         }
@@ -118,7 +125,9 @@ export class Parser {
 
       if (token.type === TokenType.COMMENT) {
         if (this.options.includeComments) {
-          dockerfile.comments.push(this.parseComment());
+          const comment = this.takeBlank(this.parseComment());
+          dockerfile.comments.push(comment);
+          this.pendingComments.push(comment);
         } else {
           this.advance();
         }
@@ -127,19 +136,20 @@ export class Parser {
 
       if (token.type === TokenType.FROM) {
         const from = this.parseFrom();
-        currentStage = {
+        currentStage = this.takeLeading({
           type: 'Stage',
           from,
           instructions: [],
           name: from.name,
           range: from.range
-        };
+        } as Stage);
         dockerfile.stages.push(currentStage);
         continue;
       }
 
       // Parse other instructions
-      const instruction = this.parseInstruction();
+      const parsed = this.parseInstruction();
+      const instruction = parsed ? this.takeLeading(parsed) : parsed;
       if (instruction) {
         if (currentStage) {
           currentStage.instructions.push(instruction);
@@ -160,6 +170,13 @@ export class Parser {
           }
         }
       }
+    }
+
+    // Comments after the last instruction lead nothing; keep them so the file
+    // can be deparsed without losing its tail.
+    if (this.pendingComments.length > 0) {
+      dockerfile.trailingComments = this.pendingComments;
+      this.pendingComments = [];
     }
 
     return dockerfile;
@@ -194,17 +211,52 @@ export class Parser {
   }
 
   /**
-   * Skip whitespace and newlines
+   * Skip whitespace and newlines, recording whether a blank line was crossed
    */
   private skipWhitespaceAndNewlines(): void {
+    let newlines = 0;
     while (!this.isAtEnd()) {
       const token = this.peek();
-      if (token.type === TokenType.WHITESPACE || token.type === TokenType.NEWLINE) {
+      if (token.type === TokenType.NEWLINE) {
+        newlines++;
+        this.advance();
+      } else if (token.type === TokenType.WHITESPACE) {
         this.advance();
       } else {
         break;
       }
     }
+    // Two newlines in a row means an empty line between instructions. At the
+    // very start of the file there is no preceding instruction to separate from.
+    if (newlines > 1 && this.pos > newlines) {
+      this.pendingBlank = true;
+    }
+  }
+
+  /**
+   * Attach the comments and blank line collected since the last node
+   */
+  private takeLeading<T extends BaseNode>(node: T): T {
+    if (this.pendingComments.length > 0) {
+      node.leadingComments = this.pendingComments;
+      this.pendingComments = [];
+    }
+    return this.takeBlank(node);
+  }
+
+  /**
+   * Attach only the blank line collected since the last node
+   *
+   * A comment takes the blank line above it but not the comments above it:
+   * consecutive comments are siblings in one block leading the same
+   * instruction, not a chain where each leads the next.
+   */
+  private takeBlank<T extends BaseNode>(node: T): T {
+    if (this.pendingBlank) {
+      node.blankBefore = true;
+      this.pendingBlank = false;
+    }
+    return node;
   }
 
   /**
