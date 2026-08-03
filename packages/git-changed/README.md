@@ -165,7 +165,7 @@ Same options; returns `result.paths`.
 In order, first hit wins:
 
 1. `options.base` / `--base <ref>` — explicit always wins.
-2. `$GITHUB_BASE_REF` as `origin/<ref>`, **if that ref exists locally**. On a pull request GitHub sets this to the target branch. The existence check matters: without it you hand back a ref that every subsequent git call rejects.
+2. `$GITHUB_BASE_REF` — the PR's target branch — as `origin/<ref>`, else the bare `<ref>`, **whichever exists locally**. `origin/` comes first because Actions fetches only the remote ref and a stale local branch of the same name would diff against the wrong commit; the bare branch covers running the same tool outside CI. Checking existence matters: without it you hand back a ref that every subsequent git call rejects.
 3. The repository default branch — `origin/HEAD` if set, else the first of `origin/main`, `origin/master`, `main`, `master` that resolves.
 
 Then the diff is taken from `git merge-base HEAD <base>`, not from the base tip, so work that landed on the base after you forked is not attributed to you.
@@ -284,7 +284,7 @@ if (process.env.CI && source === 'worktree') {
 | Files from someone else's merge included | You diffed the base tip somewhere else in your pipeline; this package uses the merge base. Verify with `--json` and look at `mergeBase`. |
 | A new module's files are missing | You're not using this package, or not `-uall`. Untracked files inside a new directory need it. |
 | Tool crashes on a missing path | Something passed `existingOnly: false`. The default drops deleted paths. |
-| `origin/main` not found | `$GITHUB_BASE_REF` was set but unfetched. This package falls through to the local default branch rather than returning a broken ref. |
+| `origin/main` not found | `$GITHUB_BASE_REF` was set but unfetched. This package falls back to the local branch of that name, then to the default branch, rather than returning a broken ref. |
 
 ## License
 
