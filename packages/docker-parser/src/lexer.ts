@@ -268,6 +268,33 @@ export class Lexer {
   }
 
   /**
+   * Read a flag, including its `=value` if present
+   *
+   * Unlike readWord, this does not stop at `=`: a flag's value is part of the
+   * flag (`--mount=type=cache,id=store`, `--from=builder`). Stopping at the
+   * first `=` leaves the value behind as free text, where an instruction parser
+   * reads it as the start of the command.
+   */
+  private readFlag(): string {
+    let result = '';
+    while (!this.isAtEnd()) {
+      const char = this.peek();
+      if (char === ' ' || char === '\t' || char === '\n' || char === '\r') {
+        break;
+      }
+      if (char === this.escapeChar && (this.peek(1) === '\n' || this.peek(1) === '\r')) {
+        // Line continuation
+        this.advance();
+        if (this.peek() === '\r') this.advance();
+        if (this.peek() === '\n') this.advance();
+        continue;
+      }
+      result += this.advance();
+    }
+    return result;
+  }
+
+  /**
    * Read a comment or directive
    */
   private readComment(): Token {
@@ -389,9 +416,9 @@ export class Lexer {
       };
     }
 
-    // Flag (--something)
+    // Flag (--something, or --something=value)
     if (char === '-' && this.peek(1) === '-') {
-      const value = this.readWord();
+      const value = this.readFlag();
       return {
         type: TokenType.FLAG,
         value,

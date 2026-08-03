@@ -154,6 +154,58 @@ FROM alpine`);
     });
   });
 
+  describe('RUN flags', () => {
+    it('should round-trip a cache mount', () => {
+      expectRoundTrip(
+        'FROM alpine\nRUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store pnpm install'
+      );
+    });
+
+    it('should round-trip a bind mount with a source', () => {
+      expectRoundTrip('FROM alpine\nRUN --mount=type=bind,source=/src,target=/dst make');
+    });
+
+    it('should round-trip a secret mount', () => {
+      expectRoundTrip('FROM alpine\nRUN --mount=type=secret,id=npmrc,required npm ci');
+    });
+
+    it('should round-trip two mounts on one RUN', () => {
+      expectRoundTrip(
+        'FROM alpine\nRUN --mount=type=cache,target=/cache --mount=type=bind,target=/src build.sh'
+      );
+    });
+
+    it('should round-trip --network and --security', () => {
+      expectRoundTrip('FROM alpine\nRUN --network=none --security=insecure build.sh');
+    });
+  });
+
+  describe('comments and blank lines', () => {
+    it('should round-trip a comment above an instruction', () => {
+      expectRoundTrip('FROM alpine\n# why this copy is separate\nCOPY a.json ./');
+    });
+
+    it('should round-trip a block of consecutive comments', () => {
+      expectRoundTrip('FROM alpine\n# first line\n# second line\n# third line\nCOPY a.json ./');
+    });
+
+    it('should round-trip a blank line between a comment and its instruction', () => {
+      expectRoundTrip('FROM alpine\n# section header\n\nCOPY a.json ./');
+    });
+
+    it('should round-trip comments leading a stage', () => {
+      expectRoundTrip('FROM alpine AS build\nRUN build.sh\n\n# the runtime image\nFROM alpine\nCOPY --from=build /out /out');
+    });
+
+    it('should round-trip a comment after the last instruction', () => {
+      expectRoundTrip('FROM alpine\nCOPY a.json ./\n# trailing note');
+    });
+
+    it('should round-trip an empty comment line', () => {
+      expectRoundTrip('FROM alpine\n# heading\n#\n# body\nCOPY a.json ./');
+    });
+  });
+
   describe('complete Dockerfiles', () => {
     it('should round-trip a typical Node.js Dockerfile', () => {
       expectRoundTrip(`FROM node:18-alpine

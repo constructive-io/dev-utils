@@ -44,6 +44,47 @@ const output = deparse(ast);
 console.log(output); // FROM node:18-alpine
 ```
 
+### Comments
+
+A comment belongs to the instruction below it, as `leadingComments`, and a blank
+line above a node is `blankBefore`. Both are emitted by the deparser, so a
+parsed Dockerfile keeps its comments and section spacing through a round-trip,
+and a generated one can carry its own:
+
+```typescript
+deparse({
+  type: 'Dockerfile',
+  directives: [],
+  comments: [],
+  stages: [
+    {
+      type: 'Stage',
+      from: { type: 'FromInstruction', instruction: 'FROM', image: 'node:22-alpine' },
+      instructions: [
+        {
+          type: 'CopyInstruction',
+          instruction: 'COPY',
+          sources: ['package.json'],
+          destination: './',
+          blankBefore: true,
+          leadingComments: [{ type: 'Comment', value: 'manifests only: cache the install layer' }],
+        },
+      ],
+    },
+  ],
+});
+// FROM node:22-alpine
+// # manifests only: cache the install layer
+//
+// COPY package.json ./
+```
+
+`Dockerfile.comments` holds every comment in source order, and comments below
+the last instruction land in `Dockerfile.trailingComments`.
+
+Line continuations are not preserved: a `RUN` written across several lines with
+`\` deparses as one line.
+
 ### AST Comparison
 
 ```typescript
