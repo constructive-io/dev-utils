@@ -198,6 +198,11 @@ export class PromptTimeoutError extends Error {
 
 const DEFAULT_NON_TTY_TIMEOUT = 15_000;
 
+/** True when the stream is a terminal a person can type into. */
+function isInteractiveInput(input: Readable): boolean {
+  return (input as Readable & { isTTY?: boolean }).isTTY === true;
+}
+
 export interface InquirererOptions {
   noTty?: boolean;
   input?: Readable;
@@ -250,7 +255,11 @@ export class Inquirerer {
 
     if (timeout !== undefined) {
       this.timeout = timeout;
-    } else if (!noTty) {
+    } else if (!noTty && !isInteractiveInput(input)) {
+      // The default timeout exists to fail a CI run that prompts with nothing
+      // to answer it, and its error text says so. A person at a real terminal
+      // is allowed to think for as long as they like, so only arm it when the
+      // input stream is not a TTY while the prompter still expects input.
       this.timeout = DEFAULT_NON_TTY_TIMEOUT;
     }
 
