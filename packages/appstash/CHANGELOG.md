@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/constructive-io/dev-utils/compare/appstash@0.7.1...appstash@0.8.0) (2026-08-04)
+
+### Features
+
+- **appstash:** shared stash identity, session fields, secret codec, atomic 0600 writes ([38e1acf](https://github.com/constructive-io/dev-utils/commit/38e1acf9c1d4d58a6b3937c35b906080d9b1496c))
+
 ## [0.7.1](https://github.com/constructive-io/dev-utils/compare/appstash@0.7.0...appstash@0.7.1) (2026-07-31)
 
 **Note:** Version bump only for package appstash
