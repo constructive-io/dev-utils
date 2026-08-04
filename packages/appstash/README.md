@@ -251,6 +251,50 @@ const dirs = appstash('myapp', {
 console.log(dirs.config); // /opt/myapp/.myapp/config
 ```
 
+## Config store
+
+`createConfigStore(tool, options?)` layers a context + credential store on top of the
+directories above: named contexts (each with an endpoint and optional per-target
+endpoints), credentials per context, per-context vars, and `getClientConfig(target)`
+resolution (store → env vars → actionable error).
+
+Every file it writes is atomic (temp file + `rename`) and mode `0600`. A stored file
+that exists but does not parse throws with its path — it is never silently replaced
+with defaults.
+
+### One signed-in state across several tools
+
+Pass `stashName` when multiple binaries are really one product. They then share
+contexts and credentials, while `tool` still drives env-var prefixes (`CSDK_TOKEN`)
+and the command names in error messages:
+
+```typescript
+// A generated SDK CLI, an agent CLI and a desktop app, one login:
+createConfigStore('csdk',    { stashName: 'constructive' });
+createConfigStore('agent',   { stashName: 'constructive' });
+createConfigStore('desktop', { stashName: 'constructive' });
+```
+
+### Encrypting secrets at rest
+
+Supply a `SecretCodec` to transform the secret-bearing fields (`token`,
+`refreshToken`, `apiKey`) on the way to disk; everything else stays readable. The
+codec name is recorded in `credentials.json`, so a file written by a different codec
+is reported instead of decoded into garbage:
+
+```typescript
+import { safeStorage } from 'electron';
+
+createConfigStore('desktop', {
+  stashName: 'constructive',
+  codec: {
+    name: 'electron-safeStorage',
+    encode: (s) => safeStorage.encryptString(s).toString('base64'),
+    decode: (s) => safeStorage.decryptString(Buffer.from(s, 'base64'))
+  }
+});
+```
+
 ## Design Philosophy
 
 - **Simple**: One function, clear structure
