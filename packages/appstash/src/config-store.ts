@@ -19,10 +19,37 @@ export interface ContextCredentials {
   token: string;
   expiresAt?: string;
   refreshToken?: string;
+  /** Identity the token belongs to. */
+  userId?: string;
+  email?: string;
+  /** Long-lived API key minted for this context, and its server-side id. */
+  apiKey?: string;
+  keyId?: string;
+  apiKeyExpiresAt?: string;
+  /** Epoch millis of the sign-in that produced these credentials. */
+  signedInAt?: number;
 }
+
+/**
+ * At-rest transform for the secret-bearing fields of stored credentials
+ * (`token`, `refreshToken`, `apiKey`). Hosts with a keychain supply one — e.g.
+ * Electron `safeStorage` — so the same on-disk layout can be encrypted without
+ * the store knowing how. `decode` receives exactly what `encode` produced.
+ */
+export interface SecretCodec {
+  /** Recorded on disk, so a file written by a different codec is detected. */
+  name: string;
+  encode(plaintext: string): string;
+  decode(encoded: string): string;
+}
+
+const SECRET_FIELDS = ['token', 'refreshToken', 'apiKey'] as const;
+const PLAINTEXT_CODEC = 'plaintext';
 
 export interface Credentials {
   tokens: Record<string, ContextCredentials>;
+  /** Name of the codec that encoded the secret fields. */
+  codec?: string;
 }
 
 export interface GlobalSettings {
@@ -31,6 +58,16 @@ export interface GlobalSettings {
 
 export interface ConfigStoreOptions {
   baseDir?: string;
+  /**
+   * Directory identity to store under, when it differs from the tool name.
+   * Several CLIs that are one product — a generated SDK CLI, an agent CLI, a
+   * desktop app — pass the same `stashName`, so signing in through one signs
+   * you in everywhere, while `toolName` still drives env-var prefixes and the
+   * commands named in error messages. Defaults to `toolName`.
+   */
+  stashName?: string;
+  /** At-rest transform for secret fields. Defaults to plaintext. */
+  codec?: SecretCodec;
 }
 
 export interface ClientConfig {
@@ -63,28 +100,57 @@ export interface ConfigStore {
   getClientConfig(targetName: string, contextName?: string): ClientConfig;
 }
 
+/**
+ * Read stored JSON, or `fallback` when the file does not exist. A file that
+ * exists but does not parse is a real problem — a half-written credential file,
+ * a hand-edit gone wrong — so it throws with the path instead of quietly
+ * resetting the caller's configuration.
+ */
 function readJson<T>(filePath: string, fallback: T): T {
-  if (fs.existsSync(filePath)) {
-    try {
-      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    } catch {
+  let raw: string;
+  try {
+    raw = fs.readFileSync(filePath, 'utf8');
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
       return JSON.parse(JSON.stringify(fallback));
     }
+    throw err;
   }
-  return JSON.parse(JSON.stringify(fallback));
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`Malformed JSON in ${filePath}: ${(err as Error).message}`);
+  }
 }
 
-function writeJson(filePath: string, data: unknown, mode?: number): void {
+/**
+ * Write JSON atomically: a temp file in the destination directory, then
+ * `rename`. A crash or a concurrent reader mid-write can never observe a
+ * truncated file. `mode` is applied to the temp file before the rename so the
+ * contents are never briefly world-readable.
+ */
+function writeJson(filePath: string, data: unknown, mode = 0o600): void {
   const dir = path.dirname(filePath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+  fs.mkdirSync(dir, { recursive: true });
+  const tmp = path.join(dir, `.${path.basename(filePath)}.${process.pid}.tmp`);
+  try {
+    fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + '\n', { mode });
+    fs.renameSync(tmp, filePath);
+  } catch (err) {
+    try {
+      fs.unlinkSync(tmp);
+    } catch {
+      // the temp file may not exist; the original error is what matters
+    }
+    throw err;
   }
-  const options: fs.WriteFileOptions = mode ? { mode } : {};
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), options);
 }
 
 export function createConfigStore(toolName: string, options?: ConfigStoreOptions): ConfigStore {
-  const dirs = appstash(toolName, { ensure: true, baseDir: options?.baseDir });
+  const stashName = options?.stashName ?? toolName;
+  const codec = options?.codec;
+  const codecName = codec?.name ?? PLAINTEXT_CODEC;
+  const dirs = appstash(stashName, { ensure: true, baseDir: options?.baseDir });
 
   function settingsPath(): string {
     return resolve(dirs, 'config', 'settings.json');
@@ -134,17 +200,11 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
     if (!fs.existsSync(contextsDir)) {
       return [];
     }
-    const files = fs.readdirSync(contextsDir).filter(f => f.endsWith('.json'));
-    const contexts: ContextConfig[] = [];
-    for (const file of files) {
-      try {
-        const content = fs.readFileSync(path.join(contextsDir, file), 'utf8');
-        contexts.push(JSON.parse(content));
-      } catch {
-        // skip invalid files
-      }
-    }
-    return contexts;
+    return fs
+      .readdirSync(contextsDir)
+      .filter(f => f.endsWith('.json'))
+      .map(f => readJson<ContextConfig | null>(path.join(contextsDir, f), null))
+      .filter((ctx): ctx is ContextConfig => ctx !== null);
   }
 
   function deleteContext(name: string): boolean {
@@ -180,23 +240,47 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
     return true;
   }
 
+  /** Map the secret fields of one entry through `transform`. */
+  function mapSecrets(
+    creds: ContextCredentials,
+    transform: (value: string) => string
+  ): ContextCredentials {
+    const mapped: ContextCredentials = { ...creds };
+    for (const field of SECRET_FIELDS) {
+      const value = mapped[field];
+      if (typeof value === 'string') mapped[field] = transform(value);
+    }
+    return mapped;
+  }
+
+  /** Stored credentials, still encoded. */
   function loadCredentials(): Credentials {
-    return readJson<Credentials>(credentialsPath(), { tokens: {} });
+    const credentials = readJson<Credentials>(credentialsPath(), { tokens: {} });
+    const fileCodec = credentials.codec ?? PLAINTEXT_CODEC;
+    if (Object.keys(credentials.tokens).length > 0 && fileCodec !== codecName) {
+      throw new Error(
+        `Credentials in ${credentialsPath()} were written with the "${fileCodec}" codec, ` +
+        `but this store uses "${codecName}". Sign in again to rewrite them.`
+      );
+    }
+    return credentials;
   }
 
   function saveCredentials(credentials: Credentials): void {
-    writeJson(credentialsPath(), credentials, 0o600);
+    writeJson(credentialsPath(), { ...credentials, codec: codecName }, 0o600);
   }
 
   function setCredentials(contextName: string, creds: ContextCredentials): void {
     const credentials = loadCredentials();
-    credentials.tokens[contextName] = creds;
+    credentials.tokens[contextName] = codec ? mapSecrets(creds, codec.encode) : creds;
     saveCredentials(credentials);
   }
 
   function getCredentials(contextName: string): ContextCredentials | null {
     const credentials = loadCredentials();
-    return credentials.tokens[contextName] || null;
+    const stored = credentials.tokens[contextName];
+    if (!stored) return null;
+    return codec ? mapSecrets(stored, codec.decode) : stored;
   }
 
   function removeCredentials(contextName: string): boolean {

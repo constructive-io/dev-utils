@@ -285,5 +285,6 @@ export type {
   ContextTargetEndpoint,
   Credentials,
   GlobalSettings,
+  SecretCodec,
 } from './config-store';
 export { createConfigStore } from './config-store';
