@@ -76,6 +76,52 @@ export const KEY_CODES = {
   ALT_DOWN: '\u001b[1;3B',
 };
 
+const ESC = '\u001b';
+const CSI_FINAL_MIN = 0x40;
+const CSI_FINAL_MAX = 0x7e;
+
+const isCsiFinal = (char: string): boolean => {
+  const code = char.codePointAt(0)!;
+  return code >= CSI_FINAL_MIN && code <= CSI_FINAL_MAX;
+};
+
+/**
+ * Split one stdin data chunk into individual keys.
+ *
+ * A chunk is not one key: pasting, fast typing, or a terminal batching its
+ * output all deliver several keys at once. Escape sequences are kept whole —
+ * CSI (`ESC [ … final`), SS3 (`ESC O x`), and meta (`ESC x`) — and everything
+ * else is split per code point so astral characters survive.
+ */
+export function segmentKeys(chunk: string): string[] {
+  const chars = Array.from(chunk);
+  if (chars.length <= 1) return chars.length === 1 ? [chunk] : [];
+
+  const keys: string[] = [];
+  let i = 0;
+  while (i < chars.length) {
+    if (chars[i] !== ESC || i + 1 >= chars.length) {
+      keys.push(chars[i]);
+      i++;
+      continue;
+    }
+
+    let end: number;
+    if (chars[i + 1] === '[') {
+      end = i + 2;
+      while (end < chars.length && !isCsiFinal(chars[end])) end++;
+      end++;
+    } else {
+      // SS3 (ESC O x) and meta (ESC x) are both ESC plus one character.
+      end = i + 3 <= chars.length && chars[i + 1] === 'O' ? i + 3 : i + 2;
+    }
+    end = Math.min(end, chars.length);
+    keys.push(chars.slice(i, end).join(''));
+    i = end;
+  }
+  return keys;
+}
+
 /**
  * Handles keyboard input for interactive prompts.
  * 
@@ -116,15 +162,29 @@ export class TerminalKeypress {
   }
 
   private setupListeners(): void {
-    this.dataHandler = (key: string) => {
+    this.dataHandler = (chunk: string) => {
       if (!this.active) return;
-      const handlers = this.listeners[key];
-      handlers?.forEach(handler => handler());
-      if (key === KEY_CODES.CTRL_C) {
-        this.proc.exit(0);
+      // A chunk carrying several keypresses (paste, fast typing) matches no
+      // single registered key, so dispatch it key by key. An exact match wins
+      // first: consumers may register sequences the segmenter does not know.
+      const keys = this.listeners[chunk] ? [chunk] : segmentKeys(chunk);
+      for (const key of keys) {
+        if (!this.active) return;
+        this.dispatch(key);
       }
     };
     this.input.on('data', this.dataHandler);
+  }
+
+  private dispatch(key: string): void {
+    const handlers = this.listeners[key];
+    if (handlers) {
+      // Copy: a handler may register or remove handlers for the same key.
+      for (const handler of [...handlers]) handler();
+    }
+    if (key === KEY_CODES.CTRL_C) {
+      this.proc.exit(0);
+    }
   }
 
   on(key: string, callback: KeyHandler): void {
