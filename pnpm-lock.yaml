@@ -517,6 +517,20 @@ importers:
         version: 0.1.10
     publishDirectory: dist
 
+  packages/ws-changed:
+    dependencies:
+      confstash:
+        specifier: workspace:*
+        version: link:../confstash/dist
+      git-changed:
+        specifier: workspace:*
+        version: link:../git-changed/dist
+    devDependencies:
+      makage:
+        specifier: 0.1.10
+        version: 0.1.10
+    publishDirectory: dist
+
   packages/yamlize:
     dependencies:
       js-yaml:

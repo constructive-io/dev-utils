@@ -71,6 +71,7 @@ jobs:
           - nginx-ast
           - promql-ast
           - yamlize
+          - ws-changed
 
     steps:
     - name: Checkout code
