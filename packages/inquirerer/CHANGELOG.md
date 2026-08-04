@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.3](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.2...inquirerer@4.9.3) (2026-08-04)
+
+### Bug Fixes
+
+- **inquirerer:** dispatch every key in a stdin chunk; arm idle timeout only for non-TTY input ([164ce72](https://github.com/constructive-io/dev-utils/commit/164ce72d0d51856b09f30ee16d898c45930717e9))
+
 ## [4.9.2](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.1...inquirerer@4.9.2) (2026-07-31)
 
 **Note:** Version bump only for package inquirerer
