@@ -58,6 +58,7 @@ jobs:
           - komoji
           - nested-obj
           - node-api-client
+          - pnpm-policy
           - schema-sdk
           - schema-typescript
           - strfy-js
