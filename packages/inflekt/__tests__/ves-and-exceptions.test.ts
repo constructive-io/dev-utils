@@ -139,6 +139,57 @@ describe('singularize: suffix classes the inflection library gets wrong', () => 
   });
 });
 
+describe('singularize: -is and -us words', () => {
+  it('depluralizes coined identifiers whose stem ends in a vowel', () => {
+    // The regression that started this: an "apis" table became "apises",
+    // because every -is/-us word was assumed to be already singular.
+    expect(singularize('apis')).toBe('api');
+    expect(singularize('uris')).toBe('uri');
+    expect(singularize('guis')).toBe('gui');
+    expect(singularize('cpus')).toBe('cpu');
+    expect(singularize('gpus')).toBe('gpu');
+    expect(singularizeLast('ApiSchemas')).toBe('ApiSchema');
+    expect(pluralize(singularize('apis'))).toBe('apis');
+    expect(pluralize(singularize('cpus'))).toBe('cpus');
+  });
+
+  it('leaves the dictionary singulars alone', () => {
+    // "iris" and "apis" have the same shape (a vowel plus "s"), so these are
+    // dictionary facts, not rules — see SINGULAR_EXCEPTIONS.
+    for (const word of [
+      'aegis',
+      'analysis',
+      'anxious',
+      'apparatus',
+      'bus',
+      'cactus',
+      'census',
+      'chassis',
+      'corpus',
+      'genius',
+      'iris',
+      'nucleus',
+      'radius',
+      'status',
+      'tennis',
+      'various',
+      'virus',
+    ]) {
+      expect(singularize(word)).toBe(word);
+    }
+  });
+
+  it('still depluralizes the dictionary plurals of vowel stems', () => {
+    expect(singularize('menus')).toBe('menu');
+    expect(singularize('emus')).toBe('emu');
+    expect(singularize('skis')).toBe('ski');
+    expect(singularize('taxis')).toBe('taxi');
+    expect(singularize('alibis')).toBe('alibi');
+    expect(singularize('statuses')).toBe('status');
+    expect(singularize('irises')).toBe('iris');
+  });
+});
+
 describe('SINGULAR_EXCEPTIONS table', () => {
   it('is applied for every entry', () => {
     for (const [plural, singular] of Object.entries(SINGULAR_EXCEPTIONS)) {
