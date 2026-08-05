@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.2.1...pnpm-policy@0.2.2) (2026-08-05)
+
+### Bug Fixes
+
+- **pnpm-policy:** generate without a lockfile when scopes alone define the exemptions ([df9883b](https://github.com/constructive-io/dev-utils/commit/df9883be3014432cb3dd83fae03ba9012f738d18))
+
 ## [0.2.1](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.2.0...pnpm-policy@0.2.1) (2026-08-05)
 
 ### Bug Fixes

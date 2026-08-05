@@ -1,6 +1,6 @@
 {
   "name": "@constructive-io/pnpm-policy",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Constructive <developers@constructive.io>",
   "description": "Constructive's pnpm supply-chain policy data — config and generated first-party inventory for pnpm-policy",
   "homepage": "https://github.com/constructive-io/dev-utils",
