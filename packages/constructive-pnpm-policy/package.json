@@ -1,0 +1,49 @@
+{
+  "name": "@constructive-io/pnpm-policy",
+  "version": "0.1.0",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Constructive's pnpm supply-chain policy data \u2014 config and generated first-party inventory for pnpm-policy",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "exports": {
+    "./pnpm-policy.yaml": "./pnpm-policy.yaml",
+    "./inventory.json": "./inventory.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "pnpm-policy.yaml",
+    "inventory.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "scripts": {
+    "clean": "makage clean",
+    "copy": "makage assets",
+    "build": "makage clean && makage copy pnpm-policy.yaml inventory.json dist --flat && makage assets",
+    "refresh": "pnpm-policy inventory --cwd .",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "makage": "0.1.10",
+    "pnpm-policy": "workspace:*"
+  },
+  "keywords": [
+    "pnpm",
+    "pnpm-policy",
+    "supply-chain",
+    "minimumReleaseAge",
+    "constructive",
+    "inventory"
+  ]
+}

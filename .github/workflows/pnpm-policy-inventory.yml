@@ -1,0 +1,106 @@
+name: Refresh pnpm-policy inventory
+
+# The inventory is an exemption list: a package landing in it stops being
+# quarantined by minimumReleaseAge. So this opens a pull request for review
+# rather than committing to main — one human glance at "these 3 names became
+# exempt" is the whole point of keeping the file in git.
+
+on:
+  schedule:
+    # Mondays, 07:00 UTC.
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+    inputs:
+      throttle:
+        description: Milliseconds between registry requests
+        required: false
+        default: '1000'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pnpm-policy-inventory
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.12.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build pnpm-policy
+        run: pnpm --filter pnpm-policy run build
+
+      # The npm search endpoint is anonymous — no registry token needed — but it
+      # rate-limits bursts, so requests are spaced out.
+      - name: Query npm for what we publish
+        run: pnpm --filter @constructive-io/pnpm-policy exec pnpm-policy inventory --cwd . --throttle "${{ inputs.throttle || '1000' }}"
+
+      - name: Open a pull request if the inventory moved
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          file=packages/constructive-pnpm-policy/inventory.json
+
+          if git diff --quiet -- "$file"; then
+            echo "Inventory unchanged."
+            exit 0
+          fi
+
+          # `generatedAt` changes on every run, so a timestamp-only diff is not a
+          # change worth a pull request.
+          if [ "$(git diff -U0 -- "$file" | grep -c '^[+-][^+-]')" -le 2 ] \
+            && [ -z "$(git diff -U0 -- "$file" | grep '^[+-][^+-]' | grep -v generatedAt)" ]; then
+            echo "Only generatedAt changed."
+            exit 0
+          fi
+
+          branch="chore/pnpm-policy-inventory-$(date -u +%Y%m%d)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add "$file"
+          git commit -m "chore(constructive-pnpm-policy): refresh first-party inventory"
+          git push -f origin "$branch"
+
+          if gh pr list --head "$branch" --state open --json number --jq 'length' | grep -qv '^0$'; then
+            echo "Pull request already open for $branch."
+            exit 0
+          fi
+
+          {
+            echo "Automated refresh of the first-party inventory from the npm maintainer search."
+            echo
+            echo "**This is an exemption list.** Every name added here stops waiting out"
+            echo "\`minimumReleaseAge\`, so read the diff before merging: a name you do not"
+            echo "recognise means an account in \`maintainers:\` published something new."
+            echo
+            echo '```diff'
+            git diff HEAD~1 -- "$file" | head -c 60000
+            echo '```'
+          } > /tmp/pr-body.md
+
+          gh pr create \
+            --base "${{ github.ref_name }}" \
+            --head "$branch" \
+            --title "chore(constructive-pnpm-policy): refresh first-party inventory" \
+            --body-file /tmp/pr-body.md
