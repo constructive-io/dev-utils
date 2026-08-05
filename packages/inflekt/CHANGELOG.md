@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/constructive-io/dev-utils/compare/inflekt@0.7.2...inflekt@0.7.3) (2026-08-05)
+
+### Bug Fixes
+
+- **inflekt:** singularize coined -is/-us plurals (apis -> api) ([dcb4b86](https://github.com/constructive-io/dev-utils/commit/dcb4b86ef319f2bfd1340f575e9541cefdb4c528))
+
 ## [0.7.2](https://github.com/constructive-io/dev-utils/compare/inflekt@0.7.1...inflekt@0.7.2) (2026-07-31)
 
 ### Bug Fixes
