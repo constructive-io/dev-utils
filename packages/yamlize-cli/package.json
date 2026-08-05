@@ -1,6 +1,6 @@
 {
   "name": "@yamlize/cli",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "description": "yamlize CLI — generate YAML from templates with imports and variable substitution",
   "author": "Dan Lynch <pyramation@gmail.com>",
   "homepage": "https://github.com/constructive-io/dev-utils",

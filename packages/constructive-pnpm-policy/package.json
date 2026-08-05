@@ -1,8 +1,8 @@
 {
   "name": "@constructive-io/pnpm-policy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Constructive <developers@constructive.io>",
-  "description": "Constructive's pnpm supply-chain policy data \u2014 config and generated first-party inventory for pnpm-policy",
+  "description": "Constructive's pnpm supply-chain policy data — config and generated first-party inventory for pnpm-policy",
   "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
   "exports": {

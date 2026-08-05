@@ -1,6 +1,6 @@
 {
   "name": "pnpm-policy",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Constructive <developers@constructive.io>",
   "description": "pnpm supply-chain policy for npm maintainers — derive minimumReleaseAge exemptions and build permissions from what you publish",
   "main": "index.js",

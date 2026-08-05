@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.1](https://github.com/constructive-io/dev-utils/compare/yamlize@0.12.0...yamlize@0.12.1) (2026-08-05)
+
+### Bug Fixes
+
+- **pnpm-policy:** build workspace deps in CI, and tidy the generated block ([9e67a1b](https://github.com/constructive-io/dev-utils/commit/9e67a1b4d4cb5c41976f90853a3f2671cba481b6))
+
 # [0.12.0](https://github.com/constructive-io/dev-utils/compare/yamlize@0.11.1...yamlize@0.12.0) (2026-08-05)
 
 ### Features
