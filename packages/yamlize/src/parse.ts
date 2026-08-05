@@ -4,8 +4,8 @@
  */
 
 import { readFileSync } from 'fs';
-import yaml from 'js-yaml';
 import { dirname, join } from 'path';
+import { parse as parseYaml } from 'yaml';
 
 // nested-obj uses `export default` which requires runtime resolution
  
@@ -76,7 +76,7 @@ export function parse(obj: YamlNode, dir: string, context: YamlizeContext): Yaml
     const importPath = record['import-yaml'] as string;
     const yamlFile = join(dir, importPath);
     const content = readFileSync(yamlFile, 'utf8');
-    const parsed = yaml.load(content) as YamlNode;
+    const parsed = parseYaml(content) as YamlNode;
     importedYaml = parse(parsed, dirname(yamlFile), context) as Record<string, YamlNode>;
   }
 

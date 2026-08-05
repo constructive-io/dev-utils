@@ -3,12 +3,18 @@
  */
 
 import fs from 'fs';
-import yaml from 'js-yaml';
 import { sync as mkdirp } from 'mkdirp';
 import { dirname } from 'path';
+import { Document, parse as parseYaml } from 'yaml';
 
+import { applyComments } from './comments';
 import { parse } from './parse';
-import type { YamlizeContext, YamlizeOptions, YamlNode } from './types';
+import type {
+  ToYamlOptions,
+  YamlizeContext,
+  YamlizeOptions,
+  YamlNode,
+} from './types';
 
 /**
  * Read a YAML template file, resolve imports and variables,
@@ -17,18 +23,17 @@ import type { YamlizeContext, YamlizeOptions, YamlNode } from './types';
 export function yamlize(
   metaYamlFile: string,
   outFile: string,
-  context: YamlizeContext
+  context: YamlizeContext,
+  options?: ToYamlOptions
 ): void {
   const metaYamlContent = fs.readFileSync(metaYamlFile, 'utf-8');
   const metaYamlDir = dirname(metaYamlFile);
-  const metaYaml = yaml.load(metaYamlContent) as YamlNode;
+  const metaYaml = parseYaml(metaYamlContent) as YamlNode;
 
   const out = parse(metaYaml, metaYamlDir, context);
 
-  const yamlOutput = yaml.dump(out, { lineWidth: -1 });
-
   mkdirp(dirname(outFile));
-  fs.writeFileSync(outFile, yamlOutput);
+  fs.writeFileSync(outFile, toYaml(out, options));
 }
 
 /**
@@ -40,7 +45,7 @@ export function yamlizeString(
   context: YamlizeContext,
   options?: YamlizeOptions
 ): YamlNode {
-  const parsed = yaml.load(yamlContent) as YamlNode;
+  const parsed = parseYaml(yamlContent) as YamlNode;
   const dir = options?.baseDir ?? process.cwd();
   return parse(parsed, dir, context);
 }
@@ -58,15 +63,22 @@ export function yamlizeObject(
 }
 
 /**
- * Serialize a value to a YAML string.
+ * Serialize a value to a YAML string, optionally attaching comments.
+ *
+ * Wrapping is off by default: a generated file is diffed on every change, and
+ * re-wrapped long values turn a one-word edit into a multi-line diff.
  */
-export function toYaml(obj: unknown): string {
-  return yaml.dump(obj, { lineWidth: -1 });
+export function toYaml(obj: unknown, options?: ToYamlOptions): string {
+  const doc = new Document(obj);
+  if (options?.comments) {
+    applyComments(doc, options.comments);
+  }
+  return doc.toString({ lineWidth: options?.lineWidth ?? 0 });
 }
 
 /**
  * Parse a YAML string into a JavaScript value.
  */
 export function fromYaml(str: string): unknown {
-  return yaml.load(str);
+  return parseYaml(str);
 }
