@@ -73,10 +73,16 @@ function load(options: RunOptions): Loaded {
     );
   }
 
+  // Intersection only ever narrows individual inventory names, so a workspace
+  // with no inventory (scopes alone, which are never intersected) has nothing to
+  // read a lockfile for — and demanding one would fail a freshly scaffolded
+  // project that has not installed yet.
+  const needsLockfile = intersect && inventory != null;
+
   const policy = resolvePolicy({
     config: { ...config, intersect },
     inventory,
-    resolved: intersect ? readWorkspacePackages(workspaceDir) : undefined,
+    resolved: needsLockfile ? readWorkspacePackages(workspaceDir) : undefined,
     buildsKey: options.buildsKey,
     now: options.now
   });
