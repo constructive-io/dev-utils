@@ -1,6 +1,6 @@
 {
   "name": "ws-changed",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "Which workspace packages does a set of changed files affect? Pluggable workspace providers (pnpm, pgpm, glob), a dependency graph, and affected = changed ∪ dependents — for change-aware CI",
   "main": "index.js",
