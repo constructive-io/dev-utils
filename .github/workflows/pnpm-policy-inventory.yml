@@ -51,10 +51,16 @@ jobs:
       - name: Build pnpm-policy
         run: pnpm --filter 'pnpm-policy...' run build
 
+      # Invoked by path, not through the linked bin: pnpm resolves a workspace
+      # dependency to its `publishConfig.directory` only if that directory exists
+      # when the link is made, and here it is created by the build step above —
+      # after install. On a fresh checkout the bin therefore points at a cli.js
+      # that does not exist yet.
+      #
       # The npm search endpoint is anonymous — no registry token needed — but it
       # rate-limits bursts, so requests are spaced out.
       - name: Query npm for what we publish
-        run: pnpm --filter @constructive-io/pnpm-policy exec pnpm-policy inventory --cwd . --throttle "${{ inputs.throttle || '1000' }}"
+        run: node packages/pnpm-policy/dist/cli.js inventory --cwd packages/constructive-pnpm-policy --throttle "${{ inputs.throttle || '1000' }}"
 
       - name: Open a pull request if the inventory moved
         env:

@@ -79,7 +79,8 @@ Scopes become `@scope/*` globs, so a package published into one tomorrow is exem
 ## Refreshing
 
 ```bash
-pnpm run refresh    # pnpm-policy inventory --cwd .
+pnpm --filter 'pnpm-policy...' run build    # the sibling tool, if you have not built it
+pnpm run refresh                            # pnpm-policy inventory --cwd .
 ```
 
 Five throttled requests, a couple of seconds. In CI this runs weekly and **opens a pull request** rather than committing ([`pnpm-policy-inventory.yml`](../../.github/workflows/pnpm-policy-inventory.yml)): a name appearing in the diff is a name that stops being quarantined, so it gets read by a human before it lands. The npm search endpoint is anonymous, so the job needs no registry token — only `contents: write` and `pull-requests: write` to open the PR.

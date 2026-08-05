@@ -31,7 +31,7 @@
     "clean": "makage clean",
     "copy": "makage assets",
     "build": "makage clean && makage copy pnpm-policy.yaml inventory.json dist --flat && makage assets",
-    "refresh": "pnpm-policy inventory --cwd .",
+    "refresh": "node ../pnpm-policy/dist/cli.js inventory --cwd .",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
