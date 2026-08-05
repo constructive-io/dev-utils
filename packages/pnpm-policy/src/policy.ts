@@ -104,7 +104,9 @@ function buildComments(
       [
         `Exempt from the wait: ${sources.join(', ')}.`,
         config.maintainers.length
-          ? `First-party membership comes from what ${config.maintainers.join(', ')} publish on npm — waiting on your own release protects nothing.`
+          ? `First-party membership comes from what ${config.maintainers.join(', ')} ${
+              config.maintainers.length === 1 ? 'publishes' : 'publish'
+            } on npm — waiting on your own release protects nothing.`
           : 'First-party membership comes from the inventory.'
       ].join('\n')
     ]);

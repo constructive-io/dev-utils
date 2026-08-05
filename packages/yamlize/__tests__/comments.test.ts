@@ -110,4 +110,18 @@ describe('applyComments', () => {
     applyComments(doc, { before: { age: 'current' } });
     expect(doc.toString()).toBe('# current\nage: 1\n');
   });
+
+  it('opens a blank line when the comment starts with one', () => {
+    const doc = parseDocument('packages:\n  - packages/*\n');
+    doc.set('age', 1);
+    applyComments(doc, { before: { age: '\nthe wait' } });
+    expect(doc.toString()).toBe('packages:\n  - packages/*\n\n# the wait\nage: 1\n');
+  });
+
+  it('does not open one otherwise', () => {
+    const doc = parseDocument('packages:\n  - packages/*\n');
+    doc.set('age', 1);
+    applyComments(doc, { before: { age: 'the wait' } });
+    expect(doc.toString()).toBe('packages:\n  - packages/*\n# the wait\nage: 1\n');
+  });
 });

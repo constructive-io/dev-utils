@@ -57,14 +57,18 @@ export function applyPolicy(
   }
 
   const first = Object.keys(policy.settings).find((key) => managed.includes(key));
-  const before = policy.comments.before.map(
-    ([path, text]): [CommentPath, string] =>
-      // The stamp goes on the first managed key rather than the top of the file,
-      // where it would fight with whatever the workspace already says there.
+  const before = policy.comments.before.map(([path, text]): [CommentPath, string] => {
+    // The stamp goes on the first managed key rather than the top of the file,
+    // where it would fight with whatever the workspace already says there.
+    const body =
       options.marker !== false && path.length === 1 && path[0] === first
-        ? [path, `${MANAGED_MARKER}\n\n${text}`]
-        : [path, text]
-  );
+        ? `${MANAGED_MARKER}\n\n${text}`
+        : text;
+    // A leading blank line keeps each managed block visually separate, which
+    // matters most for a key appended to the end of an existing file: it lands
+    // flush against whatever was already the last line.
+    return [path, path.length === 1 ? `\n${body}` : body];
+  });
 
   applyComments(doc, { before, inline: policy.comments.inline });
 

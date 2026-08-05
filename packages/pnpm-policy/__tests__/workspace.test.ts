@@ -60,6 +60,12 @@ describe('applyPolicy', () => {
     expect(out).not.toContain('allowBuilds');
   });
 
+  it('separates an appended key from the content it lands after', () => {
+    const out = applyPolicy('packages:\n  - packages/*\n', policyFor());
+    expect(out).toContain(`  - packages/*\n\n# ${MANAGED_MARKER}`);
+    expect(out).not.toMatch(/\n\n\n/);
+  });
+
   it('is idempotent — a second run changes nothing', () => {
     const once = applyPolicy('packages:\n  - packages/*\n', policyFor());
     expect(applyPolicy(once, policyFor())).toBe(once);
