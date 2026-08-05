@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, writeFileSync } from 'fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
@@ -82,6 +82,12 @@ describe('generate', () => {
     const dir = workspace(CONFIG);
     const result = generate({ cwd: dir, intersect: false });
     expect(readFileSync(result.file, 'utf-8')).toContain('never-used');
+  });
+
+  it('needs no lockfile when scopes alone define the exemptions', () => {
+    const dir = workspace('minimumReleaseAge: 14d\nscopes:\n  - "@acme"\n');
+    rmSync(join(dir, 'pnpm-lock.yaml'));
+    expect(readFileSync(generate({ cwd: dir }).file, 'utf-8')).toContain('"@acme/*"');
   });
 
   it('reports no change on a second run', () => {
