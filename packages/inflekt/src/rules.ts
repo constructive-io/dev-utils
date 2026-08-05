@@ -78,11 +78,18 @@ export const F_STEM_PLURALS: Array<[string, string]> = [
 ];
 
 /**
- * Words that are already singular but look plural to the s$ rule: no English
- * plural ends in "is" (iris, analysis, chassis) or "us" (bus, status, virus,
- * anxious).
+ * Adjectives, never plurals: anxious, various, porous. No noun stem ends in
+ * "ou", so nothing here is ever a dropped-s away from a singular.
+ *
+ * There is no equivalent rule for the rest of "-is"/"-us", because none exists:
+ * "apis" and "iris" are both a vowel plus "s" (api + s, iri + s), so no suffix
+ * tells the plural from the singular. Whether a word is one or the other is a
+ * dictionary fact, and the dictionary-proven singulars live in
+ * SINGULAR_EXCEPTIONS as self-mappings (status -> status, analysis -> analysis).
+ * Words the dictionary does not know fall through to the generic "drop the s",
+ * which is what coined identifiers want: apis -> api, cpus -> cpu, uris -> uri.
  */
-const ALREADY_SINGULAR_REGEX = /(?:is|us)$/i;
+const ADJECTIVE_OUS_REGEX = /ous$/i;
 
 /**
  * The only -ice plurals. The inflection library's rule is written `([m|l])ice`,
@@ -212,7 +219,7 @@ export function singularizeByRules(word: string): string {
   const normalizedWord = normalizeMalformedDoubleS(word);
   const lowerWord = normalizedWord.toLowerCase();
 
-  if (ALREADY_SINGULAR_REGEX.test(normalizedWord)) {
+  if (ADJECTIVE_OUS_REGEX.test(normalizedWord)) {
     return normalizedWord;
   }
 

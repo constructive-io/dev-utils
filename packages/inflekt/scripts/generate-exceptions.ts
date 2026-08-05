@@ -179,6 +179,16 @@ for (const singular of [...exceptions.values()]) {
   }
 }
 
+// Round-trip closure for the singulars that end in "s" (aegis, iris, corpus):
+// their plural takes "-es", and the generic rules read that back one letter
+// short (aegises -> aegise), because "-ses" is only "-sis" for the Greek nouns.
+for (const singular of [...new Set(exceptions.values())]) {
+  if (!singular.endsWith('s')) continue;
+  const plural = pluralize(singular);
+  if (plural === singular || exceptions.has(plural)) continue;
+  if (singularizeByRules(plural) !== singular) exceptions.set(plural, singular);
+}
+
 const entries = [...exceptions.entries()].sort(([a], [b]) => a.localeCompare(b));
 const body = entries.map(([plural, singular]) => `  ${plural}: '${singular}',`).join('\n');
 
