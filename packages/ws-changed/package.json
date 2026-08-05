@@ -1,0 +1,53 @@
+{
+  "name": "ws-changed",
+  "version": "0.0.1",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Which workspace packages does a set of changed files affect? Pluggable workspace providers (pnpm, pgpm, glob), a dependency graph, and affected = changed ∪ dependents — for change-aware CI",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "ws-changed": "cli.js"
+  },
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "confstash": "workspace:*",
+    "git-changed": "workspace:*"
+  },
+  "devDependencies": {
+    "makage": "0.1.10"
+  },
+  "keywords": [
+    "workspace",
+    "monorepo",
+    "affected",
+    "changed",
+    "pnpm",
+    "pgpm",
+    "dependency-graph",
+    "ci",
+    "incremental",
+    "lerna"
+  ]
+}
