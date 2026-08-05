@@ -46,8 +46,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # `...` includes workspace dependencies: pnpm-policy imports yamlize,
+      # which imports nested-obj, and tsc needs their built type declarations.
       - name: Build pnpm-policy
-        run: pnpm --filter pnpm-policy run build
+        run: pnpm --filter 'pnpm-policy...' run build
 
       # The npm search endpoint is anonymous — no registry token needed — but it
       # rate-limits bursts, so requests are spaced out.

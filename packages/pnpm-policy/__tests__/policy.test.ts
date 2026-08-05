@@ -128,6 +128,17 @@ describe('resolvePolicy', () => {
     expect(commentAt(comments.before, ['minimumReleaseAgeExclude'])).toContain('pyramation');
   });
 
+  it('agrees with the number of maintainers it names', () => {
+    const one = resolve({ maintainers: ['pyramation'] });
+    expect(commentAt(one.comments.before, ['minimumReleaseAgeExclude'])).toContain(
+      'pyramation publishes on npm'
+    );
+    const two = resolve({ maintainers: ['pyramation', 'dan'] });
+    expect(commentAt(two.comments.before, ['minimumReleaseAgeExclude'])).toContain(
+      'pyramation, dan publish on npm'
+    );
+  });
+
   it('carries each exception reason to the line it exempts', () => {
     const { comments, settings } = resolve({
       exceptions: [{ package: 'left-pad', reason: 'CVE-2026-1', until: '2027-01-01' }]

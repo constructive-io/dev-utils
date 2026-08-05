@@ -23,6 +23,20 @@ function commentText(text: string): string {
     .join('\n');
 }
 
+/**
+ * A leading blank line in the comment asks for a blank line in the output.
+ *
+ * The `yaml` package models that as `spaceBefore` on the node rather than as
+ * part of the comment, so it is stripped from the text and set on the node —
+ * otherwise a comment written as `'\ntext'` renders flush against whatever
+ * precedes it, which is exactly the separation the author was asking for.
+ */
+function splitSpaceBefore(text: string): { spaceBefore: boolean; text: string } {
+  return text.startsWith('\n')
+    ? { spaceBefore: true, text: text.slice(1) }
+    : { spaceBefore: false, text };
+}
+
 /** Read either comment map form as a list of path/text pairs. */
 function commentEntries(map: CommentMap | undefined): Array<[YamlPath, string]> {
   if (!map) return [];
@@ -132,9 +146,14 @@ export function applyComments(doc: Document, comments: CommentOptions): void {
     doc.comment = commentText(comments.footer);
   }
 
-  for (const [path, text] of commentEntries(comments.before)) {
-    const node = commentTarget(doc, path, false) as { commentBefore?: string } | undefined;
-    if (node) node.commentBefore = commentText(text);
+  for (const [path, raw] of commentEntries(comments.before)) {
+    const { spaceBefore, text } = splitSpaceBefore(raw);
+    const node = commentTarget(doc, path, false) as
+      | { commentBefore?: string; spaceBefore?: boolean }
+      | undefined;
+    if (!node) continue;
+    node.commentBefore = commentText(text);
+    if (spaceBefore) node.spaceBefore = true;
   }
 
   for (const [path, text] of commentEntries(comments.inline)) {
