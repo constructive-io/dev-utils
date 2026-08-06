@@ -1,9 +1,9 @@
 /**
- * Rule-based singularization: the suffix rules alone, with no exception table.
+ * Rule-based inflection: the suffix rules alone, with no exception tables.
  *
  * Kept separate from pluralize.ts so that scripts/generate-exceptions.ts can
- * diff the rules against a dictionary without the exception table masking the
- * very defects it is meant to record. Not part of the public API.
+ * diff the rules against a dictionary without the exception tables masking the
+ * very defects they are meant to record. Not part of the public API.
  */
 import * as inflection from 'inflection';
 
@@ -17,6 +17,8 @@ import * as inflection from 'inflection';
  */
 const LATIN_SUFFIX_OVERRIDES: Array<[string, string]> = [
   ['schemata', 'schema'],
+  ['corpora', 'corpus'],
+  ['genera', 'genus'],
   ['criteria', 'criterion'],
   ['phenomena', 'phenomenon'],
   ['media', 'medium'],
@@ -25,6 +27,37 @@ const LATIN_SUFFIX_OVERRIDES: Array<[string, string]> = [
   ['curricula', 'curriculum'],
   ['data', 'datum'],
 ];
+
+/**
+ * The `-a` plurals of LATIN_SUFFIX_OVERRIDES, as a set: these are the only
+ * words the rules may read as an existing plural rather than pluralizing them.
+ *
+ * Everything else ending in "a" is treated as a singular that takes "-as"
+ * (deltas, betas, quotas, schemas, replicas). The inflection library assumes
+ * the opposite — that "-a" is Latin — and so leaves every one of them
+ * unchanged, which for an identifier means the plural silently equals the
+ * singular.
+ */
+const LATIN_A_PLURALS = LATIN_SUFFIX_OVERRIDES.map(([plural]) => plural);
+
+/** Whether `lowerWord` is (or ends in) one of the Latin `-a` plurals. */
+function isLatinAPlural(lowerWord: string): boolean {
+  return LATIN_A_PLURALS.some((plural) => lowerWord.endsWith(plural));
+}
+
+/**
+ * The Latin plurals to *produce*, the inverse of LATIN_SUFFIX_OVERRIDES minus
+ * "schema" (whose plural is "schemas" here, per PostGraphile). Matched as a
+ * suffix so compounds follow: metadatum -> metadata.
+ *
+ * Without this, pluralize and singularize disagree: "criteria" singularizes to
+ * "criterion", but "criterion" would pluralize to "criterions".
+ *
+ * Format: [singularSuffix, pluralSuffix]
+ */
+const LATIN_PLURAL_SUFFIXES: Array<[string, string]> = LATIN_SUFFIX_OVERRIDES
+  .filter(([plural]) => plural !== 'schemata')
+  .map(([plural, singular]) => [singular, plural]);
 
 /**
  * Compound words ending in "base" that the inflection library incorrectly
@@ -90,6 +123,15 @@ export const F_STEM_PLURALS: Array<[string, string]> = [
  * which is what coined identifiers want: apis -> api, cpus -> cpu, uris -> uri.
  */
 const ADJECTIVE_OUS_REGEX = /ous$/i;
+
+/**
+ * Words ending in "a" are singular (delta, schema, replica, quota, aorta): the
+ * only English plurals spelled that way are the Latin ones in
+ * LATIN_SUFFIX_OVERRIDES. The inflection library reads the suffix as Latin
+ * regardless and rewrites it to "-um", coining "deltum" and "schemum", which
+ * then reads back as a plural and leaves pluralize with nothing to do.
+ */
+const A_SINGULAR_REGEX = /a$/i;
 
 /**
  * The only -ice plurals. The inflection library's rule is written `([m|l])ice`,
@@ -215,11 +257,124 @@ function applyGenericSingularRules(word: string): string | null {
  * Singularize using suffix rules only — the fallback for words absent from the
  * exception table (including coined identifiers that no dictionary knows).
  */
+const US_REGEX = /us$/i;
+const A_REGEX = /a$/i;
+const UM_REGEX = /um$/i;
+const F_OR_FE_REGEX = /(?:f|fe)$/i;
+
+/**
+ * Nouns ending in "is" that are not the Greek/Latin `-sis`/`-xis` family: their
+ * plural adds "es" (iris -> irises, chassis -> chassises). Only the Greek ones
+ * rewrite the "is" itself (analysis -> analyses, axis -> axes), which is the
+ * rule the inflection library applies to all of them, coining "chasses".
+ */
+const NON_GREEK_IS_REGEX = /(?<![sx])is$/i;
+
+/**
+ * Pluralize using suffix rules only, with no exception table — the fallback for
+ * words the dictionary does not know, which is every coined identifier.
+ *
+ * The inflection library's Latin instincts are wrong for identifiers in three
+ * shapes, all of which it leaves *unchanged* (so the "plural" equals the
+ * singular, and a schema ends up with `radius` and `radius` fields):
+ *
+ *   radius -> radiuses   (not radius)
+ *   delta  -> deltas     (not delta)
+ *   forum  -> forums     (not fora)
+ *
+ * The genuine Latin plurals are a closed set of dictionary words, carried by
+ * LATIN_SUFFIX_OVERRIDES and by the generated PLURAL_EXCEPTIONS table.
+ *
+ * Words the inflection library holds uncountable (sheep, series, aircraft) are
+ * left alone here: "no plural" is a dictionary fact like any other, and the
+ * ones it gets wrong (bias, atlas, aid) are corrected by PLURAL_EXCEPTIONS.
+ */
+export function pluralizeByRules(word: string): string {
+  const normalizedWord = normalizeMalformedDoubleS(word);
+
+  // Adjectives have no plural, so leave them be rather than coining
+  // "anxiouses"; see ADJECTIVE_OUS_REGEX.
+  if (ADJECTIVE_OUS_REGEX.test(normalizedWord)) {
+    return normalizedWord;
+  }
+
+  // -f/-fe words: only the f-stem nouns take -ves; the rest take a plain "s".
+  const fStem = pluralizeFStem(normalizedWord);
+  if (fStem) {
+    return fStem;
+  }
+  if (F_OR_FE_REGEX.test(normalizedWord)) {
+    return matchWordCase(normalizedWord, `${normalizedWord}s`);
+  }
+
+  const lowerWord = normalizedWord.toLowerCase();
+  for (const [singularSuffix, pluralSuffix] of LATIN_PLURAL_SUFFIXES) {
+    if (!lowerWord.endsWith(singularSuffix)) {
+      continue;
+    }
+    const stem = normalizedWord.slice(0, -singularSuffix.length);
+    const matched = normalizedWord.slice(-singularSuffix.length);
+    return stem + matchCase(matched, pluralSuffix);
+  }
+
+  if (NON_GREEK_IS_REGEX.test(normalizedWord)) {
+    return matchWordCase(normalizedWord, `${normalizedWord}es`);
+  }
+
+  const pluralWord = normalizeMalformedDoubleS(
+    inflection.pluralize(normalizedWord)
+  );
+
+  if (pluralWord === normalizedWord) {
+    // Latin-looking shapes it declines to pluralize, and the uncountable list
+    // it applies to countable nouns (bias, atlas, aid, air).
+    if (US_REGEX.test(normalizedWord)) {
+      return matchWordCase(normalizedWord, `${normalizedWord}es`);
+    }
+    if (UM_REGEX.test(normalizedWord)) {
+      return matchWordCase(normalizedWord, `${normalizedWord}s`);
+    }
+    if (A_REGEX.test(normalizedWord) && !isLatinAPlural(lowerWord)) {
+      return matchWordCase(normalizedWord, `${normalizedWord}s`);
+    }
+  }
+
+  return matchWordCase(
+    normalizedWord,
+    enforceDoubleSPlural(singularizeByRules(normalizedWord), pluralWord)
+  );
+}
+
+/**
+ * Keep an all-caps word all-caps: the suffix rules and the inflection library
+ * both append a lowercase "s", turning API_KEY into API_KEYs.
+ */
+function matchWordCase(word: string, plural: string): string {
+  const isAllCaps = word === word.toUpperCase() && /[A-Z]/.test(word);
+  return isAllCaps ? plural.toUpperCase() : plural;
+}
+
+/**
+ * Whether the rules already read `word` as a plural: it singularizes to
+ * something else, and that singular pluralizes back to exactly `word`.
+ *
+ * This is what keeps pluralize idempotent — `pluralize('apis')` must be `apis`,
+ * not `apises` — without a table of every plural in the language.
+ */
+export function isRulesPlural(word: string): boolean {
+  const singular = singularizeByRules(word);
+  return singular !== word && pluralizeByRules(singular) === word;
+}
+
 export function singularizeByRules(word: string): string {
   const normalizedWord = normalizeMalformedDoubleS(word);
   const lowerWord = normalizedWord.toLowerCase();
 
   if (ADJECTIVE_OUS_REGEX.test(normalizedWord)) {
+    return normalizedWord;
+  }
+
+  if (A_SINGULAR_REGEX.test(normalizedWord) && !isLatinAPlural(lowerWord)) {
     return normalizedWord;
   }
 
