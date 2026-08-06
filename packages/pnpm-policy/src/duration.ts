@@ -1,8 +1,8 @@
 /**
  * Durations, in the unit pnpm speaks.
  *
- * `minimumReleaseAge` is minutes, which nobody wants to write for a two-week
- * cooldown, so the config takes `14d` and this converts.
+ * `minimumReleaseAge` is minutes, which nobody wants to write for a multi-day
+ * cooldown, so the config takes `2d` and this converts.
  */
 
 import { PolicyError } from './errors';

@@ -5,9 +5,9 @@
 # ships it plus the generated inventory so our repos can point at one pinned
 # version instead of each maintaining its own exemption list.
 
-# Third-party releases wait two weeks. Most compromised releases are found and
-# yanked well inside that window.
-minimumReleaseAge: 14d
+# Third-party releases wait two days. A compromised release is normally reported
+# and yanked within hours, so the short wait catches it without stalling upgrades.
+minimumReleaseAge: 2d
 
 # Transitive dependencies must resolve from the registry, not from git or a URL.
 blockExoticSubdeps: true

@@ -20,12 +20,12 @@
 
 `minimumReleaseAge` is the single most effective supply-chain control pnpm ships: a package must have existed for N days before it can be installed, and most compromised releases are caught and yanked well inside that window. It is also the one control a package maintainer cannot turn on.
 
-You publish `@acme/parser` at 2pm and consume it in three workspaces at 2:05pm. A 14-day quarantine means your own release is unusable for two weeks, in every repo you own. So the cooldown gets set to `0`, and the protection that would have stopped a compromised transitive dependency is gone — not because you decided the risk was acceptable, but because the tool could not tell your packages from everyone else's.
+You publish `@acme/parser` at 2pm and consume it in three workspaces at 2:05pm. Even a two-day quarantine means your own release is unusable until Thursday, in every repo you own. So the cooldown gets set to `0`, and the protection that would have stopped a compromised transitive dependency is gone — not because you decided the risk was acceptable, but because the tool could not tell your packages from everyone else's.
 
 `pnpm-policy` makes that distinction. It asks npm what your maintainer accounts publish, and writes the answer into `pnpm-workspace.yaml` as an exemption list:
 
 ```yaml
-minimumReleaseAge: 20160          # 14 days, for everything third-party
+minimumReleaseAge: 2880           # 2 days, for everything third-party
 minimumReleaseAgeExclude:
   - "@acme/*"                     # a scope you own
   - my-unscoped-package           # a package you publish
@@ -60,7 +60,7 @@ Commit `pnpm-policy.yaml`, `pnpm-policy.inventory.json`, and the generated `pnpm
 ```yaml
 # How old a third-party release must be before it may be installed.
 # Accepts 14d / 2w / 36h / 90m, or a bare number of minutes (what pnpm stores).
-minimumReleaseAge: 14d
+minimumReleaseAge: 2d
 
 # Transitive dependencies must resolve from the registry, not from git or a URL.
 blockExoticSubdeps: true
@@ -97,7 +97,7 @@ settings:
 
 | Key | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `minimumReleaseAge` | duration | `14d` | Quarantine applied to everything not exempted. |
+| `minimumReleaseAge` | duration | `2d` | Quarantine applied to everything not exempted. |
 | `blockExoticSubdeps` | boolean | `false` | Refuse transitive deps from git/URL sources. |
 | `maintainers` | string[] | `[]` | **Your own** npm accounts. See the warning below. |
 | `scopes` | string[] | `[]` | Scopes you own, emitted as globs. |
@@ -196,9 +196,9 @@ packages:
 
 # Managed by pnpm-policy — run `pnpm-policy generate` after editing pnpm-policy.yaml.
 
-# A third-party release must be 2w old before it can be installed.
+# A third-party release must be 2d old before it can be installed.
 # Most malicious releases are found and yanked well inside that window.
-minimumReleaseAge: 20160
+minimumReleaseAge: 2880
 # Exempt from the wait: 1 scope glob(s), 2 first-party package(s).
 # First-party membership comes from what your-npm-username publishes on npm — waiting on your own release protects nothing.
 minimumReleaseAgeExclude:

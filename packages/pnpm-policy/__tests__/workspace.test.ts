@@ -17,7 +17,7 @@ describe('applyPolicy', () => {
   it('creates the policy block in an empty file', () => {
     const out = applyPolicy('', policyFor());
     expect(parseYaml(out)).toEqual({
-      minimumReleaseAge: 20160,
+      minimumReleaseAge: 2880,
       minimumReleaseAgeExclude: ['@constructive-io/*', 'yanse'],
       blockExoticSubdeps: false
     });
@@ -51,7 +51,7 @@ describe('applyPolicy', () => {
   it('replaces a hand-edited value rather than appending a second key', () => {
     const out = applyPolicy('minimumReleaseAge: 0\n', policyFor());
     expect(out.match(/minimumReleaseAge:/g)).toHaveLength(1);
-    expect(parseYaml(out)).toMatchObject({ minimumReleaseAge: 20160 });
+    expect(parseYaml(out)).toMatchObject({ minimumReleaseAge: 2880 });
   });
 
   it('removes a managed key the policy no longer sets', () => {

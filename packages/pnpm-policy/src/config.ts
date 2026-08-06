@@ -13,8 +13,11 @@ import type { AllowedBuild, PolicyConfig, PolicyException, ResolvedConfig } from
 /** Filenames searched for, in order, when no explicit path is given. */
 export const CONFIG_FILENAMES = ['pnpm-policy.yaml', 'pnpm-policy.yml', 'pnpm-policy.json'];
 
-/** Two weeks: long enough that a malicious release is usually yanked first. */
-export const DEFAULT_MINIMUM_RELEASE_AGE = '14d';
+/**
+ * Two days: a compromised release is normally reported and yanked within hours,
+ * so this catches the attack without holding legitimate upgrades for a fortnight.
+ */
+export const DEFAULT_MINIMUM_RELEASE_AGE = '2d';
 
 /** Find the config file for a directory, or undefined if there is none. */
 export function findConfig(dir: string): string | undefined {
