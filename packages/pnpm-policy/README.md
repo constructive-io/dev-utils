@@ -153,6 +153,33 @@ That becomes pnpm's `allowBuilds` map (pnpm ≥ 10.16), with the reasons as inli
 
 Unlike the release-age exemptions, this list is **not** derived from anything: a package that runs install scripts is a deliberate trust decision, whoever published it.
 
+## Understanding what you depend on
+
+Deciding what to exempt means deciding which *projects* you trust, but npm only offers accounts — and an account is as wide as everything its owner will ever publish. The person maintaining a library you want may also co-maintain something enormous you did not mean to exempt.
+
+`origins` answers the question npm does not: group the packages a workspace resolves by the repository they publish from.
+
+```bash
+pnpm-policy origins                      # every resolved package, grouped by repo owner
+pnpm-policy origins --from postgraphile  # only the subtree that one dependency dragged in
+pnpm-policy origins --owner acme         # just that owner's packages
+pnpm-policy origins --owner acme --out acme.inventory.json   # written as an inventory
+```
+
+```
+$ pnpm-policy origins --from postgraphile
+radix-ui  (29)
+<no repository metadata>  (20)
+graphile  (15)
+graphql  (8)
+```
+
+`--from` reads the lockfile's dependency graph and walks it, so you see what a single decision actually pulled in rather than surveying everything at once. Transitive dependencies are included, because those are the ones an exemption list forgets.
+
+`--owner ... --out ...` writes the result as an inventory, ready to pass to `inventory:`. It emits **names only** — no `maintainers`, no scope globs — because the point is a reviewed list, and a glob would re-widen it to whatever gets published into that scope next.
+
+The repository field is self-reported, so this is a proxy for provenance, not proof of it. It answers "which project is this package from", not "is this package safe".
+
 ## The inventory
 
 `pnpm-policy inventory` queries `registry.npmjs.org` for `maintainer:<account>`, paginates, and writes:
