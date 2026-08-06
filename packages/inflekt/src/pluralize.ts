@@ -1,18 +1,17 @@
 /**
- * Pluralization utilities with PostGraphile-compatible Latin suffix handling
+ * Inflection with PostGraphile-compatible Latin suffix handling.
  *
- * Uses the 'inflection' package with custom overrides for Latin plural suffixes
- * that PostGraphile handles differently than standard English pluralization,
- * plus a dictionary-proven exception table for the words where no suffix rule
- * is right (see exceptions.ts).
+ * Both directions are the same shape: an exception table proven against a
+ * system dictionary (exceptions.ts) in front of the suffix rules (rules.ts),
+ * so dictionary words are right by construction and coined identifiers fall
+ * through to the rules. Both are idempotent — `singularize` of a singular and
+ * `pluralize` of a plural return the word unchanged.
  */
-import * as inflection from 'inflection';
-
-import { SINGULAR_EXCEPTIONS } from './exceptions';
+import { PLURAL_EXCEPTIONS, SINGULAR_EXCEPTIONS } from './exceptions';
 import {
-  enforceDoubleSPlural,
+  isRulesPlural,
   normalizeMalformedDoubleS,
-  pluralizeFStem,
+  pluralizeByRules,
   restoreWordCase,
   singularizeByRules,
 } from './rules';
@@ -37,12 +36,36 @@ function splitLastSegment(
   return { prefix: str.slice(0, index), word: str.slice(index) };
 }
 
-function lookupException(word: string): string | null {
+function lookup(
+  table: Record<string, string>,
+  word: string
+): string | null {
   const key = word.toLowerCase();
-  if (!Object.prototype.hasOwnProperty.call(SINGULAR_EXCEPTIONS, key)) {
+  if (!Object.prototype.hasOwnProperty.call(table, key)) {
     return null;
   }
-  return restoreWordCase(word, SINGULAR_EXCEPTIONS[key]);
+  return restoreWordCase(word, table[key]);
+}
+
+/**
+ * Apply an exception table to a word, or to the final segment of a compound
+ * name ("user_cookies" -> "cookies") so compounds inflect like the word they
+ * end in.
+ */
+function applyTable(
+  table: Record<string, string>,
+  word: string
+): string | null {
+  const whole = lookup(table, word);
+  if (whole) {
+    return whole;
+  }
+  const segment = splitLastSegment(word);
+  if (!segment) {
+    return null;
+  }
+  const segmentException = lookup(table, segment.word);
+  return segmentException ? segment.prefix + segmentException : null;
 }
 
 /**
@@ -52,55 +75,46 @@ function lookupException(word: string): string | null {
 export function singularize(word: string): string {
   const normalizedWord = normalizeMalformedDoubleS(word);
 
-  const exception = lookupException(normalizedWord);
+  const exception = applyTable(SINGULAR_EXCEPTIONS, normalizedWord);
   if (exception) {
     return exception;
-  }
-
-  const segment = splitLastSegment(normalizedWord);
-  if (segment) {
-    const segmentException = lookupException(segment.word);
-    if (segmentException) {
-      return segment.prefix + segmentException;
-    }
   }
 
   return singularizeByRules(normalizedWord);
 }
 
-const F_OR_FE_REGEX = /(?:f|fe)$/i;
-
-function pluralizeCanonical(word: string): string {
-  const normalizedWord = normalizeMalformedDoubleS(word);
-
-  // -f/-fe words: only the f-stem nouns take -ves; the rest take a plain "s".
-  const fStem = pluralizeFStem(normalizedWord);
-  if (fStem) {
-    return fStem;
+/**
+ * Whether `word` is already a plural, and so must be returned unchanged.
+ *
+ * SINGULAR_EXCEPTIONS answers this for the dictionary (its keys are plurals,
+ * except the self-mapped singulars it carries to protect them from the rules),
+ * and the rules answer it for everything else, coined identifiers included.
+ */
+function isPlural(word: string): boolean {
+  const singular = applyTable(SINGULAR_EXCEPTIONS, word);
+  if (singular) {
+    return singular !== word;
   }
-  if (F_OR_FE_REGEX.test(normalizedWord)) {
-    return `${normalizedWord}s`;
-  }
-
-  const pluralWord = normalizeMalformedDoubleS(
-    inflection.pluralize(normalizedWord)
-  );
-
-  // -is nouns the inflection library leaves untouched (iris, chassis) rather
-  // than treating as Greek/Latin (analysis -> analyses).
-  if (pluralWord === normalizedWord && /is$/i.test(normalizedWord)) {
-    return `${normalizedWord}es`;
-  }
-
-  return enforceDoubleSPlural(singularize(normalizedWord), pluralWord);
+  return isRulesPlural(word);
 }
 
 /**
- * Convert a word to its plural form
- * @example "User" -> "Users", "Person" -> "People"
+ * Convert a word to its plural form. Already-plural input is returned as-is.
+ * @example "User" -> "Users", "Person" -> "People", "Users" -> "Users"
  */
 export function pluralize(word: string): string {
-  return pluralizeCanonical(word);
+  const normalizedWord = normalizeMalformedDoubleS(word);
+
+  if (isPlural(normalizedWord)) {
+    return normalizedWord;
+  }
+
+  const exception = applyTable(PLURAL_EXCEPTIONS, normalizedWord);
+  if (exception) {
+    return exception;
+  }
+
+  return pluralizeByRules(normalizedWord);
 }
 
 /**

@@ -19,6 +19,8 @@
     "build": "makage build",
     "lint": "eslint . --fix",
     "test": "jest",
+    "audit": "ts-node scripts/audit.ts",
+    "generate": "ts-node scripts/generate-exceptions.ts",
     "test:watch": "jest --watch"
   },
   "repository": {
