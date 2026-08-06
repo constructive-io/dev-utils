@@ -73,6 +73,16 @@ const OES_NOUNS = new Set([
   'torpedo', 'veto', 'volcano',
 ]);
 
+/**
+ * Nouns whose plural is the same word. The dictionary lists "deers" and
+ * "fishes", but a schema means the invariant plural, which is also what the
+ * `pluralize` package PostGraphile uses returns.
+ */
+const UNCOUNTABLE = new Set([
+  'aircraft', 'bison', 'deer', 'elk', 'fish', 'grouse', 'moose', 'offspring',
+  'salmon', 'sheep', 'shrimp', 'squid', 'swine', 'trout',
+]);
+
 /** Plural-looking words that are not plurals (or are uncountable). */
 const NOT_PLURALS = new Set([
   'acoustics', 'aerobics', 'athletics', 'crossroads', 'economics', 'ethics',
@@ -242,6 +252,7 @@ for (const singular of [...new Set(exceptions.values())]) {
 const attested = new Map<string, Set<string>>();
 for (const word of words) {
   if (!word.endsWith('s') || word.endsWith('ss') || NOT_PLURALS.has(word)) continue;
+  if (UNCOUNTABLE.has(word.slice(0, -1))) continue;
   const singular = expectedSingular(word);
   if (!singular || singular === word) continue;
   const plurals = attested.get(singular) ?? new Set<string>();
@@ -253,6 +264,15 @@ for (const word of words) {
 function preferredPlural(singular: string, plurals: Set<string>): string {
   if (OES_NOUNS.has(singular) && plurals.has(`${singular}es`)) {
     return `${singular}es`;
+  }
+  // -ex/-ix takes the Latin "-ices" wherever the dictionary attests it, so the
+  // family is self-consistent (indices, appendices, vertices, matrices) and
+  // agrees with the `pluralize` package PostGraphile's own inflector uses.
+  // Coined identifiers (mutex, regex) have no attested plural and fall through
+  // to the rules, which give "mutexes".
+  const ices = `${singular.slice(0, -2)}ices`;
+  if (/[ei]x$/.test(singular) && plurals.has(ices)) {
+    return ices;
   }
   return [...plurals].sort((a, b) => {
     if (rank(a) !== rank(b)) return rank(a) - rank(b);
@@ -273,10 +293,6 @@ function preferredPlural(singular: string, plurals: Set<string>): string {
  * alternative ("criterions").
  */
 function rulesPluralIsAttested(singular: string): boolean {
-  // -ex/-ix nouns keep the library's Latin plural (index -> indices, appendix ->
-  // appendices), even where the dictionary also lists "indexes": PostGraphile
-  // names its own fields that way, and inflekt exists to agree with it.
-  if (/[ei]x$/.test(singular)) return true;
   const plural = pluralize(singular);
   return (
     plural !== singular &&
@@ -321,6 +337,10 @@ for (const word of words) {
   const rulesPlural = pluralize(word);
   if (rulesPlural === word) continue;
   if (singularizeByRules(rulesPlural) !== word) pluralExceptions.set(word, word);
+}
+
+for (const word of UNCOUNTABLE) {
+  if (pluralize(word) !== word) pluralExceptions.set(word, word);
 }
 
 for (const plurals of attested.values()) {

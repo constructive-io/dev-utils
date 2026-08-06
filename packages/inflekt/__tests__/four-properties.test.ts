@@ -114,16 +114,18 @@ const ENGLISH: Array<[string, string]> = [
   // -ch/-sh/-x/-z
   ['church', 'churches'], ['dish', 'dishes'], ['box', 'boxes'],
   ['quiz', 'quizzes'], ['buzz', 'buzzes'], ['waltz', 'waltzes'],
-  // Latin and Greek. -ex/-ix follows the inflection library exactly, because
-  // PostGraphile names its fields with it (indices, vertices, matrices, but
-  // appendixes and mutexes). Elsewhere the English plural wins wherever the
-  // dictionary attests one (alumnuses, aquariums), and the Latin plural is kept
-  // only where English has none (curricula, memoranda, genera).
-  ['appendix', 'appendixes'], ['index', 'indices'], ['alumnus', 'alumnuses'],
+  // Latin and Greek. -ex/-ix takes the Latin plural wherever the dictionary
+  // attests one, which is also what PostGraphile's inflector (the `pluralize`
+  // package) does: indices, appendices, vertices, matrices. Elsewhere the
+  // English plural wins wherever the dictionary attests one (alumnuses,
+  // aquariums) — deliberately unlike `pluralize`, which coins "radii" and
+  // "cacti" for identifiers — and the Latin plural is kept only where English
+  // has none (curricula, memoranda, genera).
+  ['appendix', 'appendices'], ['index', 'indices'], ['alumnus', 'alumnuses'],
   ['curriculum', 'curricula'], ['memorandum', 'memoranda'],
   ['aquarium', 'aquariums'], ['genus', 'genera'],
   // -o: "es" for the nouns that take it, "s" for the rest
-  ['veto', 'vetoes'], ['fish', 'fishes'],
+  ['veto', 'vetoes'],
   // -ice, which the inflection library reads as -ouse
   ['police', 'polices'], ['service', 'services'], ['chalice', 'chalices'],
   // compounds where the last word is irregular
@@ -133,7 +135,7 @@ const ENGLISH: Array<[string, string]> = [
 /** Words with no distinct plural: both numbers are the same word. */
 const INVARIANT = [
   'sheep', 'series', 'species', 'aircraft', 'news', 'equipment',
-  'information', 'software', 'chassis',
+  'information', 'software', 'chassis', 'deer', 'fish', 'moose', 'salmon',
 ];
 
 describe.each([
@@ -191,9 +193,9 @@ describe('inherently ambiguous', () => {
     expect(singularize('dns')).toBe('dn');
   });
 
-  it('follows the dictionary even where the dictionary is odd', () => {
-    // wamerican lists "deers", so that is the plural we emit, though "deer" is
-    // the one most people write.
-    expect(pluralize('deer')).toBe('deers');
+  it('reads a word that is also a plural as the word', () => {
+    // wamerican lists "cons" as a word in its own right (with the plural
+    // "conses"), so it is left alone rather than read as the plural of "con".
+    expect(singularize('cons')).toBe('cons');
   });
 });
