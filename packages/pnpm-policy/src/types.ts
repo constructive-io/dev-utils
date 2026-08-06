@@ -38,8 +38,16 @@ export interface PolicyConfig {
    * own but publish to under a different account (CI tokens, org automation).
    */
   scopes?: string[];
-  /** Path to the committed inventory export, or an installed package that ships one. */
-  inventory?: string;
+  /**
+   * Where the first-party inventory comes from: a path relative to this config,
+   * or an installed package that ships one.
+   *
+   * A list is merged into a single inventory, which is how a workspace combines
+   * inventories that are deliberately kept apart — your own accounts in one
+   * published package, an upstream you have chosen to trust in another — without
+   * either being flattened into a copy checked in beside the config.
+   */
+  inventory?: string | string[];
   /**
    * Emit only the first-party names this workspace actually resolves.
    * Scopes are always emitted as globs — see the README.
@@ -59,7 +67,8 @@ export interface ResolvedConfig {
   blockExoticSubdeps: boolean;
   maintainers: string[];
   scopes: string[];
-  inventory?: string;
+  /** Normalized to a list; empty when no inventory is configured. */
+  inventory: string[];
   intersect: boolean;
   allowBuilds: AllowedBuild[];
   exceptions: PolicyException[];

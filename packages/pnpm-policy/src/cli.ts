@@ -209,10 +209,21 @@ async function runInventory(parsed: Parsed): Promise<number> {
     return 1;
   }
 
+  // With several inventories configured there is no single file this command
+  // owns — the others are published elsewhere — so writing requires --out rather
+  // than guessing which one to overwrite.
+  if (!parsed.out && config.inventory.length > 1) {
+    console.error(
+      `${configFile} configures ${config.inventory.length} inventories, so there is no ` +
+        'single default to write. Pass --out <path> to choose one.'
+    );
+    return 1;
+  }
+
   const out = resolve(
     parsed.out ??
-      (config.inventory
-        ? join(resolve(configFile, '..'), config.inventory)
+      (config.inventory[0]
+        ? join(resolve(configFile, '..'), config.inventory[0])
         : join(resolve(configFile, '..'), 'pnpm-policy.inventory.json'))
   );
 

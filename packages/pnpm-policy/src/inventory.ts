@@ -130,6 +130,41 @@ export function inventoryMatches(inventory: Inventory, name: string): boolean {
   return inScope(name, inventory.scopes) || inventory.packages.includes(name);
 }
 
+/**
+ * Combine inventories into one.
+ *
+ * Every list is a union: an inventory says what is exempt, so merging can only
+ * widen the set, never narrow it. `generatedAt` takes the OLDEST timestamp of
+ * the inputs — the merged view is only as fresh as its stalest source, and
+ * reporting the newest would overstate it.
+ *
+ * A scope that one inventory owns outright and another sees as shared stays in
+ * `sharedScopes` as well, so the caller can still tell it is not exclusively
+ * ours; `scopes` and `sharedScopes` are not treated as mutually exclusive here.
+ */
+export function mergeInventories(inventories: Inventory[]): Inventory {
+  if (inventories.length === 0) {
+    throw new PolicyError('Cannot merge an empty list of inventories');
+  }
+  if (inventories.length === 1) return inventories[0];
+
+  const union = (pick: (inventory: Inventory) => string[] | undefined): string[] =>
+    [...new Set(inventories.flatMap((inventory) => pick(inventory) ?? []))].sort();
+
+  const sharedScopes = union((inventory) => inventory.sharedScopes);
+
+  return {
+    generatedAt: inventories
+      .map((inventory) => inventory.generatedAt)
+      .filter(Boolean)
+      .sort()[0] ?? '',
+    maintainers: union((inventory) => inventory.maintainers),
+    scopes: union((inventory) => inventory.scopes),
+    packages: union((inventory) => inventory.packages),
+    ...(sharedScopes.length ? { sharedScopes } : {})
+  };
+}
+
 export function readInventory(file: string): Inventory {
   const parsed = JSON.parse(readFileSync(file, 'utf-8')) as Inventory;
   if (!Array.isArray(parsed.scopes) || !Array.isArray(parsed.packages)) {

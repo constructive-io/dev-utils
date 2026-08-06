@@ -95,6 +95,16 @@ function normalizeScopes(scopes: string[] | undefined): string[] {
     .sort();
 }
 
+/**
+ * Accept one inventory reference or several. Several are merged at load time, so
+ * a workspace can combine separately-published inventories rather than keeping a
+ * flattened copy of them checked in.
+ */
+function normalizeInventory(value: string | string[] | undefined): string[] {
+  if (value === undefined) return [];
+  return (Array.isArray(value) ? value : [value]).filter((entry) => entry.length > 0);
+}
+
 /** Apply defaults and convert a config into the shape the resolver consumes. */
 export function normalizeConfig(config: PolicyConfig): ResolvedConfig {
   return {
@@ -104,7 +114,7 @@ export function normalizeConfig(config: PolicyConfig): ResolvedConfig {
     blockExoticSubdeps: config.blockExoticSubdeps ?? false,
     maintainers: config.maintainers ?? [],
     scopes: normalizeScopes(config.scopes),
-    inventory: config.inventory,
+    inventory: normalizeInventory(config.inventory),
     intersect: config.intersect ?? true,
     allowBuilds: normalizeAllowBuilds(config.allowBuilds),
     exceptions: normalizeExceptions(config.exceptions),

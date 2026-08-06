@@ -17,6 +17,7 @@ export {
   groupByScope,
   inScope,
   inventoryMatches,
+  mergeInventories,
   readInventory,
   writeInventory
 } from './inventory';

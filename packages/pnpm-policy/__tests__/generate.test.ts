@@ -175,3 +175,62 @@ describe('config errors', () => {
     expect(() => generate({ cwd: dir })).toThrow(/no inventory is available/);
   });
 });
+
+describe('multiple inventories', () => {
+  // The point of the list: a workspace consumes two separately-published
+  // inventories — its own accounts, and an upstream it has chosen to trust —
+  // without flattening them into one copy checked in beside the config.
+  function twoInventoryWorkspace(): string {
+    const dir = mkdtempSync(join(tmpdir(), 'pnpm-policy-'));
+    writeFileSync(join(dir, 'pnpm-lock.yaml'), LOCKFILE);
+    writeFileSync(join(dir, 'pnpm-workspace.yaml'), 'packages:\n  - packages/*\n');
+    writeFileSync(join(dir, 'ours.json'), JSON.stringify(INVENTORY, null, 2));
+    writeFileSync(
+      join(dir, 'upstream.json'),
+      JSON.stringify(
+        {
+          generatedAt: '2026-01-01T00:00:00.000Z',
+          maintainers: ['upstream'],
+          scopes: ['@upstream'],
+          packages: ['grafast']
+        },
+        null,
+        2
+      )
+    );
+    writeFileSync(
+      join(dir, 'pnpm-policy.yaml'),
+      `minimumReleaseAge: 14d
+maintainers:
+  - me
+inventory:
+  - ./ours.json
+  - ./upstream.json
+`
+    );
+    return dir;
+  }
+
+  it('exempts names from every listed inventory', () => {
+    const dir = twoInventoryWorkspace();
+    const written = readFileSync(generate({ cwd: dir, intersect: false }).file, 'utf-8');
+    expect(written).toContain('- yanse');       // from ours.json
+    expect(written).toContain('- grafast');     // from upstream.json
+    expect(written).toContain('- "@acme/*"');
+    expect(written).toContain('- "@upstream/*"');
+  });
+
+  it('still intersects a merged inventory against the lockfile', () => {
+    const dir = twoInventoryWorkspace();
+    const result = generate({ cwd: dir });
+    const written = readFileSync(result.file, 'utf-8');
+    // Present in a listed inventory, absent from this lockfile.
+    expect(written).not.toContain('grafast');
+    expect(result.report.omittedPackages).toContain('grafast');
+  });
+
+  it('accepts a single string, so existing configs keep working', () => {
+    const dir = workspace(CONFIG);
+    expect(readFileSync(generate({ cwd: dir }).file, 'utf-8')).toContain('- yanse');
+  });
+});

@@ -75,6 +75,7 @@ scopes:
   - "@acme"
 
 # Written by `pnpm-policy inventory`. Commit it; review its diffs.
+# May also name an installed package that ships one, or a list of either.
 inventory: ./pnpm-policy.inventory.json
 
 # Dependencies allowed to run install scripts. The value is the reason.
@@ -101,11 +102,27 @@ settings:
 | `blockExoticSubdeps` | boolean | `false` | Refuse transitive deps from git/URL sources. |
 | `maintainers` | string[] | `[]` | **Your own** npm accounts. See the warning below. |
 | `scopes` | string[] | `[]` | Scopes you own, emitted as globs. |
-| `inventory` | path or package | – | Where the generated inventory lives. |
+| `inventory` | path, package, or list | – | Where the inventory comes from. A list is merged. |
 | `intersect` | boolean | `true` | Only emit names this workspace actually resolves. |
 | `allowBuilds` | map or list | `{}` | Dependencies permitted to run install scripts. |
 | `exceptions` | list | `[]` | Third-party bypasses, each with a reason. |
 | `settings` | map | `{}` | Extra pnpm settings to include in the managed block. |
+
+### `inventory` can name more than one source
+
+`inventory` takes a path, an installed package that ships one, or a list of either. A list is merged into a single inventory before the policy is resolved.
+
+```yaml
+inventory:
+  - "@acme/pnpm-policy"          # your accounts, published and pinned
+  - "@acme/pnpm-policy-upstream" # an upstream you have chosen to trust
+```
+
+This exists so inventories that are deliberately kept apart can stay apart. Trusting an upstream account is a decision one workspace may have made and others have not, and folding that account into the inventory everyone installs would extend the exemption to every workspace by default. Keeping them as separate published packages lets each workspace opt in by listing what it actually trusts — instead of checking a flattened copy of both into the repo, where it goes stale and has to be reviewed by hand.
+
+Merging is a union: an inventory only ever says what is *exempt*, so combining two can widen the set and never narrow it. `generatedAt` reports the **oldest** of the inputs, because the merged view is only as fresh as its stalest source.
+
+`pnpm-policy inventory` writes one file. With several configured there is no single default to overwrite, so it asks for `--out`.
 
 ### `maintainers` is your own identity, not a trust list
 
