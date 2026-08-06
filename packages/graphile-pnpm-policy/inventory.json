@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-08-06T08:25:26.000Z",
+  "maintainers": [],
+  "scopes": [],
+  "packages": [
+    "@dataplan/json",
+    "@dataplan/pg",
+    "@graphile-contrib/pg-many-to-many",
+    "@graphile/lru",
+    "grafast",
+    "grafserv",
+    "graphile-build",
+    "graphile-build-pg",
+    "graphile-config",
+    "graphile-utils",
+    "pg-introspection",
+    "pg-sql2",
+    "postgraphile",
+    "ruru",
+    "ruru-types",
+    "tamedevil"
+  ]
+}

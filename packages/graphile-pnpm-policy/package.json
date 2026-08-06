@@ -1,0 +1,46 @@
+{
+  "name": "@constructive-io/pnpm-policy-graphile",
+  "version": "0.1.0",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Release-age exemptions for the Graphile packages Constructive runs \u2014 a reviewed allowlist, not a maintainer query",
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "exports": {
+    "./inventory.json": "./inventory.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "inventory.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/constructive-io/dev-utils/issues"
+  },
+  "scripts": {
+    "clean": "makage clean",
+    "copy": "makage assets",
+    "build": "makage clean && makage copy inventory.json dist --flat && makage assets",
+    "prepublishOnly": "npm run build",
+    "test": "node test.js"
+  },
+  "devDependencies": {
+    "makage": "0.1.10"
+  },
+  "keywords": [
+    "pnpm",
+    "pnpm-policy",
+    "supply-chain",
+    "minimumReleaseAge",
+    "graphile",
+    "inventory"
+  ]
+}
