@@ -8,7 +8,7 @@ import { dirname, join } from 'path';
 
 import { loadConfig, resolveFromConfig } from './config';
 import { PolicyError } from './errors';
-import { readInventory } from './inventory';
+import { mergeInventories, readInventory } from './inventory';
 import { readWorkspacePackages } from './lockfile';
 import type { BuildsKey } from './policy';
 import { resolvePolicy } from './policy';
@@ -34,11 +34,11 @@ interface Loaded {
 }
 
 /**
- * Locate the inventory: a path relative to the config, or a package that ships
+ * Locate one inventory: a path relative to the config, or a package that ships
  * one (`@constructive-io/pnpm-policy`), which is how a fleet of workspaces
  * shares a single reviewed export instead of each keeping its own copy.
  */
-function loadInventory(configFile: string, reference: string): Inventory {
+function loadOneInventory(configFile: string, reference: string): Inventory {
   const asPath = resolveFromConfig(configFile, reference);
   if (existsSync(asPath)) return readInventory(asPath);
 
@@ -62,8 +62,13 @@ function load(options: RunOptions): Loaded {
   const workspaceDir = options.cwd ?? dirname(configFile);
   const intersect = options.intersect ?? config.intersect;
 
-  const inventory = config.inventory
-    ? loadInventory(configFile, config.inventory)
+  // Several references merge into one inventory, so a workspace can consume two
+  // separately-published exports — its own accounts and an upstream it has chosen
+  // to trust — without flattening them into a copy checked in beside the config.
+  const inventory = config.inventory.length
+    ? mergeInventories(
+        config.inventory.map((reference) => loadOneInventory(configFile, reference))
+      )
     : undefined;
 
   if (!inventory && config.maintainers.length && !config.scopes.length) {

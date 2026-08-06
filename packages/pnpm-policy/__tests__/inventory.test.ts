@@ -1,5 +1,5 @@
 import type { Inventory } from '../src';
-import { buildInventory, groupByScope, inventoryMatches, packagesByMaintainer } from '../src';
+import { buildInventory, groupByScope, inventoryMatches, mergeInventories, packagesByMaintainer } from '../src';
 
 /** A registry stub: query string in, package names out. */
 function stubFetch(pages: Record<string, string[]>): typeof fetch {
@@ -179,5 +179,64 @@ describe('inventoryMatches', () => {
     expect(inventoryMatches(inventory, 'yanse')).toBe(true);
     expect(inventoryMatches(inventory, '@acme-other/x')).toBe(false);
     expect(inventoryMatches(inventory, 'react')).toBe(false);
+  });
+});
+
+describe('mergeInventories', () => {
+  const ours: Inventory = {
+    generatedAt: '2026-02-01T00:00:00.000Z',
+    maintainers: ['me'],
+    scopes: ['@acme'],
+    packages: ['yanse', 'shared-name']
+  };
+  const upstream: Inventory = {
+    generatedAt: '2026-01-01T00:00:00.000Z',
+    maintainers: ['them'],
+    scopes: ['@upstream'],
+    packages: ['grafast', 'shared-name']
+  };
+
+  it('unions scopes, packages and maintainers', () => {
+    const merged = mergeInventories([ours, upstream]);
+    expect(merged.scopes).toEqual(['@acme', '@upstream']);
+    expect(merged.packages).toEqual(['grafast', 'shared-name', 'yanse']);
+    expect(merged.maintainers).toEqual(['me', 'them']);
+  });
+
+  it('deduplicates a name both inventories claim', () => {
+    const merged = mergeInventories([ours, upstream]);
+    expect(merged.packages.filter((name) => name === 'shared-name')).toHaveLength(1);
+  });
+
+  // The merged view is only as fresh as its stalest input; reporting the newest
+  // would overstate how current the exemption list is.
+  it('reports the oldest generatedAt', () => {
+    expect(mergeInventories([ours, upstream]).generatedAt).toBe('2026-01-01T00:00:00.000Z');
+    expect(mergeInventories([upstream, ours]).generatedAt).toBe('2026-01-01T00:00:00.000Z');
+  });
+
+  it('returns a single inventory untouched', () => {
+    expect(mergeInventories([ours])).toBe(ours);
+  });
+
+  it('refuses an empty list rather than inventing an empty inventory', () => {
+    expect(() => mergeInventories([])).toThrow(/empty list/);
+  });
+
+  it('keeps sharedScopes when any input has them, and omits the key otherwise', () => {
+    expect(mergeInventories([ours, upstream]).sharedScopes).toBeUndefined();
+    const merged = mergeInventories([
+      ours,
+      { ...upstream, sharedScopes: ['@mixed'] }
+    ]);
+    expect(merged.sharedScopes).toEqual(['@mixed']);
+  });
+
+  it('matches names contributed by either inventory', () => {
+    const merged = mergeInventories([ours, upstream]);
+    expect(inventoryMatches(merged, 'grafast')).toBe(true);
+    expect(inventoryMatches(merged, '@acme/widget')).toBe(true);
+    expect(inventoryMatches(merged, '@upstream/thing')).toBe(true);
+    expect(inventoryMatches(merged, 'lodash')).toBe(false);
   });
 });
