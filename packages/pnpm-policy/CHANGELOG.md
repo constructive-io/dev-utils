@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.3.0...pnpm-policy@0.4.0) (2026-08-06)
+
+### Features
+
+- **pnpm-policy:** accept several inventories and merge them ([c911640](https://github.com/constructive-io/dev-utils/commit/c9116407353a0ac900cd5daad2b7b6d9126c79c6))
+- **pnpm-policy:** origins — group dependencies by the repo they publish from ([190b784](https://github.com/constructive-io/dev-utils/commit/190b7842bf96d7a9ccbc17f5f8aaf5a477952914))
+
 # [0.3.0](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.2.2...pnpm-policy@0.3.0) (2026-08-06)
 
 ### Features

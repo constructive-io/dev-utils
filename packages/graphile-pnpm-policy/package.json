@@ -1,8 +1,8 @@
 {
   "name": "@constructive-io/pnpm-policy-graphile",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Constructive <developers@constructive.io>",
-  "description": "Release-age exemptions for the Graphile packages Constructive runs \u2014 a reviewed allowlist, not a maintainer query",
+  "description": "Release-age exemptions for the Graphile packages Constructive runs — a reviewed allowlist, not a maintainer query",
   "homepage": "https://github.com/constructive-io/dev-utils",
   "license": "MIT",
   "exports": {
