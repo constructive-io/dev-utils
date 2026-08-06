@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.2.2...pnpm-policy@0.3.0) (2026-08-06)
+
+### Features
+
+- **pnpm-policy:** default the wait to two days ([1823c33](https://github.com/constructive-io/dev-utils/commit/1823c33e4e92e56a7fd638ba7ecb643a460ad864))
+
 ## [0.2.2](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.2.1...pnpm-policy@0.2.2) (2026-08-05)
 
 ### Bug Fixes

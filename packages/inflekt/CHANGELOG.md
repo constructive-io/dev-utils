@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/constructive-io/dev-utils/compare/inflekt@0.8.0...inflekt@0.8.1) (2026-08-06)
+
+### Bug Fixes
+
+- **inflekt:** audit pluralize and singularize against the dictionary in both directions ([8c9c016](https://github.com/constructive-io/dev-utils/commit/8c9c01686acca9f65ab45f7e98545ceb88b3b502))
+- **inflekt:** match PostGraphile's inflector on -ex/-ix and uncountables ([8cff192](https://github.com/constructive-io/dev-utils/commit/8cff192e8c5ee7957bae6784fc9a86374d5ad9c9))
+
 # [0.8.0](https://github.com/constructive-io/dev-utils/compare/inflekt@0.7.2...inflekt@0.8.0) (2026-08-05)
 
 ### Bug Fixes
