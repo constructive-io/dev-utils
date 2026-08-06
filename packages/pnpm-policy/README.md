@@ -33,7 +33,7 @@ minimumReleaseAgeExclude:
 
 Your releases install immediately. Everything else waits.
 
-At Constructive that is 1104 published packages behind one maintainer account, fetched in 5 requests and under two seconds, compressing to 5 scope globs plus 85 individual names for a workspace with ~1800 resolved dependencies.
+At Constructive that is over 1100 published packages, fetched in 5 requests and under two seconds, compressing to 5 scope globs plus 85 individual names for a workspace with ~1800 resolved dependencies.
 
 ## Installation
 
@@ -172,7 +172,7 @@ Two rules govern how it compresses:
 
 **Unscoped names are listed individually**, which is exact: they come from your own maintainer query.
 
-**Intersection.** By default only names this workspace actually resolves (read from `pnpm-lock.yaml`) are written out — 1104 published packages becomes the ~85 that appear in this repo. Scope globs are never intersected: nobody else can publish into a scope you own, so the glob stays correct when a new package lands there tomorrow. Pass `--no-intersect` to emit everything. A config with no `inventory:` has no individual names to narrow, so it needs no lockfile at all — which is what lets a freshly scaffolded workspace generate its policy before its first install.
+**Intersection.** By default only names this workspace actually resolves (read from `pnpm-lock.yaml`) are written out — over 1100 published packages becomes the ~85 that appear in this repo. Scope globs are never intersected: nobody else can publish into a scope you own, so the glob stays correct when a new package lands there tomorrow. Pass `--no-intersect` to emit everything. A config with no `inventory:` has no individual names to narrow, so it needs no lockfile at all — which is what lets a freshly scaffolded workspace generate its policy before its first install.
 
 Commit the inventory and review its diffs. It is an exemption list, so a name appearing in it is a name that stops being quarantined — worth one human glance, which is also why refreshing it should open a pull request rather than run silently in an install hook.
 
