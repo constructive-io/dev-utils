@@ -44,7 +44,7 @@ const STARTER = `# pnpm-policy — https://github.com/constructive-io/dev-utils
 # Run \`pnpm-policy generate\` to patch these settings into pnpm-workspace.yaml.
 
 # How long a third-party release must exist before it may be installed.
-minimumReleaseAge: 14d
+minimumReleaseAge: 2d
 
 # Transitive dependencies must come from the registry, not from git or a URL.
 blockExoticSubdeps: true

@@ -24,8 +24,8 @@ const resolve = (config: PolicyConfig, resolved?: string[]) =>
   });
 
 describe('resolvePolicy', () => {
-  it('defaults to a two-week wait', () => {
-    expect(resolve({}).settings.minimumReleaseAge).toBe(20160);
+  it('defaults to a two-day wait', () => {
+    expect(resolve({}).settings.minimumReleaseAge).toBe(2880);
   });
 
   it('converts a human duration to the minutes pnpm expects', () => {
@@ -124,7 +124,7 @@ describe('resolvePolicy', () => {
 
   it('explains the wait and where the exemptions came from', () => {
     const { comments } = resolve({ maintainers: ['pyramation'] });
-    expect(commentAt(comments.before, ['minimumReleaseAge'])).toContain('2w');
+    expect(commentAt(comments.before, ['minimumReleaseAge'])).toContain('2d');
     expect(commentAt(comments.before, ['minimumReleaseAgeExclude'])).toContain('pyramation');
   });
 

@@ -27,7 +27,7 @@ pnpm add -D pnpm-policy @constructive-io/pnpm-policy
 `pnpm-policy.yaml` at the workspace root:
 
 ```yaml
-minimumReleaseAge: 14d
+minimumReleaseAge: 2d
 blockExoticSubdeps: true
 maintainers:
   - pyramation
