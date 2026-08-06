@@ -11,6 +11,10 @@ export { formatDuration, parseDuration } from './duration';
 export { PolicyError } from './errors';
 export type { CheckResult, GenerateResult, RunOptions } from './generate';
 export { check, generate } from './generate';
+export type { DependencyGraph } from './graph';
+export { readLockfileGraph, readWorkspaceGraph, reachableFrom } from './graph';
+export type { PackageOrigin } from './origins';
+export { groupByOwner, namesFromOwners, packageOrigins, repositorySlug } from './origins';
 export type { BuildInventoryOptions } from './inventory';
 export {
   buildInventory,

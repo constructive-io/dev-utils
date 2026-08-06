@@ -6,7 +6,10 @@ import { findConfig, loadConfig } from './config';
 import { formatDuration } from './duration';
 import { PolicyError } from './errors';
 import { check, generate } from './generate';
+import { readWorkspaceGraph, reachableFrom } from './graph';
 import { buildInventory, writeInventory } from './inventory';
+import { readWorkspacePackages } from './lockfile';
+import { groupByOwner, namesFromOwners, packageOrigins } from './origins';
 import type { BuildsKey } from './policy';
 
 const USAGE = `pnpm-policy — pnpm supply-chain policy for npm maintainers
@@ -19,6 +22,7 @@ Commands:
   inventory           Query npm for what your maintainers publish, and write the export
   generate            Patch the policy into pnpm-workspace.yaml
   check               Fail if the workspace file drifted or a waiver expired
+  origins             Group this workspace's dependencies by the repository they publish from
 
 Options:
   --cwd <dir>         Workspace root (default: current directory)
@@ -28,6 +32,8 @@ Options:
   --no-intersect      Emit every first-party name, not just the ones this workspace resolves
   --verify-scopes     inventory: also glob a scope the registry shows nobody else publishing
                       into (best-effort — npm's search index is incomplete)
+  --owner <name>      origins: keep only packages published from this repo owner (repeatable)
+  --from <pkg>        origins: limit to the subtree under this dependency (repeatable)
   --registry <url>    inventory: registry to query (default: https://registry.npmjs.org)
   --throttle <ms>     inventory: pause between registry requests (default: 1000)
   --json              Print machine-readable output
@@ -83,6 +89,8 @@ interface Parsed {
   verifyScopes: boolean;
   registry?: string;
   throttle?: number;
+  owners: string[];
+  from: string[];
   json: boolean;
   quiet: boolean;
   help: boolean;
@@ -91,6 +99,8 @@ interface Parsed {
 
 export function parseArgs(argv: string[]): Parsed {
   const parsed: Parsed = {
+    owners: [],
+    from: [],
     verifyScopes: false,
     json: false,
     quiet: false,
@@ -146,6 +156,12 @@ export function parseArgs(argv: string[]): Parsed {
     case '--verify-scopes':
       parsed.verifyScopes = true;
       break;
+    case '--owner':
+      parsed.owners.push(next());
+      break;
+    case '--from':
+      parsed.from.push(next());
+      break;
     case '--registry':
       parsed.registry = next();
       break;
@@ -193,6 +209,88 @@ function runInit(parsed: Parsed): number {
   if (!parsed.quiet) {
     console.log(`Wrote ${file}`);
     console.log('Add your npm account(s) under `maintainers`, then run: pnpm-policy inventory');
+  }
+  return 0;
+}
+
+/**
+ * Group a workspace's dependencies by the repository they publish from.
+ *
+ * The question this answers is "which projects am I actually depending on",
+ * which is the one worth asking before deciding what to exempt from a release-age
+ * quarantine. Grouping by repository rather than by npm account matters: an
+ * account is as wide as everything its owner will ever publish, and the owner of
+ * a library you want may also co-maintain something far larger.
+ *
+ * With --from, only the subtree under those dependencies is considered, so you
+ * can ask what one decision dragged in rather than surveying the whole lockfile.
+ * With --owner, the output narrows to those owners and can be written straight
+ * out as an inventory.
+ */
+async function runOrigins(parsed: Parsed): Promise<number> {
+  const workspaceDir = parsed.cwd ?? process.cwd();
+
+  let names: Set<string>;
+  if (parsed.from.length) {
+    const graph = readWorkspaceGraph(workspaceDir);
+    const missing = parsed.from.filter((name) => !graph.edges.has(name) && !graph.roots.has(name));
+    if (missing.length) {
+      console.error(`Not in this lockfile: ${missing.join(', ')}`);
+      return 1;
+    }
+    names = reachableFrom(graph, parsed.from);
+  } else {
+    names = readWorkspacePackages(workspaceDir);
+  }
+
+  if (!parsed.quiet) {
+    const scope = parsed.from.length ? `under ${parsed.from.join(', ')}` : 'in this workspace';
+    console.error(`Resolving repositories for ${names.size} package(s) ${scope}...`);
+  }
+
+  const origins = await packageOrigins(names, {
+    registry: parsed.registry,
+    throttleMs: parsed.throttle,
+    onPackage: parsed.quiet
+      ? undefined
+      : (name, index, total) => {
+        if (index % 25 === 0) console.error(`  ${index}/${total}`);
+      }
+  });
+
+  if (parsed.owners.length) {
+    const matched = namesFromOwners(origins, parsed.owners);
+
+    if (parsed.out) {
+      // Deliberately no maintainers and no scopes: a list derived this way is a
+      // reviewed set of names, and a scope glob would re-widen it to whatever
+      // gets published into that scope next.
+      writeInventory(resolve(parsed.out), {
+        generatedAt: new Date().toISOString(),
+        maintainers: [],
+        scopes: [],
+        packages: matched
+      });
+      if (!parsed.quiet) {
+        console.error(`Wrote ${matched.length} package(s) to ${parsed.out}`);
+      }
+      return 0;
+    }
+
+    console.log(parsed.json ? JSON.stringify(matched, null, 2) : matched.join('\n'));
+    return 0;
+  }
+
+  const grouped = [...groupByOwner(origins)].sort((a, b) => b[1].length - a[1].length);
+
+  if (parsed.json) {
+    console.log(JSON.stringify(Object.fromEntries(grouped), null, 2));
+    return 0;
+  }
+
+  for (const [owner, packages] of grouped) {
+    console.log(`${owner || '<no repository metadata>'}  (${packages.length})`);
+    for (const name of packages) console.log(`  ${name}`);
   }
   return 0;
 }
@@ -345,6 +443,8 @@ export async function run(argv: string[] = process.argv.slice(2)): Promise<numbe
       return runGenerate(parsed);
     case 'check':
       return runCheck(parsed);
+    case 'origins':
+      return await runOrigins(parsed);
     default:
       console.error(`Unknown command: ${parsed.command}`);
       console.error(`\n${USAGE}`);
