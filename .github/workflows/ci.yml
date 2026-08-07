@@ -49,6 +49,7 @@ jobs:
           - appstash
           - clean-ansi
           - confstash
+          - fetch
           - fetch-api-client
           - find-and-require-package-json
           - git-changed
