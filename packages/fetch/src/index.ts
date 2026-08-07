@@ -1,2 +1,2 @@
 export { createFetch, isLocalhostSubdomain } from './localhost-fetch';
-export type { FetchFunction } from './types';
+export type { CreateFetchOptions, FetchFunction, LoopbackAddress } from './types';
