@@ -1,9 +1,11 @@
 import { Lexer, Token, TokenType } from './lexer';
 import {
   AssignmentWord,
+  BraceGroup,
   CaseClause,
   CaseItem,
   Command,
+  Comment,
   CompoundList,
   ForClause,
   FunctionDefinition,
@@ -22,7 +24,16 @@ import {
  * Parser options
  */
 export interface ParserOptions {
-  // Reserved for future options
+  /**
+   * Keep comments in the AST as `Comment` nodes instead of discarding them.
+   */
+  keepComments?: boolean;
+
+  /**
+   * Wall-clock budget for a single `parse()`, in milliseconds. Exceeding it
+   * throws, so a pathological input is a loud failure rather than a hang.
+   */
+  timeoutMs?: number;
 }
 
 /**
@@ -32,6 +43,7 @@ export class Parser {
   private tokens: Token[] = [];
   private pos: number = 0;
   private options: ParserOptions;
+  private deadline?: number;
 
   constructor(options: ParserOptions = {}) {
     this.options = options;
@@ -41,26 +53,64 @@ export class Parser {
    * Parse bash source into AST
    */
   parse(source: string): Script {
-    const lexer = new Lexer(source);
+    const lexer = new Lexer(source, {
+      keepComments: this.options.keepComments,
+      timeoutMs: this.options.timeoutMs
+    });
     this.tokens = lexer.tokenize();
     this.pos = 0;
+    this.deadline = this.options.timeoutMs === undefined
+      ? undefined
+      : Date.now() + this.options.timeoutMs;
 
     const commands: Command[] = [];
 
     this.skipNewlines();
 
     while (!this.isAtEnd()) {
-      const command = this.parseCommand();
-      if (command) {
-        commands.push(command);
+      this.checkDeadline();
+      const before = this.pos;
+
+      if (this.check(TokenType.COMMENT)) {
+        commands.push(this.parseComment());
+      } else {
+        const command = this.parseCommand();
+        if (command) {
+          this.applyAsync(command);
+          commands.push(command);
+        }
       }
+
       this.skipNewlinesAndSeparators();
+
+      if (this.pos === before) {
+        // Nothing was consumed: the token cannot start a command. Fail loudly
+        // rather than spinning forever.
+        throw new Error(this.unexpected());
+      }
     }
 
     return {
       type: 'Script',
       commands
     };
+  }
+
+  /**
+   * Fail if the parse budget is spent
+   */
+  private checkDeadline(): void {
+    if (this.deadline !== undefined && Date.now() > this.deadline) {
+      throw new Error(`bash-ast: parsing exceeded ${this.options.timeoutMs}ms at ${this.unexpected()}`);
+    }
+  }
+
+  /**
+   * Error message for the current token
+   */
+  private unexpected(): string {
+    const token = this.peek();
+    return `Unexpected ${token.type}${token.value ? ` (${JSON.stringify(token.value)})` : ''} at line ${token.range.start.line}, column ${token.range.start.column}`;
   }
 
   /**
@@ -105,11 +155,11 @@ export class Parser {
     if (this.check(type)) {
       return this.advance();
     }
-    throw new Error(`Expected ${type}, got ${this.peek().type} at position ${this.pos}`);
+    throw new Error(`Expected ${type}, got ${this.peek().type} at line ${this.peek().range.start.line}, column ${this.peek().range.start.column}`);
   }
 
   /**
-   * Skip newlines
+   * Skip newlines (and comments the parser was told to drop)
    */
   private skipNewlines(): void {
     while (this.check(TokenType.NEWLINE)) {
@@ -124,6 +174,30 @@ export class Parser {
     while (this.check(TokenType.NEWLINE) || this.check(TokenType.SEMI) || this.check(TokenType.AMP)) {
       this.advance();
     }
+  }
+
+  /**
+   * Mark a command as asynchronous when it is terminated by `&`
+   */
+  private applyAsync(command: Command): boolean {
+    if (this.check(TokenType.AMP)) {
+      this.advance();
+      command.async = true;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Parse a comment node
+   */
+  private parseComment(): Comment {
+    const token = this.expect(TokenType.COMMENT);
+    return {
+      type: 'Comment',
+      text: token.value,
+      range: token.range
+    };
   }
 
   /**
@@ -227,19 +301,19 @@ export class Parser {
 
     switch (token.type) {
     case TokenType.IF:
-      return this.parseIf();
+      return this.withRedirects(this.parseIf());
     case TokenType.WHILE:
-      return this.parseWhile();
+      return this.withRedirects(this.parseWhile());
     case TokenType.UNTIL:
-      return this.parseUntil();
+      return this.withRedirects(this.parseUntil());
     case TokenType.FOR:
-      return this.parseFor();
+      return this.withRedirects(this.parseFor());
     case TokenType.CASE:
-      return this.parseCase();
+      return this.withRedirects(this.parseCase());
     case TokenType.LPAREN:
-      return this.parseSubshell();
+      return this.withRedirects(this.parseSubshell());
     case TokenType.LBRACE:
-      return this.parseBraceGroup();
+      return this.withRedirects(this.parseBraceGroup());
     case TokenType.FUNCTION:
       return this.parseFunction();
     default:
@@ -252,11 +326,27 @@ export class Parser {
   }
 
   /**
+   * Attach the redirections that follow a compound command (`{ … } > file`)
+   */
+  private withRedirects<T extends { redirects?: Redirect[] }>(command: T): T {
+    const redirects: Redirect[] = [];
+    while (this.isRedirectOp()) {
+      const redirect = this.parseRedirect();
+      if (!redirect) break;
+      redirects.push(redirect);
+    }
+    if (redirects.length > 0) {
+      command.redirects = redirects;
+    }
+    return command;
+  }
+
+  /**
    * Parse simple command
    */
   private parseSimpleCommand(): SimpleCommand | null {
     const prefix: AssignmentWord[] = [];
-    const suffix: (Word | Redirect)[] = [];
+    const suffix: (Word | AssignmentWord | Redirect)[] = [];
     let name: Word | undefined;
 
     // Parse prefix (assignments before command name)
@@ -294,6 +384,14 @@ export class Parser {
         const token = this.advance();
         suffix.push({
           type: 'Word',
+          text: token.value,
+          range: token.range
+        });
+      } else if (this.check(TokenType.ASSIGNMENT_WORD)) {
+        // operand of export/local/declare/readonly
+        const token = this.advance();
+        suffix.push({
+          type: 'AssignmentWord',
           text: token.value,
           range: token.range
         });
@@ -383,28 +481,30 @@ export class Parser {
 
     this.advance();
 
-    // Parse file/word
-    if (this.check(TokenType.WORD)) {
-      const fileToken = this.advance();
-      return {
-        type: 'Redirect',
-        op,
-        file: {
-          type: 'Word',
-          text: fileToken.value,
-          range: fileToken.range
-        },
-        numberIo,
-        range: opToken.range
-      };
-    }
-
-    return {
+    const redirect: Redirect = {
       type: 'Redirect',
       op,
       numberIo,
       range: opToken.range
     };
+
+    // The body of a here-document is lexed as opaque text and hangs off the
+    // operator token.
+    if (opToken.heredoc) {
+      redirect.heredoc = opToken.heredoc;
+    }
+
+    // Parse file/word (the delimiter, for a here-document)
+    if (this.check(TokenType.WORD)) {
+      const fileToken = this.advance();
+      redirect.file = {
+        type: 'Word',
+        text: fileToken.value,
+        range: fileToken.range
+      };
+    }
+
+    return redirect;
   }
 
   /**
@@ -585,11 +685,27 @@ export class Parser {
     const cases: CaseItem[] = [];
 
     while (!this.check(TokenType.ESAC)) {
+      if (this.isAtEnd()) {
+        throw new Error('Expected esac, got end of input');
+      }
+
+      const before = this.pos;
+
+      if (this.check(TokenType.COMMENT)) {
+        // a comment between case items has nowhere to live on a CaseClause
+        this.advance();
+        continue;
+      }
+
       const caseItem = this.parseCaseItem();
       if (caseItem) {
         cases.push(caseItem);
       }
       this.skipNewlines();
+
+      if (this.pos === before) {
+        throw new Error(this.unexpected());
+      }
     }
 
     this.expect(TokenType.ESAC);
@@ -672,17 +788,22 @@ export class Parser {
   }
 
   /**
-   * Parse brace group
+   * Parse brace group. A brace group is one compound command: it keeps its
+   * grouping through pipelines, `&&`/`||`, `&` and redirection.
    */
-  private parseBraceGroup(): CompoundList {
-    this.expect(TokenType.LBRACE);
+  private parseBraceGroup(): BraceGroup {
+    const start = this.expect(TokenType.LBRACE);
     this.skipNewlines();
 
     const list = this.parseCompoundList();
 
     this.expect(TokenType.RBRACE);
 
-    return list;
+    return {
+      type: 'BraceGroup',
+      list,
+      range: start.range
+    };
   }
 
   /**
@@ -737,12 +858,12 @@ export class Parser {
   /**
    * Parse function body
    */
-  private parseFunctionBody(): CompoundList | Subshell {
+  private parseFunctionBody(): BraceGroup | Subshell {
     if (this.check(TokenType.LPAREN)) {
-      return this.parseSubshell();
+      return this.withRedirects(this.parseSubshell());
     }
 
-    return this.parseBraceGroup();
+    return this.withRedirects(this.parseBraceGroup());
   }
 
   /**
@@ -752,6 +873,7 @@ export class Parser {
     const commands: Command[] = [];
 
     while (true) {
+      this.checkDeadline();
       this.skipNewlines();
 
       // Check for terminators
@@ -769,17 +891,23 @@ export class Parser {
         break;
       }
 
+      if (this.check(TokenType.COMMENT)) {
+        commands.push(this.parseComment());
+        continue;
+      }
+
       const command = this.parseCommand();
-      if (command) {
-        commands.push(command);
-      } else {
+      if (!command) {
         break;
       }
 
-      // Check for separator
+      // `cmd &` backgrounds cmd and also separates it from what follows
+      const separated = this.applyAsync(command);
+      commands.push(command);
+
       if (this.check(TokenType.SEMI) || this.check(TokenType.AMP) || this.check(TokenType.NEWLINE)) {
         this.advance();
-      } else {
+      } else if (!separated) {
         break;
       }
     }

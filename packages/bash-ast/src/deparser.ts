@@ -1,11 +1,14 @@
 import {
   AssignmentWord,
+  BraceGroup,
   CaseClause,
   CaseItem,
   Command,
+  Comment,
   CompoundList,
   ForClause,
   FunctionDefinition,
+  HereDoc,
   IfClause,
   LogicalExpression,
   Node,
@@ -28,11 +31,26 @@ export interface DeparserOptions {
 }
 
 /**
+ * A deparsed list of commands. `multiline` is set when the list cannot be
+ * collapsed onto one line — because a statement is backgrounded, carries a
+ * here-document body, or is a comment.
+ */
+interface DeparsedList {
+  text: string;
+  multiline: boolean;
+}
+
+/**
  * Bash Deparser - converts AST back to source
  */
 export class Deparser {
   private options: DeparserOptions;
-  private indentLevel: number = 0;
+
+  /**
+   * Here-document bodies owed by the statement currently being deparsed. They
+   * are emitted after the line that opened them.
+   */
+  private heredocs: string[] = [];
 
   constructor(options: DeparserOptions = {}) {
     this.options = {
@@ -50,46 +68,23 @@ export class Deparser {
       switch (node.type) {
       case 'Script':
         return this.deparseScript(node as Script);
-      case 'SimpleCommand':
-        return this.deparseSimpleCommand(node as SimpleCommand);
-      case 'Pipeline':
-        return this.deparsePipeline(node as Pipeline);
-      case 'LogicalExpression':
-        return this.deparseLogicalExpression(node as LogicalExpression);
-      case 'Subshell':
-        return this.deparseSubshell(node as Subshell);
-      case 'CompoundList':
-        return this.deparseCompoundList(node as CompoundList);
-      case 'IfClause':
-        return this.deparseIf(node as IfClause);
-      case 'WhileClause':
-        return this.deparseWhile(node as WhileClause);
-      case 'UntilClause':
-        return this.deparseUntil(node as UntilClause);
-      case 'ForClause':
-        return this.deparseFor(node as ForClause);
-      case 'CaseClause':
-        return this.deparseCase(node as CaseClause);
-      case 'FunctionDefinition':
-        return this.deparseFunction(node as FunctionDefinition);
       case 'Word':
         return this.deparseWord(node as Word);
       case 'AssignmentWord':
         return (node as AssignmentWord).text;
       case 'Redirect':
         return this.deparseRedirect(node as Redirect);
+      case 'CaseItem':
+        return this.deparseCaseItem(node as CaseItem);
+      case 'HereDoc': {
+        const heredoc = node as HereDoc;
+        return heredoc.content + heredoc.delimiter;
+      }
       default:
-        throw new Error(`Unknown node type: ${(node as any).type}`);
+        return this.emitStatement(node as Command);
       }
     }
     throw new Error('Invalid node');
-  }
-
-  /**
-   * Get current indentation
-   */
-  private getIndent(): string {
-    return this.options.indent!.repeat(this.indentLevel);
   }
 
   /**
@@ -97,8 +92,28 @@ export class Deparser {
    */
   private deparseScript(script: Script): string {
     return script.commands
-      .map(cmd => this.deparseCommand(cmd))
+      .map(cmd => this.emitStatement(cmd))
       .join(this.options.newline);
+  }
+
+  /**
+   * Deparse one statement: the command itself, its `&`, and the bodies of any
+   * here-documents it opened.
+   */
+  private emitStatement(command: Command): string {
+    const owed = this.heredocs;
+    this.heredocs = [];
+
+    let text = this.deparseCommand(command);
+    if (command.async) {
+      text += ' &';
+    }
+    if (this.heredocs.length > 0) {
+      text += '\n' + this.heredocs.join('\n');
+    }
+
+    this.heredocs = owed;
+    return text;
   }
 
   /**
@@ -114,8 +129,12 @@ export class Deparser {
       return this.deparseLogicalExpression(command);
     case 'Subshell':
       return this.deparseSubshell(command);
+    case 'BraceGroup':
+      return this.deparseBraceGroup(command);
     case 'CompoundList':
-      return this.deparseCompoundList(command);
+      return this.deparseList(command).text;
+    case 'Comment':
+      return this.deparseComment(command);
     case 'IfClause':
       return this.deparseIf(command);
     case 'WhileClause':
@@ -129,8 +148,21 @@ export class Deparser {
     case 'FunctionDefinition':
       return this.deparseFunction(command);
     default:
-      throw new Error(`Unknown command type: ${(command as any).type}`);
+      throw new Error(`Unknown command type: ${(command as { type: string }).type}`);
     }
+  }
+
+  /**
+   * Deparse a list of commands, keeping it on one line when that is safe
+   */
+  private deparseList(list: CompoundList): DeparsedList {
+    const parts = list.commands.map(cmd => this.emitStatement(cmd));
+    const multiline = parts.some(part => part.includes('\n') || part.endsWith('&')) ||
+      list.commands.some(cmd => cmd.type === 'Comment');
+    return {
+      text: parts.join(multiline ? '\n' : '; '),
+      multiline
+    };
   }
 
   /**
@@ -154,8 +186,8 @@ export class Deparser {
     // Suffix (arguments and redirections)
     if (cmd.suffix) {
       for (const item of cmd.suffix) {
-        if (item.type === 'Word') {
-          parts.push(this.deparseWord(item));
+        if (item.type === 'Word' || item.type === 'AssignmentWord') {
+          parts.push(item.text);
         } else if (item.type === 'Redirect') {
           parts.push(this.deparseRedirect(item));
         }
@@ -173,7 +205,15 @@ export class Deparser {
   }
 
   /**
-   * Deparse redirect
+   * Deparse comment
+   */
+  private deparseComment(comment: Comment): string {
+    return `#${comment.text}`;
+  }
+
+  /**
+   * Deparse redirect. A here-document's body is owed to the end of the
+   * statement, so it is buffered rather than returned.
    */
   private deparseRedirect(redirect: Redirect): string {
     let result = '';
@@ -186,9 +226,27 @@ export class Deparser {
 
     if (redirect.file) {
       result += this.deparseWord(redirect.file);
+    } else if (redirect.heredoc) {
+      result += redirect.heredoc.quoted
+        ? `'${redirect.heredoc.delimiter}'`
+        : redirect.heredoc.delimiter;
+    }
+
+    if (redirect.heredoc) {
+      this.heredocs.push(redirect.heredoc.content + redirect.heredoc.delimiter);
     }
 
     return result;
+  }
+
+  /**
+   * Deparse the redirections attached to a compound command
+   */
+  private deparseRedirects(redirects?: Redirect[]): string {
+    if (!redirects || redirects.length === 0) {
+      return '';
+    }
+    return ' ' + redirects.map(redirect => this.deparseRedirect(redirect)).join(' ');
   }
 
   /**
@@ -223,124 +281,151 @@ export class Deparser {
    * Deparse subshell
    */
   private deparseSubshell(subshell: Subshell): string {
-    const list = this.deparseCompoundListInline(subshell.list);
-    return `(${list})`;
+    const list = this.deparseList(subshell.list);
+    const body = list.multiline ? `(\n${list.text}\n)` : `(${list.text})`;
+    return body + this.deparseRedirects(subshell.redirects);
   }
 
   /**
-   * Deparse compound list
+   * Deparse brace group. The braces are always emitted: they are what keeps
+   * the group a single command inside a pipeline or after `&&`/`||`.
    */
-  private deparseCompoundList(list: CompoundList): string {
-    return list.commands
-      .map(cmd => this.deparseCommand(cmd))
-      .join('; ');
+  private deparseBraceGroup(group: BraceGroup): string {
+    const list = this.deparseList(group.list);
+    const body = list.multiline ? `{\n${list.text}\n}` : `{ ${list.text}; }`;
+    return body + this.deparseRedirects(group.redirects);
   }
 
   /**
-   * Deparse compound list inline (for subshells, etc.)
+   * Render `<keyword> <list><separator><terminator>`, breaking the line when
+   * the list cannot be inlined
    */
-  private deparseCompoundListInline(list: CompoundList): string {
-    return list.commands
-      .map(cmd => this.deparseCommand(cmd))
-      .join('; ');
+  private clause(keyword: string, list: DeparsedList, terminator: string): string {
+    if (list.multiline) {
+      return `${keyword} ${list.text}\n${terminator}`;
+    }
+    return `${keyword} ${list.text}; ${terminator}`;
   }
 
   /**
    * Deparse if clause
    */
-  private deparseIf(ifClause: IfClause): string {
-    const parts: string[] = [];
+  private deparseIf(ifClause: IfClause, keyword: string = 'if'): string {
+    const condition = this.deparseList(ifClause.condition);
+    const then = this.deparseList(ifClause.then);
 
-    parts.push('if');
-    parts.push(this.deparseCompoundListInline(ifClause.condition));
-    parts.push('; then');
-    parts.push(this.deparseCompoundListInline(ifClause.then));
+    let elseText: string | undefined;
+    let elseMultiline = false;
 
     if (ifClause.else) {
       if (ifClause.else.type === 'IfClause') {
-        // elif
-        parts.push('; el' + this.deparseIf(ifClause.else).substring(0));
-        return parts.join(' ').replace('; elif', '; elif').replace('; fi; fi', '; fi');
+        elseText = this.deparseIf(ifClause.else, 'elif');
+        elseMultiline = elseText.includes('\n');
       } else {
-        parts.push('; else');
-        parts.push(this.deparseCompoundListInline(ifClause.else));
+        const elseList = this.deparseList(ifClause.else);
+        elseText = elseList.text;
+        elseMultiline = elseList.multiline;
       }
     }
 
-    parts.push('; fi');
+    const multiline = condition.multiline || then.multiline || elseMultiline;
+    const isElif = keyword === 'elif';
 
-    return parts.join(' ');
+    if (!multiline) {
+      const parts = [`${this.clause(keyword, condition, 'then')} ${then.text}`];
+      if (elseText !== undefined) {
+        parts.push(ifClause.else!.type === 'IfClause' ? elseText : `else ${elseText}`);
+      }
+      const body = parts.join('; ');
+      return isElif ? body : `${body}; fi`;
+    }
+
+    const parts = [`${this.clause(keyword, condition, 'then')}\n${then.text}`];
+    if (elseText !== undefined) {
+      parts.push(ifClause.else!.type === 'IfClause' ? elseText : `else\n${elseText}`);
+    }
+    const body = parts.join('\n');
+    return isElif ? body : `${body}\nfi`;
   }
 
   /**
    * Deparse while clause
    */
   private deparseWhile(whileClause: WhileClause): string {
-    const condition = this.deparseCompoundListInline(whileClause.condition);
-    const body = this.deparseCompoundListInline(whileClause.body);
-    return `while ${condition}; do ${body}; done`;
+    return this.deparseLoop('while', whileClause.condition, whileClause.body) +
+      this.deparseRedirects(whileClause.redirects);
   }
 
   /**
    * Deparse until clause
    */
   private deparseUntil(untilClause: UntilClause): string {
-    const condition = this.deparseCompoundListInline(untilClause.condition);
-    const body = this.deparseCompoundListInline(untilClause.body);
-    return `until ${condition}; do ${body}; done`;
+    return this.deparseLoop('until', untilClause.condition, untilClause.body) +
+      this.deparseRedirects(untilClause.redirects);
+  }
+
+  /**
+   * Deparse `while`/`until`
+   */
+  private deparseLoop(keyword: string, conditionList: CompoundList, bodyList: CompoundList): string {
+    const condition = this.deparseList(conditionList);
+    const body = this.deparseList(bodyList);
+
+    if (!condition.multiline && !body.multiline) {
+      return `${keyword} ${condition.text}; do ${body.text}; done`;
+    }
+
+    return `${this.clause(keyword, condition, 'do')}\n${body.text}\ndone`;
   }
 
   /**
    * Deparse for clause
    */
   private deparseFor(forClause: ForClause): string {
-    const parts: string[] = ['for', forClause.name];
+    let head = `for ${forClause.name}`;
 
     if (forClause.wordlist && forClause.wordlist.length > 0) {
-      parts.push('in');
-      parts.push(forClause.wordlist.map(w => this.deparseWord(w)).join(' '));
+      head += ` in ${forClause.wordlist.map(word => this.deparseWord(word)).join(' ')}`;
     }
 
-    parts.push(';');
-    parts.push('do');
-    parts.push(this.deparseCompoundListInline(forClause.body));
-    parts.push(';');
-    parts.push('done');
+    const body = this.deparseList(forClause.body);
+    const text = body.multiline
+      ? `${head}; do\n${body.text}\ndone`
+      : `${head}; do ${body.text}; done`;
 
-    return parts.join(' ');
+    return text + this.deparseRedirects(forClause.redirects);
   }
 
   /**
    * Deparse case clause
    */
   private deparseCase(caseClause: CaseClause): string {
-    const parts: string[] = [];
+    const items = caseClause.cases.map(item => this.deparseCaseItem(item));
+    const multiline = items.some(item => item.includes('\n'));
+    const head = `case ${this.deparseWord(caseClause.word)} in`;
 
-    parts.push('case');
-    parts.push(this.deparseWord(caseClause.word));
-    parts.push('in');
+    const text = multiline
+      ? `${head}\n${items.join('\n')}\nesac`
+      : [head, ...items, 'esac'].join(' ');
 
-    for (const caseItem of caseClause.cases) {
-      parts.push(this.deparseCaseItem(caseItem));
-    }
-
-    parts.push('esac');
-
-    return parts.join(' ');
+    return text + this.deparseRedirects(caseClause.redirects);
   }
 
   /**
    * Deparse case item
    */
   private deparseCaseItem(caseItem: CaseItem): string {
-    const pattern = caseItem.pattern.map(w => this.deparseWord(w)).join('|');
+    const pattern = caseItem.pattern.map(word => this.deparseWord(word)).join('|');
     let result = `${pattern})`;
 
     if (caseItem.body) {
-      result += ' ' + this.deparseCompoundListInline(caseItem.body);
+      const body = this.deparseList(caseItem.body);
+      result += body.multiline ? `\n${body.text}\n` : ` ${body.text} `;
+    } else {
+      result += ' ';
     }
 
-    result += ' ;;';
+    result += ';;';
 
     return result;
   }
@@ -351,7 +436,7 @@ export class Deparser {
   private deparseFunction(func: FunctionDefinition): string {
     const body = func.body.type === 'Subshell'
       ? this.deparseSubshell(func.body)
-      : `{ ${this.deparseCompoundListInline(func.body)}; }`;
+      : this.deparseBraceGroup(func.body);
 
     return `${func.name}() ${body}`;
   }
