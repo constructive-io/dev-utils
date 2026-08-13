@@ -1,4 +1,4 @@
-import { Position, Range } from './types';
+import { HereDoc, Position, Range } from './types';
 
 /**
  * Token types for bash lexer
@@ -55,6 +55,7 @@ export enum TokenType {
 
   // Special
   IO_NUMBER = 'IO_NUMBER',
+  COMMENT = 'COMMENT',
   EOF = 'EOF',
   WHITESPACE = 'WHITESPACE',
 }
@@ -66,6 +67,27 @@ export interface Token {
   type: TokenType;
   value: string;
   range: Range;
+  /**
+   * Body of the here-document introduced by this token. Only ever set on
+   * `<<` / `<<-` tokens, and only once the delimiter line has been read.
+   */
+  heredoc?: HereDoc;
+}
+
+/**
+ * Lexer options
+ */
+export interface LexerOptions {
+  /**
+   * Emit COMMENT tokens instead of discarding comments.
+   */
+  keepComments?: boolean;
+
+  /**
+   * Wall-clock budget for tokenizing, in milliseconds. Exceeding it throws
+   * instead of letting a pathological input run unbounded.
+   */
+  timeoutMs?: number;
 }
 
 /**
@@ -90,6 +112,31 @@ const RESERVED_WORDS: Record<string, TokenType> = {
 };
 
 /**
+ * Builtins whose operands are assignments (`export FOO=bar`)
+ */
+const DECLARATION_BUILTINS = new Set([
+  'export',
+  'local',
+  'declare',
+  'readonly',
+  'typeset',
+]);
+
+const ASSIGNMENT_RE = /^[a-zA-Z_][a-zA-Z0-9_]*(\[[^\]]*\])?\+?=/;
+
+/**
+ * A here-document whose delimiter has been seen but whose body has not been
+ * read yet. The body starts on the line following the operator, so the token
+ * is kept around and filled in once the newline is consumed.
+ */
+interface PendingHereDoc {
+  token: Token;
+  dash: boolean;
+  delimiter?: string;
+  quoted?: boolean;
+}
+
+/**
  * Bash Lexer
  */
 export class Lexer {
@@ -97,9 +144,24 @@ export class Lexer {
   private pos: number = 0;
   private line: number = 1;
   private column: number = 0;
+  private options: LexerOptions;
 
-  constructor(input: string) {
+  /**
+   * True when the next word would be the command name, i.e. when a leading
+   * `NAME=value` word is an assignment rather than an ordinary argument.
+   */
+  private commandPosition: boolean = true;
+
+  /**
+   * True while lexing the arguments of `export`/`local`/`declare`/`readonly`.
+   */
+  private declarationCommand: boolean = false;
+
+  private pendingHereDocs: PendingHereDoc[] = [];
+
+  constructor(input: string, options: LexerOptions = {}) {
     this.input = input;
+    this.options = options;
   }
 
   /**
@@ -146,7 +208,7 @@ export class Lexer {
    * Check if character is whitespace (not newline)
    */
   private isWhitespace(char: string): boolean {
-    return char === ' ' || char === '\t';
+    return char === ' ' || char === '\t' || char === '\r';
   }
 
   /**
@@ -157,7 +219,7 @@ export class Lexer {
   }
 
   /**
-   * Check if character can start a word
+   * Check if character can be part of a word
    */
   private isWordChar(char: string): boolean {
     return char !== '' &&
@@ -169,17 +231,40 @@ export class Lexer {
       char !== '(' &&
       char !== ')' &&
       char !== '<' &&
-      char !== '>' &&
-      char !== '{' &&
-      char !== '}';
+      char !== '>';
   }
 
   /**
-   * Skip whitespace (not newlines)
+   * Check if a character terminates a token. `{` and `}` are reserved words
+   * only when they stand alone; elsewhere they are ordinary word characters
+   * (`--set jsonpath={.metadata.name}`, `{1..3}`).
+   */
+  private isTokenDelimiter(char: string): boolean {
+    return char === '' ||
+      this.isWhitespace(char) ||
+      char === '\n' ||
+      char === ';' ||
+      char === '&' ||
+      char === '|' ||
+      char === '(' ||
+      char === ')' ||
+      char === '<' ||
+      char === '>';
+  }
+
+  /**
+   * Skip whitespace and line continuations (not newlines)
    */
   private skipWhitespace(): void {
-    while (!this.isAtEnd() && this.isWhitespace(this.peek())) {
-      this.advance();
+    while (!this.isAtEnd()) {
+      if (this.isWhitespace(this.peek())) {
+        this.advance();
+      } else if (this.peek() === '\\' && this.peek(1) === '\n') {
+        this.advance();
+        this.advance();
+      } else {
+        break;
+      }
     }
   }
 
@@ -230,6 +315,12 @@ export class Lexer {
       } else if (char === '"') {
         result += this.readDoubleQuoted();
       } else if (char === '\\') {
+        if (this.peek(1) === '\n') {
+          // line continuation: removed, the word continues on the next line
+          this.advance();
+          this.advance();
+          continue;
+        }
         result += this.advance(); // backslash
         if (!this.isAtEnd()) {
           result += this.advance(); // escaped char
@@ -238,9 +329,34 @@ export class Lexer {
         result += this.readExpansion();
       } else if (char === '`') {
         result += this.readBacktickSubstitution();
+      } else if ((char === '{' || char === '}') && result === '' && this.isTokenDelimiter(this.peek(1))) {
+        break;
       } else {
         result += this.advance();
       }
+    }
+    return result;
+  }
+
+  /**
+   * Read a balanced parenthesised run, including the parens
+   */
+  private readBalancedParens(): string {
+    let result = this.advance(); // (
+    let depth = 1;
+    while (!this.isAtEnd() && depth > 0) {
+      const char = this.peek();
+      if (char === "'") {
+        result += this.readSingleQuoted();
+        continue;
+      }
+      if (char === '"') {
+        result += this.readDoubleQuoted();
+        continue;
+      }
+      if (char === '(') depth++;
+      if (char === ')') depth--;
+      result += this.advance();
     }
     return result;
   }
@@ -263,13 +379,7 @@ export class Lexer {
         }
       } else {
         // Command substitution $(cmd)
-        result += this.advance(); // (
-        let depth = 1;
-        while (!this.isAtEnd() && depth > 0) {
-          if (this.peek() === '(') depth++;
-          if (this.peek() === ')') depth--;
-          result += this.advance();
-        }
+        result += this.readBalancedParens();
       }
     } else if (this.peek() === '{') {
       // Parameter expansion ${VAR}
@@ -311,11 +421,121 @@ export class Lexer {
   }
 
   /**
-   * Read a comment
+   * Read a comment, excluding the leading `#`
    */
-  private readComment(): void {
+  private readComment(): string {
+    this.advance(); // #
+    let result = '';
     while (!this.isAtEnd() && this.peek() !== '\n') {
+      result += this.advance();
+    }
+    return result;
+  }
+
+  /**
+   * Strip one level of quoting from a here-document delimiter
+   */
+  private unquoteDelimiter(word: string): { delimiter: string; quoted: boolean } {
+    if (word.length >= 2 && ((word.startsWith("'") && word.endsWith("'")) || (word.startsWith('"') && word.endsWith('"')))) {
+      return { delimiter: word.slice(1, -1), quoted: true };
+    }
+    if (word.includes('\\')) {
+      return { delimiter: word.replace(/\\(.)/g, '$1'), quoted: true };
+    }
+    return { delimiter: word, quoted: false };
+  }
+
+  /**
+   * Read one raw line, consuming its terminating newline
+   */
+  private readRawLine(): { text: string; terminated: boolean } {
+    let text = '';
+    while (!this.isAtEnd() && this.peek() !== '\n') {
+      text += this.advance();
+    }
+    const terminated = this.peek() === '\n';
+    if (terminated) {
       this.advance();
+    }
+    return { text, terminated };
+  }
+
+  /**
+   * Read the bodies of every here-document pending on the line just ended.
+   * A body is opaque text: it is never fed through the command lexer.
+   */
+  private readPendingHereDocBodies(): void {
+    const pending = this.pendingHereDocs;
+    this.pendingHereDocs = [];
+
+    for (const entry of pending) {
+      if (entry.delimiter === undefined) continue;
+
+      let content = '';
+      for (;;) {
+        if (this.isAtEnd()) break;
+        const startOfLine = this.pos;
+        const { text, terminated } = this.readRawLine();
+        const candidate = entry.dash ? text.replace(/^[\t]+/, '') : text;
+        if (candidate === entry.delimiter) {
+          break;
+        }
+        if (!terminated && this.isAtEnd() && startOfLine === this.pos) {
+          break;
+        }
+        content += text + '\n';
+        if (!terminated) break;
+      }
+
+      entry.token.heredoc = {
+        type: 'HereDoc',
+        delimiter: entry.delimiter,
+        content,
+        quoted: entry.quoted || undefined
+      };
+    }
+  }
+
+  /**
+   * Track whether the next word sits in command (assignment) position. `)` is
+   * in the list because it closes a case pattern, whose body starts a command.
+   */
+  private updateContext(token: Token): void {
+    switch (token.type) {
+    case TokenType.NEWLINE:
+    case TokenType.SEMI:
+    case TokenType.DSEMI:
+    case TokenType.AMP:
+    case TokenType.PIPE:
+    case TokenType.AND_IF:
+    case TokenType.OR_IF:
+    case TokenType.LBRACE:
+    case TokenType.LPAREN:
+    case TokenType.RPAREN:
+    case TokenType.BANG:
+    case TokenType.IF:
+    case TokenType.THEN:
+    case TokenType.ELSE:
+    case TokenType.ELIF:
+    case TokenType.WHILE:
+    case TokenType.UNTIL:
+    case TokenType.DO:
+      this.commandPosition = true;
+      this.declarationCommand = false;
+      break;
+    case TokenType.ASSIGNMENT_WORD:
+    case TokenType.COMMENT:
+      break;
+    case TokenType.WORD:
+      if (this.commandPosition && DECLARATION_BUILTINS.has(token.value)) {
+        this.declarationCommand = true;
+      }
+      this.commandPosition = false;
+      break;
+    default:
+      this.commandPosition = false;
+      this.declarationCommand = false;
+      break;
     }
   }
 
@@ -323,6 +543,12 @@ export class Lexer {
    * Get next token
    */
   nextToken(): Token {
+    const token = this.scanToken();
+    this.updateContext(token);
+    return token;
+  }
+
+  private scanToken(): Token {
     this.skipWhitespace();
 
     if (this.isAtEnd()) {
@@ -338,18 +564,29 @@ export class Lexer {
 
     // Comment
     if (char === '#') {
-      this.readComment();
-      return this.nextToken();
+      const text = this.readComment();
+      if (this.options.keepComments) {
+        return {
+          type: TokenType.COMMENT,
+          value: text,
+          range: { start, end: this.getPosition() }
+        };
+      }
+      return this.scanToken();
     }
 
-    // Newline
+    // Newline — here-document bodies start right after it
     if (char === '\n') {
       this.advance();
-      return {
+      const token: Token = {
         type: TokenType.NEWLINE,
         value: '\n',
         range: { start, end: this.getPosition() }
       };
+      if (this.pendingHereDocs.length > 0) {
+        this.readPendingHereDocBodies();
+      }
+      return token;
     }
 
     // Operators
@@ -368,6 +605,15 @@ export class Lexer {
         this.advance();
         return { type: TokenType.AND_IF, value: '&&', range: { start, end: this.getPosition() } };
       }
+      if (this.peek() === '>') {
+        // `&>file` — redirect both streams; lexed as a word-carrying redirect
+        this.advance();
+        if (this.peek() === '>') {
+          this.advance();
+          return { type: TokenType.WORD, value: '&>>', range: { start, end: this.getPosition() } };
+        }
+        return { type: TokenType.WORD, value: '&>', range: { start, end: this.getPosition() } };
+      }
       return { type: TokenType.AMP, value: '&', range: { start, end: this.getPosition() } };
     }
 
@@ -380,6 +626,13 @@ export class Lexer {
       return { type: TokenType.SEMI, value: ';', range: { start, end: this.getPosition() } };
     }
 
+    // Process substitution — a word, not a redirection
+    if ((char === '<' || char === '>') && this.peek(1) === '(') {
+      const op = this.advance();
+      const body = this.readBalancedParens();
+      return { type: TokenType.WORD, value: op + body, range: { start, end: this.getPosition() } };
+    }
+
     // Redirections
     if (char === '<') {
       this.advance();
@@ -387,13 +640,17 @@ export class Lexer {
         this.advance();
         if (this.peek() === '-') {
           this.advance();
-          return { type: TokenType.DLESSDASH, value: '<<-', range: { start, end: this.getPosition() } };
+          const token: Token = { type: TokenType.DLESSDASH, value: '<<-', range: { start, end: this.getPosition() } };
+          this.pendingHereDocs.push({ token, dash: true });
+          return token;
         }
         if (this.peek() === '<') {
           this.advance();
           return { type: TokenType.TLESS, value: '<<<', range: { start, end: this.getPosition() } };
         }
-        return { type: TokenType.DLESS, value: '<<', range: { start, end: this.getPosition() } };
+        const token: Token = { type: TokenType.DLESS, value: '<<', range: { start, end: this.getPosition() } };
+        this.pendingHereDocs.push({ token, dash: false });
+        return token;
       }
       if (this.peek() === '&') {
         this.advance();
@@ -423,6 +680,20 @@ export class Lexer {
       return { type: TokenType.GREAT, value: '>', range: { start, end: this.getPosition() } };
     }
 
+    // Arithmetic command `((expr))` — a word, not two subshells
+    if (char === '(' && this.peek(1) === '(') {
+      const text = this.readBalancedParens();
+      if (text.startsWith('((') && text.endsWith('))')) {
+        return { type: TokenType.WORD, value: text, range: { start, end: this.getPosition() } };
+      }
+      // not an arithmetic command after all: re-lex what we consumed
+      this.pos = start.offset;
+      this.line = start.line;
+      this.column = start.column;
+      this.advance();
+      return { type: TokenType.LPAREN, value: '(', range: { start, end: this.getPosition() } };
+    }
+
     // Grouping
     if (char === '(') {
       this.advance();
@@ -434,12 +705,12 @@ export class Lexer {
       return { type: TokenType.RPAREN, value: ')', range: { start, end: this.getPosition() } };
     }
 
-    if (char === '{') {
+    if (char === '{' && this.isTokenDelimiter(this.peek(1))) {
       this.advance();
       return { type: TokenType.LBRACE, value: '{', range: { start, end: this.getPosition() } };
     }
 
-    if (char === '}') {
+    if (char === '}' && this.isTokenDelimiter(this.peek(1))) {
       this.advance();
       return { type: TokenType.RBRACE, value: '}', range: { start, end: this.getPosition() } };
     }
@@ -451,17 +722,31 @@ export class Lexer {
     }
 
     // Word
-    const word = this.readWord();
-    const end = this.getPosition();
+    let word = this.readWord();
 
     // Check for reserved words
     if (word in RESERVED_WORDS) {
-      return { type: RESERVED_WORDS[word], value: word, range: { start, end } };
+      return { type: RESERVED_WORDS[word], value: word, range: { start, end: this.getPosition() } };
     }
 
-    // Check for assignment word (NAME=VALUE)
-    if (word.includes('=') && /^[a-zA-Z_][a-zA-Z0-9_]*=/.test(word)) {
-      return { type: TokenType.ASSIGNMENT_WORD, value: word, range: { start, end } };
+    // Assignment words only exist in assignment position: before the command
+    // name, or as an operand of export/local/declare/readonly.
+    if ((this.commandPosition || this.declarationCommand) && ASSIGNMENT_RE.test(word)) {
+      if (word.endsWith('=') && this.peek() === '(') {
+        // array assignment: arr=(a b c)
+        word += this.readBalancedParens();
+      }
+      return { type: TokenType.ASSIGNMENT_WORD, value: word, range: { start, end: this.getPosition() } };
+    }
+
+    const end = this.getPosition();
+
+    // A here-document delimiter is the word right after the operator
+    const awaiting = this.pendingHereDocs.find(entry => entry.delimiter === undefined);
+    if (awaiting) {
+      const { delimiter, quoted } = this.unquoteDelimiter(word);
+      awaiting.delimiter = delimiter;
+      awaiting.quoted = quoted;
     }
 
     return { type: TokenType.WORD, value: word, range: { start, end } };
@@ -471,9 +756,16 @@ export class Lexer {
    * Tokenize entire input
    */
   tokenize(): Token[] {
+    const deadline = this.options.timeoutMs === undefined
+      ? undefined
+      : Date.now() + this.options.timeoutMs;
+
     const tokens: Token[] = [];
     let token: Token;
     do {
+      if (deadline !== undefined && Date.now() > deadline) {
+        throw new Error(`bash-ast: tokenizing exceeded ${this.options.timeoutMs}ms at line ${this.line}, column ${this.column}`);
+      }
       token = this.nextToken();
       tokens.push(token);
     } while (token.type !== TokenType.EOF);

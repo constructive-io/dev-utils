@@ -2,7 +2,7 @@
 export * from './types';
 
 // Lexer
-export { Lexer, Token, TokenType } from './lexer';
+export { Lexer, LexerOptions, Token, TokenType } from './lexer';
 
 // Parser
 export { parse,Parser, ParserOptions } from './parser';

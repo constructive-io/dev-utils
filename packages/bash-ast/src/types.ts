@@ -21,6 +21,11 @@ export interface Range {
 export interface BaseNode {
   type: string;
   range?: Range;
+  /**
+   * Set when the command is terminated by `&` and therefore runs in the
+   * background. Only meaningful on command nodes.
+   */
+  async?: boolean;
 }
 
 /**
@@ -39,7 +44,9 @@ export type Command =
   | Pipeline
   | LogicalExpression
   | Subshell
+  | BraceGroup
   | CompoundList
+  | Comment
   | IfClause
   | WhileClause
   | UntilClause
@@ -54,7 +61,15 @@ export interface SimpleCommand extends BaseNode {
   type: 'SimpleCommand';
   name?: Word;
   prefix?: AssignmentWord[];
-  suffix?: (Word | Redirect)[];
+  suffix?: (Word | AssignmentWord | Redirect)[];
+}
+
+/**
+ * Comment (`# ...`), retained only when the parser runs with `keepComments`
+ */
+export interface Comment extends BaseNode {
+  type: 'Comment';
+  text: string;
 }
 
 /**
@@ -172,6 +187,17 @@ export interface LogicalExpression extends BaseNode {
 export interface Subshell extends BaseNode {
   type: 'Subshell';
   list: CompoundList;
+  redirects?: Redirect[];
+}
+
+/**
+ * Brace group (e.g., `{ cmd1; cmd2; }`) — a single compound command, so it
+ * survives pipelines, `&&`/`||`, `&` and redirection as one unit
+ */
+export interface BraceGroup extends BaseNode {
+  type: 'BraceGroup';
+  list: CompoundList;
+  redirects?: Redirect[];
 }
 
 /**
@@ -190,6 +216,7 @@ export interface IfClause extends BaseNode {
   condition: CompoundList;
   then: CompoundList;
   else?: CompoundList | IfClause;
+  redirects?: Redirect[];
 }
 
 /**
@@ -199,6 +226,7 @@ export interface WhileClause extends BaseNode {
   type: 'WhileClause';
   condition: CompoundList;
   body: CompoundList;
+  redirects?: Redirect[];
 }
 
 /**
@@ -208,6 +236,7 @@ export interface UntilClause extends BaseNode {
   type: 'UntilClause';
   condition: CompoundList;
   body: CompoundList;
+  redirects?: Redirect[];
 }
 
 /**
@@ -218,6 +247,7 @@ export interface ForClause extends BaseNode {
   name: string;
   wordlist?: Word[];
   body: CompoundList;
+  redirects?: Redirect[];
 }
 
 /**
@@ -227,6 +257,7 @@ export interface CaseClause extends BaseNode {
   type: 'CaseClause';
   word: Word;
   cases: CaseItem[];
+  redirects?: Redirect[];
 }
 
 /**
@@ -244,7 +275,7 @@ export interface CaseItem extends BaseNode {
 export interface FunctionDefinition extends BaseNode {
   type: 'FunctionDefinition';
   name: string;
-  body: CompoundList | Subshell;
+  body: BraceGroup | Subshell;
 }
 
 /**
