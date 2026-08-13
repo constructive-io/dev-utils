@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/constructive-io/dev-utils/compare/docker-parser@0.1.3...docker-parser@0.1.4) (2026-08-13)
+
+**Note:** Version bump only for package docker-parser
+
 ## [0.1.3](https://github.com/constructive-io/dev-utils/compare/docker-parser@0.1.2...docker-parser@0.1.3) (2026-08-03)
 
 ### Bug Fixes
