@@ -1,6 +1,6 @@
 import { rmSync } from 'fs';
 
-import { expandDirGlob, makeMatcher, toRel } from '../src/glob';
+import { expandDirGlob, extOf, makeMatcher, normalizeExts, toRel } from '../src/glob';
 import { buildWorkspace } from './support/build-workspace';
 
 describe('expandDirGlob', () => {
@@ -76,6 +76,31 @@ describe('makeMatcher', () => {
     const match = makeMatcher(['pnpm-lock.yaml']);
     expect(match('pnpm-lock.yaml')).toBe(true);
     expect(match('nested/pnpm-lock.yaml')).toBe(true);
+  });
+});
+
+describe('normalizeExts', () => {
+  it('adds the dot, lowercases, splits commas, and tolerates absence', () => {
+    expect(normalizeExts('sql')).toEqual(['.sql']);
+    expect(normalizeExts('.SQL')).toEqual(['.sql']);
+    expect(normalizeExts('ts, tsx')).toEqual(['.ts', '.tsx']);
+    expect(normalizeExts(['.ts', 'tsx'])).toEqual(['.ts', '.tsx']);
+    expect(normalizeExts()).toEqual([]);
+    expect(normalizeExts([''])).toEqual([]);
+  });
+});
+
+describe('extOf', () => {
+  it('returns the lowercased extension', () => {
+    expect(extOf('packages/a/deploy/x.SQL')).toBe('.sql');
+    expect(extOf('a/b.tar.gz')).toBe('.gz');
+  });
+
+  it('returns empty for a dotfile or an extensionless name', () => {
+    expect(extOf('.gitignore')).toBe('');
+    expect(extOf('packages/a/.npmrc')).toBe('');
+    expect(extOf('Makefile')).toBe('');
+    expect(extOf('bin/ws-changed')).toBe('');
   });
 });
 

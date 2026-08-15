@@ -47,6 +47,20 @@ describe('loadConfig', () => {
     expect(config.provider).toBe('pgpm');
   });
 
+  it('reads the extension filter from the environment layer', () => {
+    const root = buildWorkspace({ packages: [] });
+    roots.push(root);
+    const prev = process.env.WS_CHANGED_EXT;
+    process.env.WS_CHANGED_EXT = '.sql,.ts';
+    try {
+      const { config } = loadConfig({ cwd: root });
+      expect(config.files).toEqual({ ext: '.sql,.ts' });
+    } finally {
+      if (prev === undefined) delete process.env.WS_CHANGED_EXT;
+      else process.env.WS_CHANGED_EXT = prev;
+    }
+  });
+
   it('reads global triggers from the environment layer', () => {
     const root = buildWorkspace({ packages: [] });
     roots.push(root);

@@ -50,6 +50,12 @@ ws-changed --provider pgpm --dirs --global 'pnpm-lock.yaml' '.github/**'
 # explain why each package was selected
 ws-changed --why --base origin/develop
 
+# only count changed SQL — and print which extensions changed in each package
+ws-changed --provider pgpm --ext .sql --exts
+
+# a lint lane: TypeScript only, ignoring generated trees
+ws-changed --ext ts,tsx --not-files '**/generated/**'
+
 # just enumerate / inspect the graph (ignores changes)
 ws-changed --list
 ws-changed --graph
@@ -68,6 +74,9 @@ result.changed;    // ['core']                — packages that directly own a c
 result.rootChanged;// ['README.md']           — changed paths owned by no package
 result.global;     // false                   — did a global-trigger path change?
 result.why;        // [{ package, kind: 'changed'|'dependent', via }]
+result.extensions; // ['.sql', '.ts']         — extensions present in the changeset
+result.extensionsByPackage; // { core: ['.sql'] } — what changed *in* each changed package
+result.ignored;    // ['README.md']           — changed paths the file filter dropped
 ```
 
 Lower-level pieces are exported too — `loadWorkspace`, the `WorkspaceGraph` (direct/transitive dependencies & dependents, topological sort, cycle detection), and `affected` for when you already hold the changed paths:
@@ -83,6 +92,30 @@ const result = affected(workspace, {
 });
 ```
 
+## Extensions: one changeset, several questions
+
+A CI lane's real question is rarely "did anything change?" but "did anything *of this kind* change, and where?" — a SQL lint lane cares about `.sql`, an image build about its build inputs, a lint lane about `.ts`. `files` narrows the changed files **before** they are attributed to packages, so the same diff answers each question separately:
+
+```ts
+import { wsChanged } from 'ws-changed';
+
+// which packages have changed SQL? (and their dependents)
+const sql = wsChanged({ overrides: { provider: 'pgpm', files: { ext: '.sql' } } });
+if (!sql.result.packages.length) skipSqlLint();
+
+// what kind of change was it, per package?
+wsChanged().result.extensionsByPackage; // { 'my-pkg': ['.md', '.ts'] }
+```
+
+`ext` takes the same shapes `git-changed` accepts — `'sql'`, `'.sql'`, `'ts,tsx'`, `['.ts','.tsx']` — normalized to a lowercased `.ext` list, so a filter moves between the two without translation. A dotfile or extensionless name (`.gitignore`, `Makefile`) has *no* extension and therefore matches no `ext` filter.
+
+Two properties worth knowing:
+
+- **A dropped file cannot trigger `global`.** The filter defines which files the question is about, so a SQL lane asking about `.sql` is not told "everything is affected" by a changed `pnpm-lock.yaml`. Ask the unfiltered question when you want the lockfile's blast radius.
+- **`extensionsByPackage` covers changed packages only**, never dependents — they own no changed file, so "what changed in `pkg`" stays distinct from "what `pkg` is affected by".
+
+On the CLI it's `--ext`, `--files`, `--not-files` (and `--exts` to print the per-package breakdown); in the environment, `WS_CHANGED_EXT` — enough for a CI lane to name its extensions without carrying its own config file.
+
 ## Configuration
 
 Discovered by confstash (`ws-changed.config.{ts,js,json}`, `.ws-changedrc{,.json,.yaml}`, or a `ws-changed` key in `package.json`), walking up from the cwd:
@@ -93,6 +126,7 @@ Discovered by confstash (`ws-changed.config.{ts,js,json}`, `.ws-changedrc{,.json
   "provider": ["pnpm", "pgpm"],
   "global": ["pnpm-lock.yaml", ".github/**", "bin/shard-plan.cjs"],
   "exclude": ["**/fixtures/**"],
+  "files": { "ext": [".sql"], "exclude": ["**/generated/**"] },
   "providers": {
     "pnpm": { "edgeKinds": ["prod", "dev", "peer"] }
   }
@@ -104,7 +138,9 @@ Discovered by confstash (`ws-changed.config.{ts,js,json}`, `.ws-changedrc{,.json
 | `provider` | Provider name or list. Multiple providers compose: their package sets are unioned by name and their edges merged, so `['pnpm','pgpm']` gives JS *and* SQL edges on the same nodes. Default `pnpm`. |
 | `root` | Workspace root. Default: the git repo root, else cwd. |
 | `global` | Glob patterns whose change means "everything is affected" (`AffectedResult.global`). Also settable via `WS_CHANGED_GLOBAL` (comma-separated). |
-| `include` / `exclude` | Restrict the package set by directory glob. |
+| `include` / `exclude` | Restrict the **package** set by directory glob. |
+| `files.ext` | Only count changed files with these extensions (`'.sql'`, `'ts,tsx'`, `['.ts','.tsx']`). Also settable via `WS_CHANGED_EXT`. |
+| `files.include` / `files.exclude` | Restrict the changed **file** set by glob — a generated tree, `dist/`, fixtures. |
 | `providers.pnpm.edgeKinds` | Which dependency kinds form edges: `prod`, `dev`, `peer`, `optional`. Default: all. |
 | `providers.pgpm.globs` / `providers.glob.globs` | Directory globs to search (default: the workspace's own globs). |
 
