@@ -135,6 +135,32 @@ export function makeMatcher(patterns: string[] = []): (rel: string) => boolean {
   return (rel: string) => regexes.some((re) => re.test(rel));
 }
 
+/**
+ * Normalize `.sql` / `sql` / `['.sql','.psql']` / `'ts,tsx'` into a lowercased
+ * `.ext` list. Same shape git-changed accepts, so a filter written for one works
+ * verbatim in the other.
+ */
+export function normalizeExts(ext?: string | string[]): string[] {
+  const list = Array.isArray(ext) ? ext : ext ? [ext] : [];
+  return list
+    .flatMap((e) => e.split(','))
+    .map((e) => e.trim())
+    .filter(Boolean)
+    .map((e) => (e.startsWith('.') ? e : `.${e}`))
+    .map((e) => e.toLowerCase());
+}
+
+/**
+ * The lowercased extension of a `/`-separated relative path, or `''` when it has
+ * none. A leading dot is a name, not an extension, so `.gitignore` and `Makefile`
+ * both yield `''`.
+ */
+export function extOf(rel: string): string {
+  const base = rel.slice(rel.lastIndexOf('/') + 1);
+  const dot = base.lastIndexOf('.');
+  return dot > 0 ? base.slice(dot).toLowerCase() : '';
+}
+
 /** Normalize an absolute or relative path to a `/`-separated path relative to root. */
 export function toRel(root: string, path: string): string {
   return relative(root, path).split(sep).join('/');

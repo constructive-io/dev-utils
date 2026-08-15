@@ -58,6 +58,25 @@ describe('wsChanged', () => {
     expect(result.packages).toEqual(['app', 'core']);
   });
 
+  it('applies the config file filter to the changed set', () => {
+    const root = buildWorkspace({
+      pnpmGlobs: ['packages/*'],
+      packages: [
+        { dir: 'packages/app', pkg: { name: 'app', dependencies: { core: 'workspace:*' } } },
+        { dir: 'packages/core', pkg: { name: 'core' } }
+      ]
+    });
+    roots.push(root);
+    const { result } = wsChanged({
+      cwd: root,
+      overrides: { root, files: { ext: '.sql' } },
+      changed: ['packages/core/deploy/x.sql', 'packages/app/src/x.ts']
+    });
+    expect(result.changed).toEqual(['core']);
+    expect(result.ignored).toEqual(['packages/app/src/x.ts']);
+    expect(result.extensionsByPackage).toEqual({ core: ['.sql'] });
+  });
+
   it('flags a global-trigger change from config', () => {
     const root = buildWorkspace({
       pnpmGlobs: ['packages/*'],

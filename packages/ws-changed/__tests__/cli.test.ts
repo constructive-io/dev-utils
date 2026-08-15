@@ -27,6 +27,19 @@ describe('parseArgs', () => {
     expect(p.overrides.exclude).toEqual(['apps/**']);
   });
 
+  it('parses the file filter flags into config.files', () => {
+    const p = parseArgs(['--ext', 'sql,ts', '--files', 'deploy/**', '--not-files', '**/generated/**']);
+    expect(p.overrides.files).toEqual({
+      ext: ['sql', 'ts'],
+      include: ['deploy/**'],
+      exclude: ['**/generated/**']
+    });
+  });
+
+  it('leaves config.files unset when no file flag is given', () => {
+    expect(parseArgs(['--base', 'origin/main']).overrides.files).toBeUndefined();
+  });
+
   it('throws on an unknown option', () => {
     expect(() => parseArgs(['--nope'])).toThrow(/Unknown option/);
   });

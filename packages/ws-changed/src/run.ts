@@ -49,6 +49,10 @@ export function wsChanged(params: WsChangedParams = {}): WsChangedRun {
     base = cr.base;
   }
 
-  const result = affected(workspace, { changed, global: config.global });
+  const result = affected(workspace, {
+    changed,
+    global: config.global,
+    ...(config.files ? { files: config.files } : {})
+  });
   return { workspace, config, configPath, result, base };
 }

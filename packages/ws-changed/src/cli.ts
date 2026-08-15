@@ -20,9 +20,14 @@ Options:
   --global <globs>    Paths whose change means "everything affected" (repeatable)
   --include <globs>   Only consider packages whose dir matches these globs
   --exclude <globs>   Drop packages whose dir matches these globs
+  --ext <exts>        Only count changed files with these extensions, e.g.
+                      --ext .sql (repeatable, comma-separated)
+  --files <globs>     Only count changed files matching these globs (repeatable)
+  --not-files <globs> Ignore changed files matching these globs (repeatable)
   --changed           Print only directly-changed packages (not dependents)
   --dirs              Print package directories instead of names
   --why               Explain why each affected package was selected
+  --exts              Print the extensions changed in each changed package
   --list              List all workspace packages (ignore changes)
   --graph             Print the dependency graph (topological order)
   --json              Print the full result as JSON
@@ -38,7 +43,13 @@ Examples:
   ws-changed --base origin/main
   ws-changed --provider pnpm,pgpm --base origin/main --json
   ws-changed --provider pgpm --dirs --global 'pnpm-lock.yaml' '.github/**'
-  ws-changed --why --base origin/develop`;
+  ws-changed --why --base origin/develop
+
+  # does this branch touch SQL, and where?
+  ws-changed --provider pgpm --ext .sql --exts
+
+  # lint lane: TypeScript only, ignoring generated trees
+  ws-changed --ext ts,tsx --not-files '**/generated/**'`;
 
 function packageVersion(): string {
   for (const candidate of ['../package.json', './package.json']) {
@@ -59,6 +70,7 @@ interface Parsed {
   onlyChanged: boolean;
   dirs: boolean;
   why: boolean;
+  exts: boolean;
   list: boolean;
   graph: boolean;
   json: boolean;
@@ -78,12 +90,16 @@ export function parseArgs(argv: string[]): Parsed {
   const global: string[] = [];
   const include: string[] = [];
   const exclude: string[] = [];
+  const ext: string[] = [];
+  const files: string[] = [];
+  const notFiles: string[] = [];
   const overrides: Partial<WsChangedConfig> = {};
   const parsed: Parsed = {
     overrides,
     onlyChanged: false,
     dirs: false,
     why: false,
+    exts: false,
     list: false,
     graph: false,
     json: false,
@@ -135,6 +151,15 @@ export function parseArgs(argv: string[]): Parsed {
     case '--exclude':
       pushList(exclude, next());
       break;
+    case '--ext':
+      pushList(ext, next());
+      break;
+    case '--files':
+      pushList(files, next());
+      break;
+    case '--not-files':
+      pushList(notFiles, next());
+      break;
     case '--cwd':
       parsed.cwd = next();
       break;
@@ -146,6 +171,9 @@ export function parseArgs(argv: string[]): Parsed {
       break;
     case '--why':
       parsed.why = true;
+      break;
+    case '--exts':
+      parsed.exts = true;
       break;
     case '--list':
       parsed.list = true;
@@ -165,6 +193,13 @@ export function parseArgs(argv: string[]): Parsed {
   if (global.length) overrides.global = global;
   if (include.length) overrides.include = include;
   if (exclude.length) overrides.exclude = exclude;
+  if (ext.length || files.length || notFiles.length) {
+    overrides.files = {
+      ...(ext.length ? { ext } : {}),
+      ...(files.length ? { include: files } : {}),
+      ...(notFiles.length ? { exclude: notFiles } : {})
+    };
+  }
   return parsed;
 }
 
@@ -230,6 +265,14 @@ export function run(argv: string[] = process.argv.slice(2)): number {
 
     if (parsed.json) {
       console.log(JSON.stringify(runResult, null, 2));
+      return 0;
+    }
+
+    if (parsed.exts) {
+      for (const name of result.changed) {
+        const exts = result.extensionsByPackage[name] ?? [];
+        console.log(`${name}\t${exts.join(' ')}`);
+      }
       return 0;
     }
 

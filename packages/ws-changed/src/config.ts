@@ -28,10 +28,14 @@ export function loadConfig(params: {
     defaults: DEFAULT_CONFIG,
     // A changed lockfile or CI change should invalidate everything, so let the
     // environment inject a global-trigger list without a config file.
-    envLayer: (env) =>
-      env.WS_CHANGED_GLOBAL
+    envLayer: (env) => ({
+      ...(env.WS_CHANGED_GLOBAL
         ? { global: env.WS_CHANGED_GLOBAL.split(',').map((s) => s.trim()).filter(Boolean) }
-        : {}
+        : {}),
+      // A CI lane asks one question per extension set, so let the lane name its
+      // extensions in the environment rather than needing its own config file.
+      ...(env.WS_CHANGED_EXT ? { files: { ext: env.WS_CHANGED_EXT } } : {})
+    })
   });
   const result = loader.loadSync({
     cwd: params.cwd,

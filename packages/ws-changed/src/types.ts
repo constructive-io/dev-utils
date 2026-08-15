@@ -34,6 +34,28 @@ export interface Workspace {
   packages: WorkspacePackage[];
 }
 
+/**
+ * A filter over the changed *files*, applied before they are mapped to owning
+ * packages — the counterpart to {@link WsChangedConfig.include}/`exclude`,
+ * which filter the *packages*.
+ *
+ * This is what makes one changeset answer several questions: "which packages
+ * have changed SQL" and "which have changed TypeScript" are the same diff with
+ * a different `ext`, and a CI lane that rebuilds an image cares about neither
+ * when the only change is a `.md`.
+ *
+ * Same shapes and semantics as git-changed's `ext`/`include`/`exclude`, so a
+ * filter can move between the two without translation.
+ */
+export interface FileFilter {
+  /** Keep only these extensions: `'.sql'`, `'sql'`, `['.ts', '.tsx']`. */
+  ext?: string | string[];
+  /** Keep only paths matching these globs. */
+  include?: string[];
+  /** Drop paths matching these globs — generated trees, `dist/`, fixtures. */
+  exclude?: string[];
+}
+
 /** pnpm dependency edge kinds, so callers can select which ones count. */
 export type EdgeKind = 'prod' | 'dev' | 'peer' | 'optional';
 
@@ -93,6 +115,11 @@ export interface WsChangedConfig {
    * matches, {@link AffectedResult.global} is `true`.
    */
   global?: string[];
+  /**
+   * Filter the changed files before they are attributed to packages. A file the
+   * filter drops cannot make a package affected and cannot trigger `global`.
+   */
+  files?: FileFilter;
   /** Restrict discovered packages to those whose relDir matches these globs. */
   include?: string[];
   /** Drop discovered packages whose relDir matches these globs. */
@@ -128,4 +155,20 @@ export interface AffectedResult {
   globalMatches: string[];
   /** Per-package explanation of why it is affected. */
   why: AffectedReason[];
+  /**
+   * Distinct extensions among the changed files that survived the file filter,
+   * lowercased and sorted (`['.sql', '.ts']`). Extensionless files contribute
+   * nothing. Answers "did this branch touch any SQL at all?" without a second
+   * pass over the diff.
+   */
+  extensions: string[];
+  /**
+   * The extensions changed *within* each package that directly owns a change,
+   * keyed by package name. Dependents are absent — they own no changed file —
+   * so `extensionsByPackage[pkg]` is "what changed in `pkg`", not "what `pkg`
+   * might be affected by".
+   */
+  extensionsByPackage: Record<string, string[]>;
+  /** Changed paths dropped by the file filter, sorted. Empty without a filter. */
+  ignored: string[];
 }

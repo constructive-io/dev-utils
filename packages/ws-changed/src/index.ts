@@ -1,6 +1,6 @@
 export { affected, type AffectedParams } from './affected';
 export { DEFAULT_CONFIG, loadConfig } from './config';
-export { expandDirGlob, makeMatcher, toRel } from './glob';
+export { expandDirGlob, extOf, makeMatcher, normalizeExts, toRel } from './glob';
 export { WorkspaceGraph } from './graph';
 export { globProvider } from './providers/glob';
 export { pgpmProvider } from './providers/pgpm';
@@ -11,6 +11,7 @@ export type {
   AffectedReason,
   AffectedResult,
   EdgeKind,
+  FileFilter,
   GlobProviderConfig,
   PgpmProviderConfig,
   PnpmProviderConfig,
