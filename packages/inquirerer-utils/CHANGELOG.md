@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.13](https://github.com/constructive-io/dev-utils/compare/@inquirerer/utils@3.3.12...@inquirerer/utils@3.3.13) (2026-09-01)
+
+**Note:** Version bump only for package @inquirerer/utils
+
 ## [3.3.12](https://github.com/constructive-io/dev-utils/compare/@inquirerer/utils@3.3.11...@inquirerer/utils@3.3.12) (2026-08-04)
 
 **Note:** Version bump only for package @inquirerer/utils

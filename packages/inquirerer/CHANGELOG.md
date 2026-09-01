@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.4](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.3...inquirerer@4.9.4) (2026-09-01)
+
+### Bug Fixes
+
+- execute git/npm subcommands with argv arrays ([5768bb2](https://github.com/constructive-io/dev-utils/commit/5768bb268e43f8dff38325a4aaee4c185417ee8b))
+
 ## [4.9.3](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.2...inquirerer@4.9.3) (2026-08-04)
 
 ### Bug Fixes

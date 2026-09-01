@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.6](https://github.com/constructive-io/dev-utils/compare/@inquirerer/test@1.4.5...@inquirerer/test@1.4.6) (2026-09-01)
+
+**Note:** Version bump only for package @inquirerer/test
+
 ## [1.4.5](https://github.com/constructive-io/dev-utils/compare/@inquirerer/test@1.4.4...@inquirerer/test@1.4.5) (2026-08-04)
 
 **Note:** Version bump only for package @inquirerer/test

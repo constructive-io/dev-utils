@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.6](https://github.com/constructive-io/dev-utils/compare/genomic@5.6.5...genomic@5.6.6) (2026-09-01)
+
+### Bug Fixes
+
+- execute git/npm subcommands with argv arrays ([5768bb2](https://github.com/constructive-io/dev-utils/commit/5768bb268e43f8dff38325a4aaee4c185417ee8b))
+
 ## [5.6.5](https://github.com/constructive-io/dev-utils/compare/genomic@5.6.4...genomic@5.6.5) (2026-08-04)
 
 **Note:** Version bump only for package genomic
