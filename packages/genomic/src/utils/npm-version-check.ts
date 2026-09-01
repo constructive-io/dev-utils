@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 
 import { VersionCheckResult } from './types';
 
@@ -13,8 +13,9 @@ export async function checkNpmVersion(
   currentVersion: string
 ): Promise<VersionCheckResult> {
   try {
-    const latestVersion = execSync(
-      `npm view ${packageName} version`,
+    const latestVersion = execFileSync(
+      'npm',
+      ['view', packageName, 'version'],
       { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }
     ).trim();
 

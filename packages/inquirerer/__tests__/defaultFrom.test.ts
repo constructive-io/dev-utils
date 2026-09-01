@@ -7,11 +7,14 @@ import { Question } from '../src/question';
 
 jest.mock('readline');
 jest.mock('child_process', () => ({
-  execSync: jest.fn()
+  execSync: jest.fn(),
+  execFileSync: jest.fn()
 }));
 
-import { execSync } from 'child_process';
-const mockedExecSync = execSync as jest.MockedFunction<typeof execSync>;
+import { execFileSync } from 'child_process';
+const mockedExecFileSync = execFileSync as jest.MockedFunction<
+  typeof execFileSync
+>;
 
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -99,7 +102,7 @@ describe('Inquirerer - defaultFrom feature', () => {
 
   describe('git resolvers', () => {
     it('should use git.user.name as default', async () => {
-      mockedExecSync.mockReturnValue('John Doe\n' as any);
+      mockedExecFileSync.mockReturnValue('John Doe\n' as any);
 
       const prompter = new Inquirerer({
         input: mockInput,
@@ -118,14 +121,15 @@ describe('Inquirerer - defaultFrom feature', () => {
       const result = await prompter.prompt({}, questions);
 
       expect(result).toEqual({ authorName: 'John Doe' });
-      expect(mockedExecSync).toHaveBeenCalledWith(
-        'git config --global user.name',
+      expect(mockedExecFileSync).toHaveBeenCalledWith(
+        'git',
+        ['config', '--global', '--', 'user.name'],
         expect.any(Object)
       );
     });
 
     it('should use git.user.email as default', async () => {
-      mockedExecSync.mockReturnValue('john@example.com\n' as any);
+      mockedExecFileSync.mockReturnValue('john@example.com\n' as any);
 
       const prompter = new Inquirerer({
         input: mockInput,
@@ -144,14 +148,15 @@ describe('Inquirerer - defaultFrom feature', () => {
       const result = await prompter.prompt({}, questions);
 
       expect(result).toEqual({ authorEmail: 'john@example.com' });
-      expect(mockedExecSync).toHaveBeenCalledWith(
-        'git config --global user.email',
+      expect(mockedExecFileSync).toHaveBeenCalledWith(
+        'git',
+        ['config', '--global', '--', 'user.email'],
         expect.any(Object)
       );
     });
 
     it('should fallback to static default when git config fails', async () => {
-      mockedExecSync.mockImplementation(() => {
+      mockedExecFileSync.mockImplementation(() => {
         throw new Error('Git not configured');
       });
 
@@ -176,7 +181,7 @@ describe('Inquirerer - defaultFrom feature', () => {
     });
 
     it('should resolve multiple git fields', async () => {
-      mockedExecSync
+      mockedExecFileSync
         .mockReturnValueOnce('Jane Smith\n' as any)
         .mockReturnValueOnce('jane@example.com\n' as any);
 
@@ -339,7 +344,7 @@ describe('Inquirerer - defaultFrom feature', () => {
 
   describe('priority and fallbacks', () => {
     it('should prioritize argv over defaultFrom', async () => {
-      mockedExecSync.mockReturnValue('Git User\n' as any);
+      mockedExecFileSync.mockReturnValue('Git User\n' as any);
 
       const prompter = new Inquirerer({
         input: mockInput,
@@ -362,7 +367,7 @@ describe('Inquirerer - defaultFrom feature', () => {
     });
 
     it('should use undefined when resolver returns undefined and no static default', async () => {
-      mockedExecSync.mockImplementation(() => {
+      mockedExecFileSync.mockImplementation(() => {
         throw new Error('Git not configured');
       });
 
@@ -386,7 +391,7 @@ describe('Inquirerer - defaultFrom feature', () => {
     });
 
     it('should handle mixed defaultFrom and static defaults', async () => {
-      mockedExecSync.mockReturnValue('Jane Doe\n' as any);
+      mockedExecFileSync.mockReturnValue('Jane Doe\n' as any);
 
       const prompter = new Inquirerer({
         input: mockInput,
@@ -527,7 +532,7 @@ describe('Inquirerer - defaultFrom feature', () => {
     });
 
     it('should not override when defaultFrom resolver fails and field is required', async () => {
-      mockedExecSync.mockImplementation(() => {
+      mockedExecFileSync.mockImplementation(() => {
         throw new Error('Git not configured');
       });
 

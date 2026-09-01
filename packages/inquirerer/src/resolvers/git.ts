@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 
 import type { ResolverRegistry } from './types';
 
@@ -9,7 +9,7 @@ import type { ResolverRegistry } from './types';
  */
 export function getGitConfig(key: string): string | undefined {
   try {
-    const result = execSync(`git config --global ${key}`, {
+    const result = execFileSync('git', ['config', '--global', '--', key], {
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'ignore'] // Suppress stderr
     });

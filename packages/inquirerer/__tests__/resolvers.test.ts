@@ -10,10 +10,14 @@ import {
 // Mock child_process.execSync for git config tests
 jest.mock('child_process', () => ({
   execSync: jest.fn(),
+  execFileSync: jest.fn(),
 }));
 
-import { execSync } from 'child_process';
+import { execFileSync,execSync } from 'child_process';
 const mockedExecSync = execSync as jest.MockedFunction<typeof execSync>;
+const mockedExecFileSync = execFileSync as jest.MockedFunction<
+  typeof execFileSync
+>;
 
 describe('DefaultResolverRegistry', () => {
   let registry: DefaultResolverRegistry;
@@ -166,13 +170,14 @@ describe('Git Resolvers', () => {
 
   describe('getGitConfig', () => {
     it('should return git config value when successful', () => {
-      mockedExecSync.mockReturnValue('John Doe\n' as any);
+      mockedExecFileSync.mockReturnValue('John Doe\n' as any);
 
       const result = getGitConfig('user.name');
 
       expect(result).toBe('John Doe');
-      expect(mockedExecSync).toHaveBeenCalledWith(
-        'git config --global user.name',
+      expect(mockedExecFileSync).toHaveBeenCalledWith(
+        'git',
+        ['config', '--global', '--', 'user.name'],
         expect.objectContaining({
           encoding: 'utf8',
           stdio: ['pipe', 'pipe', 'ignore'],
@@ -181,7 +186,7 @@ describe('Git Resolvers', () => {
     });
 
     it('should trim whitespace from git config value', () => {
-      mockedExecSync.mockReturnValue('  test@example.com  \n' as any);
+      mockedExecFileSync.mockReturnValue('  test@example.com  \n' as any);
 
       const result = getGitConfig('user.email');
 
@@ -189,7 +194,7 @@ describe('Git Resolvers', () => {
     });
 
     it('should return undefined when git config fails', () => {
-      mockedExecSync.mockImplementation(() => {
+      mockedExecFileSync.mockImplementation(() => {
         throw new Error('Git config not found');
       });
 
@@ -199,7 +204,7 @@ describe('Git Resolvers', () => {
     });
 
     it('should return undefined when git config returns empty string', () => {
-      mockedExecSync.mockReturnValue('' as any);
+      mockedExecFileSync.mockReturnValue('' as any);
 
       const result = getGitConfig('user.name');
 
@@ -209,7 +214,7 @@ describe('Git Resolvers', () => {
 
   describe('git.user.name resolver', () => {
     it('should resolve git user name', async () => {
-      mockedExecSync.mockReturnValue('Jane Smith\n' as any);
+      mockedExecFileSync.mockReturnValue('Jane Smith\n' as any);
 
       const result = await globalResolverRegistry.resolve('git.user.name');
 
@@ -217,7 +222,7 @@ describe('Git Resolvers', () => {
     });
 
     it('should return undefined when git config fails', async () => {
-      mockedExecSync.mockImplementation(() => {
+      mockedExecFileSync.mockImplementation(() => {
         throw new Error('Git not configured');
       });
 
@@ -229,7 +234,7 @@ describe('Git Resolvers', () => {
 
   describe('git.user.email resolver', () => {
     it('should resolve git user email', async () => {
-      mockedExecSync.mockReturnValue('jane@example.com\n' as any);
+      mockedExecFileSync.mockReturnValue('jane@example.com\n' as any);
 
       const result = await globalResolverRegistry.resolve('git.user.email');
 
@@ -237,7 +242,7 @@ describe('Git Resolvers', () => {
     });
 
     it('should return undefined when git config fails', async () => {
-      mockedExecSync.mockImplementation(() => {
+      mockedExecFileSync.mockImplementation(() => {
         throw new Error('Git not configured');
       });
 
