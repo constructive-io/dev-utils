@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import * as fs from 'fs';
 import { createSpinner } from 'inquirerer';
 import * as os from 'os';
@@ -101,20 +101,19 @@ export class GitCloner {
     const singleBranch = options?.singleBranch ?? true;
     const silent = options?.silent ?? true;
 
-    const branchArgs = branch ? ` --branch ${branch}` : '';
-    const singleBranchArgs = singleBranch ? ' --single-branch' : '';
-    const depthArgs = ` --depth ${depth}`;
-
-    const command = `git clone${branchArgs}${singleBranchArgs}${depthArgs} ${url} ${destination}`;
+    const args = ['clone'];
+    if (branch) args.push('--branch', branch);
+    if (singleBranch) args.push('--single-branch');
+    args.push('--depth', String(depth), '--', url, destination);
 
     const spinner = silent ? createSpinner(`Cloning ${url}...`) : null;
-    
+
     try {
       if (spinner) {
         spinner.start();
       }
-      
-      execSync(command, { 
+
+      execFileSync('git', args, {
         stdio: silent ? 'pipe' : 'inherit',
         encoding: 'utf-8'
       });

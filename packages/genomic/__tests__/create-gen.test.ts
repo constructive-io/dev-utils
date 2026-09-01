@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
@@ -7,7 +7,7 @@ import { ExtractedVariables, extractVariables, GitCloner,promptUser, replaceVari
 
 jest.mock('child_process', () => {
   return {
-    execSync: jest.fn(),
+    execFileSync: jest.fn(),
   };
 });
 
@@ -560,23 +560,31 @@ module.exports = {
   });
 
   describe('GitCloner', () => {
-    const execSyncMock = execSync as jest.MockedFunction<typeof execSync>;
+    const execFileSyncMock = execFileSync as jest.MockedFunction<
+      typeof execFileSync
+    >;
     let gitCloner: GitCloner;
 
     beforeEach(() => {
       gitCloner = new GitCloner();
-      execSyncMock.mockReset();
-      execSyncMock.mockImplementation(() => undefined);
+      execFileSyncMock.mockReset();
+      execFileSyncMock.mockImplementation(() => undefined);
     });
 
     it('clones default branch when no branch provided', () => {
       const tempDir = path.join(testTempDir, 'clone-test');
       gitCloner.clone('https://github.com/example/repo.git', tempDir);
-      const command = execSyncMock.mock.calls[0][0] as string;
-      expect(command).toContain(
-        'git clone --single-branch --depth 1 https://github.com/example/repo.git'
-      );
-      expect(command.trim().endsWith(tempDir)).toBe(true);
+      const [file, args] = execFileSyncMock.mock.calls[0];
+      expect(file).toBe('git');
+      expect(args).toEqual([
+        'clone',
+        '--single-branch',
+        '--depth',
+        '1',
+        '--',
+        'https://github.com/example/repo.git',
+        tempDir,
+      ]);
     });
 
     it('clones a specific branch when provided', () => {
@@ -584,11 +592,26 @@ module.exports = {
       gitCloner.clone('https://github.com/example/repo.git', tempDir, {
         branch: 'dev',
       });
-      const command = execSyncMock.mock.calls[0][0] as string;
-      expect(command).toContain(
-        'git clone --branch dev --single-branch --depth 1 https://github.com/example/repo.git'
-      );
-      expect(command.trim().endsWith(tempDir)).toBe(true);
+      const [file, args] = execFileSyncMock.mock.calls[0];
+      expect(file).toBe('git');
+      expect(args).toEqual([
+        'clone',
+        '--branch',
+        'dev',
+        '--single-branch',
+        '--depth',
+        '1',
+        '--',
+        'https://github.com/example/repo.git',
+        tempDir,
+      ]);
+    });
+
+    it('passes metacharacter-bearing destinations as a single argv entry', () => {
+      const tempDir = path.join(testTempDir, 'a; touch pwned');
+      gitCloner.clone('https://github.com/example/repo.git', tempDir);
+      const [, args] = execFileSyncMock.mock.calls[0];
+      expect(args?.[args.length - 1]).toBe(tempDir);
     });
   });
 

@@ -7,11 +7,14 @@ import { Question } from '../src/question';
 
 jest.mock('readline');
 jest.mock('child_process', () => ({
-  execSync: jest.fn()
+  execSync: jest.fn(),
+  execFileSync: jest.fn()
 }));
 
-import { execSync } from 'child_process';
-const mockedExecSync = execSync as jest.MockedFunction<typeof execSync>;
+import { execFileSync } from 'child_process';
+const mockedExecFileSync = execFileSync as jest.MockedFunction<
+  typeof execFileSync
+>;
 
 describe('Inquirerer - setFrom feature', () => {
   let mockWrite: jest.Mock;
@@ -106,7 +109,7 @@ describe('Inquirerer - setFrom feature', () => {
     });
 
     it('should use git.user.name with setFrom', async () => {
-      mockedExecSync.mockReturnValue('John Doe\n' as any);
+      mockedExecFileSync.mockReturnValue('John Doe\n' as any);
 
       const prompter = new Inquirerer({
         input: mockInput,
@@ -125,8 +128,9 @@ describe('Inquirerer - setFrom feature', () => {
       const result = await prompter.prompt({}, questions);
 
       expect(result).toEqual({ authorName: 'John Doe' });
-      expect(mockedExecSync).toHaveBeenCalledWith(
-        'git config --global user.name',
+      expect(mockedExecFileSync).toHaveBeenCalledWith(
+        'git',
+        ['config', '--global', '--', 'user.name'],
         expect.any(Object)
       );
     });
@@ -216,7 +220,7 @@ describe('Inquirerer - setFrom feature', () => {
     });
 
     it('should allow both setFrom and defaultFrom on different questions', async () => {
-      mockedExecSync.mockReturnValue('Git User\n' as any);
+      mockedExecFileSync.mockReturnValue('Git User\n' as any);
 
       const prompter = new Inquirerer({
         input: mockInput,
