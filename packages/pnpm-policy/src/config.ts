@@ -8,7 +8,13 @@ import { parse as parseYaml } from 'yaml';
 
 import { parseDuration } from './duration';
 import { PolicyError } from './errors';
-import type { AllowedBuild, PolicyConfig, PolicyException, ResolvedConfig } from './types';
+import type {
+  AllowedBuild,
+  DeniedBuild,
+  PolicyConfig,
+  PolicyException,
+  ResolvedConfig
+} from './types';
 
 /** Filenames searched for, in order, when no explicit path is given. */
 export const CONFIG_FILENAMES = ['pnpm-policy.yaml', 'pnpm-policy.yml', 'pnpm-policy.json'];
@@ -39,10 +45,13 @@ export function readConfig(file: string): PolicyConfig {
   return parsed;
 }
 
-function normalizeAllowBuilds(input: PolicyConfig['allowBuilds']): AllowedBuild[] {
+function normalizeBuilds(
+  key: 'allowBuilds' | 'denyBuilds',
+  input: PolicyConfig['allowBuilds'] | PolicyConfig['denyBuilds']
+): Array<AllowedBuild | DeniedBuild> {
   if (!input) return [];
 
-  const builds: AllowedBuild[] = Array.isArray(input)
+  const builds: Array<AllowedBuild | DeniedBuild> = Array.isArray(input)
     ? input.map((entry) =>
       typeof entry === 'string' ? { package: entry } : { ...entry }
     )
@@ -53,12 +62,23 @@ function normalizeAllowBuilds(input: PolicyConfig['allowBuilds']): AllowedBuild[
 
   for (const build of builds) {
     if (!build.package) {
-      throw new PolicyError('An allowBuilds entry is missing a package name');
+      throw new PolicyError(`A ${key} entry is missing a package name`);
     }
   }
 
   // Sorted so the generated file does not churn on config reordering.
   return builds.sort((a, b) => a.package.localeCompare(b.package));
+}
+
+function checkBuildConflicts(allow: AllowedBuild[], deny: DeniedBuild[]): void {
+  const denied = new Set(deny.map((build) => build.package));
+  for (const build of allow) {
+    if (denied.has(build.package)) {
+      throw new PolicyError(
+        `"${build.package}" is listed in both allowBuilds and denyBuilds; pick one`
+      );
+    }
+  }
 }
 
 function normalizeExceptions(input: PolicyException[] | undefined): PolicyException[] {
@@ -107,6 +127,9 @@ function normalizeInventory(value: string | string[] | undefined): string[] {
 
 /** Apply defaults and convert a config into the shape the resolver consumes. */
 export function normalizeConfig(config: PolicyConfig): ResolvedConfig {
+  const allowBuilds = normalizeBuilds('allowBuilds', config.allowBuilds);
+  const denyBuilds = normalizeBuilds('denyBuilds', config.denyBuilds);
+  checkBuildConflicts(allowBuilds, denyBuilds);
   return {
     minimumReleaseAgeMinutes: parseDuration(
       config.minimumReleaseAge ?? DEFAULT_MINIMUM_RELEASE_AGE
@@ -116,7 +139,8 @@ export function normalizeConfig(config: PolicyConfig): ResolvedConfig {
     scopes: normalizeScopes(config.scopes),
     inventory: normalizeInventory(config.inventory),
     intersect: config.intersect ?? true,
-    allowBuilds: normalizeAllowBuilds(config.allowBuilds),
+    allowBuilds,
+    denyBuilds,
     exceptions: normalizeExceptions(config.exceptions),
     settings: config.settings ?? {}
   };

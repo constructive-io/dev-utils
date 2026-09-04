@@ -117,6 +117,43 @@ describe('resolvePolicy', () => {
     expect(policy.settings.allowBuilds).toBeUndefined();
   });
 
+  it('writes denyBuilds as false entries in the same allowBuilds map', () => {
+    const { settings, comments } = resolve({
+      allowBuilds: { esbuild: 'native binary' },
+      denyBuilds: { nx: 'prebuilt binary ships as an optional dep', '@parcel/watcher': 'same' }
+    });
+    expect(settings.allowBuilds).toEqual({
+      '@parcel/watcher': false,
+      esbuild: true,
+      nx: false
+    });
+    expect(commentAt(comments.inline, ['allowBuilds', 'nx'])).toBe(
+      'prebuilt binary ships as an optional dep'
+    );
+    expect(commentAt(comments.before, ['allowBuilds'])).toMatch(/false means reviewed/);
+  });
+
+  it('emits a map when only denyBuilds is set', () => {
+    const { settings } = resolve({ denyBuilds: ['nx'] });
+    expect(settings.allowBuilds).toEqual({ nx: false });
+  });
+
+  it('writes denyBuilds as ignoredBuiltDependencies for older pnpm', () => {
+    const policy = resolvePolicy({
+      config: normalizeConfig({ allowBuilds: ['esbuild'], denyBuilds: ['nx', '@parcel/watcher'] }),
+      buildsKey: 'onlyBuiltDependencies'
+    });
+    expect(policy.settings.onlyBuiltDependencies).toEqual(['esbuild']);
+    expect(policy.settings.ignoredBuiltDependencies).toEqual(['@parcel/watcher', 'nx']);
+    expect(policy.settings.allowBuilds).toBeUndefined();
+  });
+
+  it('rejects a package that is both allowed and denied', () => {
+    expect(() => normalizeConfig({ allowBuilds: ['nx'], denyBuilds: ['nx'] })).toThrow(
+      /both allowBuilds and denyBuilds/
+    );
+  });
+
   it('passes extra settings through verbatim', () => {
     const { settings } = resolve({ settings: { trustPolicy: 'strict' } });
     expect(settings.trustPolicy).toBe('strict');

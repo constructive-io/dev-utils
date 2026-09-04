@@ -105,6 +105,7 @@ settings:
 | `inventory` | path, package, or list | – | Where the inventory comes from. A list is merged. |
 | `intersect` | boolean | `true` | Only emit names this workspace actually resolves. |
 | `allowBuilds` | map or list | `{}` | Dependencies permitted to run install scripts. |
+| `denyBuilds` | map or list | `{}` | Dependencies whose install scripts were reviewed and are not needed. |
 | `exceptions` | list | `[]` | Third-party bypasses, each with a reason. |
 | `settings` | map | `{}` | Extra pnpm settings to include in the managed block. |
 
@@ -169,6 +170,18 @@ allowBuilds:
 That becomes pnpm's `allowBuilds` map (pnpm ≥ 10.16), with the reasons as inline comments. For older pnpm, `--builds-key onlyBuiltDependencies` emits the array form instead.
 
 Unlike the release-age exemptions, this list is **not** derived from anything: a package that runs install scripts is a deliberate trust decision, whoever published it.
+
+### `denyBuilds`
+
+pnpm treats a dependency with an install script that appears in neither list as an open question: it warns, and pnpm 11 fails the install with `ERR_PNPM_IGNORED_BUILDS` until someone runs the interactive `pnpm approve-builds`. Most such scripts are fallbacks — `nx`, `@parcel/watcher` and `unrs-resolver` all ship prebuilt binaries as optional dependencies and only compile when none fits. Close the question in the policy, with the reason, instead of in a prompt:
+
+```yaml
+denyBuilds:
+  nx: prebuilt binary ships as an optional dep
+  "@parcel/watcher": prebuilt binary ships as an optional dep
+```
+
+These become `false` entries in the same `allowBuilds` map (or, with `--builds-key onlyBuiltDependencies`, an `ignoredBuiltDependencies` array). A name in both lists is an error. Do not run `pnpm approve-builds` in a workspace managed by pnpm-policy: it writes an `allowBuilds` entry that the next `generate` overwrites and that `check` reports as drift.
 
 ## Understanding what you depend on
 

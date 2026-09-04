@@ -1,2 +1,8 @@
 packages:
   - 'packages/*'
+
+# Install scripts: true runs them, false means reviewed and not needed.
+allowBuilds:
+  '@launchql/protobufjs': false # postinstall only prints a version-scheme notice
+  nx: false # prebuilt binary ships as an optional dep
+  unrs-resolver: false # prebuilt binary ships as an optional dep

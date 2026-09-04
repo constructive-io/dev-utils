@@ -20,6 +20,9 @@ import type {
 /** Which pnpm key carries the build allowlist. */
 export type BuildsKey = 'allowBuilds' | 'onlyBuiltDependencies';
 
+/** The pre-10.16 companion to `onlyBuiltDependencies`, carrying the denials. */
+export const IGNORED_BUILDS_KEY = 'ignoredBuiltDependencies';
+
 export interface ResolveOptions {
   config: ResolvedConfig;
   inventory?: Inventory;
@@ -105,8 +108,8 @@ function buildComments(
         `Exempt from the wait: ${sources.join(', ')}.`,
         config.maintainers.length
           ? `First-party membership comes from what ${config.maintainers.join(', ')} ${
-              config.maintainers.length === 1 ? 'publishes' : 'publish'
-            } on npm — waiting on your own release protects nothing.`
+            config.maintainers.length === 1 ? 'publishes' : 'publish'
+          } on npm — waiting on your own release protects nothing.`
           : report.firstPartyPackages.length
             ? 'First-party membership comes from the inventory.'
             : 'First-party membership comes from the scopes claimed in pnpm-policy.yaml.'
@@ -124,12 +127,31 @@ function buildComments(
     index++;
   }
 
-  if (config.allowBuilds.length) {
-    before.push([[buildsKey], 'The only dependencies permitted to run install scripts.']);
+  if (buildsKey === 'allowBuilds') {
+    if (config.allowBuilds.length || config.denyBuilds.length) {
+      before.push([
+        [buildsKey],
+        config.denyBuilds.length
+          ? 'Install scripts: true runs them, false means reviewed and not needed.'
+          : 'The only dependencies permitted to run install scripts.'
+      ]);
+    }
+    for (const build of [...config.allowBuilds, ...config.denyBuilds]) {
+      if (build.reason) inline.push([[buildsKey, build.package], build.reason]);
+    }
+  } else {
+    if (config.allowBuilds.length) {
+      before.push([[buildsKey], 'The only dependencies permitted to run install scripts.']);
+    }
     config.allowBuilds.forEach((build, i) => {
-      if (!build.reason) return;
-      inline.push([[buildsKey, buildsKey === 'allowBuilds' ? build.package : i], build.reason]);
+      if (build.reason) inline.push([[buildsKey, i], build.reason]);
     });
+    if (config.denyBuilds.length) {
+      before.push([[IGNORED_BUILDS_KEY], 'Install scripts reviewed and not needed.']);
+      config.denyBuilds.forEach((build, i) => {
+        if (build.reason) inline.push([[IGNORED_BUILDS_KEY, i], build.reason]);
+      });
+    }
   }
 
   before.push([
@@ -170,11 +192,24 @@ export function resolvePolicy(options: ResolveOptions): ResolvedPolicy {
   if (exclude.length) {
     settings.minimumReleaseAgeExclude = exclude;
   }
-  if (config.allowBuilds.length) {
-    settings[buildsKey] =
-      buildsKey === 'allowBuilds'
-        ? Object.fromEntries(config.allowBuilds.map((build) => [build.package, true]))
-        : config.allowBuilds.map((build) => build.package);
+  if (buildsKey === 'allowBuilds') {
+    if (config.allowBuilds.length || config.denyBuilds.length) {
+      // One map, sorted by name, so allowed and denied entries interleave the
+      // way a reader scanning for a package expects.
+      settings.allowBuilds = Object.fromEntries(
+        [
+          ...config.allowBuilds.map((build): [string, boolean] => [build.package, true]),
+          ...config.denyBuilds.map((build): [string, boolean] => [build.package, false])
+        ].sort(([a], [b]) => a.localeCompare(b))
+      );
+    }
+  } else {
+    if (config.allowBuilds.length) {
+      settings.onlyBuiltDependencies = config.allowBuilds.map((build) => build.package);
+    }
+    if (config.denyBuilds.length) {
+      settings[IGNORED_BUILDS_KEY] = config.denyBuilds.map((build) => build.package);
+    }
   }
   settings.blockExoticSubdeps = config.blockExoticSubdeps;
   Object.assign(settings, config.settings);
@@ -192,6 +227,7 @@ export function managedKeys(buildsKey: BuildsKey, extra: string[] = []): string[
     'minimumReleaseAge',
     'minimumReleaseAgeExclude',
     buildsKey,
+    ...(buildsKey === 'onlyBuiltDependencies' ? [IGNORED_BUILDS_KEY] : []),
     'blockExoticSubdeps',
     ...extra
   ];

@@ -23,6 +23,12 @@ export interface AllowedBuild {
   reason?: string;
 }
 
+/** A dependency whose install scripts were reviewed and deliberately left off. */
+export interface DeniedBuild {
+  package: string;
+  reason?: string;
+}
+
 export interface PolicyConfig {
   /**
    * How long a third-party release must exist before it may be installed.
@@ -55,6 +61,12 @@ export interface PolicyConfig {
   intersect?: boolean;
   /** Dependencies allowed to run install scripts. */
   allowBuilds?: Array<string | AllowedBuild> | Record<string, string | true>;
+  /**
+   * Dependencies whose install scripts are known and not needed. pnpm treats an
+   * unlisted script as an open question — it warns, or on pnpm 11 fails the
+   * install and asks for `pnpm approve-builds` — so a `false` here closes it.
+   */
+  denyBuilds?: Array<string | DeniedBuild> | Record<string, string | false>;
   /** Third-party escape hatches. */
   exceptions?: PolicyException[];
   /** Extra pnpm settings written verbatim into the workspace file. */
@@ -71,6 +83,7 @@ export interface ResolvedConfig {
   inventory: string[];
   intersect: boolean;
   allowBuilds: AllowedBuild[];
+  denyBuilds: DeniedBuild[];
   exceptions: PolicyException[];
   settings: Record<string, unknown>;
 }

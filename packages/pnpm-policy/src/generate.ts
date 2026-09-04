@@ -67,8 +67,8 @@ function load(options: RunOptions): Loaded {
   // to trust — without flattening them into a copy checked in beside the config.
   const inventory = config.inventory.length
     ? mergeInventories(
-        config.inventory.map((reference) => loadOneInventory(configFile, reference))
-      )
+      config.inventory.map((reference) => loadOneInventory(configFile, reference))
+    )
     : undefined;
 
   if (!inventory && config.maintainers.length && !config.scopes.length) {
