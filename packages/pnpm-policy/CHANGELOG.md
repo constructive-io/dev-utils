@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.4.0...pnpm-policy@0.5.0) (2026-09-04)
+
+### Features
+
+- **pnpm-policy:** denyBuilds — record install scripts that were reviewed and are not needed ([45fd581](https://github.com/constructive-io/dev-utils/commit/45fd581c23b51fca025d716ae42cf4eda0122d9f))
+
 # [0.4.0](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.3.0...pnpm-policy@0.4.0) (2026-08-06)
 
 ### Features
