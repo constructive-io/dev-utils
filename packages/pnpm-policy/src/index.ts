@@ -12,9 +12,7 @@ export { PolicyError } from './errors';
 export type { CheckResult, GenerateResult, RunOptions } from './generate';
 export { check, generate } from './generate';
 export type { DependencyGraph } from './graph';
-export { readLockfileGraph, readWorkspaceGraph, reachableFrom } from './graph';
-export type { PackageOrigin } from './origins';
-export { groupByOwner, namesFromOwners, packageOrigins, repositorySlug } from './origins';
+export { reachableFrom,readLockfileGraph, readWorkspaceGraph } from './graph';
 export type { BuildInventoryOptions } from './inventory';
 export {
   buildInventory,
@@ -31,8 +29,10 @@ export {
   readLockfilePackages,
   readWorkspacePackages
 } from './lockfile';
+export type { PackageOrigin } from './origins';
+export { groupByOwner, namesFromOwners, packageOrigins, repositorySlug } from './origins';
 export type { BuildsKey, ResolveOptions } from './policy';
-export { exceptionPattern, managedKeys, resolvePolicy } from './policy';
+export { exceptionPattern, IGNORED_BUILDS_KEY, managedKeys, resolvePolicy } from './policy';
 export type { RegistryOptions } from './registry';
 export {
   DEFAULT_REGISTRY,
@@ -42,6 +42,7 @@ export {
 } from './registry';
 export type {
   AllowedBuild,
+  DeniedBuild,
   Duration,
   Inventory,
   PolicyConfig,

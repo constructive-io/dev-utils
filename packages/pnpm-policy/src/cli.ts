@@ -6,7 +6,7 @@ import { findConfig, loadConfig } from './config';
 import { formatDuration } from './duration';
 import { PolicyError } from './errors';
 import { check, generate } from './generate';
-import { readWorkspaceGraph, reachableFrom } from './graph';
+import { reachableFrom,readWorkspaceGraph } from './graph';
 import { buildInventory, writeInventory } from './inventory';
 import { readWorkspacePackages } from './lockfile';
 import { groupByOwner, namesFromOwners, packageOrigins } from './origins';
@@ -69,6 +69,12 @@ inventory: ./pnpm-policy.inventory.json
 # Dependencies allowed to run install scripts. The value is the reason.
 allowBuilds:
   esbuild: native binary, downloaded at install time
+
+# Dependencies whose install scripts you have looked at and do not need. Without
+# a decision here pnpm warns (or, on pnpm 11, refuses to install) until someone
+# runs \`pnpm approve-builds\` by hand.
+denyBuilds: {}
+#  nx: prebuilt binary ships as an optional dep
 
 # Third-party escape hatches. A reason is required; \`until\` makes the waiver
 # expire so \`pnpm-policy check\` reminds you to re-justify or remove it.
