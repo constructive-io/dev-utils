@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.5.0...pnpm-policy@0.6.0) (2026-09-17)
+
+### Features
+
+- **pnpm-policy:** list first-party packages inline with `packages` ([57999b1](https://github.com/constructive-io/dev-utils/commit/57999b12e85467b6601a70f400feb8031f6ff0d5))
+
 # [0.5.0](https://github.com/constructive-io/dev-utils/compare/pnpm-policy@0.4.0...pnpm-policy@0.5.0) (2026-09-04)
 
 ### Features
