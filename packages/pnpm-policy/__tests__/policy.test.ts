@@ -67,6 +67,52 @@ describe('resolvePolicy', () => {
     expect(report.scopes).toContain('@launchql/*');
   });
 
+  it('merges, sorts, and deduplicates directly claimed package names', () => {
+    const { report, settings } = resolve({
+      packages: [' zeta ', 'graphile-*', 'inquirerer', 'zeta']
+    });
+    expect(report.firstPartyPackages).toEqual([
+      'graphile-*',
+      'inquirerer',
+      'pgsql-parser',
+      'yanse',
+      'zeta'
+    ]);
+    expect(settings.minimumReleaseAgeExclude).toEqual([
+      '@constructive-io/*',
+      '@pgsql/*',
+      'graphile-*',
+      'inquirerer',
+      'pgsql-parser',
+      'yanse',
+      'zeta'
+    ]);
+  });
+
+  it('does not repeat a direct package covered by a scope glob', () => {
+    const { report } = resolve({ packages: ['@constructive-io/new', 'owned-package'] });
+    expect(report.firstPartyPackages).toEqual([
+      'owned-package',
+      'pgsql-parser',
+      'inquirerer',
+      'yanse'
+    ].sort());
+  });
+
+  it('does not intersect directly claimed names away', () => {
+    const { report, settings } = resolve({ packages: ['owned-package'] }, ['yanse']);
+    expect(report.firstPartyPackages).toEqual(['owned-package', 'yanse']);
+    expect(report.omittedPackages).toEqual(['inquirerer', 'pgsql-parser']);
+    expect(settings.minimumReleaseAgeExclude).toContain('owned-package');
+  });
+
+  it('explains direct package claims in generated comments', () => {
+    const { comments } = resolve({ packages: ['owned-package'] });
+    expect(commentAt(comments.before, ['minimumReleaseAgeExclude'])).toContain(
+      'inventory and the names claimed in pnpm-policy.yaml'
+    );
+  });
+
   it('does not list a package a scope glob already covers', () => {
     const { report } = resolvePolicy({
       config: normalizeConfig({}),
@@ -216,6 +262,18 @@ describe('normalizeConfig', () => {
       '@launchql',
       '@pgsql'
     ]);
+  });
+
+  it('normalizes directly claimed packages', () => {
+    expect(normalizeConfig({
+      packages: [' zeta ', '', 'graphile-*', 'zeta', 'alpha']
+    }).packages).toEqual(['alpha', 'graphile-*', 'zeta']);
+  });
+
+  it('rejects a directly claimed package that is not a string', () => {
+    expect(() => normalizeConfig({ packages: ['valid', 42] as never })).toThrow(
+      /packages entry must be a string/
+    );
   });
 
   it('sorts allowBuilds so the generated file does not churn', () => {

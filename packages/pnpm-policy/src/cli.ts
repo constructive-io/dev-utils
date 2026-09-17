@@ -63,6 +63,10 @@ maintainers: []
 # packages you publish there tomorrow — only list scopes nobody else can publish to.
 scopes: []
 
+# First-party package names to exempt directly (pnpm globs are allowed).
+# packages:
+#   - my-package
+
 # Built by \`pnpm-policy inventory\`; commit it and review its diffs.
 inventory: ./pnpm-policy.inventory.json
 

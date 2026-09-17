@@ -52,7 +52,8 @@ function buildExclude(options: ResolveOptions): {
   // it stays correct when a new package lands there tomorrow.
   const scopes = [...new Set([...(inventory?.scopes ?? []), ...config.scopes])].sort();
 
-  const known = inventory?.packages ?? [];
+  const explicit = new Set(config.packages);
+  const known = [...new Set([...(inventory?.packages ?? []), ...config.packages])].sort();
   const intersect = config.intersect && resolved != null;
 
   const packages: string[] = [];
@@ -60,7 +61,7 @@ function buildExclude(options: ResolveOptions): {
   for (const name of known) {
     // A name already covered by a scope glob would be noise in the file.
     if (scopes.some((scope) => name.startsWith(`${scope}/`))) continue;
-    if (intersect && !resolved.has(name)) omitted.push(name);
+    if (intersect && !explicit.has(name) && !resolved.has(name)) omitted.push(name);
     else packages.push(name);
   }
 
@@ -80,7 +81,8 @@ function buildComments(
   config: ResolvedConfig,
   report: PolicyReport,
   buildsKey: BuildsKey,
-  excludeCount: number
+  excludeCount: number,
+  inventory?: Inventory
 ): PolicyComments {
   const before: Array<[CommentPath, string]> = [];
   const inline: Array<[CommentPath, string]> = [];
@@ -110,9 +112,13 @@ function buildComments(
           ? `First-party membership comes from what ${config.maintainers.join(', ')} ${
             config.maintainers.length === 1 ? 'publishes' : 'publish'
           } on npm — waiting on your own release protects nothing.`
-          : report.firstPartyPackages.length
-            ? 'First-party membership comes from the inventory.'
-            : 'First-party membership comes from the scopes claimed in pnpm-policy.yaml.'
+          : config.packages.length && inventory
+            ? 'First-party membership comes from the inventory and the names claimed in pnpm-policy.yaml.'
+            : config.packages.length
+              ? 'First-party membership comes from the names claimed in pnpm-policy.yaml.'
+              : report.firstPartyPackages.length
+                ? 'First-party membership comes from the inventory.'
+                : 'First-party membership comes from the scopes claimed in pnpm-policy.yaml.'
       ].join('\n')
     ]);
   }
@@ -216,7 +222,7 @@ export function resolvePolicy(options: ResolveOptions): ResolvedPolicy {
 
   return {
     settings,
-    comments: buildComments(config, report, buildsKey, exclude.length),
+    comments: buildComments(config, report, buildsKey, exclude.length, options.inventory),
     report
   };
 }

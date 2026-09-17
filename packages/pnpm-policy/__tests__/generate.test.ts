@@ -90,6 +90,16 @@ describe('generate', () => {
     expect(readFileSync(generate({ cwd: dir }).file, 'utf-8')).toContain('"@acme/*"');
   });
 
+  it('needs no inventory or lockfile when packages are claimed directly', () => {
+    const dir = workspace(
+      'minimumReleaseAge: 14d\nmaintainers:\n  - me\npackages:\n  - graphile-storage-registry\n'
+    );
+    rmSync(join(dir, 'pnpm-lock.yaml'));
+    expect(readFileSync(generate({ cwd: dir }).file, 'utf-8')).toContain(
+      '- graphile-storage-registry'
+    );
+  });
+
   it('reports no change on a second run', () => {
     const dir = workspace(CONFIG);
     generate({ cwd: dir });

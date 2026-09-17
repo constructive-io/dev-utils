@@ -115,6 +115,23 @@ function normalizeScopes(scopes: string[] | undefined): string[] {
     .sort();
 }
 
+function normalizePackages(packages: string[] | undefined): string[] {
+  const entries = packages ?? [];
+  if (!Array.isArray(entries)) {
+    throw new PolicyError('packages must be a list of package names');
+  }
+  for (const entry of entries) {
+    if (typeof entry !== 'string') {
+      throw new PolicyError('A packages entry must be a string');
+    }
+  }
+  return [...new Set(
+    entries
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+  )].sort();
+}
+
 /**
  * Accept one inventory reference or several. Several are merged at load time, so
  * a workspace can combine separately-published inventories rather than keeping a
@@ -137,6 +154,7 @@ export function normalizeConfig(config: PolicyConfig): ResolvedConfig {
     blockExoticSubdeps: config.blockExoticSubdeps ?? false,
     maintainers: config.maintainers ?? [],
     scopes: normalizeScopes(config.scopes),
+    packages: normalizePackages(config.packages),
     inventory: normalizeInventory(config.inventory),
     intersect: config.intersect ?? true,
     allowBuilds,
