@@ -45,6 +45,13 @@ export interface PolicyConfig {
    */
   scopes?: string[];
   /**
+   * First-party package names to exempt from the wait, listed directly. Use
+   * for unscoped names (or names in a shared scope) you publish, when you'd
+   * rather list them than query the registry or pin an inventory. pnpm globs
+   * are allowed (`graphile-*`).
+   */
+  packages?: string[];
+  /**
    * Where the first-party inventory comes from: a path relative to this config,
    * or an installed package that ships one.
    *
@@ -79,6 +86,8 @@ export interface ResolvedConfig {
   blockExoticSubdeps: boolean;
   maintainers: string[];
   scopes: string[];
+  /** Normalized first-party package names claimed directly by this config. */
+  packages: string[];
   /** Normalized to a list; empty when no inventory is configured. */
   inventory: string[];
   intersect: boolean;

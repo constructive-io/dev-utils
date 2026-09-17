@@ -74,6 +74,13 @@ maintainers:
 scopes:
   - "@acme"
 
+# First-party package names to exempt directly, without a registry query or
+# pinned inventory. Names and pnpm globs are allowed.
+packages:
+  - pgpm
+  - makage
+  - "graphile-*"
+
 # Written by `pnpm-policy inventory`. Commit it; review its diffs.
 # May also name an installed package that ships one, or a list of either.
 inventory: ./pnpm-policy.inventory.json
@@ -102,6 +109,7 @@ settings:
 | `blockExoticSubdeps` | boolean | `false` | Refuse transitive deps from git/URL sources. |
 | `maintainers` | string[] | `[]` | **Your own** npm accounts. See the warning below. |
 | `scopes` | string[] | `[]` | Scopes you own, emitted as globs. |
+| `packages` | string[] | `[]` | First-party names or pnpm globs to exempt directly. |
 | `inventory` | path, package, or list | – | Where the inventory comes from. A list is merged. |
 | `intersect` | boolean | `true` | Only emit names this workspace actually resolves. |
 | `allowBuilds` | map or list | `{}` | Dependencies permitted to run install scripts. |
@@ -229,7 +237,7 @@ Two rules govern how it compresses:
 
 **Unscoped names are listed individually**, which is exact: they come from your own maintainer query.
 
-**Intersection.** By default only names this workspace actually resolves (read from `pnpm-lock.yaml`) are written out — over 1100 published packages becomes the ~85 that appear in this repo. Scope globs are never intersected: nobody else can publish into a scope you own, so the glob stays correct when a new package lands there tomorrow. Pass `--no-intersect` to emit everything. A config with no `inventory:` has no individual names to narrow, so it needs no lockfile at all — which is what lets a freshly scaffolded workspace generate its policy before its first install.
+**Intersection.** By default only names this workspace actually resolves (read from `pnpm-lock.yaml`) are written out — over 1100 published packages becomes the ~85 that appear in this repo. Scope globs are never intersected: nobody else can publish into a scope you own, so the glob stays correct when a new package lands there tomorrow. Pass `--no-intersect` to emit everything. Names listed under `packages:` are explicit claims and are never intersected away. A config with no `inventory:` has no inventory names to narrow, so it needs no lockfile at all — which is what lets a freshly scaffolded workspace generate its policy before its first install.
 
 Commit the inventory and review its diffs. It is an exemption list, so a name appearing in it is a name that stops being quarantined — worth one human glance, which is also why refreshing it should open a pull request rather than run silently in an install hook.
 

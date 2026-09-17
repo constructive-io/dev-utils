@@ -71,10 +71,16 @@ function load(options: RunOptions): Loaded {
     )
     : undefined;
 
-  if (!inventory && config.maintainers.length && !config.scopes.length) {
+  if (
+    !inventory &&
+    config.maintainers.length &&
+    !config.scopes.length &&
+    !config.packages.length
+  ) {
     throw new PolicyError(
       'maintainers are configured but no inventory is available. ' +
-        'Run `pnpm-policy inventory` to build one, or set `scopes` to skip the registry.'
+        'Run `pnpm-policy inventory` to build one, or set `scopes` or `packages` to claim ' +
+        'first-party names directly.'
     );
   }
 
