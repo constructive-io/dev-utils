@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+reviews:
+  profile: chill
+  high_level_summary: true
+  review_status: true
+  poem: false
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!pnpm-lock.yaml"
+    - "!**/dist/**"
+    - "!**/__snapshots__/**"
+    - "!__fixtures__/output/**"
+    - "!packages/inflekt/src/exceptions.ts"
+  path_instructions:
+    - path: "packages/**/*.ts"
+      instructions: >-
+        Follow AGENTS.md and the relevant dev-utils skill references. Preserve each utility's public API and review CLI behavior through its observable prompts and output rather than snapshot churn.
+chat:
+  art: false
