@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/constructive-io/dev-utils/compare/@constructive-io/fetch@1.2.0...@constructive-io/fetch@1.2.1) (2026-11-23)
+
+**Note:** Version bump only for package @constructive-io/fetch
+
 # [1.2.0](https://github.com/constructive-io/dev-utils/compare/@constructive-io/fetch@1.1.2...@constructive-io/fetch@1.2.0) (2026-08-07)
 
 ### Features

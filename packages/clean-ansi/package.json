@@ -1,6 +1,6 @@
 {
   "name": "clean-ansi",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "Constructive <developers@constructive.io>",
   "description": "Remove ANSI escape codes from strings",
   "main": "index.js",

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/constructive-io/dev-utils/compare/ws-changed@0.2.0...ws-changed@0.2.1) (2026-11-23)
+
+**Note:** Version bump only for package ws-changed
+
 # [0.2.0](https://github.com/constructive-io/dev-utils/compare/ws-changed@0.1.0...ws-changed@0.2.0) (2026-08-15)
 
 ### Features

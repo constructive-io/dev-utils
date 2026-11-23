@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/constructive-io/dev-utils/compare/bash-ast@0.1.3...bash-ast@0.1.4) (2026-11-23)
+
+**Note:** Version bump only for package bash-ast
+
 ## [0.1.3](https://github.com/constructive-io/dev-utils/compare/bash-ast@0.1.2...bash-ast@0.1.3) (2026-08-13)
 
 ### Bug Fixes

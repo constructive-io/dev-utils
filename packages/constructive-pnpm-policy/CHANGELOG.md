@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/constructive-io/dev-utils/compare/@constructive-io/pnpm-policy@0.4.0...@constructive-io/pnpm-policy@0.4.1) (2026-11-23)
+
+**Note:** Version bump only for package @constructive-io/pnpm-policy
+
 # [0.4.0](https://github.com/constructive-io/dev-utils/compare/@constructive-io/pnpm-policy@0.3.2...@constructive-io/pnpm-policy@0.4.0) (2026-09-17)
 
 **Note:** Version bump only for package @constructive-io/pnpm-policy
