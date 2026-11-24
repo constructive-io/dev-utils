@@ -56,7 +56,7 @@ export function deploy(config: SiteConfig, { directory, preserve = markdown }: O
   };
 
   const source = root.endsWith(sep) ? root : root + sep;
-  aws('s3', 'sync', source, s3, ...markdown.flatMap(pattern => ['--exclude', pattern]));
+  aws('s3', 'cp', source, s3, '--recursive', ...markdown.flatMap(pattern => ['--exclude', pattern]));
   aws('s3', 'cp', source, s3, '--recursive', '--exclude', '*',
     ...markdown.flatMap(pattern => ['--include', pattern]), '--content-type', 'text/plain; charset=utf-8');
   for (const [alias, key] of aliases) aws('s3', 'cp', `${s3}/${key}`, `${s3}/${alias}`);

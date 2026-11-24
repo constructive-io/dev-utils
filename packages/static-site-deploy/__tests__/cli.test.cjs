@@ -82,19 +82,19 @@ process.stdout.write('<html></html>\\n' + (process.env.HTTP_STATUS ?? '200 text/
   return fixtureState;
 }
 
-test('syncs and refreshes aliases before verifying and pruning across pages', () => {
+test('uploads and refreshes aliases before verifying and pruning across pages', () => {
   const { cliRun, calls } = fakeDeploy();
   const result = cliRun(['deploy', '--site', site, '--preserve', '*.md', '--preserve', 'llms.txt', '--preserve', 'manual/*'], {
     ...targets, AWS_PROFILE: undefined, GITHUB_ACTIONS: 'true',
   });
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(calls().map(([tool, service, command]) => tool === 'curl' ? 'check' : `${service} ${command}`), [
-    's3 sync', 's3 cp', 's3 cp', 'cloudfront create-invalidation', 'cloudfront wait',
+    's3 cp', 's3 cp', 's3 cp', 'cloudfront create-invalidation', 'cloudfront wait',
     'check', 's3api list-objects-v2', 's3api list-objects-v2', 's3api delete-objects',
     'cloudfront create-invalidation', 'cloudfront wait',
   ]);
-  const sync = calls()[0];
-  assert.ok(!sync.includes('--delete'), 'sync must not delete before health checks and preserve filtering');
+  const upload = calls()[0];
+  assert.deepEqual(upload.slice(4), ['s3://example-site-bucket', '--recursive', '--exclude', '*.md', '--exclude', 'llms.txt']);
   const copy = calls()[2];
   assert.deepEqual(copy.slice(3), [
     's3://example-site-bucket/new-page/index.html', 's3://example-site-bucket/new-page',
