@@ -31,7 +31,9 @@ function fixture() {
     cwd, env: { ...env, ...extra }, encoding: 'utf8',
   });
   const mock = (name, body) => writeFileSync(join(cwd, name), '#!/usr/bin/env node\n' + body, { mode: 0o755 });
-  return { cwd, env, cliRun, mock, calls: () => readFileSync(env.CALLS, 'utf8').trim().split('\n').map(JSON.parse) };
+  const calls = () => readFileSync(env.CALLS, 'utf8').trim().split('\n').map(JSON.parse);
+  calls.path = env.CALLS;
+  return { cwd, env, cliRun, mock, calls };
 }
 
 test('setup stores only targets and profile for the selected site; env overrides the stash', () => {
@@ -237,9 +239,14 @@ test('dry run plans site-specific IAM and GitHub settings without mutating the s
   assert.notEqual(cliRun(['check', '--site', site]).status, 0);
 });
 
-for (const { bypass, firstRun = false } of [{ bypass: true }, { bypass: false }, { bypass: false, firstRun: true }]) {
-  const description = firstRun ? 'creates missing provisioning resources when the approval gate is in place' :
-    `preserves GitHub environment settings on rerun (admin bypass = ${bypass})`;
+const immutablePrefix = 'repo:example-org@111/example-site@222';
+for (const { bypass, firstRun = false, prefix } of [
+  { bypass: true }, { bypass: false }, { bypass: false, firstRun: true },
+  { bypass: false, prefix: immutablePrefix }, { bypass: false, firstRun: true, prefix: 'repo:EXAMPLE-ORG@111/Example-Site@222' },
+]) {
+  const description = (firstRun ? 'creates missing provisioning resources when the approval gate is in place' :
+    `preserves GitHub environment settings on rerun (admin bypass = ${bypass})`) +
+    (prefix ? ' with immutable OIDC subjects' : '');
   test(description, () => {
     const { cliRun, mock, calls } = fixture();
     const log = "const args = process.argv.slice(2); require('node:fs').appendFileSync(process.env.CALLS, JSON.stringify([";
@@ -262,7 +269,8 @@ else if (!['create-open-id-connect-provider','update-assume-role-policy','put-ro
 const fs = require('node:fs');
 const [command, endpoint, method, target] = args;
 if (endpoint === 'repos/example-org/example-site') console.log('example-org/example-site');
-else if (endpoint.endsWith('/customization/sub')) console.log('{"use_immutable_subject":false}');
+else if (endpoint.endsWith('/customization/sub')) console.log(JSON.stringify(${JSON.stringify(prefix ?? null)} ?
+  { use_default: true, use_immutable_subject: true, sub_claim_prefix: ${JSON.stringify(prefix ?? null)} } : { use_immutable_subject: false }));
 else if (endpoint === 'users/example-reviewer') console.log('123');
 else if (endpoint === '--paginate') console.log(${firstRun} ? '[{"branch_policies":[]}]' : '[{"branch_policies":[{"id":1,"name":"release","type":"branch"}]}]');
 else if (${firstRun} && endpoint.endsWith('/environments/production') && !fs.existsSync(process.env.CALLS + '.changed')) {
@@ -276,6 +284,7 @@ else if (endpoint.endsWith('/environments/production')) console.log(JSON.stringi
 }));
 else if (endpoint === '--method' && method === 'PUT') {
   if (target.endsWith('/environments/production')) fs.writeFileSync(process.env.CALLS + '.changed', '');
+  if (target.endsWith('/customization/sub')) fs.writeFileSync(process.env.CALLS + '.sub', fs.readFileSync(0));
 } else if (command !== 'variable' && !(method === 'POST' && target.endsWith('/deployment-branch-policies'))) process.exit(99);
 `);
     const result = cliRun(provisionArgs, targets);
@@ -290,5 +299,35 @@ else if (endpoint === '--method' && method === 'PUT') {
       assert.ok(commands.some(args => args.includes('create-role')));
     }
     if (bypass) assert.match(result.stderr, /Allow administrators to bypass configured protection rules/);
+    else {
+      const trustArgs = commands.find(args => args.includes(firstRun ? 'create-role' : 'update-assume-role-policy'));
+      const trust = JSON.parse(trustArgs[trustArgs.indexOf(firstRun ? '--assume-role-policy-document' : '--policy-document') + 1]);
+      assert.equal(trust.Statement[0].Condition.StringEquals['token.actions.githubusercontent.com:sub'],
+        `${prefix ?? 'repo:example-org/example-site'}:environment:production:ref:refs/heads/release`);
+      assert.deepEqual(JSON.parse(readFileSync(calls.path + '.sub', 'utf8')), {
+        use_default: false, include_claim_keys: ['repo', 'context', 'ref'], ...(prefix && { use_immutable_subject: true }),
+      });
+    }
+  });
+}
+
+for (const prefix of [undefined, 'repo:example-org/example-site', 'repo:other-org@111/example-site@222']) {
+  test(`fails before changes when the immutable OIDC subject prefix is ${prefix ?? 'missing'}`, () => {
+    const { cliRun, mock, calls } = fixture();
+    const log = "const args = process.argv.slice(2); require('node:fs').appendFileSync(process.env.CALLS, JSON.stringify([";
+    mock('aws', log + `'aws', ...args]) + '\\n');
+if (args[0] === '--version') console.log('aws-cli/2.example');
+else if (args[0] === 'sts') console.log('arn:aws:iam::123456789012:role/example-admin');
+else process.exit(99);
+`);
+    mock('gh', log + `'gh', ...args]) + '\\n');
+if (args[1] === 'repos/example-org/example-site') console.log('example-org/example-site');
+else if (args[1].endsWith('/customization/sub')) console.log(JSON.stringify({ use_immutable_subject: true, sub_claim_prefix: ${JSON.stringify(prefix)} }));
+else process.exit(99);
+`);
+    const result = cliRun(provisionArgs, targets);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /did not return an immutable OIDC subject prefix/);
+    assert.equal(calls().length, 4);
   });
 }
