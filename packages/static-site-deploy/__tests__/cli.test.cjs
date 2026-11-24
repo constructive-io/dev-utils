@@ -52,6 +52,24 @@ test('setup stores only targets and profile for the selected site; env overrides
   assert.doesNotMatch(file, /FAKE_SECRET|not-for-the-store/);
 });
 
+test('setup preserves a saved AWS profile when ambient credentials make it optional', () => {
+  const { cliRun, cwd } = fixture();
+  const args = ['setup', '--site', site, '--yes'];
+  const original = cliRun(args, targets);
+  assert.equal(original.status, 0, original.stderr);
+  const updated = cliRun(args, {
+    ...targets, AWS_PROFILE: undefined, AWS_REGION: 'us-west-2',
+    AWS_ACCESS_KEY_ID: 'example-key', AWS_SECRET_ACCESS_KEY: 'example-secret',
+  });
+  assert.equal(updated.status, 0, updated.stderr);
+  const local = cliRun(['check', '--site', site]);
+  assert.equal(local.status, 0, local.stderr);
+  const file = readFileSync(join(cwd, '.static-site-deploy', 'config', 'vars', 'example-org%2Fexample-site.json'), 'utf8');
+  assert.match(file, /example-local/);
+  assert.match(file, /us-west-2/);
+  assert.doesNotMatch(file, /example-key|example-secret/);
+});
+
 function fakeDeploy() {
   const fixtureState = fixture();
   const { cwd, mock } = fixtureState;

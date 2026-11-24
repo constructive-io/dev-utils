@@ -57,7 +57,8 @@ export function validateConfig(values: ConfigValues, environment: Environment): 
     AWS_CLOUDFRONT_DISTRIBUTION_ID: validator('AWS_CLOUDFRONT_DISTRIBUTION_ID'),
     SITE_URL: validator('SITE_URL'),
     AWS_REGION: validator('AWS_REGION'),
-    ...(requiredFields(environment).includes('AWS_PROFILE') ? { AWS_PROFILE: validator('AWS_PROFILE') } : {}),
+    ...(requiredFields(environment).includes('AWS_PROFILE') || (!isCI(environment) && validValue('AWS_PROFILE', values.AWS_PROFILE))
+      ? { AWS_PROFILE: validator('AWS_PROFILE') } : {}),
   }) };
 }
 
@@ -79,10 +80,16 @@ export function readSiteConfig(site: string, environment = process.env): ConfigV
 
 export function saveSiteConfig(site: string, values: SiteConfig) {
   const context = siteKey(site);
+  const store = createConfigStore(storeName);
   const config = Object.fromEntries(keys.flatMap(key =>
     validValue(key, values[key]) ? [[key, values[key].trim()]] : [],
   ));
-  createConfigStore(storeName).setVar(storeKey, JSON.stringify(config), context);
+  if (config.AWS_PROFILE === undefined) {
+    const stored = store.getVar(storeKey, context);
+    const profile = stored ? JSON.parse(stored).AWS_PROFILE : undefined;
+    if (validValue('AWS_PROFILE', profile)) config.AWS_PROFILE = profile.trim();
+  }
+  store.setVar(storeKey, JSON.stringify(config), context);
 }
 
 export function awsEnvironment(config: SiteConfig, environment = process.env) {

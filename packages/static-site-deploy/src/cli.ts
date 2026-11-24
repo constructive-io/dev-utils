@@ -47,8 +47,9 @@ async function promptForConfig(site: string, allowPrompt: boolean) {
 }
 
 function runProvisioner(site: string, config: SiteConfig, provision: Record<string, string>, dryRun: boolean) {
+  const { AWS_PROFILE: _profile, ...targets } = config;
   const result = spawnSync('bash', [join(__dirname, 'provision.sh'), ...(dryRun ? ['--dry-run'] : [])], {
-    env: { ...awsEnvironment(config), ...config, ...provision, SITE_REPO: site },
+    env: { ...awsEnvironment(config), ...targets, ...provision, SITE_REPO: site },
     stdio: 'inherit',
   });
   if (result.error) throw result.error;
