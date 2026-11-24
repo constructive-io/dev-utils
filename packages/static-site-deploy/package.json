@@ -1,6 +1,6 @@
 {
   "name": "@constructive-io/static-site-deploy",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "Constructive <developers@constructive.io>",
   "description": "Deploy a static site to S3 and CloudFront with optional GitHub OIDC setup",
   "main": "index.js",
