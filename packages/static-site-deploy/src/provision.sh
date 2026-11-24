@@ -92,8 +92,15 @@ subject_template=repos/$repo/actions/oidc/customization/sub
 identity=$(read_state "arn:aws:iam::$AWS_ACCOUNT_ID:root" aws sts get-caller-identity --query Arn --output text)
 [[ $identity == arn:aws:*:"$AWS_ACCOUNT_ID":* ]] || fail "AWS credentials do not belong to account $AWS_ACCOUNT_ID in the standard AWS partition."
 template=$(read_state '{"use_immutable_subject":false}' gh api "$subject_template")
-jq -e '.use_immutable_subject != true' <<< "$template" >/dev/null ||
-  fail "This repository uses immutable OIDC subjects. Do not replace its template with the name-based trust policy."
+subject_settings='{"use_default":false,"include_claim_keys":["repo","context","ref"]}'
+subject_repo="repo:$repo"
+if jq -e '.use_immutable_subject == true' <<< "$template" >/dev/null; then
+  subject_repo=$(jq -er --arg repo "repo:$repo" '.sub_claim_prefix | select(type == "string"
+    and test("^repo:[A-Za-z0-9-]+@[1-9][0-9]*/[A-Za-z0-9_.-]+@[1-9][0-9]*$")
+    and (sub("@[0-9]+"; ""; "g") | ascii_downcase) == ($repo | ascii_downcase))' <<< "$template") ||
+    fail "GitHub did not return an immutable OIDC subject prefix for $repo."
+  subject_settings='{"use_default":false,"include_claim_keys":["repo","context","ref"],"use_immutable_subject":true}'
+fi
 
 reviewer=$(read_state 1 gh api "users/$SITE_REVIEWER" --jq .id)
 [[ $reviewer =~ ^[1-9][0-9]*$ ]] || fail "Could not resolve the GitHub reviewer $SITE_REVIEWER."
@@ -133,7 +140,7 @@ elif ! jq -e --arg aud "$audience" '.ClientIDList | index($aud) != null' <<< "$p
   run aws iam add-client-id-to-open-id-connect-provider --open-id-connect-provider-arn "$provider" --client-id "$audience"
 fi
 
-trust=$(jq -cn --arg provider "$provider" --arg aud "$audience" --arg sub "repo:$repo:environment:production:ref:refs/heads/$SITE_BRANCH" '{
+trust=$(jq -cn --arg provider "$provider" --arg aud "$audience" --arg sub "$subject_repo:environment:production:ref:refs/heads/$SITE_BRANCH" '{
   Version: "2012-10-17", Statement: [{
     Effect: "Allow", Principal: {Federated: $provider}, Action: "sts:AssumeRoleWithWebIdentity",
     Condition: {StringEquals: {"token.actions.githubusercontent.com:aud": $aud, "token.actions.githubusercontent.com:sub": $sub}}
@@ -162,7 +169,7 @@ else
   run aws iam update-assume-role-policy --role-name "$AWS_DEPLOY_ROLE_NAME" --policy-document "$trust"
 fi
 run aws iam put-role-policy --role-name "$AWS_DEPLOY_ROLE_NAME" --policy-name "$policy_name" --policy-document "$permissions"
-write_github PUT "$subject_template" '{"use_default":false,"include_claim_keys":["repo","context","ref"]}'
+write_github PUT "$subject_template" "$subject_settings"
 
 for name in AWS_S3_BUCKET AWS_CLOUDFRONT_DISTRIBUTION_ID SITE_URL AWS_REGION; do
   run gh variable set "$name" --repo "$repo" --env production --body "${!name}"
