@@ -20,6 +20,12 @@ Deploy uploads the export, refreshes extensionless aliases, and waits for CloudF
 
 By default, existing Markdown files (`*.md`) and the root `llms.txt` are preserved when absent from the export. Repeat `--preserve PATTERN` to replace that list with a site-specific list. Patterns match full keys, with `*` matching any number of characters, including slashes.
 
+Per-site deploy options:
+
+- `--dry-run` lists planned uploads, alias copies, and stale-key deletions. It needs read-only access to list the bucket, but does not upload, delete, invalidate CloudFront, check the homepage, or save answers to prompts.
+- `--trailing-slash-aliases` adds `foo/` alongside `foo` for `foo/index.html`. The default creates only `foo`; neither mode creates an alias for the root `index.html`.
+- `--verify-homepage` also requires the HTTP 200 HTML response body to match the export's `index.html` byte for byte before pruning. Use it when CloudFront serves the export without modifying the response body.
+
 ## GitHub Actions and AWS OIDC
 
 Run setup with AWS CLI v2 signed into the account that owns the bucket and distribution, `gh` signed in as a repository administrator, and `jq` and Bash installed. The AWS identity needs IAM permissions to manage the GitHub OIDC provider, the dedicated role, and its inline policy.

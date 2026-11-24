@@ -84,7 +84,7 @@ if (command === 'create-invalidation') console.log('{"Invalidation":{"Id":"EXAMP
 if (command === 'wait' && process.env.WAIT_FAILURE) process.exit(9);
 if (command === 'list-objects-v2') {
   if (args.includes('--continuation-token')) {
-    console.log(JSON.stringify({Contents: [{Key: 'manual/data.json'}]}));
+    console.log(JSON.stringify({Contents: [{Key: 'manual/data.json'}, ...(process.env.EXTRA_KEY ? [{Key: process.env.EXTRA_KEY}] : [])]}));
   } else {
     console.log(JSON.stringify({
       Contents: ['old.html', '_next/static/old.js', 'new-page', 'asset.js', 'old-lesson.md', 'llms.txt'].map(Key => ({Key})),
@@ -95,7 +95,9 @@ if (command === 'list-objects-v2') {
 if (command === 'delete-objects') console.log(process.env.DELETE_ERROR ?? '{}');
 `);
   mock('curl', log + `'curl', ...args]) + '\\n');
-process.stdout.write('<html></html>\\n' + (process.env.HTTP_STATUS ?? '200 text/html'));
+if (process.env.HOME_BODY) process.stdout.write(Buffer.from(process.env.HOME_BODY, 'base64'));
+else process.stdout.write('<html></html>');
+process.stdout.write('\\n' + (process.env.HTTP_STATUS ?? '200 text/html'));
 `);
   return fixtureState;
 }
@@ -135,6 +137,39 @@ test('prefers the directory index when both forms produce the same extensionless
   ]);
 });
 
+test('dry run lists planned changes and only sends read-only S3 listing requests', () => {
+  const { cliRun, calls } = fakeDeploy();
+  const result = cliRun(['deploy', '--site', site, '--dry-run', '--trailing-slash-aliases', '--preserve', 'manual/*'], {
+    ...targets, EXTRA_KEY: 'new-page/', HTTP_STATUS: '503 text/html',
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Would upload "index.html"/);
+  assert.match(result.stdout, /Would copy "new-page\/index.html" to "new-page\/"/);
+  assert.match(result.stdout, /Would delete "old.html"/);
+  assert.doesNotMatch(result.stdout, /Would delete "(?:manual\/data\.json|new-page\/|asset\.js)"/);
+  assert.deepEqual(calls().map(args => args.slice(0, 3)), [
+    ['aws', 's3api', 'list-objects-v2'], ['aws', 's3api', 'list-objects-v2'],
+  ]);
+});
+
+test('copies a trailing-slash alias to an exact S3 key and keeps it during pruning', () => {
+  const { cwd, cliRun, calls } = fakeDeploy();
+  const route = 'a space%';
+  mkdirSync(join(cwd, 'out', route));
+  writeFileSync(join(cwd, 'out', route, 'index.html'), '');
+  const result = cliRun(['deploy', '--site', site, '--trailing-slash-aliases'], {
+    ...targets, EXTRA_KEY: `${route}/`,
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.ok(calls().some(args => args[4] === `s3://example-site-bucket/${route}`));
+  assert.deepEqual(calls().find(args => args[2] === 'copy-object' && args.at(-1) === `${route}/`), [
+    'aws', 's3api', 'copy-object', '--bucket', 'example-site-bucket',
+    '--copy-source', `example-site-bucket/${route}/index.html`, '--key', `${route}/`,
+  ]);
+  const deleteArgs = calls().find(args => args[2] === 'delete-objects');
+  assert.ok(!JSON.parse(deleteArgs.at(-3)).Objects.some(({ Key }) => Key === `${route}/`));
+});
+
 for (const [label, additional, error] of [
   ['invalidation fails', { WAIT_FAILURE: '1' }, /cloudfront wait failed/],
   ['homepage is unhealthy', { HTTP_STATUS: '503 text/html' }, /HTTP 200 with HTML/],
@@ -148,6 +183,26 @@ for (const [label, additional, error] of [
     assert.ok(!calls().find(args => args[2] === 'delete-objects'));
   });
 }
+
+test.each([
+  ['exact bytes', 0x80, '200 text/html', null],
+  ['different bytes that decode to the same text', 0x81, '200 text/html', /does not match the exported index.html/],
+  ['matching bytes and unsuccessful status', 0x80, '503 text/html', /HTTP 200 with HTML/],
+])('verifies the homepage before pruning: %s', (_label, remoteByte, status, error) => {
+  const { cwd, cliRun, calls } = fakeDeploy();
+  const home = byte => Buffer.concat([Buffer.from('<html>'), Buffer.from([byte]), Buffer.from('</html>\n')]);
+  writeFileSync(join(cwd, 'out', 'index.html'), home(0x80));
+  const result = cliRun(['deploy', '--site', site, '--verify-homepage'], {
+    ...targets, HOME_BODY: home(remoteByte).toString('base64'), HTTP_STATUS: status,
+  });
+  if (error) {
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, error);
+  } else {
+    assert.equal(result.status, 0, result.stderr);
+  }
+  assert.equal(calls().some(args => args[2] === 'delete-objects'), !error);
+});
 
 test('fails on S3 per-key delete errors without a second invalidation', () => {
   const { cliRun, calls } = fakeDeploy();

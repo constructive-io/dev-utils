@@ -12,6 +12,7 @@ import { deploy } from './deploy';
 
 const usage = `Usage:
   static-site-deploy deploy --site OWNER/REPO [--dir out] [--preserve PATTERN ...]
+    [--dry-run] [--trailing-slash-aliases] [--verify-homepage]
   static-site-deploy check --site OWNER/REPO
   static-site-deploy setup --site OWNER/REPO [--provision] [--dry-run] [--yes]
     [--reviewer LOGIN] [--account-id ID] [--role-name NAME] [--branch main]`;
@@ -63,6 +64,8 @@ async function main() {
       site: { type: 'string' },
       dir: { type: 'string' },
       preserve: { type: 'string', multiple: true },
+      'trailing-slash-aliases': { type: 'boolean' },
+      'verify-homepage': { type: 'boolean' },
       provision: { type: 'boolean' },
       'dry-run': { type: 'boolean' },
       yes: { type: 'boolean' },
@@ -78,9 +81,11 @@ async function main() {
   if (positionals.length !== 1 || !['deploy', 'setup', 'check'].includes(command)) throw new Error(usage);
   const site = options.site ?? process.env.GITHUB_REPOSITORY;
   if (!site) throw new Error('Specify the GitHub repository as --site OWNER/REPO.');
-  if (command !== 'setup' && (options.provision || options['dry-run'] || options.yes ||
+  if (command !== 'setup' && (options.provision || options.yes ||
       options.reviewer || options['account-id'] || options['role-name'] || options.branch)) throw new Error(usage);
-  if (command !== 'deploy' && (options.dir || options.preserve)) throw new Error(usage);
+  if (command !== 'deploy' && (options.dir || options.preserve ||
+      options['trailing-slash-aliases'] || options['verify-homepage'])) throw new Error(usage);
+  if (command === 'check' && options['dry-run']) throw new Error(usage);
 
   const allowPrompt = interactive && !options.yes && command !== 'check';
   const dryRun = !!options['dry-run'];
@@ -93,8 +98,14 @@ async function main() {
   const { config, prompted } = await promptForConfig(site, allowPrompt);
   if (command === 'check') return;
   if (command === 'deploy') {
-    if (prompted) saveSiteConfig(site, config);
-    return deploy(config, { directory: options.dir ?? 'out', preserve: options.preserve });
+    if (prompted && !dryRun) saveSiteConfig(site, config);
+    return deploy(config, {
+      directory: options.dir ?? 'out',
+      preserve: options.preserve,
+      dryRun,
+      trailingSlashAliases: options['trailing-slash-aliases'],
+      verifyHomepage: options['verify-homepage'],
+    });
   }
 
   if (!dryRun) {
