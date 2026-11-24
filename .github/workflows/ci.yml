@@ -74,6 +74,7 @@ jobs:
           - promql-ast
           - yamlize
           - ws-changed
+          - static-site-deploy
 
     steps:
     - name: Checkout code

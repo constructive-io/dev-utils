@@ -1,0 +1,37 @@
+{
+  "name": "@constructive-io/static-site-deploy",
+  "version": "0.1.0",
+  "author": "Constructive <developers@constructive.io>",
+  "description": "Deploy a static site to S3 and CloudFront with optional GitHub OIDC setup",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "static-site-deploy": "cli.js"
+  },
+  "homepage": "https://github.com/constructive-io/dev-utils",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/constructive-io/dev-utils"
+  },
+  "scripts": {
+    "copy": "makage assets",
+    "clean": "makage clean",
+    "prepublishOnly": "npm run build",
+    "build": "makage build && makage copy src/provision.sh dist --flat",
+    "test": "node --test __tests__/*.test.cjs"
+  },
+  "dependencies": {
+    "12factor-env": "1.34.0",
+    "appstash": "workspace:*",
+    "inquirerer": "workspace:*"
+  },
+  "devDependencies": {
+    "makage": "0.1.10"
+  }
+}

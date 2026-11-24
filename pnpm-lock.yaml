@@ -612,6 +612,23 @@ importers:
         version: 0.1.10
     publishDirectory: dist
 
+  packages/static-site-deploy:
+    dependencies:
+      12factor-env:
+        specifier: 1.34.0
+        version: 1.34.0
+      appstash:
+        specifier: workspace:*
+        version: link:../appstash/dist
+      inquirerer:
+        specifier: workspace:*
+        version: link:../inquirerer/dist
+    devDependencies:
+      makage:
+        specifier: 0.1.10
+        version: 0.1.10
+    publishDirectory: dist
+
 packages:
   "@babel/code-frame@7.27.1":
     resolution:
@@ -6817,6 +6834,20 @@ packages:
       }
     engines: { node: ">=10" }
 
+  12factor-env@1.34.0:
+    resolution:
+      integrity: sha512-jyeOuen3cbNn2EKmRkbayXsNKxqeeHGnL84to4RiLoOAOa7IG98z8kJXLKO70+0yE8wrsRGIlR2UVf7xKbr21g==
+
+  "@constructive-io/coerce@0.6.1":
+    resolution:
+      integrity: sha512-wAdvy6+yoBpijYpAJepcVZB+PgEv5ZBMWB7poE8S9iLcufUBln9sHFaUpimxFPBKeUlHuSoYblBx2kYbSa5SKg==
+
+  envalid@8.2.0:
+    resolution:
+      integrity: sha512-CkPvea95dwMYE1wnKX5mQXkOpiMs9O+ncv8NqZy+gW7FuzpUp06KTdUHb18xFG8CqQHmfmRqGLF5DuGaBWNrSw==
+    engines:
+      node: ">=18"
+
 snapshots:
   "@babel/code-frame@7.27.1":
     dependencies:
@@ -10979,3 +11010,14 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  12factor-env@1.34.0:
+    dependencies:
+      "@constructive-io/coerce": 0.6.1
+      envalid: 8.2.0
+
+  "@constructive-io/coerce@0.6.1": {}
+
+  envalid@8.2.0:
+    dependencies:
+      tslib: 2.8.1
