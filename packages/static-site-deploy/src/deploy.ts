@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process';
-import { readdirSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, sep } from 'node:path';
 
 import { awsEnvironment, SiteConfig } from './config';
@@ -18,11 +18,19 @@ function* exportKeys(root: string, prefix = ''): Generator<string> {
   }
 }
 
-type Options = { directory: string; preserve?: string[] };
+type Options = {
+  directory: string;
+  preserve?: string[];
+  dryRun?: boolean;
+  trailingSlashAliases?: boolean;
+  verifyHomepage?: boolean;
+};
 type ObjectKey = { Key: string };
 type ObjectPage = { Contents?: ObjectKey[]; IsTruncated?: boolean; NextContinuationToken?: string };
 
-export function deploy(config: SiteConfig, { directory, preserve = markdown }: Options) {
+export function deploy(config: SiteConfig, {
+  directory, preserve = markdown, dryRun, trailingSlashAliases, verifyHomepage,
+}: Options) {
   const root = resolve(directory);
   const files = new Set(exportKeys(root));
   if (!files.has('index.html')) throw new Error(`Site export is missing ${directory}/index.html`);
@@ -33,6 +41,7 @@ export function deploy(config: SiteConfig, { directory, preserve = markdown }: O
     const alias = key.slice(0, directoryIndex ? -'/index.html'.length : -'.html'.length);
     if (files.has(alias)) throw new Error(`Conflicting extensionless route: ${alias}`);
     if (directoryIndex || !aliases.has(alias)) aliases.set(alias, key);
+    if (directoryIndex && trailingSlashAliases) aliases.set(`${alias}/`, key);
   }
 
   const keep = preserve.map(globRegex);
@@ -40,49 +49,72 @@ export function deploy(config: SiteConfig, { directory, preserve = markdown }: O
   const s3 = `s3://${bucket}`;
   const environment = awsEnvironment(config);
   const exec = (command: string, args: string[], env?: NodeJS.ProcessEnv) => execFileSync(command, args, {
-    env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'], maxBuffer: 4 * 1024 * 1024,
+    env, stdio: ['ignore', 'pipe', 'inherit'], maxBuffer: 4 * 1024 * 1024,
   });
   const aws = (...args: string[]) => {
     const result = spawnSync('aws', args, { env: environment, stdio: 'inherit' });
     if (result.error) throw result.error;
     if (result.status !== 0) throw new Error(`AWS ${args.slice(0, 2).join(' ')} failed (${result.status ?? result.signal})`);
   };
-  const awsJson = <T>(...args: string[]): T => JSON.parse(exec('aws', [...args, '--output', 'json'], environment));
+  const awsJson = <T>(...args: string[]): T => JSON.parse(exec('aws', [...args, '--output', 'json'], environment).toString());
   const invalidate = () => {
     const { Invalidation: { Id } } = awsJson<{ Invalidation: { Id: string } }>(
       'cloudfront', 'create-invalidation', '--distribution-id', distribution, '--paths', '/*',
     );
     aws('cloudfront', 'wait', 'invalidation-completed', '--distribution-id', distribution, '--id', Id);
   };
+  const listStaleKeys = () => {
+    const stale: ObjectKey[] = [];
+    const seen = new Set<string>();
+    let token: string | undefined;
+    do {
+      const page: ObjectPage = awsJson('s3api', 'list-objects-v2', '--bucket', bucket, '--no-paginate',
+        ...(token ? ['--continuation-token', token] : []));
+      for (const { Key } of page.Contents ?? []) {
+        if (!files.has(Key) && !aliases.has(Key) && !keep.some(pattern => pattern.test(Key))) stale.push({ Key });
+      }
+      token = page.IsTruncated ? page.NextContinuationToken : undefined;
+      if (page.IsTruncated && (!token || seen.has(token))) throw new Error('S3 object listing is incomplete');
+      if (token) seen.add(token);
+    } while (token);
+    return stale;
+  };
 
+  if (dryRun) {
+    const stale = listStaleKeys();
+    console.log(`Dry run: ${s3} (no changes)`);
+    for (const key of files) console.log(`Would upload ${JSON.stringify(key)}`);
+    for (const [alias, key] of aliases) console.log(`Would copy ${JSON.stringify(key)} to ${JSON.stringify(alias)}`);
+    for (const { Key } of stale) console.log(`Would delete ${JSON.stringify(Key)}`);
+    return;
+  }
+
+  const expectedHomepage = verifyHomepage ? readFileSync(resolve(root, 'index.html')) : undefined;
   const source = root.endsWith(sep) ? root : root + sep;
   aws('s3', 'cp', source, s3, '--recursive', ...markdown.flatMap(pattern => ['--exclude', pattern]));
   aws('s3', 'cp', source, s3, '--recursive', '--exclude', '*',
     ...markdown.flatMap(pattern => ['--include', pattern]), '--content-type', 'text/plain; charset=utf-8');
-  for (const [alias, key] of aliases) aws('s3', 'cp', `${s3}/${key}`, `${s3}/${alias}`);
+  for (const [alias, key] of aliases) {
+    if (alias.endsWith('/')) {
+      aws('s3api', 'copy-object', '--bucket', bucket, '--copy-source', `${bucket}/${key}`, '--key', alias);
+    } else {
+      aws('s3', 'cp', `${s3}/${key}`, `${s3}/${alias}`);
+    }
+  }
   invalidate();
 
   const response = exec('curl', ['--silent', '--show-error', '--max-time', '30', '--write-out', '\n%{http_code} %{content_type}', '--', url]);
   const separator = response.lastIndexOf('\n');
-  const status = response.slice(separator + 1);
-  if (!/^200 text\/html(?:;.*)?$/i.test(status) || !/<!doctype\s+html\b|<html\b/i.test(response.slice(0, separator))) {
+  const status = response.subarray(separator + 1).toString();
+  const body = response.subarray(0, separator);
+  if (!/^200 text\/html(?:;.*)?$/i.test(status) || !/<!doctype\s+html\b|<html\b/i.test(body.toString())) {
     throw new Error(`Homepage health check did not return HTTP 200 with HTML (got ${status})`);
   }
+  if (expectedHomepage && !body.equals(expectedHomepage)) {
+    throw new Error('Homepage content does not match the exported index.html');
+  }
 
-  const stale: ObjectKey[] = [];
-  const seen = new Set<string>();
-  let token: string | undefined;
-  do {
-    const page: ObjectPage = awsJson('s3api', 'list-objects-v2', '--bucket', bucket, '--no-paginate',
-      ...(token ? ['--continuation-token', token] : []));
-    for (const { Key } of page.Contents ?? []) {
-      if (!files.has(Key) && !aliases.has(Key) && !keep.some(pattern => pattern.test(Key))) stale.push({ Key });
-    }
-    token = page.IsTruncated ? page.NextContinuationToken : undefined;
-    if (page.IsTruncated && (!token || seen.has(token))) throw new Error('S3 object listing is incomplete');
-    if (token) seen.add(token);
-  } while (token);
-
+  const stale = listStaleKeys();
   for (let offset = 0; offset < stale.length; offset += 20) {
     const { Errors } = awsJson<{ Errors?: unknown[] }>('s3api', 'delete-objects', '--bucket', bucket, '--delete',
       JSON.stringify({ Objects: stale.slice(offset, offset + 20) }));
