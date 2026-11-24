@@ -96,7 +96,7 @@ export function deploy(config: SiteConfig, {
     ...markdown.flatMap(pattern => ['--include', pattern]), '--content-type', 'text/plain; charset=utf-8');
   for (const [alias, key] of aliases) {
     if (alias.endsWith('/')) {
-      aws('s3api', 'copy-object', '--bucket', bucket, '--copy-source', `${bucket}/${key}`, '--key', alias);
+      aws('s3api', 'copy-object', '--bucket', bucket, `--copy-source=${bucket}/${key}`, `--key=${alias}`);
     } else {
       aws('s3', 'cp', `${s3}/${key}`, `${s3}/${alias}`);
     }

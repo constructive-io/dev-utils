@@ -152,9 +152,8 @@ test('dry run lists planned changes and only sends read-only S3 listing requests
   ]);
 });
 
-test('copies a trailing-slash alias to an exact S3 key and keeps it during pruning', () => {
+test.each(['a space%', '-archive'])('copies a trailing-slash alias for %s and keeps it during pruning', route => {
   const { cwd, cliRun, calls } = fakeDeploy();
-  const route = 'a space%';
   mkdirSync(join(cwd, 'out', route));
   writeFileSync(join(cwd, 'out', route, 'index.html'), '');
   const result = cliRun(['deploy', '--site', site, '--trailing-slash-aliases'], {
@@ -162,9 +161,9 @@ test('copies a trailing-slash alias to an exact S3 key and keeps it during pruni
   });
   assert.equal(result.status, 0, result.stderr);
   assert.ok(calls().some(args => args[4] === `s3://example-site-bucket/${route}`));
-  assert.deepEqual(calls().find(args => args[2] === 'copy-object' && args.at(-1) === `${route}/`), [
+  assert.deepEqual(calls().find(args => args[2] === 'copy-object' && args.at(-1) === `--key=${route}/`), [
     'aws', 's3api', 'copy-object', '--bucket', 'example-site-bucket',
-    '--copy-source', `example-site-bucket/${route}/index.html`, '--key', `${route}/`,
+    `--copy-source=example-site-bucket/${route}/index.html`, `--key=${route}/`,
   ]);
   const deleteArgs = calls().find(args => args[2] === 'delete-objects');
   assert.ok(!JSON.parse(deleteArgs.at(-3)).Objects.some(({ Key }) => Key === `${route}/`));
