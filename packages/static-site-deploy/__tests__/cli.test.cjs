@@ -93,6 +93,8 @@ test('syncs and refreshes aliases before verifying and pruning across pages', ()
     'check', 's3api list-objects-v2', 's3api list-objects-v2', 's3api delete-objects',
     'cloudfront create-invalidation', 'cloudfront wait',
   ]);
+  const sync = calls()[0];
+  assert.ok(!sync.includes('--delete'), 'sync must not delete before health checks and preserve filtering');
   const copy = calls()[2];
   assert.deepEqual(copy.slice(3), [
     's3://example-site-bucket/new-page/index.html', 's3://example-site-bucket/new-page',
