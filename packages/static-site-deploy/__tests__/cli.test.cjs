@@ -132,6 +132,14 @@ test('fails on S3 per-key delete errors without a second invalidation', () => {
 const provisionArgs = ['setup', '--site', site, '--provision', '--yes', '--reviewer', 'example-reviewer',
   '--account-id', '123456789012', '--role-name', 'example-deploy', '--branch', 'release'];
 
+test('rejects unattended provisioning without confirmation before saving local settings', () => {
+  const { cliRun } = fixture();
+  const result = cliRun(provisionArgs.filter(arg => arg !== '--yes'), targets);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Unattended cloud provisioning requires --provision --yes/);
+  assert.notEqual(cliRun(['check', '--site', site]).status, 0);
+});
+
 test('dry run plans site-specific IAM and GitHub settings without mutating the stash', () => {
   const { cliRun } = fixture();
   const result = cliRun([...provisionArgs, '--dry-run'], targets);

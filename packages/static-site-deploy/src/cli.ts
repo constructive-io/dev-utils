@@ -82,6 +82,13 @@ async function main() {
   if (command !== 'deploy' && (options.dir || options.preserve)) throw new Error(usage);
 
   const allowPrompt = interactive && !options.yes && command !== 'check';
+  const dryRun = !!options['dry-run'];
+  if (command === 'setup' && !dryRun) {
+    if (isCI(process.env)) throw new Error('Run interactive setup outside CI; use environment variables to deploy in CI.');
+    if (options.provision && !allowPrompt && !options.yes) {
+      throw new Error('Unattended cloud provisioning requires --provision --yes.');
+    }
+  }
   const { config, prompted } = await promptForConfig(site, allowPrompt);
   if (command === 'check') return;
   if (command === 'deploy') {
@@ -89,9 +96,7 @@ async function main() {
     return deploy(config, { directory: options.dir ?? 'out', preserve: options.preserve });
   }
 
-  const dryRun = !!options['dry-run'];
   if (!dryRun) {
-    if (isCI(process.env)) throw new Error('Run interactive setup outside CI; use environment variables to deploy in CI.');
     saveSiteConfig(site, config);
     console.log(`Saved local deploy settings for ${site}. No AWS credentials were stored.`);
   }
@@ -104,7 +109,6 @@ async function main() {
   };
   if (!allowPrompt) {
     if (!options.provision && !dryRun) return;
-    if (!dryRun && !options.yes) throw new Error('Unattended cloud provisioning requires --provision --yes.');
     return runProvisioner(site, config, provision, dryRun);
   }
 
