@@ -24,7 +24,7 @@
     "clean": "makage clean",
     "prepublishOnly": "npm run build",
     "build": "makage build && makage copy src/provision.sh dist --flat",
-    "test": "node --test __tests__/*.test.cjs"
+    "test": "jest"
   },
   "dependencies": {
     "12factor-env": "1.34.0",

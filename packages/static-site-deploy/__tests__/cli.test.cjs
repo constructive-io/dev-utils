@@ -3,7 +3,6 @@ const { spawnSync } = require('node:child_process');
 const { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } = require('node:fs');
 const { tmpdir } = require('node:os');
 const { join, resolve, delimiter } = require('node:path');
-const { test } = require('node:test');
 
 const cli = resolve(__dirname, '../dist/cli.js');
 const site = 'example-org/example-site';
@@ -15,9 +14,14 @@ const targets = {
   AWS_PROFILE: 'example-local',
 };
 
-function fixture(t) {
+const tempDirectories = [];
+afterEach(() => {
+  for (const cwd of tempDirectories.splice(0)) rmSync(cwd, { recursive: true, force: true });
+});
+
+function fixture() {
   const cwd = mkdtempSync(join(tmpdir(), 'static-site-deploy-'));
-  t.after(() => rmSync(cwd, { recursive: true, force: true }));
+  tempDirectories.push(cwd);
   const env = {
     APPSTASH_BASE_DIR: cwd,
     PATH: [cwd, process.env.PATH].join(delimiter),
@@ -30,8 +34,8 @@ function fixture(t) {
   return { cwd, env, cliRun, mock, calls: () => readFileSync(env.CALLS, 'utf8').trim().split('\n').map(JSON.parse) };
 }
 
-test('setup stores only targets and profile for the selected site; env overrides the stash', t => {
-  const { cliRun, cwd } = fixture(t);
+test('setup stores only targets and profile for the selected site; env overrides the stash', () => {
+  const { cliRun, cwd } = fixture();
   const setup = cliRun(['setup', '--site', site, '--yes'], { ...targets, FAKE_SECRET: 'not-for-the-store' });
   assert.equal(setup.status, 0, setup.stderr);
   const local = cliRun(['check', '--site', site]);
@@ -48,8 +52,8 @@ test('setup stores only targets and profile for the selected site; env overrides
   assert.doesNotMatch(file, /FAKE_SECRET|not-for-the-store/);
 });
 
-function fakeDeploy(t) {
-  const fixtureState = fixture(t);
+function fakeDeploy() {
+  const fixtureState = fixture();
   const { cwd, mock } = fixtureState;
   mkdirSync(join(cwd, 'out', 'new-page'), { recursive: true });
   for (const key of ['index.html', 'new-page/index.html', 'asset.js']) {
@@ -78,8 +82,8 @@ process.stdout.write('<html></html>\\n' + (process.env.HTTP_STATUS ?? '200 text/
   return fixtureState;
 }
 
-test('syncs and refreshes aliases before verifying and pruning across pages', t => {
-  const { cliRun, calls } = fakeDeploy(t);
+test('syncs and refreshes aliases before verifying and pruning across pages', () => {
+  const { cliRun, calls } = fakeDeploy();
   const result = cliRun(['deploy', '--site', site, '--preserve', '*.md', '--preserve', 'llms.txt', '--preserve', 'manual/*'], {
     ...targets, AWS_PROFILE: undefined, GITHUB_ACTIONS: 'true',
   });
@@ -104,8 +108,8 @@ for (const [label, additional, error] of [
   ['homepage is unhealthy', { HTTP_STATUS: '503 text/html' }, /HTTP 200 with HTML/],
   ['object listing is incomplete', { TOKEN: '' }, /listing is incomplete/],
 ]) {
-  test(`does not delete when ${label}`, t => {
-    const { cliRun, calls } = fakeDeploy(t);
+  test(`does not delete when ${label}`, () => {
+    const { cliRun, calls } = fakeDeploy();
     const result = cliRun(['deploy', '--site', site], { ...targets, ...additional });
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, error);
@@ -113,8 +117,8 @@ for (const [label, additional, error] of [
   });
 }
 
-test('fails on S3 per-key delete errors without a second invalidation', t => {
-  const { cliRun, calls } = fakeDeploy(t);
+test('fails on S3 per-key delete errors without a second invalidation', () => {
+  const { cliRun, calls } = fakeDeploy();
   const result = cliRun(['deploy', '--site', site], {
     ...targets, DELETE_ERROR: '{"Errors":[{"Code":"AccessDenied","Key":"old.html"}]}',
   });
@@ -126,8 +130,8 @@ test('fails on S3 per-key delete errors without a second invalidation', t => {
 const provisionArgs = ['setup', '--site', site, '--provision', '--yes', '--reviewer', 'example-reviewer',
   '--account-id', '123456789012', '--role-name', 'example-deploy', '--branch', 'release'];
 
-test('dry run plans site-specific IAM and GitHub settings without mutating the stash', t => {
-  const { cliRun } = fixture(t);
+test('dry run plans site-specific IAM and GitHub settings without mutating the stash', () => {
+  const { cliRun } = fixture();
   const result = cliRun([...provisionArgs, '--dry-run'], targets);
   assert.equal(result.status, 0, result.stderr);
   const output = result.stdout.replace(/\\(.)/g, '$1');
@@ -140,8 +144,8 @@ test('dry run plans site-specific IAM and GitHub settings without mutating the s
 });
 
 for (const bypass of [true, false]) {
-  test(`preserves GitHub environment settings on rerun (admin bypass = ${bypass})`, t => {
-    const { cliRun, mock, calls } = fixture(t);
+  test(`preserves GitHub environment settings on rerun (admin bypass = ${bypass})`, () => {
+    const { cliRun, mock, calls } = fixture();
     const log = "const args = process.argv.slice(2); require('node:fs').appendFileSync(process.env.CALLS, JSON.stringify([";
     mock('aws', log + `'aws', ...args]) + '\\n');
 const [service, command] = args;
