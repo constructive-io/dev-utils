@@ -145,19 +145,26 @@ test('dry run plans site-specific IAM and GitHub settings without mutating the s
   assert.notEqual(cliRun(['check', '--site', site]).status, 0);
 });
 
-for (const bypass of [true, false]) {
-  test(`preserves GitHub environment settings on rerun (admin bypass = ${bypass})`, () => {
+for (const { bypass, firstRun = false } of [{ bypass: true }, { bypass: false }, { bypass: false, firstRun: true }]) {
+  const description = firstRun ? 'creates missing provisioning resources when the approval gate is in place' :
+    `preserves GitHub environment settings on rerun (admin bypass = ${bypass})`;
+  test(description, () => {
     const { cliRun, mock, calls } = fixture();
     const log = "const args = process.argv.slice(2); require('node:fs').appendFileSync(process.env.CALLS, JSON.stringify([";
     mock('aws', log + `'aws', ...args]) + '\\n');
 const [service, command] = args;
 if (service === '--version') console.log('aws-cli/2.example');
 else if (service === 'sts') console.log('arn:aws:iam::123456789012:role/example-admin');
+else if (${firstRun} && ['get-open-id-connect-provider', 'get-role'].includes(command)) {
+  console.error('An error occurred (NoSuchEntity)');
+  process.exit(254);
+}
+else if (command === 'create-role') console.log('arn:aws:iam::123456789012:role/example-deploy');
 else if (command === 'get-open-id-connect-provider') console.log('{"ClientIDList":["sts.amazonaws.com"]}');
 else if (command === 'get-role') console.log('{"Role":{"Arn":"arn:aws:iam::123456789012:role/example-deploy"}}');
 else if (command === 'list-attached-role-policies') console.log('{"AttachedPolicies":[]}');
 else if (command === 'list-role-policies') console.log('{"PolicyNames":["SiteDeploy"]}');
-else if (!['update-assume-role-policy','put-role-policy'].includes(command)) process.exit(99);
+else if (!['create-open-id-connect-provider','update-assume-role-policy','put-role-policy'].includes(command)) process.exit(99);
 `);
     mock('gh', log + `'gh', ...args]) + '\\n');
 const fs = require('node:fs');
@@ -165,22 +172,31 @@ const [command, endpoint, method, target] = args;
 if (endpoint === 'repos/example-org/example-site') console.log('example-org/example-site');
 else if (endpoint.endsWith('/customization/sub')) console.log('{"use_immutable_subject":false}');
 else if (endpoint === 'users/example-reviewer') console.log('123');
-else if (endpoint === '--paginate') console.log('[{"branch_policies":[{"id":1,"name":"release","type":"branch"}]}]');
+else if (endpoint === '--paginate') console.log(${firstRun} ? '[{"branch_policies":[]}]' : '[{"branch_policies":[{"id":1,"name":"release","type":"branch"}]}]');
+else if (${firstRun} && endpoint.endsWith('/environments/production') && !fs.existsSync(process.env.CALLS + '.changed')) {
+  console.error('gh: Not Found (HTTP 404)');
+  process.exit(1);
+}
 else if (endpoint.endsWith('/environments/production')) console.log(JSON.stringify({
-  can_admins_bypass: ${bypass} || fs.existsSync(process.env.CALLS + '.changed'),
+  can_admins_bypass: ${bypass} || (!${firstRun} && fs.existsSync(process.env.CALLS + '.changed')),
   deployment_branch_policy: { protected_branches: false, custom_branch_policies: true },
   protection_rules: [{ type: 'required_reviewers', prevent_self_review: false, reviewers: [{ type: 'User', reviewer: {id: 123} }] }],
 }));
 else if (endpoint === '--method' && method === 'PUT') {
   if (target.endsWith('/environments/production')) fs.writeFileSync(process.env.CALLS + '.changed', '');
-} else if (command !== 'variable') process.exit(99);
+} else if (command !== 'variable' && !(method === 'POST' && target.endsWith('/deployment-branch-policies'))) process.exit(99);
 `);
     const result = cliRun(provisionArgs, targets);
     assert.equal(result.status, bypass ? 1 : 0, result.stderr);
     const commands = calls();
-    assert.ok(!commands.some(args => args.includes('PUT') && args[4].endsWith('/environments/production')));
-    assert.equal(commands.some(args => args.includes('update-assume-role-policy')), !bypass);
+    assert.equal(commands.some(args => args.includes('PUT') && args[4].endsWith('/environments/production')), firstRun);
+    assert.equal(commands.some(args => args.includes('update-assume-role-policy')), !bypass && !firstRun);
     assert.equal(commands.some(args => args.includes('PUT') && args[4].endsWith('/customization/sub')), !bypass);
+    if (firstRun) {
+      assert.ok(commands.some(args => args.includes('POST') && args[4].endsWith('/deployment-branch-policies')));
+      assert.ok(commands.some(args => args.includes('create-open-id-connect-provider')));
+      assert.ok(commands.some(args => args.includes('create-role')));
+    }
     if (bypass) assert.match(result.stderr, /Allow administrators to bypass configured protection rules/);
   });
 }

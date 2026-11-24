@@ -68,7 +68,9 @@ read_optional() {
     print_command "$@"
   elif result=$(LC_ALL=C "$@" 2>&1); then
     printf '%s\n' "$result"
-  elif [[ $result != *"$missing"* ]]; then
+  elif [[ $result == *"$missing"* ]]; then
+    return 0
+  else
     fail "$result"
   fi
 }
