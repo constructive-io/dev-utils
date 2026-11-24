@@ -105,6 +105,18 @@ test('syncs and refreshes aliases before verifying and pruning across pages', ()
   });
 });
 
+test('prefers the directory index when both forms produce the same extensionless alias', () => {
+  const { cwd, cliRun, calls } = fakeDeploy();
+  mkdirSync(join(cwd, 'out', '404'));
+  writeFileSync(join(cwd, 'out', '404', 'index.html'), '');
+  writeFileSync(join(cwd, 'out', '404.html'), '');
+  const result = cliRun(['deploy', '--site', site], targets);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(calls().filter(args => args[4] === 's3://example-site-bucket/404').map(args => args[3]), [
+    's3://example-site-bucket/404/index.html',
+  ]);
+});
+
 for (const [label, additional, error] of [
   ['invalidation fails', { WAIT_FAILURE: '1' }, /cloudfront wait failed/],
   ['homepage is unhealthy', { HTTP_STATUS: '503 text/html' }, /HTTP 200 with HTML/],

@@ -29,9 +29,10 @@ export function deploy(config: SiteConfig, { directory, preserve = markdown }: O
   const aliases = new Map<string, string>();
   for (const key of files) {
     if (!key.endsWith('.html') || key === 'index.html') continue;
-    const alias = key.endsWith('/index.html') ? key.slice(0, -'/index.html'.length) : key.slice(0, -'.html'.length);
-    if (files.has(alias) || aliases.has(alias)) throw new Error(`Conflicting extensionless route: ${alias}`);
-    aliases.set(alias, key);
+    const directoryIndex = key.endsWith('/index.html');
+    const alias = key.slice(0, directoryIndex ? -'/index.html'.length : -'.html'.length);
+    if (files.has(alias)) throw new Error(`Conflicting extensionless route: ${alias}`);
+    if (directoryIndex || !aliases.has(alias)) aliases.set(alias, key);
   }
 
   const keep = preserve.map(globRegex);
