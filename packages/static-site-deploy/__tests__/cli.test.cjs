@@ -239,14 +239,37 @@ test('dry run plans site-specific IAM and GitHub settings without mutating the s
   assert.notEqual(cliRun(['check', '--site', site]).status, 0);
 });
 
+const noReviewerArgs = provisionArgs.filter((arg, index) => arg !== '--reviewer' && provisionArgs[index - 1] !== '--reviewer');
+const reviewerPlanError = 'gh: Failed to create the environment protection rule. Please ensure the billing plan supports the required reviewers protection rule. (HTTP 422)';
+
+test('plans and checks configuration without a reviewer', () => {
+  const { cliRun } = fixture();
+  const result = cliRun([...noReviewerArgs, '--dry-run'], targets);
+  assert.equal(result.status, 0, result.stderr);
+  const output = result.stdout.replace(/\\(.)/g, '$1');
+  assert.match(output, /"custom_branch_policies":true/);
+  assert.match(output, /"can_admins_bypass":false/);
+  assert.match(output, /"name":"release","type":"branch"/);
+  assert.doesNotMatch(output, /users\/|reviewers/);
+  assert.match(result.stderr, /no required reviewer/);
+  assert.equal(cliRun(['check', '--site', site], { ...targets, CI: 'true' }).status, 0);
+});
+
 const immutablePrefix = 'repo:example-org@111/example-site@222';
-for (const { bypass, firstRun = false, prefix } of [
+for (const { bypass, firstRun = false, prefix, noReviewer = false, reviewerError } of [
   { bypass: true }, { bypass: false }, { bypass: false, firstRun: true },
   { bypass: false, prefix: immutablePrefix }, { bypass: false, firstRun: true, prefix: 'repo:EXAMPLE-ORG@111/Example-Site@222' },
+  { bypass: false, firstRun: true, noReviewer: true },
+  { bypass: false, noReviewer: true },
+  { bypass: false, firstRun: true, reviewerError: reviewerPlanError },
+  { bypass: true, firstRun: true, reviewerError: reviewerPlanError },
+  { bypass: false, firstRun: true, reviewerError: 'gh: unrelated validation error (HTTP 422)' },
 ]) {
   const description = (firstRun ? 'creates missing provisioning resources when the approval gate is in place' :
     `preserves GitHub environment settings on rerun (admin bypass = ${bypass})`) +
-    (prefix ? ' with immutable OIDC subjects' : '');
+    (prefix ? ' with immutable OIDC subjects' : '') +
+    (noReviewer ? ' without specifying a reviewer' : '') +
+    (reviewerError ? ` with ${reviewerError === reviewerPlanError ? 'unsupported reviewers' : 'an unrelated 422'} (admin bypass = ${bypass})` : '');
   test(description, () => {
     const { cliRun, mock, calls } = fixture();
     const log = "const args = process.argv.slice(2); require('node:fs').appendFileSync(process.env.CALLS, JSON.stringify([";
@@ -278,28 +301,54 @@ else if (${firstRun} && endpoint.endsWith('/environments/production') && !fs.exi
   process.exit(1);
 }
 else if (endpoint.endsWith('/environments/production')) console.log(JSON.stringify({
-  can_admins_bypass: ${bypass} || (!${firstRun} && fs.existsSync(process.env.CALLS + '.changed')),
+  can_admins_bypass: ${bypass} || (fs.existsSync(process.env.CALLS + '.changed') &&
+    JSON.parse(fs.readFileSync(process.env.CALLS + '.changed')).can_admins_bypass !== false),
   deployment_branch_policy: { protected_branches: false, custom_branch_policies: true },
-  protection_rules: [{ type: 'required_reviewers', prevent_self_review: false, reviewers: [{ type: 'User', reviewer: {id: 123} }] }],
+  protection_rules: !${firstRun} || (!${noReviewer} && !${!!reviewerError}) ?
+    [{ type: 'required_reviewers', prevent_self_review: false, reviewers: [{ type: 'User', reviewer: {id: 123} }] }] : [],
 }));
 else if (endpoint === '--method' && method === 'PUT') {
-  if (target.endsWith('/environments/production')) fs.writeFileSync(process.env.CALLS + '.changed', '');
+  if (target.endsWith('/environments/production')) {
+    const body = JSON.parse(fs.readFileSync(0));
+    fs.appendFileSync(process.env.CALLS + '.env', JSON.stringify(body) + '\\n');
+    if (body.reviewers && ${JSON.stringify(reviewerError ?? null)}) {
+      console.error(${JSON.stringify(reviewerError ?? null)});
+      process.exit(1);
+    }
+    fs.writeFileSync(process.env.CALLS + '.changed', JSON.stringify(body));
+  }
   if (target.endsWith('/customization/sub')) fs.writeFileSync(process.env.CALLS + '.sub', fs.readFileSync(0));
 } else if (command !== 'variable' && !(method === 'POST' && target.endsWith('/deployment-branch-policies'))) process.exit(99);
 `);
-    const result = cliRun(provisionArgs, targets);
-    assert.equal(result.status, bypass ? 1 : 0, result.stderr);
+    const result = cliRun(noReviewer ? noReviewerArgs : provisionArgs, targets);
+    const fallback = reviewerError === reviewerPlanError;
+    const unexpectedError = reviewerError && !fallback;
+    const blocked = bypass || unexpectedError;
+    assert.equal(result.status, blocked ? 1 : 0, result.stderr);
     const commands = calls();
-    assert.equal(commands.some(args => args.includes('PUT') && args[4].endsWith('/environments/production')), firstRun);
-    assert.equal(commands.some(args => args.includes('update-assume-role-policy')), !bypass && !firstRun);
-    assert.equal(commands.some(args => args.includes('PUT') && args[4].endsWith('/customization/sub')), !bypass);
-    if (firstRun) {
+    assert.equal(commands.some(args => args.includes('PUT') && args[4].endsWith('/environments/production')), firstRun || bypass);
+    assert.equal(commands.some(args => args.includes('users/example-reviewer')), !noReviewer);
+    if (firstRun || bypass) {
+      const payloads = readFileSync(calls.path + '.env', 'utf8').trim().split('\n').map(JSON.parse);
+      const branchOnly = { can_admins_bypass: false, deployment_branch_policy: { protected_branches: false, custom_branch_policies: true } };
+      const withReviewer = { ...branchOnly, wait_timer: 0, prevent_self_review: false, reviewers: [{ type: 'User', id: 123 }] };
+      assert.deepEqual(payloads, fallback ? [withReviewer, branchOnly] : [noReviewer ? branchOnly : withReviewer]);
+    }
+    if (unexpectedError) assert.match(result.stderr, /unrelated validation error/);
+    if (firstRun && (noReviewer || fallback)) assert.match(result.stderr, /no required reviewer/);
+    else assert.doesNotMatch(result.stderr, /no required reviewer/);
+    if (blocked) assert.ok(!commands.some(args => args[0] === 'aws' && args[1] === 'iam'));
+    assert.equal(commands.some(args => args.includes('update-assume-role-policy')), !blocked && !firstRun);
+    assert.equal(commands.some(args => args.includes('PUT') && args[4].endsWith('/customization/sub')), !blocked);
+    if (firstRun && !unexpectedError) {
       assert.ok(commands.some(args => args.includes('POST') && args[4].endsWith('/deployment-branch-policies')));
+    }
+    if (firstRun && !blocked) {
       assert.ok(commands.some(args => args.includes('create-open-id-connect-provider')));
       assert.ok(commands.some(args => args.includes('create-role')));
     }
-    if (bypass) assert.match(result.stderr, /Allow administrators to bypass configured protection rules/);
-    else {
+    if (bypass) assert.match(result.stderr, /did not confirm that administrator bypass is disabled/);
+    else if (!blocked) {
       const trustArgs = commands.find(args => args.includes(firstRun ? 'create-role' : 'update-assume-role-policy'));
       const trust = JSON.parse(trustArgs[trustArgs.indexOf(firstRun ? '--assume-role-policy-document' : '--policy-document') + 1]);
       assert.equal(trust.Statement[0].Condition.StringEquals['token.actions.githubusercontent.com:sub'],

@@ -128,19 +128,18 @@ async function main() {
   try {
     if (!dryRun && !options.provision) {
       const { configure } = await prompter.prompt({} as { configure?: boolean }, [{
-        type: 'confirm', name: 'configure', message: 'Set up AWS OIDC and the GitHub production approval gate?', default: false,
+        type: 'confirm', name: 'configure', message: 'Set up AWS OIDC and the GitHub production environment?', default: false,
       }]);
       if (!configure) return;
     }
     const questions = [
-      { name: 'SITE_REVIEWER', message: 'Required GitHub reviewer (login)' },
-      { name: 'AWS_ACCOUNT_ID', message: 'AWS account ID' },
-      { name: 'AWS_DEPLOY_ROLE_NAME', message: 'Dedicated IAM deploy role name' },
+      { name: 'SITE_REVIEWER', message: 'GitHub reviewer login (optional)', required: false },
+      { name: 'AWS_ACCOUNT_ID', message: 'AWS account ID', required: true },
+      { name: 'AWS_DEPLOY_ROLE_NAME', message: 'Dedicated IAM deploy role name', required: true },
     ].filter(question => provision[question.name] === undefined);
     const answers = questions.length ? await prompter.prompt({}, questions.map(question => ({
       ...question,
       type: 'text',
-      required: true,
     }))) : {};
     const { apply } = dryRun ? { apply: true } : await prompter.prompt({} as { apply?: boolean }, [{
       type: 'confirm',
