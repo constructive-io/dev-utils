@@ -1,6 +1,6 @@
 import generate from '@babel/generator';
 import * as t from '@babel/types';
-import { parse,Root } from '@launchql/protobufjs';
+import { parse,Root } from '@constructive-io/protobufjs';
 import { mkdirSync,readFileSync, writeFileSync } from 'fs';
 import {join } from 'path';
 

@@ -42,7 +42,7 @@ inventory: ./inventory.json
 # is a deliberate decision. The value is the reason.
 allowBuilds:
   "@google/genai": vendored native deps
-  "@launchql/protobufjs": protobuf codegen postinstall
+  "@constructive-io/protobufjs": protobuf codegen postinstall
   core-js: polyfill postinstall banner
   electron-winstaller: Windows installer toolchain
   esbuild: native binary, downloaded at install time
