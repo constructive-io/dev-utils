@@ -7,6 +7,7 @@ This file provides guidance to AI agents working with the `constructive-io/dev-u
 | Skill | Description |
 |-------|-------------|
 | **dev-utils** | Developer utilities — inquirerer (CLI prompts), yanse (terminal colors), appStash (state persistence), inflekt (string inflection), and 25+ other packages |
+| **[static-site-deploy](.agents/skills/static-site-deploy/SKILL.md)** | Local static exports, deployment previews, and GitHub Actions OIDC provisioning |
 
 ## Skill Structure
 
@@ -22,4 +23,7 @@ This file provides guidance to AI agents working with the `constructive-io/dev-u
       inquirerer-anti-patterns.md
       readme-formatting.md
   dev-utils.zip           # Packaged for distribution
+  static-site-deploy/
+    SKILL.md
+  static-site-deploy.zip
 ```
