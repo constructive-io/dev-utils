@@ -17,6 +17,8 @@ Use this skill with the site's deploy guide and the [CLI reference](../../../pac
 
 ## GitHub Actions and provisioning
 
+Follow the site repository's approval rules for production provisioning and workflow dispatches, including dry-runs where required.
+
 1. Preview `pnpm exec static-site-deploy setup --site acme/site --provision --reviewer LOGIN --account-id ACCOUNT_ID --role-name ROLE_NAME --dry-run`. The plan illustrates a fresh setup without contacting AWS or GitHub. To apply with authorization, use AWS CLI v2 with IAM setup permissions, authenticated `gh` with repository admin access, Bash, and `jq`.
 2. Use a dedicated IAM role per site. Setup restricts permissions to that site's bucket and distribution, and binds trust to audience `sts.amazonaws.com` and the repository's `production` environment on `refs/heads/main`, for example `repo:acme/site:environment:production:ref:refs/heads/main`. It preserves immutable subjects where enabled. Check other OIDC integrations first: the subject template is repository-wide.
 3. Keep `production` restricted to `main`, with administrator bypass off. Use a required reviewer where supported. If GitHub rejects the reviewer rule because of the plan, supported CLI versions retry without setting a reviewer and warn; the run then does not wait for reviewer approval. Setup verifies that administrator bypass is disabled before changing IAM trust. Keep the human approval requirement even when GitHub cannot enforce it.
