@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/constructive-io/dev-utils/compare/@constructive-io/static-site-deploy@0.3.0...@constructive-io/static-site-deploy@0.3.1) (2026-11-25)
+
+### Bug Fixes
+
+- **static-site-deploy:** fall back to no required reviewer when the plan rejects it ([#147](https://github.com/constructive-io/dev-utils/issues/147)) ([ed1a896](https://github.com/constructive-io/dev-utils/commit/ed1a8963037a508edcbb6421ccbadbf14ae9f809))
+
 # [0.3.0](https://github.com/constructive-io/dev-utils/compare/@constructive-io/static-site-deploy@0.2.0...@constructive-io/static-site-deploy@0.3.0) (2026-11-24)
 
 ### Bug Fixes
