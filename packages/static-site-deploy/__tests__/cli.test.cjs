@@ -242,6 +242,26 @@ test('dry run plans site-specific IAM and GitHub settings without mutating the s
 const noReviewerArgs = provisionArgs.filter((arg, index) => arg !== '--reviewer' && provisionArgs[index - 1] !== '--reviewer');
 const reviewerPlanError = 'gh: Failed to create the environment protection rule. Please ensure the billing plan supports the required reviewers protection rule. (HTTP 422)';
 
+test.each([null, '', '   '])('a blank reviewer prompt (%j) does not look up a GitHub user', answer => {
+  const { cwd, cliRun } = fixture();
+  const preload = join(cwd, 'prompt.cjs');
+  writeFileSync(preload, `
+const { createRequire } = require('node:module');
+const { Inquirerer } = createRequire(${JSON.stringify(cli)})('inquirerer');
+process.stdin.isTTY = process.stdout.isTTY = true;
+Inquirerer.prototype.text = async question => {
+  if (question.name !== 'SITE_REVIEWER' || question.required) throw new Error('Expected an optional reviewer prompt');
+  return ${JSON.stringify(answer)};
+};
+`);
+  const result = cliRun([...noReviewerArgs.filter(arg => arg !== '--yes'), '--dry-run'], {
+    ...targets, NODE_OPTIONS: `--require="${preload}"`,
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.doesNotMatch(result.stdout, /users\/|reviewers/);
+  assert.match(result.stderr, /no required reviewer/);
+});
+
 test('plans and checks configuration without a reviewer', () => {
   const { cliRun } = fixture();
   const result = cliRun([...noReviewerArgs, '--dry-run'], targets);
