@@ -47,10 +47,17 @@ async function promptForConfig(site: string, allowPrompt: boolean) {
   }
 }
 
-function runProvisioner(site: string, config: SiteConfig, provision: Record<string, string>, dryRun: boolean) {
+type ProvisionSettings = {
+  SITE_REVIEWER?: string | null;
+  AWS_ACCOUNT_ID?: string;
+  AWS_DEPLOY_ROLE_NAME?: string;
+  SITE_BRANCH: string;
+};
+
+function runProvisioner(site: string, config: SiteConfig, provision: ProvisionSettings, dryRun: boolean) {
   const { AWS_PROFILE: _profile, ...targets } = config;
   const result = spawnSync('bash', [join(__dirname, 'provision.sh'), ...(dryRun ? ['--dry-run'] : [])], {
-    env: { ...awsEnvironment(config), ...targets, ...provision, SITE_REPO: site },
+    env: { ...awsEnvironment(config), ...targets, ...provision, SITE_REVIEWER: provision.SITE_REVIEWER?.trim() || undefined, SITE_REPO: site },
     stdio: 'inherit',
   });
   if (result.error) throw result.error;
@@ -113,7 +120,7 @@ async function main() {
     console.log(`Saved local deploy settings for ${site}. No AWS credentials were stored.`);
   }
 
-  const provision: Record<string, string> = {
+  const provision: ProvisionSettings = {
     SITE_REVIEWER: options.reviewer ?? process.env.SITE_REVIEWER,
     AWS_ACCOUNT_ID: options['account-id'] ?? process.env.AWS_ACCOUNT_ID,
     AWS_DEPLOY_ROLE_NAME: options['role-name'] ?? process.env.AWS_DEPLOY_ROLE_NAME,
@@ -132,12 +139,12 @@ async function main() {
       }]);
       if (!configure) return;
     }
-    const questions = [
+    const questions = ([
       { name: 'SITE_REVIEWER', message: 'GitHub reviewer login (optional)', required: false },
       { name: 'AWS_ACCOUNT_ID', message: 'AWS account ID', required: true },
       { name: 'AWS_DEPLOY_ROLE_NAME', message: 'Dedicated IAM deploy role name', required: true },
-    ].filter(question => provision[question.name] === undefined);
-    const answers = questions.length ? await prompter.prompt({}, questions.map(question => ({
+    ] as const).filter(question => provision[question.name] === undefined);
+    const answers = questions.length ? await prompter.prompt<Partial<ProvisionSettings>>({}, questions.map(question => ({
       ...question,
       type: 'text',
     }))) : {};
