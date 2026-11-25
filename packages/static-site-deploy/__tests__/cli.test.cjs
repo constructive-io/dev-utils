@@ -248,6 +248,7 @@ test('plans and checks configuration without a reviewer', () => {
   assert.equal(result.status, 0, result.stderr);
   const output = result.stdout.replace(/\\(.)/g, '$1');
   assert.match(output, /"custom_branch_policies":true/);
+  assert.match(output, /"can_admins_bypass":false/);
   assert.match(output, /"name":"release","type":"branch"/);
   assert.doesNotMatch(output, /users\/|reviewers/);
   assert.match(result.stderr, /no required reviewer/);
@@ -300,7 +301,8 @@ else if (${firstRun} && endpoint.endsWith('/environments/production') && !fs.exi
   process.exit(1);
 }
 else if (endpoint.endsWith('/environments/production')) console.log(JSON.stringify({
-  can_admins_bypass: ${bypass} || (!${firstRun} && fs.existsSync(process.env.CALLS + '.changed')),
+  can_admins_bypass: ${bypass} || (fs.existsSync(process.env.CALLS + '.changed') &&
+    JSON.parse(fs.readFileSync(process.env.CALLS + '.changed')).can_admins_bypass !== false),
   deployment_branch_policy: { protected_branches: false, custom_branch_policies: true },
   protection_rules: !${firstRun} || (!${noReviewer} && !${!!reviewerError}) ?
     [{ type: 'required_reviewers', prevent_self_review: false, reviewers: [{ type: 'User', reviewer: {id: 123} }] }] : [],
@@ -313,7 +315,7 @@ else if (endpoint === '--method' && method === 'PUT') {
       console.error(${JSON.stringify(reviewerError ?? null)});
       process.exit(1);
     }
-    fs.writeFileSync(process.env.CALLS + '.changed', '');
+    fs.writeFileSync(process.env.CALLS + '.changed', JSON.stringify(body));
   }
   if (target.endsWith('/customization/sub')) fs.writeFileSync(process.env.CALLS + '.sub', fs.readFileSync(0));
 } else if (command !== 'variable' && !(method === 'POST' && target.endsWith('/deployment-branch-policies'))) process.exit(99);
@@ -324,11 +326,11 @@ else if (endpoint === '--method' && method === 'PUT') {
     const blocked = bypass || unexpectedError;
     assert.equal(result.status, blocked ? 1 : 0, result.stderr);
     const commands = calls();
-    assert.equal(commands.some(args => args.includes('PUT') && args[4].endsWith('/environments/production')), firstRun);
+    assert.equal(commands.some(args => args.includes('PUT') && args[4].endsWith('/environments/production')), firstRun || bypass);
     assert.equal(commands.some(args => args.includes('users/example-reviewer')), !noReviewer);
-    if (firstRun) {
+    if (firstRun || bypass) {
       const payloads = readFileSync(calls.path + '.env', 'utf8').trim().split('\n').map(JSON.parse);
-      const branchOnly = { deployment_branch_policy: { protected_branches: false, custom_branch_policies: true } };
+      const branchOnly = { can_admins_bypass: false, deployment_branch_policy: { protected_branches: false, custom_branch_policies: true } };
       const withReviewer = { ...branchOnly, wait_timer: 0, prevent_self_review: false, reviewers: [{ type: 'User', id: 123 }] };
       assert.deepEqual(payloads, fallback ? [withReviewer, branchOnly] : [noReviewer ? branchOnly : withReviewer]);
     }
@@ -345,7 +347,7 @@ else if (endpoint === '--method' && method === 'PUT') {
       assert.ok(commands.some(args => args.includes('create-open-id-connect-provider')));
       assert.ok(commands.some(args => args.includes('create-role')));
     }
-    if (bypass) assert.match(result.stderr, /Allow administrators to bypass configured protection rules/);
+    if (bypass) assert.match(result.stderr, /did not confirm that administrator bypass is disabled/);
     else if (!blocked) {
       const trustArgs = commands.find(args => args.includes(firstRun ? 'create-role' : 'update-assume-role-policy'));
       const trust = JSON.parse(trustArgs[trustArgs.indexOf(firstRun ? '--assume-role-policy-document' : '--policy-document') + 1]);
