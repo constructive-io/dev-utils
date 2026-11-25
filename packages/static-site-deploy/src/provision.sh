@@ -14,7 +14,7 @@ case "${1-}:$#" in
   *) fail "Usage: static-site-deploy setup --site OWNER/REPO [--provision] [--dry-run]" ;;
 esac
 
-for name in SITE_REPO SITE_REVIEWER SITE_BRANCH AWS_ACCOUNT_ID AWS_DEPLOY_ROLE_NAME AWS_REGION AWS_S3_BUCKET AWS_CLOUDFRONT_DISTRIBUTION_ID SITE_URL; do
+for name in SITE_REPO SITE_BRANCH AWS_ACCOUNT_ID AWS_DEPLOY_ROLE_NAME AWS_REGION AWS_S3_BUCKET AWS_CLOUDFRONT_DISTRIBUTION_ID SITE_URL; do
   [[ ${!name-} =~ [^[:space:]] ]] || fail "Set $name before running this script."
 done
 [[ $AWS_ACCOUNT_ID =~ ^[0-9]{12}$ ]] || fail "AWS_ACCOUNT_ID must be a 12-digit AWS account ID."
@@ -33,7 +33,7 @@ fi
 export AWS_PAGER="" GH_PROMPT_DISABLED=1
 
 [[ $SITE_REPO =~ ^[A-Za-z0-9][A-Za-z0-9-]*/[A-Za-z0-9_.-]+$ && $SITE_REPO != */. && $SITE_REPO != */.. ]] || fail "Expected OWNER/REPO."
-[[ $SITE_REVIEWER =~ ^[A-Za-z0-9][A-Za-z0-9-]*$ ]] || fail "Expected a GitHub username."
+[[ -z ${SITE_REVIEWER-} || $SITE_REVIEWER =~ ^[A-Za-z0-9][A-Za-z0-9-]*$ ]] || fail "Expected a GitHub username."
 [[ $SITE_BRANCH =~ ^[A-Za-z0-9][A-Za-z0-9._/-]*$ ]] || fail "Expected a deployment branch name."
 issuer=token.actions.githubusercontent.com
 audience=sts.amazonaws.com
@@ -102,21 +102,35 @@ if jq -e '.use_immutable_subject == true' <<< "$template" >/dev/null; then
   subject_settings='{"use_default":false,"include_claim_keys":["repo","context","ref"],"use_immutable_subject":true}'
 fi
 
-reviewer=$(read_state 1 gh api "users/$SITE_REVIEWER" --jq .id)
-[[ $reviewer =~ ^[1-9][0-9]*$ ]] || fail "Could not resolve the GitHub reviewer $SITE_REVIEWER."
-protection=$(jq -cn --argjson id "$reviewer" '{
-  wait_timer: 0, prevent_self_review: false, reviewers: [{type: "User", id: $id}],
-  deployment_branch_policy: {protected_branches: false, custom_branch_policies: true}
-}')
+branch_protection='{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
+reviewer=null
+protection=$branch_protection
+if [[ -n ${SITE_REVIEWER-} ]]; then
+  reviewer=$(read_state 1 gh api "users/$SITE_REVIEWER" --jq .id)
+  [[ $reviewer =~ ^[1-9][0-9]*$ ]] || fail "Could not resolve the GitHub reviewer $SITE_REVIEWER."
+  protection=$(jq -c --argjson id "$reviewer" '. + {
+    wait_timer: 0, prevent_self_review: false, reviewers: [{type: "User", id: $id}]
+  }' <<< "$branch_protection")
+fi
 current=$(read_optional '(HTTP 404)' gh api "$environment")
 if [[ -z $current ]] || ! jq -e --argjson reviewer "$reviewer" '
   .deployment_branch_policy == {protected_branches: false, custom_branch_policies: true}
-  and ([.protection_rules[] | select(.type == "wait_timer" and .wait_timer > 0)] | length == 0)
-  and any(.protection_rules[];
-    .type == "required_reviewers" and .prevent_self_review == false
-    and ([.reviewers[] | {type, id: .reviewer.id}] == [{type: "User", id: $reviewer}]))
+  and ($reviewer == null or (
+    ([.protection_rules[]? | select(.type == "wait_timer" and .wait_timer > 0)] | length == 0)
+    and any(.protection_rules[]?;
+      .type == "required_reviewers" and .prevent_self_review == false
+      and ([.reviewers[] | {type, id: .reviewer.id}] == [{type: "User", id: $reviewer}]))
+  ))
 ' <<< "$current" >/dev/null; then
-  write_github PUT "$environment" "$protection"
+  if $dry_run; then
+    write_github PUT "$environment" "$protection"
+  elif ! result=$(write_github PUT "$environment" "$protection" 2>&1); then
+    if [[ $reviewer != null && $result == *'supports the required reviewers protection rule'* && $result == *'(HTTP 422)'* ]]; then
+      write_github PUT "$environment" "$branch_protection"
+    else
+      fail "$result"
+    fi
+  fi
 fi
 
 policies=$(read_state '[{"branch_policies":[]}]' gh api --paginate --slurp "$branch_policies")
@@ -128,10 +142,21 @@ for id in $stale; do
   run gh api --method DELETE "$branch_policies/$id" --silent
 done
 
-protection=$(read_state '{"can_admins_bypass":false}' gh api "$environment")
+protection=$(read_state "$(jq -c --argjson reviewer "$reviewer" '. + {
+  can_admins_bypass: false, protection_rules: (if $reviewer == null then [] else [{type: "required_reviewers"}] end)
+}' <<< "$branch_protection")" gh api "$environment")
+if ! jq -e 'any(.protection_rules[]?; .type == "required_reviewers")' <<< "$protection" >/dev/null; then
+  if $dry_run; then
+    printf '%s\n' "Dry run: this plan sets no required reviewer." >&2
+  else
+    printf '%s\n' "Warning: the production environment has no required reviewer; deployments will not wait for reviewer approval." >&2
+  fi
+fi
 if ! jq -e '.can_admins_bypass == false' <<< "$protection" >/dev/null; then
   fail "In https://github.com/$repo/settings/environments, open production, uncheck 'Allow administrators to bypass configured protection rules', save, and rerun. OIDC and IAM trust have not been changed."
 fi
+jq -e --argjson expected "$branch_protection" '.deployment_branch_policy == $expected.deployment_branch_policy' <<< "$protection" >/dev/null ||
+  fail "The production environment does not enforce custom deployment branch policies. OIDC and IAM trust have not been changed."
 
 provider_state=$(read_optional '(NoSuchEntity)' aws iam get-open-id-connect-provider --open-id-connect-provider-arn "$provider" --output json)
 if [[ -z $provider_state ]]; then
