@@ -41,7 +41,7 @@
   "dependencies": {
     "@babel/generator": "^7.28.6",
     "@babel/types": "^7.28.6",
-    "@launchql/protobufjs": "^7.2.6",
+    "@constructive-io/protobufjs": "7.6.6",
     "@marcbachmann/cel-js": "^7.1.0",
     "nested-obj": "workspace:*",
     "strfy-js": "workspace:*"
