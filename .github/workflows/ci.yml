@@ -75,6 +75,7 @@ jobs:
           - yamlize
           - ws-changed
           - static-site-deploy
+          - llms-markdown
 
     steps:
     - name: Checkout code
