@@ -223,9 +223,27 @@ interface InquirererOptions {
   globalMaxLines?: number;             // Max lines for list displays (default: 10)
   mutateArgs?: boolean;                // Mutate argv object (default: true)
   resolverRegistry?: DefaultResolverRegistry;  // Custom resolver registry
+  clearScreen?: boolean;               // Reset the terminal before each prompt (default: true)
+  onCancel?: (reason: CancelReason) => Error;  // Reject a prompt that ends without an answer (default: unset)
 }
 
 const prompter = new Inquirerer(options);
+```
+
+`clearScreen: false` keeps what is already on the screen: each prompt is written below it, and a prompt that redraws itself erases only the lines it drew.
+
+By default, Ctrl-C at a prompt exits the process with code 0. With `onCancel`, a prompt that ends without an answer rejects with the error `onCancel` returns, so the caller's `finally` blocks run. The `CancelReason` is `'interrupt'` for Ctrl-C, or `'end-of-input'` for Ctrl-D or a closed input stream. Ctrl-C while no prompt is pending sends SIGINT to the process. After a cancelled prompt, call `close()` on the prompter and do not prompt with it again.
+
+```typescript
+const prompter = new Inquirerer({
+  clearScreen: false,
+  onCancel: (reason) => new Error(reason === 'interrupt' ? 'Cancelled (Ctrl-C).' : 'The input ended before an answer.')
+});
+try {
+  await prompter.prompt({}, questions);
+} finally {
+  prompter.close();
+}
 ```
 
 #### Methods

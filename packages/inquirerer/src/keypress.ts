@@ -122,6 +122,9 @@ export function segmentKeys(chunk: string): string[] {
   return keys;
 }
 
+/** Why a prompt ended without an answer: Ctrl-C, or the end of input (Ctrl-D, or a closed stdin). */
+export type CancelReason = 'interrupt' | 'end-of-input';
+
 /**
  * Handles keyboard input for interactive prompts.
  * 
@@ -135,6 +138,8 @@ export function segmentKeys(chunk: string): string[] {
  */
 export class TerminalKeypress {
   private listeners: Record<string, KeyHandler[]> = {};
+  private unhandled: ((key: string) => void) | null = null;
+  private cancelKey: ((reason: CancelReason) => void) | null = null;
   private active: boolean = true;
   private noTty: boolean;
   private input: Readable;
@@ -163,7 +168,11 @@ export class TerminalKeypress {
 
   private setupListeners(): void {
     this.dataHandler = (chunk: string) => {
-      if (!this.active) return;
+      if (!this.active) {
+        // A cancel-key handler hears Ctrl-C also while no prompt reads keys.
+        if (this.cancelKey && chunk.includes(KEY_CODES.CTRL_C)) this.cancelKey('interrupt');
+        return;
+      }
       // A chunk carrying several keypresses (paste, fast typing) matches no
       // single registered key, so dispatch it key by key. An exact match wins
       // first: consumers may register sequences the segmenter does not know.
@@ -181,10 +190,20 @@ export class TerminalKeypress {
     if (handlers) {
       // Copy: a handler may register or remove handlers for the same key.
       for (const handler of [...handlers]) handler();
+    } else {
+      this.unhandled?.(key);
     }
     if (key === KEY_CODES.CTRL_C) {
-      this.proc.exit(0);
+      if (this.cancelKey) this.cancelKey('interrupt');
+      else this.proc.exit(0);
+    } else if (key === KEY_CODES.CTRL_D) {
+      this.cancelKey?.('end-of-input');
     }
+  }
+
+  /** Ctrl-C calls this with 'interrupt' in place of exiting the process, and Ctrl-D with 'end-of-input'. */
+  onCancelKey(callback: (reason: CancelReason) => void): void {
+    this.cancelKey = callback;
   }
 
   on(key: string, callback: KeyHandler): void {
@@ -203,8 +222,14 @@ export class TerminalKeypress {
     }
   }
 
+  /** Receives each key that has no handler of its own, for example any typed character. */
+  onUnhandled(callback: (key: string) => void): void {
+    this.unhandled = callback;
+  }
+
   clearHandlers(): void {
     this.listeners = {};
+    this.unhandled = null;
   }
 
   pause(): void {

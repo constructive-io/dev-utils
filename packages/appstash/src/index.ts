@@ -192,6 +192,9 @@ export function ensure(dirs: AppStashResult): EnsureResult {
   return ensureDirectories(dirs);
 }
 
+/** Directories appstash creates are private to the user, as the XDG base directory spec asks. */
+export const DIRECTORY_MODE = 0o700;
+
 /**
  * Internal function to ensure directories exist
  */
@@ -209,7 +212,7 @@ function ensureDirectories(
   for (const dir of persistentDirs) {
     try {
       if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
+        fs.mkdirSync(dir, { recursive: true, mode: DIRECTORY_MODE });
         created.push(dir);
       }
     } catch {
@@ -231,7 +234,7 @@ function ensureDirectories(
       for (const dir of xdgDirs) {
         try {
           if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
+            fs.mkdirSync(dir, { recursive: true, mode: DIRECTORY_MODE });
             created.push(dir);
           }
         } catch {
@@ -287,4 +290,4 @@ export type {
   GlobalSettings,
   SecretCodec,
 } from './config-store';
-export { createConfigStore } from './config-store';
+export { assertContextName, createConfigStore } from './config-store';

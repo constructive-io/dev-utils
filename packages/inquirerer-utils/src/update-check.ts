@@ -1,4 +1,4 @@
-import { appstash } from 'appstash';
+import { appstash, DIRECTORY_MODE } from 'appstash';
 import * as fs from 'fs';
 import * as path from 'path';
 import semver from 'semver';
@@ -108,7 +108,7 @@ export function suppressUpdateCheck(toolName: string, currentVersion: string): b
     const dirs = appstash(toolName);
     const cacheFile = path.join(dirs.cache, CACHE_FILENAME);
     if (!fs.existsSync(dirs.cache)) {
-      fs.mkdirSync(dirs.cache, { recursive: true });
+      fs.mkdirSync(dirs.cache, { recursive: true, mode: DIRECTORY_MODE });
     }
     fs.writeFileSync(cacheFile, JSON.stringify({
       latestVersion: currentVersion,
@@ -207,7 +207,7 @@ export const checkForUpdates = async (
     // Cache the result
     try {
       if (!fs.existsSync(dirs.cache)) {
-        fs.mkdirSync(dirs.cache, { recursive: true });
+        fs.mkdirSync(dirs.cache, { recursive: true, mode: DIRECTORY_MODE });
       }
       fs.writeFileSync(cacheFile, JSON.stringify({
         latestVersion,

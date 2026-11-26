@@ -53,6 +53,12 @@ function setupReadlineMock(inputQueue: InputResponse[], currentInputIndex: numbe
 }
 
 export function setupTests(): () => TestEnvironment {
+  // The fake is set on the real readline module, which every test file in the same jest worker shares.
+  const createInterface = readline.createInterface;
+  afterAll(() => {
+    readline.createInterface = createInterface;
+  });
+
   let options: Partial<CLIOptions>;
   let mockWrite: jest.Mock;
   let mockInput: Readable;

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
-import { createConfigStore } from '../src';
+import { appstash, createConfigStore } from '../src';
 
 describe('createConfigStore', () => {
   let tempBase: string;
@@ -612,6 +612,128 @@ describe('createConfigStore', () => {
       store.deleteContext('staging');
       expect(store.listContexts()).toHaveLength(1);
       expect(store.getCurrentContext()).toBeNull();
+    });
+  });
+
+  describe('context names', () => {
+    const configDir = () => appstash('testapp', { baseDir: tempBase }).config;
+    const contextsDir = () => path.join(configDir(), 'contexts');
+
+    it('refuses a name that would overwrite settings.json', () => {
+      const store = createStore();
+      store.saveSettings({ currentContext: 'production' });
+      expect(() => store.createContext('../settings', { endpoint: 'https://evil.example.com' })).toThrow('"../settings" is not a valid context name');
+      expect(store.loadSettings()).toEqual({ currentContext: 'production' });
+    });
+
+    it.each([
+      ['../../../victim', () => path.join(contextsDir(), '../../../victim.json')],
+      ['../credentials', () => path.join(configDir(), 'credentials.json')]
+    ])('refuses to delete the file %s names', (name, target) => {
+      const store = createStore();
+      store.setCredentials('production', { token: 'keep-me' });
+      fs.mkdirSync(path.dirname(target()), { recursive: true });
+      if (!fs.existsSync(target())) fs.writeFileSync(target(), '{}');
+      expect(() => store.deleteContext(name)).toThrow('is not a valid context name');
+      expect(fs.existsSync(target())).toBe(true);
+      expect(store.getCredentials('production')).toMatchObject({ token: 'keep-me' });
+    });
+
+    it('refuses to read credentials.json as a context', () => {
+      const store = createStore();
+      store.setCredentials('production', { token: 'keep-me' });
+      expect(() => store.loadContext('../credentials')).toThrow('is not a valid context name');
+      expect(() => store.setCurrentContext('../credentials')).toThrow('is not a valid context name');
+    });
+
+    const requiredNameCalls = (store: ReturnType<typeof createStore>, name: string): Array<() => unknown> => [
+      () => store.createContext(name, { endpoint: 'https://api.example.com' }),
+      () => store.loadContext(name),
+      () => store.deleteContext(name),
+      () => store.setCurrentContext(name),
+      () => store.setCredentials(name, { token: 't' }),
+      () => store.getCredentials(name),
+      () => store.removeCredentials(name),
+      () => store.hasValidCredentials(name)
+    ];
+
+    it.each(['.', '..', 'a/b', 'a\\b', 'a\0b'])('refuses %j in every method that takes a context name', (name) => {
+      const store = createStore();
+      const calls = [
+        ...requiredNameCalls(store, name),
+        () => store.setVar('k', 'v', name),
+        () => store.getVar('k', name),
+        () => store.listVars(name)
+      ];
+      for (const call of calls) expect(call).toThrow('is not a valid context name');
+    });
+
+    it('refuses an empty name in every method that requires a name', () => {
+      const store = createStore();
+      for (const call of requiredNameCalls(store, '')) expect(call).toThrow('is not a valid context name');
+    });
+
+    it.each(['my app', 'prod:eu', 'user@example.com', `${'o'.repeat(30)}%2F${'r'.repeat(80)}`])(
+      'keeps %j working for write, read and delete',
+      (name) => {
+        const store = createStore();
+        store.createContext(name, { endpoint: 'https://api.example.com' });
+        store.setCurrentContext(name);
+        store.setCredentials(name, { token: 't' });
+        store.setVar('k', 'v', name);
+        expect(store.getCurrentContext()).toMatchObject({ name, endpoint: 'https://api.example.com' });
+        expect(store.getCredentials(name)).toMatchObject({ token: 't' });
+        expect(store.getVar('k')).toBe('v');
+        expect(store.removeCredentials(name)).toBe(true);
+        expect(store.deleteContext(name)).toBe(true);
+        expect(store.listContexts()).toEqual([]);
+      }
+    );
+
+    it.each(['__proto__', 'constructor', 'toString', 'hasOwnProperty'])('keeps %j as a plain key, never a member of Object.prototype', (name) => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com', targets: { admin: { endpoint: 'https://admin.example.com' } } });
+      expect(store.getCredentials(name)).toBeNull();
+      expect(store.removeCredentials(name)).toBe(false);
+      expect(store.getVar(name, 'production')).toBeNull();
+      expect(store.deleteVar(name, 'production')).toBe(false);
+      expect(store.getTargetEndpoint(name, 'production')).toBe('https://api.example.com');
+      store.setCredentials(name, { token: 't' });
+      store.setVar(name, 'v', 'production');
+
+      const reopened = createStore();
+      expect(reopened.getCredentials(name)).toMatchObject({ token: 't' });
+      expect(reopened.getVar(name, 'production')).toBe('v');
+      expect(Object.entries(reopened.listVars('production'))).toEqual([[name, 'v']]);
+      expect(reopened.removeCredentials(name)).toBe(true);
+      expect(reopened.getCredentials(name)).toBeNull();
+    });
+  });
+
+  describe('directory modes', () => {
+    const posix = process.platform !== 'win32';
+    const mode = (dir: string) => fs.statSync(dir).mode & 0o777;
+    const owned = () => {
+      const dirs = appstash('testapp', { baseDir: tempBase });
+      return [dirs.root, dirs.config, dirs.cache, dirs.data, dirs.logs, path.join(dirs.config, 'contexts'), path.join(dirs.config, 'vars')];
+    };
+
+    (posix ? it : it.skip)('creates every directory it owns with mode 0700', () => {
+      const store = createStore();
+      store.createContext('production', { endpoint: 'https://api.example.com' });
+      store.setVar('k', 'v', 'production');
+      expect(owned().map(mode)).toEqual(owned().map(() => 0o700));
+    });
+
+    (posix ? it : it.skip)('tightens the directories it owns when it opens, and never the base directory it was given', () => {
+      fs.chmodSync(tempBase, 0o755);
+      for (const dir of owned()) {
+        fs.mkdirSync(dir, { recursive: true });
+        fs.chmodSync(dir, 0o755);
+      }
+      createStore();
+      expect(owned().map(mode)).toEqual(owned().map(() => 0o700));
+      expect(mode(tempBase)).toBe(0o755);
     });
   });
 });
