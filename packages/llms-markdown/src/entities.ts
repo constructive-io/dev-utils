@@ -55,11 +55,11 @@ export function selectPageEntity(page: ParsedPage): Entity | undefined {
   const candidates = jsonld.filter(matchesPage);
   const pageEntity = candidates.find((entity) => types(entity).some((type) => /Page$/.test(type)));
   if (pageEntity) {
-    const main = references(page, pageEntity.mainEntity).find((entity) => name(entity));
-    if (main) return main;
-    if (types(pageEntity).includes('WebPage')) {
-      const subject = references(page, pageEntity.about).find((entity) => name(entity));
-      if (subject) return subject;
+    const primary = references(page, pageEntity.mainEntity).filter((entity) => name(entity));
+    if (primary.length === 1) return primary[0];
+    if (!name(pageEntity) && types(pageEntity).includes('WebPage')) {
+      const subjects = references(page, pageEntity.about).filter((entity) => name(entity));
+      if (subjects.length === 1) return subjects[0];
     }
     return pageEntity;
   }

@@ -26,7 +26,9 @@ test("uses canonical site and page identities, preserves the body, and indexes t
   write("index.html", graph(
     { "@type": "WebSite", "@id": "#website:project", name: "Unrelated site" },
     { "@type": "WebSite", "@id": "#website", url: siteUrl, mainEntity: { "@id": "#person" } },
-    { "@type": "Person", "@id": "#person", name: "Example", description: "Canonical summary" }
+    { "@type": "Person", "@id": "#person", name: "Example", description: "Canonical summary" },
+    { "@type": "WebPage", "@id": "#home", name: "Home page", about: { "@id": "#news" } },
+    { "@type": "Event", "@id": "#news", name: "News event" }
   ) + "<main><h1>Home</h1></main>");
   for (const [slug, relationship] of [["main", "mainEntity"], ["about", "about"]]) {
     write(`example/${slug}/index.html`, graph(
@@ -35,12 +37,19 @@ test("uses canonical site and page identities, preserves the body, and indexes t
     ) + '<meta name="description" content="HTML summary"><main><h1>Other title</h1><button>Read this <strong>first</strong></button><a href="../">more</a><a href="https://old.example.com">old</a></main>');
   }
   write("preview.html", "<main><h1>Preview</h1></main>");
+  write("listing.html", graph(
+    { "@type": "CollectionPage", "@id": "/listing#page", name: "All events", mainEntity: [{ "@id": "#one" }, { "@id": "#two" }] },
+    { "@type": "Event", "@id": "#one", name: "First event" },
+    { "@type": "Event", "@id": "#two", name: "Second event" }
+  ) + "<main>Listing</main>");
   write("redirect.html", '<meta http-equiv="refresh" content="0; url=/"><main>Redirect</main>');
   write("404.html", "<main>Missing</main>");
   const config = { outDir, siteUrl, exclude: ["/preview"], blockedHosts: ["old.example.com"] };
   const { twins } = await generate(config);
-  assert.deepEqual(twins.map((twin) => twin.file), ["index.md", "example/about.md", "example/main.md"]);
+  assert.deepEqual(twins.map((twin) => twin.file), ["index.md", "example/about.md", "example/main.md", "listing.md"]);
   assert.match(read("llms.txt"), /^# Example\n\n> Canonical summary/);
+  assert.match(read("index.md"), /^# Home page\n/);
+  assert.match(read("listing.md"), /^# All events\n/);
   assert.match(read("llms.txt"), /\[Example article \(\/example\/main\/\)\]/);
   assert.match(read("example/main.md"), /^# Example article\n\n> HTML summary/);
   assert.match(read("example/main.md"), /Read this \*\*first\*\*/);
