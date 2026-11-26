@@ -537,7 +537,6 @@
     "@pyramation/some-lerna-module",
     "@pyramation/storybook-addon-chakra-theme",
     "@pyramation/stream-to-s3",
-    "@pyramation/test-publish-2fa",
     "@pyramation/testingnpmmodule",
     "@pyramation/upload-names",
     "@pyramation/url-domains",
