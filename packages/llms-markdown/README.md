@@ -19,6 +19,8 @@ Flat and trailing-slash exports (for example, `guide.html` and
 redirects, and noindex pages (except legal pages), and resolves relative
 content links against the page URL. Mark UI to omit with `data-llm-ignore`.
 ARIA tables convert to Markdown tables; presentation tables are flattened.
+An explicit primary entity can supply page metadata. A named page retains
+its own identity when the graph lists collection members or related topics.
 
 ## Library
 

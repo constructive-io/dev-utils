@@ -27,7 +27,7 @@ test("uses canonical site and page identities, preserves the body, and indexes t
     { "@type": "WebSite", "@id": "#website:project", name: "Unrelated site" },
     { "@type": "WebSite", "@id": "#website", url: siteUrl, mainEntity: { "@id": "#person" } },
     { "@type": "Person", "@id": "#person", name: "Example", description: "Canonical summary" },
-    { "@type": "WebPage", "@id": "#home", name: "Home page", about: { "@id": "#news" } },
+    { "@type": "WebPage", "@id": "#home", name: "Home page", about: { "@id": "#news" }, mainEntity: [{ "@id": "#news" }] },
     { "@type": "Event", "@id": "#news", name: "News event" }
   ) + "<main><h1>Home</h1></main>");
   for (const [slug, relationship] of [["main", "mainEntity"], ["about", "about"]]) {

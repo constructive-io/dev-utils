@@ -56,7 +56,7 @@ export function selectPageEntity(page: ParsedPage): Entity | undefined {
   const pageEntity = candidates.find((entity) => types(entity).some((type) => /Page$/.test(type)));
   if (pageEntity) {
     const primary = references(page, pageEntity.mainEntity).filter((entity) => name(entity));
-    if (primary.length === 1) return primary[0];
+    if (primary.length === 1 && (!Array.isArray(pageEntity.mainEntity) || !name(pageEntity))) return primary[0];
     if (!name(pageEntity) && types(pageEntity).includes('WebPage')) {
       const subjects = references(page, pageEntity.about).filter((entity) => name(entity));
       if (subjects.length === 1) return subjects[0];
