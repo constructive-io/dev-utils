@@ -50,6 +50,13 @@ function pageCanonical(page: ParsedPage, siteUrl: string, allowed: HostPolicy['a
   return page.canonical || sitePath(siteUrl, page.route);
 }
 
+function matchesExportRoute(canonical: URL, route: URL): boolean {
+  if (sameRoute(canonical, route)) return true;
+  const normalized = new URL(canonical);
+  normalized.pathname = routeKey(normalized.pathname).replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+  return sameRoute(normalized, route);
+}
+
 function parentFor(
   row: Entry, entries: Iterable<Entry>, rules: NonNullable<TreeOptions['inferParents']>,
   lookup: (row: Entry) => Entity | undefined, base: URL,
@@ -203,7 +210,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     if (!page && route !== undefined) throw new Error(`Unknown HTML route: ${row.route}`);
     if (page) {
       entry.source = pageCanonical(page, siteUrl, policy.allowed);
-      if (!sameRoute(entry.source, sitePath(siteUrl, page.route))) {
+      if (!matchesExportRoute(entry.source, sitePath(siteUrl, page.route))) {
         if (row.tier === 'page') entry.tier = 'child';
       } else if (hasTwin) {
         entry.page = page;

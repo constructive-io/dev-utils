@@ -209,3 +209,14 @@ test("renders an explicitly metadata-only page twin", async () => {
   assert.match(read("widget.md"), /> Source: https:\/\/example\.com\/widget\n> Type: SoftwareApplication/);
   assert.doesNotMatch(read("widget.md"), /Public main content/);
 });
+
+test("retains twins when canonical HTML uses export filenames", async () => {
+  for (const [file, slug] of [["guide.html", "guide"], ["help/index.html", "help"]]) {
+    write(file, `<link rel="canonical" href="/${file}">` +
+      graph(entity(slug, "Page-specific description.")) + "<main><p>Guide content.</p></main>");
+  }
+  const result = await generate(config([placement("guide"), placement("help")]));
+  assert.deepEqual(result.twins.map(({ file }) => file), ["guide.md", "help.md"]);
+  assert.match(read("guide.md"), /> Source: https:\/\/example\.com\/guide\.html/);
+  assert.match(read("help.md"), /> Source: https:\/\/example\.com\/help\/index\.html/);
+});
