@@ -146,6 +146,19 @@ describe('answer resolution', () => {
     }
   });
 
+  it.each([{ selection: [] }, { selection: ['unknown'] }])('rejects a required full-results checkbox with no selected option ($selection)', async ({ selection }) => {
+    const question: Question = {
+      name: 'features',
+      type: 'checkbox',
+      options: ['search', 'reporting'],
+      default: selection,
+      required: true,
+      returnFullResults: true,
+    };
+    const prompter = new Inquirerer({ noTty: true, output: new PassThrough() });
+    await expect(prompter.prompt({}, [question])).rejects.toThrow('Missing required arguments');
+  });
+
   it.each([false, true])('preserves all flag types while reading a missing TTY answer (retry: %s)', async retry => {
     const terminal = mockTerminal(retry ? ['invalid', 'accepted'] : ['accepted']);
     const prompter = new Inquirerer(terminal);

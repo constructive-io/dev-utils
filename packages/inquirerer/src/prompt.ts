@@ -384,7 +384,7 @@ export class Inquirerer {
       }
     }
 
-    if (question.required && this.isEmptyAnswer(obj[question.name])) {
+    if (question.required && this.isEmptyAnswer(question, obj[question.name])) {
       ctx.tryAgain({ type: 'required' });
       return false;
     }
@@ -413,13 +413,15 @@ export class Inquirerer {
     };
   }
 
-  private isEmptyAnswer(answer: any): boolean {
+  private isEmptyAnswer(question: Question, answer: any): boolean {
     switch (true) {
     case answer === undefined:
     case answer === null:
     case answer === '':
     case Array.isArray(answer) && answer.length === 0:
       return true;
+    case question.type === 'checkbox' && question.returnFullResults && Array.isArray(answer):
+      return !answer.some(option => option?.selected === true);
     }
     return false;
   }
@@ -577,7 +579,7 @@ export class Inquirerer {
   }
 
   private hasMissingRequiredArgs(questions: Question[], argv: any): boolean {
-    return questions.some(question => question.required && this.isEmptyAnswer(argv[question.name])
+    return questions.some(question => question.required && this.isEmptyAnswer(question, argv[question.name])
       && (!question.when || question.when(argv)));
   }
 
