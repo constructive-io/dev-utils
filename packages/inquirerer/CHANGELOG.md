@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.8](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.7...inquirerer@4.9.8) (2026-11-27)
+
+### Bug Fixes
+
+- **inquirerer:** keep string-array checkbox defaults in noninteractive mode ([#159](https://github.com/constructive-io/dev-utils/issues/159)) ([af7a527](https://github.com/constructive-io/dev-utils/commit/af7a527335d2dbaee92fb3a82218e2aea3607a5d))
+
+## [4.9.7](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.6...inquirerer@4.9.7) (2026-11-27)
+
+### Bug Fixes
+
+- **inquirerer:** never overwrite supplied answers with defaults ([#156](https://github.com/constructive-io/dev-utils/issues/156)) ([aabe441](https://github.com/constructive-io/dev-utils/commit/aabe441319e3d54b2fe42fa0d349c08d685b1a7c))
+
+## [4.9.6](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.5...inquirerer@4.9.6) (2026-11-27)
+
+**Note:** Version bump only for package inquirerer
+
 ## [4.9.5](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.4...inquirerer@4.9.5) (2026-11-23)
 
 **Note:** Version bump only for package inquirerer

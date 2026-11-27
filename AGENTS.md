@@ -8,6 +8,7 @@ This file provides guidance to AI agents working with the `constructive-io/dev-u
 |-------|-------------|
 | **dev-utils** | Developer utilities — inquirerer (CLI prompts), yanse (terminal colors), appStash (state persistence), inflekt (string inflection), and 25+ other packages |
 | **[static-site-deploy](.agents/skills/static-site-deploy/SKILL.md)** | Local static exports, deployment previews, and GitHub Actions OIDC provisioning |
+| **[gen-llm-md](.agents/skills/gen-llm-md/SKILL.md)** | Generate an LLM index and Markdown twins from a static export |
 
 ## Skill Structure
 
@@ -26,4 +27,7 @@ This file provides guidance to AI agents working with the `constructive-io/dev-u
   static-site-deploy/
     SKILL.md
   static-site-deploy.zip
+  gen-llm-md/
+    SKILL.md
+  gen-llm-md.zip
 ```

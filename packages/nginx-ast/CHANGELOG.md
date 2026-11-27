@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/constructive-io/dev-utils/compare/nginx-ast@0.1.2...nginx-ast@0.1.3) (2026-11-27)
+
+**Note:** Version bump only for package nginx-ast
+
 ## [0.1.2](https://github.com/constructive-io/dev-utils/compare/nginx-ast@0.1.1...nginx-ast@0.1.2) (2026-11-23)
 
 **Note:** Version bump only for package nginx-ast

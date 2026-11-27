@@ -1,6 +1,6 @@
 {
   "name": "@constructive-io/eslint-config",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Constructive <developers@constructive.io>",
   "description": "Shared ESLint 9 flat config for Constructive repos",
   "main": "index.mjs",

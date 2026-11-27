@@ -1,6 +1,6 @@
 {
   "name": "@schema-typescript/cli",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "author": "Constructive <developers@constructive.io>",
   "description": "schema-typescript CLI",
   "main": "index.js",

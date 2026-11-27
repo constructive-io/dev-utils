@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/constructive-io/dev-utils/compare/clean-ansi@0.2.3...clean-ansi@0.2.4) (2026-11-27)
+
+**Note:** Version bump only for package clean-ansi
+
 ## [0.2.3](https://github.com/constructive-io/dev-utils/compare/clean-ansi@0.2.2...clean-ansi@0.2.3) (2026-11-23)
 
 **Note:** Version bump only for package clean-ansi

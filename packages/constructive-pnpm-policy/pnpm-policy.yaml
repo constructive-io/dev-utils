@@ -24,6 +24,7 @@ maintainers:
 scopes:
   - "@constructive-io"
   - "@constructive-db"
+  - "@latex-kit"
   - "@launchql"
   - "@pgpm"
   - "@pgpmjs"

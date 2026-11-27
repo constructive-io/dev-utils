@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.2](https://github.com/constructive-io/dev-utils/compare/appstash@0.8.1...appstash@0.8.2) (2026-11-27)
+
+**Note:** Version bump only for package appstash
+
 ## [0.8.1](https://github.com/constructive-io/dev-utils/compare/appstash@0.8.0...appstash@0.8.1) (2026-11-23)
 
 **Note:** Version bump only for package appstash
