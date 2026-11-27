@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.10](https://github.com/constructive-io/dev-utils/compare/@yamlize/cli@0.11.9...@yamlize/cli@0.11.10) (2026-11-27)
+
+**Note:** Version bump only for package @yamlize/cli
+
 ## [0.11.9](https://github.com/constructive-io/dev-utils/compare/@yamlize/cli@0.11.8...@yamlize/cli@0.11.9) (2026-11-27)
 
 **Note:** Version bump only for package @yamlize/cli

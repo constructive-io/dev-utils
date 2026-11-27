@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/constructive-io/dev-utils/compare/gen-llm-md@0.4.0...gen-llm-md@0.4.1) (2026-11-27)
+
+### Bug Fixes
+
+- **gen-llm-md:** keep word boundaries at <br> and element edges in extracted text ([#164](https://github.com/constructive-io/dev-utils/issues/164)) ([47c2d57](https://github.com/constructive-io/dev-utils/commit/47c2d57e51c3251f23e469cb99daed98bc35f1d0))
+
 # [0.4.0](https://github.com/constructive-io/dev-utils/compare/gen-llm-md@0.3.0...gen-llm-md@0.4.0) (2026-11-27)
 
 ### Features
