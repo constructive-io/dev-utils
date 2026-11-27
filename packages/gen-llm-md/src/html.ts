@@ -15,9 +15,9 @@ export function parsePage(page: ExportPage, html: string, siteUrl: string): Pars
   const $ = load(html);
   const url = sitePath(siteUrl, page.route);
   const canonical = urlFor($('link[rel="canonical"]').attr('href'), url);
-  const readJsonld = () => $('script[type="application/ld+json"]').toArray().flatMap((script) => {
+  const readJsonld = (): unknown[] => $('script[type="application/ld+json"]').toArray().map((script) => {
     try {
-      return entities(JSON.parse($(script).text()));
+      return JSON.parse($(script).text()) as unknown;
     } catch (error) {
       throw new Error(`Invalid JSON-LD in ${page.htmlFile}`, { cause: error });
     }
@@ -25,11 +25,15 @@ export function parsePage(page: ExportPage, html: string, siteUrl: string): Pars
   const meta = (name: string) => text($('meta[name]').filter((_, node) =>
     $(node).attr('name')?.toLowerCase() === name.toLowerCase()).first().attr('content'));
   let jsonld: ParsedPage['jsonld'] | undefined;
+  let documents: readonly unknown[] | undefined;
   return {
-    ...page, html, $, meta,
+    ...page, html, $, meta, canonical,
     url: canonical && sameRoute(canonical, url) ? canonical : url,
+    get jsonldDocuments() {
+      return (documents ??= readJsonld());
+    },
     get jsonld() {
-      return (jsonld ??= readJsonld());
+      return (jsonld ??= (documents ??= readJsonld()).flatMap(entities));
     },
     set jsonld(value: ParsedPage['jsonld']) {
       jsonld = value;

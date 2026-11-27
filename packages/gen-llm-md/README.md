@@ -68,11 +68,97 @@ await generate(config);
   `renderTwin`, `renderIndex`, `planManifest`, and `writeArtifacts`.
   Pass overrides under `pipeline`, or compose the functions independently.
 
+## Curated tree mode (opt-in)
+
+Add `tree` in `llms.config.mjs` and keep the same CLI build step. Sites
+without `tree` keep the flat index and existing provider behavior. Do not
+combine `tree` and `index.sections`.
+
+```js
+import { readPlacements } from 'gen-llm-md';
+
+export default {
+  siteUrl: 'https://example.com',
+  outDir: 'out',
+  tree: {
+    sections: [{ key: 'work', title: 'Work', rank: 10, description: 'Tools and guides.' }],
+    placements: readPlacements(new URL('./llms-placements.json', import.meta.url)),
+    inferParents: ['isPartOf', 'hasPart', 'creator'],
+    factFields: { SoftwareApplication: ['creator', 'datePublished', 'codeRepository'] },
+    pages: [{
+      match: '/guides',
+      facts: false,
+      collection: { selector: '[data-cards]', relation: 'itemListElement', durationSelector: '[data-duration]' },
+    }],
+  },
+};
+```
+
+An example placement file:
+
+```json
+[
+  { "key": "widget", "tier": "page", "route": "/widget", "parentKey": "work", "entityId": "https://example.com/#widget", "rank": 1 },
+  { "key": "extension", "tier": "child", "parentKey": "widget", "title": "Extension", "summary": "Adds an export format." },
+  { "key": "guides", "tier": "page", "route": "/guides", "parentKey": "work", "collection": true }
+]
+```
+
+- `page` generates a twin from exported HTML. Use a page-scoped
+  `entityId` or a unique same-route page whose `mainEntity` resolves;
+  declare `collection: true` for a structural route without a subject.
+  Set a reviewed `summary` or supply the subject's description. The site's
+  default bio and unrelated HTML metadata are not fallbacks. The root
+  may omit its parent. A route with a different HTML canonical is an HTML
+  handoff rather than a duplicate twin.
+- `child` emits one line under a retained parent, without a new file.
+  Supply a `title` or scoped entity, and optionally a public contextual
+  `href`. `optional` emits a line under the final Optional section and
+  generates a twin only if it has a retained local HTML `route`.
+  `omit`, noindex, redirects, exclusions and unspecified routes don't get twins.
+- Sections and siblings sort by ascending `rank`, then title/key.
+  Explicit `parentKey` takes precedence over the opt-in `inferParents`
+  rules (listed in precedence order). Missing or ambiguous parents,
+  duplicates and cycles fail before writing.
+- Generated Markdown uses public main content and a canonical HTML
+  `Source:` line. It includes short, non-repeated facts from the page's
+  own inline JSON-LD by default; neither HTML nor standalone graph files
+  are written. Disable facts with `tree.facts: false` or per route.
+- `tree.pages` accepts the first matching string, regexp, or predicate.
+  Set a built-in renderer (`default`, `entity`, `collection`) or custom
+  function, override `facts`, or explicitly set `content: 'omit'` for
+  an applicable metadata-only route. `tree.renderers` supplies defaults
+  by Schema.org type. A collection rule turns a selected card region into
+  a list, preserving visible order; configure title, duration,
+  description and card selectors as needed. `hasPart` or
+  `itemListElement` can provide labels and descriptions for visible links.
+- Custom renderers and `hooks.transformMarkdown` get the body and a
+  context with `page`, `subject`, and `twinHref(href)`. Use
+  `hooks.filterEntities` to filter readable facts, not to change
+  the source page or the graph.
+- Body links to routes with emitted twins target the twins unless
+  `tree.rewriteInternalLinks` is false. Links with query or fragment
+  keep their HTML target. Code, image destinations and external links
+  are not rewritten to twins. Exact-byte `nativeMarkdown` entries still
+  bypass body processing; use `pageContent` for authored bodies you
+  want to enrich or rewrite.
+- `tree.canonicalMapFile` optionally writes a path-to-HTML-canonical map
+  outside the export, for hosting. `planGeneration` returns
+  `canonicalMap` without writing. The generator doesn't configure HTTP
+  headers or deploy files.
+
+Use `markdownSource` for native source files with route-to-file rules
+and an optional custom frontmatter parser; use its `intro` option or
+`formatMarkdownIntro` for bylines, dates, images, contextual text, and
+links. `splitLeadingH1` separates a leading title from the body.
+
+## Generated file ownership
+
 The tool records its output in `out/.llms-markdown.json`. On a reused
 export, generation deletes obsolete twins whose bytes still match that
 manifest. Hand-written and edited Markdown is left alone. For deployments
 that keep stale Markdown, pass `stale: { previousManifest: 'previous.json',
-unavailable: true }` and carry the last deployed manifest forward before
+  unavailable: true }` and carry the last deployed manifest forward before
 each clean build. If the output directory survives builds, the default
 previous manifest is the one already in it. A removed route gets a notice
 twin, not an index entry. Existing files not matching the previous

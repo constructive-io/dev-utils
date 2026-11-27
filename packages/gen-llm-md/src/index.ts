@@ -1,12 +1,14 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { closeSync, constants, openSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 
 import { name, selectPageEntity, selectSiteIdentity, sitePath, text, types, urlFor } from './entities';
 import { discoverPages, markdownArtifact, planManifest, type StaleOptions, writeArtifacts } from './files';
 import { collapseAdjacentImages, htmlToMarkdown, ignoredContent, parsePage, removePageChrome } from './html';
 import { defaultSections, renderIndex, renderTwin } from './render';
+import { matches } from './source';
+import { planTree } from './tree';
 import type {
-  Artifact, Awaitable, IndexPage, IndexSection, PageContent, ParsedPage, SiteIdentity, Twin,
+  Artifact, Awaitable, IndexPage, IndexSection, PageContent, ParsedPage, RouteMatch, SiteIdentity, TreeOptions, Twin,
 } from './types';
 
 export { selectPageEntity, selectSiteIdentity } from './entities';
@@ -14,6 +16,8 @@ export type { StaleOptions } from './files';
 export { discoverPages, manifestFile, planManifest, writeArtifacts } from './files';
 export { flattenLayoutTables, htmlToMarkdown, normalizeRoleTables, parsePage } from './html';
 export { defaultSections, indexTitles, renderIndex, renderTwin } from './render';
+export type { SourceIntro, SourceRule } from './source';
+export { formatMarkdownIntro, markdownSource, readPlacements, splitLeadingH1 } from './source';
 export * from './types';
 
 const defaults = {
@@ -22,7 +26,7 @@ const defaults = {
 };
 export type Pipeline = typeof defaults;
 export type RouteTransform = {
-  match: string | RegExp | ((page: ParsedPage) => boolean);
+  match: RouteMatch;
   apply: (page: ParsedPage) => Awaitable<void>;
 };
 export type Config = {
@@ -34,16 +38,11 @@ export type Config = {
   pageContent?: (page: ParsedPage) => Awaitable<PageContent | undefined>;
   transforms?: readonly RouteTransform[];
   index?: { sections?: (pages: readonly IndexPage[]) => readonly IndexSection[] };
+  tree?: TreeOptions;
   stale?: StaleOptions;
   pipeline?: Partial<Pipeline>;
 };
-export type Generation = { site: SiteIdentity; twins: Twin[]; artifacts: Artifact[] };
-
-function matches(page: ParsedPage, match: RouteTransform['match']) {
-  if (typeof match === 'function') return match(page);
-  if (typeof match === 'string') return page.route.replace(/\/$/, '') === match.replace(/\/$/, '');
-  return new RegExp(match.source, match.flags.replace(/[gy]/g, '')).test(page.route);
-}
+export type Generation = { site: SiteIdentity; twins: Twin[]; artifacts: Artifact[]; canonicalMap?: Record<string, string> };
 
 function hostPolicy(hosts: readonly string[]) {
   const keys = hosts.map((host) => host.toLowerCase());
@@ -69,6 +68,14 @@ export async function planGeneration(config: Config): Promise<Generation> {
   const { allowed, clean } = hostPolicy(config.blockedHosts ?? []);
   if (!allowed(origin)) throw new Error('siteUrl must not be a blocked host');
   const pipeline = { ...defaults, ...config.pipeline };
+  if (config.tree) {
+    if (config.index?.sections) throw new Error('tree and index.sections cannot be used together');
+    const { site, twins, index, canonicalMap } = await planTree(config, config.tree, pipeline, { allowed, clean });
+    const artifacts = twins.map(({ file, markdown }) => markdownArtifact(file, markdown));
+    artifacts.push({ file: 'llms.txt', contents: index });
+    artifacts.push(...pipeline.planManifest(outDir, twins, config.stale));
+    return { site, twins, artifacts, canonicalMap };
+  }
   const twins: Twin[] = [...await (config.nativeMarkdown?.() ?? [])];
   const files = new Set(twins.map((twin) => twin.file));
   if (files.size !== twins.length) throw new Error('Duplicate native Markdown twin');
@@ -132,7 +139,23 @@ export async function planGeneration(config: Config): Promise<Generation> {
 }
 
 export async function generate(config: Config): Promise<Generation> {
+  const configuredMap = config.tree?.canonicalMapFile;
+  const mapFile = configuredMap && join(realpathSync(dirname(resolve(configuredMap))), basename(configuredMap));
+  if (mapFile) {
+    const path = relative(realpathSync(config.outDir), mapFile);
+    if (!path || (!path.startsWith(`..${sep}`) && path !== '..' && !isAbsolute(path))) {
+      throw new Error('canonicalMapFile must be outside outDir');
+    }
+  }
   const result = await planGeneration(config);
   (config.pipeline?.writeArtifacts ?? writeArtifacts)(config.outDir, result.artifacts, config.stale);
+  if (mapFile) {
+    const handle = openSync(mapFile, constants.O_CREAT | constants.O_TRUNC | constants.O_WRONLY | constants.O_NOFOLLOW);
+    try {
+      writeFileSync(handle, `${JSON.stringify(result.canonicalMap, null, 2)}\n`);
+    } finally {
+      closeSync(handle);
+    }
+  }
   return result;
 }
