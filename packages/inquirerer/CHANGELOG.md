@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.7](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.6...inquirerer@4.9.7) (2026-11-27)
+
+### Bug Fixes
+
+- **inquirerer:** never overwrite supplied answers with defaults ([#156](https://github.com/constructive-io/dev-utils/issues/156)) ([aabe441](https://github.com/constructive-io/dev-utils/commit/aabe441319e3d54b2fe42fa0d349c08d685b1a7c))
+
 ## [4.9.6](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.5...inquirerer@4.9.6) (2026-11-27)
 
 **Note:** Version bump only for package inquirerer
