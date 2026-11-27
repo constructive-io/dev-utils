@@ -490,31 +490,16 @@ export class Inquirerer {
 
     const ordered = reorderQuestionsByDeps(questions);
 
-    // Before defaults resolve, required questions' conditions may not be ready to evaluate.
-    if (this.noTty && ordered.some(question => this.isMissingRequiredAnswer(question, obj))) {
-
-      // Apply default values for all questions
-      this.applyDefaultValues(ordered, obj);
-
-      // Recheck for missing required arguments after applying defaults
-      // NOT so sure this would ever happen, but possible if developer did something wrong
-      if (!this.hasMissingRequiredArgs(ordered, obj)) {
-        return obj as T;  // Return the updated object if no required arguments are missing
-      }
-
-      // Handle error for missing required arguments
-      this.handleMissingArgsError(options);
-      throw new Error('Missing required arguments. Please provide all required parameters.');
-    }
-
-
-
     for (let index = 0; index < ordered.length; index++) {
       const question = ordered[index];
       const ctx: PromptContext = new PromptContext();
 
       // obj is already either argv itself, or a clone, but let's check if it has the property
       if (question.name in obj) {
+        if (this.noTty && question.required && this.isMissingAnswer(question, obj[question.name])
+          && (!question.when || question.when(obj))) {
+          this.throwMissingArgsError(options);
+        }
         this.handleOverrides(argv, obj, question);
         ctx.nextQuestion();
         continue;
@@ -522,6 +507,17 @@ export class Inquirerer {
 
       if (question.when && !question.when(obj)) {
         ctx.nextQuestion();
+        continue;
+      }
+
+      if (this.noTty && question.required) {
+        if (!('default' in question)) {
+          this.throwMissingArgsError(options);
+        }
+        obj[question.name] = this.defaultAnswer(question);
+        if (!this.isValid(question, obj, ctx)) {
+          this.throwMissingArgsError(options);
+        }
         continue;
       }
 
@@ -539,6 +535,9 @@ export class Inquirerer {
       // this is mostly to avoid a prompt for "hidden" options
       if ('default' in question && (this.useDefaults || question.useDefault)) {
         obj[question.name] = this.defaultAnswer(question);
+        if (this.noTty && !this.isValid(question, obj, ctx)) {
+          this.throwMissingArgsError(options);
+        }
         continue;  // Skip to the next question since the default is applied
       }
 
@@ -557,9 +556,7 @@ export class Inquirerer {
 
         if (!this.isValid(question, obj, ctx)) {
           if (this.noTty) {
-            // If you're not valid and here with noTty, you're out!
-            this.clearScreen(); // clear before leaving, not calling exit() since it may be a bad pattern to continue, devs should try/catch
-            throw new Error('Missing required arguments. Please provide all required parameters.');
+            this.throwMissingArgsError(options);
           }
           continue;
         }
@@ -571,7 +568,7 @@ export class Inquirerer {
     return obj as T;
   }
 
-  private handleMissingArgsError(options?: { usageText?: string; manPageInfo?: any }): void {
+  private throwMissingArgsError(options?: PromptOptions): never {
     this.clearScreen();
     if (options?.usageText) {
       this.log(options.usageText);
@@ -580,16 +577,11 @@ export class Inquirerer {
     } else {
       this.log('Missing required arguments. Please provide all required parameters.');
     }
+    throw new Error('Missing required arguments. Please provide all required parameters.');
   }
 
-  private isMissingRequiredAnswer(question: Question, answers: any): boolean {
-    const answer = answers[question.name];
-    return question.required && (this.isEmptyAnswer(answer) || this.isUnselectedCheckbox(question, answer));
-  }
-
-  private hasMissingRequiredArgs(questions: Question[], answers: any): boolean {
-    return questions.some(question => this.isMissingRequiredAnswer(question, answers)
-      && (!question.when || question.when(answers)));
+  private isMissingAnswer(question: Question, answer: any): boolean {
+    return this.isEmptyAnswer(answer) || this.isUnselectedCheckbox(question, answer);
   }
 
   /**
@@ -745,14 +737,6 @@ export class Inquirerer {
 
   private defaultAnswer(question: Question): any {
     return question.type === 'checkbox' ? this.checkboxDefault(question) : question.default;
-  }
-
-  private applyDefaultValues(questions: Question[], obj: any): void {
-    questions.forEach(question => {
-      if ('default' in question && !(question.name in obj) && (!question.when || question.when(obj))) {
-        obj[question.name] = this.defaultAnswer(question);
-      }
-    });
   }
 
   private applyOverrides(argv: any, obj: any, questions: Question[]): void {
