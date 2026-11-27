@@ -86,6 +86,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
     for (const transform of transforms) if (matches(page, transform.match)) await transform.apply(page);
     const override = await config.pageContent?.(page);
     const entity = pipeline.selectPageEntity(page);
+    $('[data-llm-ignore]').remove();
     removePageChrome($);
     const main = $('main, [role="main"]').first();
     const primary = main.length ? main : $('article').first();
