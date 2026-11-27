@@ -322,8 +322,9 @@ async function renderEntry(
   const content = primary.length ? primary : $('body').first();
   content.find(ignoredContent).remove();
   const headingNode = content.find('h1').first();
-  const heading = htmlText(headingNode);
-  if (heading === title) headingNode.remove();
+  const heading = policy.clean(htmlText(headingNode));
+  const duplicateHeading = Boolean(heading && heading === title);
+  if (duplicateHeading) headingNode.remove();
   demoteHeadings($, content);
   if (renderer === 'collection' && rule?.content !== 'omit') {
     if (!rule?.collection) throw new Error(`Missing collection options for ${page.route}`);
@@ -345,13 +346,14 @@ async function renderEntry(
   };
   let body = rule?.content === 'omit' ? '' :
     renderPageBody($, content, (html) => pipeline.htmlToMarkdown.call(pipeline, html), override?.body);
+  const headingOnly = duplicateHeading && override?.body === undefined && !body;
   const context: RenderContext = { page, subject, body, twinHref: resolveLink };
   if (typeof renderer === 'function' && rule?.content !== 'omit') body = await renderer(context);
   if (tree.hooks?.transformMarkdown && rule?.content !== 'omit') {
     body = await tree.hooks.transformMarkdown(body, { ...context, body });
   }
   body = policy.clean(await rewriteMarkdownLinks(body, resolveLink));
-  if (!body && rule?.content !== 'omit' && entry.tier === 'page' && entry.route !== '/' && !entry.collection) {
+  if (!body && !headingOnly && rule?.content !== 'omit' && entry.tier === 'page' && entry.route !== '/' && !entry.collection) {
     throw new Error(`Missing main content for ${entry.key}`);
   }
   const filter = (entity: Entity) => tree.hooks?.filterEntities?.(entity, { ...context, body }) !== false;

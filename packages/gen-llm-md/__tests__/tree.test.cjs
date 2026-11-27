@@ -208,6 +208,13 @@ test("uses the page's own subject and direct facts only, rejects the site bio an
   assert.match(read("widget.md"), /Transformed\./);
 });
 
+test("renders a graph page whose only content is its split heading", async () => {
+  write("guide.html", "<main><h1>Example<br>Guide</h1></main>");
+  await generate({ outDir, siteUrl, tree: { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} } });
+  assert.match(read("llms.txt"), /\[Example Guide\]\(https:\/\/example\.com\/guide\.md\)/);
+  assert.equal(read("guide.md"), "# Example Guide\n\n> Source: https://example.com/guide\n");
+});
+
 test("separates HTML collection titles and summaries at element boundaries", async () => {
   page("guide", [], `<div data-cards><a href="/example">
     <h2>Example<span>Item</span></h2><div data-summary><div>First</div><div>detail<br>here</div></div>
