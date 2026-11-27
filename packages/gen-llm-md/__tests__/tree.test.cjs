@@ -208,6 +208,23 @@ test("uses the page's own subject and direct facts only, rejects the site bio an
   assert.match(read("widget.md"), /Transformed\./);
 });
 
+test("separates HTML collection titles and summaries at element boundaries", async () => {
+  page("guide", [], `<div data-cards><a href="/example">
+    <h2>Example<span>Item</span></h2><div data-summary><div>First</div><div>detail<br>here</div></div>
+  </a></div>`);
+  await generate({
+    outDir, siteUrl,
+    tree: {
+      sections: [{ key: "guides", title: "Guides", rank: 0 }],
+      graph: {},
+      pages: [{ match: "/guide", collection: {
+        selector: "[data-cards]", relation: "hasPart", descriptionSelector: "[data-summary]",
+      } }],
+    },
+  });
+  assert.match(read("guide.md"), /\[Example Item\]\(https:\/\/example\.com\/example\): First detail here/);
+});
+
 test("renders ordered visible cards and rewrites Markdown link destinations without changing code or images", async () => {
   const lesson = (slug, title, description) => ({ "@type": "LearningResource", "@id": id(slug), name: title, description, url: `${siteUrl}/${slug}` });
   page("course", [{

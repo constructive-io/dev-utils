@@ -3,7 +3,7 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 
 import { name, selectPageEntity, selectSiteIdentity, sitePath, text, types, urlFor } from './entities';
 import { discoverPages, markdownArtifact, planManifest, type StaleOptions, writeArtifacts } from './files';
-import { collapseAdjacentImages, demoteHeadings, htmlToMarkdown, ignoredContent, parsePage, removePageChrome, renderPageBody } from './html';
+import { collapseAdjacentImages, demoteHeadings, htmlText, htmlToMarkdown, ignoredContent, parsePage, removePageChrome, renderPageBody } from './html';
 import { defaultSections, renderIndex, renderTwin } from './render';
 import { matches } from './source';
 import { planTree } from './tree';
@@ -102,8 +102,8 @@ export async function planGeneration(config: Config): Promise<Generation> {
     const content = primary.length ? primary : $('body').first();
     content.find(ignoredContent).remove();
     const headingNode = content.find('h1').first();
-    const heading = text(headingNode.clone().find('br').replaceWith(' ').end().text());
-    const title = clean(override?.title || name(entity) || heading || text($('title').first().text()) || route) || route;
+    const heading = htmlText(headingNode);
+    const title = clean(override?.title || name(entity) || heading || htmlText($('title').first()) || route) || route;
     const description = clean(override?.description || text(entity?.description) || page.meta('description'));
     if (route === '/') {
       const identity = pipeline.selectSiteIdentity(page);

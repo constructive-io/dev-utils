@@ -11,6 +11,12 @@ const converter = new NodeHtmlMarkdown({ codeFence: '```' }, {
   }),
 });
 
+export function htmlText(node: ReturnType<CheerioAPI>): string {
+  const copy = node.clone();
+  copy.find('*').before(' ').after(' ');
+  return text(copy.text());
+}
+
 export function parsePage(page: ExportPage, html: string, siteUrl: string): ParsedPage {
   const $ = load(html);
   const url = sitePath(siteUrl, page.route);

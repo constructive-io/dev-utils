@@ -1,5 +1,6 @@
 import { isEntity, list, name, text, urlFor } from './entities';
 import { resolveEntity } from './facts';
+import { htmlText } from './html';
 import { http, linkKey } from './navigation';
 import type { CollectionOptions, Entity, ParsedPage } from './types';
 
@@ -42,11 +43,11 @@ export function renderCollection(
         text(relatedNode?.duration) || text(relatedNode?.timeRequired));
       const fallback = link.clone();
       fallback.find(['img', options.durationSelector, options.descriptionSelector].filter(Boolean).join(',')).remove();
-      const title = text(card.find(options.titleSelector ?? '[data-title], h2, h3, h4').first().text()) ||
-        name(relatedNode) || text(link.attr('aria-label')) || text(fallback.text());
+      const title = htmlText(card.find(options.titleSelector ?? '[data-title], h2, h3, h4').first()) ||
+        name(relatedNode) || text(link.attr('aria-label')) || htmlText(fallback);
       if (!title) return;
       const description = text(relatedNode?.description) ||
-        (options.descriptionSelector ? text(card.find(options.descriptionSelector).first().text()) : '');
+        (options.descriptionSelector ? htmlText(card.find(options.descriptionSelector).first()) : '');
       const suffix = [duration && ` — ${durationText(duration)}`, description && `: ${description}`].join('');
       items.append($('<li>').append($('<a>').attr('href', url.href).text(title), $('<span>').text(suffix)));
       seen.add(url.href);

@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const { tmpdir } = require("node:os");
 const { dirname, join, resolve } = require("node:path");
 
-const { flattenLayoutTables, generate, manifestFile, planGeneration, retiredPageNotice, writeArtifacts } = require("../dist");
+const { flattenLayoutTables, generate, manifestFile, markdownSource, planGeneration, retiredPageNotice, writeArtifacts } = require("../dist");
 
 const siteUrl = "https://example.com";
 let outDir;
@@ -21,6 +21,22 @@ beforeEach(() => {
   write("index.html", "<main><h1>Home</h1></main>");
 });
 afterEach(() => fs.rmSync(outDir, { recursive: true, force: true }));
+
+test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
+  "separates HTML heading text at element boundaries with tree=%p",
+  async (tree) => {
+    write("index.html", "<main><h1>Example<br>Site</h1><p>Welcome.</p></main>");
+    write("guide.html", "<main><h1>Example<br>Guide<span>for<strong>new</strong></span>users</h1><p>Introduction.</p></main>");
+    write("reference.html", "<main><h1 data-title>Example<span>Reference</span></h1><p>Details.</p></main>");
+    await generate({ outDir, siteUrl, tree, pageContent: markdownSource([], { titleSelector: "[data-title]" }) });
+
+    assert.match(read("llms.txt"), /^# Example Site\n/);
+    assert.match(read("llms.txt"), /\[Example Guide for new users\]/);
+    assert.match(read("llms.txt"), /\[Example Reference\]/);
+    assert.match(read("guide.md"), /^# Example Guide for new users\n/);
+    assert.doesNotMatch(read("guide.md"), /^## /m);
+  }
+);
 
 test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
   "keeps the custom converter receiver with tree=%p",

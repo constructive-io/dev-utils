@@ -5,7 +5,7 @@ import { renderCollection } from './collection';
 import { list, name, sameRoute, sitePath, text, types, urlFor } from './entities';
 import { entityId, pageEntities, pageSubject, renderFacts, schemaType } from './facts';
 import { deriveGraphTree, optionalKey } from './graph-tree';
-import { collapseAdjacentImages, demoteHeadings, ignoredContent, removePageChrome, renderPageBody } from './html';
+import { collapseAdjacentImages, demoteHeadings, htmlText, ignoredContent, removePageChrome, renderPageBody } from './html';
 import type { Config, Pipeline } from './index';
 import { http, linkKey, markdownHref, rewriteMarkdownLinks, routeKey, twinLink } from './navigation';
 import { inline } from './render';
@@ -165,7 +165,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
   }
   const home = pages.get('');
   const site: SiteIdentity = home ? pipeline.selectSiteIdentity(home) : { title: origin.hostname };
-  site.title = policy.clean(site.title) || policy.clean(home?.$('h1').first().text() ?? '') || origin.hostname;
+  site.title = policy.clean(site.title) || (home && policy.clean(htmlText(home.$('h1').first()))) || origin.hostname;
   site.description = policy.clean(site.description || home?.meta('description') || '');
   const siteDescriptions = [site.description, home?.meta('description'),
     ...(home?.jsonld.filter((node) => types(node).map(schemaType).some(
@@ -239,7 +239,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     entry.subject = subject;
     entry.subjectBase = page?.url ?? located?.base;
     entry.title = policy.clean(text(row.title || entry.override?.title || entry.native?.title || name(subject) ||
-      page?.$('h1').first().text() || page?.$('title').first().text()));
+      (page && (htmlText(page.$('h1').first()) || htmlText(page.$('title').first())))));
     if (!entry.title) {
       if (!derived || !page) throw new Error(`Missing title for tree placement: ${row.key}`);
       entry.title = policy.clean(route?.split('/').at(-1) ?? '') || site.title;
@@ -322,7 +322,7 @@ async function renderEntry(
   const content = primary.length ? primary : $('body').first();
   content.find(ignoredContent).remove();
   const headingNode = content.find('h1').first();
-  const heading = text(headingNode.clone().find('br').replaceWith(' ').end().text());
+  const heading = htmlText(headingNode);
   if (heading === title) headingNode.remove();
   demoteHeadings($, content);
   if (renderer === 'collection' && rule?.content !== 'omit') {
