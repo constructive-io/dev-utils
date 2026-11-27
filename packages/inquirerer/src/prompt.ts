@@ -486,8 +486,8 @@ export class Inquirerer {
 
     const ordered = reorderQuestionsByDeps(questions);
 
-    // Check for required arguments when no terminal is available (non-interactive mode)
-    if (this.noTty && this.hasMissingRequiredArgs(ordered, obj)) {
+    // Before defaults resolve, required questions' conditions may not be ready to evaluate.
+    if (this.noTty && ordered.some(question => this.isMissingRequiredAnswer(question, obj))) {
 
       // Apply default values for all questions
       this.applyDefaultValues(ordered, obj);
@@ -578,9 +578,13 @@ export class Inquirerer {
     }
   }
 
-  private hasMissingRequiredArgs(questions: Question[], argv: any): boolean {
-    return questions.some(question => question.required && this.isEmptyAnswer(question, argv[question.name])
-      && (!question.when || question.when(argv)));
+  private isMissingRequiredAnswer(question: Question, answers: any): boolean {
+    return question.required && this.isEmptyAnswer(question, answers[question.name]);
+  }
+
+  private hasMissingRequiredArgs(questions: Question[], answers: any): boolean {
+    return questions.some(question => this.isMissingRequiredAnswer(question, answers)
+      && (!question.when || question.when(answers)));
   }
 
   /**
