@@ -41,7 +41,7 @@ function artifactPath(outDir: string, file: string) {
 
 export function writeArtifacts(outDir: string, artifacts: readonly Artifact[], stale: StaleOptions = {}) {
   const targets = artifacts.map(({ file, contents }) => ({ file, target: artifactPath(outDir, file), contents }));
-  const existingTwins = targets.filter(({ file, target }) => /\.md$/i.test(file) && existsSync(target));
+  const existingTwins = targets.filter(({ file, target }) => /\.(?:md|markdown)$/i.test(file) && existsSync(target));
   if (existingTwins.length) {
     const current = artifactPath(outDir, manifestFile);
     const manifests = [current];
@@ -87,7 +87,7 @@ export function planManifest(outDir: string, twins: readonly Twin[], stale: Stal
   const files = new Set(entries.map(({ file }) => file));
   for (const entry of readManifest(previous)) {
     const { route, file, sha256 } = entry;
-    if (typeof route !== 'string' || typeof file !== 'string' || !file.endsWith('.md')) {
+    if (typeof route !== 'string' || typeof file !== 'string') {
       throw new Error(`Invalid twin manifest entry: ${previous}`);
     }
     if (files.has(file)) continue;

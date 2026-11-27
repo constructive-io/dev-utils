@@ -168,6 +168,32 @@ test("does not overwrite Markdown without matching ownership in the export manif
   assert.equal(read("guide.md"), "Manually replaced");
 });
 
+test.each(["guide.MD", "guide.markdown", "guide.mdown"])(
+  "keeps the manifest usable across runs for a native twin named %s",
+  async (file) => {
+    const config = {
+      outDir, siteUrl,
+      nativeMarkdown: () => [{ route: "/guide", file, title: "Guide", markdown: "# Guide" }],
+    };
+    await generate(config);
+    await generate(config);
+    assert.equal(read(file), "# Guide");
+    await generate({ outDir, siteUrl, stale: { unavailable: true } });
+    assert.match(read(file), /no longer available/);
+    assert(!read("llms.txt").includes(file));
+  }
+);
+
+test("does not overwrite handwritten .markdown files", async () => {
+  const file = "guide.markdown";
+  write(file, "Hand-written guide");
+  await assert.rejects(generate({
+    outDir, siteUrl,
+    nativeMarkdown: () => [{ route: "/guide", file, title: "Guide", markdown: "# Generated guide" }],
+  }), /unowned Markdown: guide\.markdown/);
+  assert.equal(read(file), "Hand-written guide");
+});
+
 test("CLI loads an ESM config and dry-run never writes artifacts", () => {
   write("llms.config.mjs", `export default { siteUrl: "${siteUrl}", outDir: ".", pageContent: () => ({ title: "Configured" }) };`);
   const cli = resolve(__dirname, "../dist/cli.js");
