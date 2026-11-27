@@ -321,9 +321,15 @@ async function renderEntry(
   const primary = main.length ? main : $('article').first();
   const content = primary.length ? primary : $('body').first();
   content.find(ignoredContent).remove();
+  const allowedContentUrl = (href?: string) => {
+    const url = urlFor(href, page.url);
+    return url && policy.allowed(url) && (http(url) || /^(mailto:|tel:)$/.test(url.protocol)) ? url : undefined;
+  };
   const headingNode = content.find('h1').first();
   const heading = policy.clean(htmlText(headingNode));
-  const duplicateHeading = Boolean(heading && heading === title);
+  const hasAllowedLink = headingNode.find('a[href]').add(headingNode.closest('a[href]')).toArray()
+    .some((link) => allowedContentUrl($(link).attr('href')));
+  const duplicateHeading = Boolean(heading && heading === title && !hasAllowedLink);
   if (duplicateHeading) headingNode.remove();
   demoteHeadings($, content);
   if (renderer === 'collection' && rule?.content !== 'omit') {
@@ -333,8 +339,8 @@ async function renderEntry(
   content.find('a[href], img[src]').each((_, node) => {
     const element = $(node);
     const attr = node.tagName === 'a' ? 'href' : 'src';
-    const url = urlFor(element.attr(attr), page.url);
-    if (url && policy.allowed(url) && (http(url) || /^(mailto:|tel:)$/.test(url.protocol))) element.attr(attr, url.href);
+    const url = allowedContentUrl(element.attr(attr));
+    if (url) element.attr(attr, url.href);
     else element.removeAttr(attr);
   });
   collapseAdjacentImages($);
