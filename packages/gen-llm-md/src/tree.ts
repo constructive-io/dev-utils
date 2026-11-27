@@ -18,6 +18,7 @@ type Entry = Placement & {
   page?: ParsedPage;
   source?: URL;
   subject?: Entity;
+  subjectBase?: URL;
   title: string;
   summary: string;
   native?: Twin;
@@ -59,21 +60,20 @@ function matchesExportRoute(canonical: URL, route: URL): boolean {
 
 function parentFor(
   row: Entry, entries: Iterable<Entry>, rules: NonNullable<TreeOptions['inferParents']>,
-  lookup: (row: Entry) => Entity | undefined, base: URL,
 ): string | undefined {
-  const node = row.subject ?? lookup(row);
-  if (!node) return undefined;
+  const { subject: node, subjectBase: base } = row;
+  if (!node || !base) return undefined;
   const id = entityId(node, base);
   const candidates = [...entries].filter((entry) => entry !== row && !entry.skip && entry.tier === 'page');
   for (const relation of rules) {
     const ids = list(node[relation]).map((ref) => entityId(ref, base)).filter(Boolean);
     const matches = candidates.filter((parent) => {
-      const target = parent.subject ?? lookup(parent);
-      const targetId = target && entityId(target, base);
-      if (!target || !targetId) return false;
+      const { subject: target, subjectBase: targetBase } = parent;
+      const targetId = target && targetBase && entityId(target, targetBase);
+      if (!target || !targetBase || !targetId) return false;
       const parentTypes = types(target).map(schemaType);
       if (parentTypes.some((type) => type === 'Person' || type === 'WebSite')) return false;
-      if (relation === 'hasPart') return !!id && list(target.hasPart).some((ref) => entityId(ref, base) === id);
+      if (relation === 'hasPart') return !!id && list(target.hasPart).some((ref) => entityId(ref, targetBase) === id);
       if ((relation === 'creator' || relation === 'publisher') &&
           !parentTypes.some((type) => type.endsWith('Organization') || type === 'Corporation')) return false;
       return ids.includes(targetId);
@@ -177,7 +177,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     if (!id) return undefined;
     for (const page of pages.values()) {
       const node = graph(page).get(id);
-      if (node) return node;
+      if (node) return { node, base: page.url };
     }
   };
   const native = new Map<string, Twin>();
@@ -223,12 +223,14 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     const id = entityId(row.entityId, page?.url ?? origin);
     if (id && entities.has(id)) throw new Error(`Duplicate tree entity: ${row.entityId}`);
     if (id) entities.add(id);
-    const subject = id ? (page ? graph(page).get(id) : lookup(row)) : page && pageSubject(page, graph(page));
+    const located = id && !page ? lookup(row) : undefined;
+    const subject = page ? (id ? graph(page).get(id) : pageSubject(page, graph(page))) : located?.node;
     if (row.entityId && !subject) throw new Error(`Unknown page entity for ${row.key}: ${row.entityId}`);
     if (entry.page && row.tier === 'page' && !row.collection && route && !subject) {
       throw new Error(`Missing page entity for ${row.key}; declare entityId or a collection`);
     }
     entry.subject = subject;
+    entry.subjectBase = page?.url ?? located?.base;
     entry.title = policy.clean(text(row.title || entry.override?.title || entry.native?.title || name(subject) ||
       page?.$('h1').first().text() || page?.$('title').first().text()));
     if (!entry.title) throw new Error(`Missing title for tree placement: ${row.key}`);
@@ -243,7 +245,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
   for (const entry of entries.values()) {
     if (entry.skip) continue;
     if (!entry.parentKey && entry.tier !== 'optional' && entry.route !== '/') {
-      entry.parentKey = parentFor(entry, entries.values(), tree.inferParents ?? [], lookup, origin);
+      entry.parentKey = parentFor(entry, entries.values(), tree.inferParents ?? []);
       if (!entry.parentKey) throw new Error(`Missing tree parent for ${entry.key}`);
     }
   }

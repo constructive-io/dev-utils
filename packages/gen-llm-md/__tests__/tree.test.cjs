@@ -220,3 +220,19 @@ test("retains twins when canonical HTML uses export filenames", async () => {
   assert.match(read("guide.md"), /> Source: https:\/\/example\.com\/guide\.html/);
   assert.match(read("help.md"), /> Source: https:\/\/example\.com\/help\/index\.html/);
 });
+
+test("resolves fragment entity IDs on the pages that define them when inferring parents", async () => {
+  page("parent", [entity("parent", "Parent details.", {
+    "@id": "#project", hasPart: { "@id": "/inverse#project" },
+  })]);
+  page("direct", [entity("direct", "Direct child.", {
+    "@id": "#project", isPartOf: { "@id": "/parent#project" },
+  })]);
+  page("inverse", [entity("inverse", "Inverse child.", { "@id": "#project" })]);
+  await generate(config([
+    placement("parent", { entityId: "#project" }),
+    placement("direct", { entityId: "#project", parentKey: undefined }),
+    placement("inverse", { entityId: "#project", parentKey: undefined }),
+  ], { inferParents: ["isPartOf", "hasPart"] }));
+  assert.match(read("llms.txt"), /parent\.md\): Parent details\.\n  - .*direct\.md\).*\n  - .*inverse\.md\)/);
+});
