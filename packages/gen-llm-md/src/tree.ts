@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { renderCollection } from './collection';
 import { list, name, sameRoute, sitePath, text, types, urlFor } from './entities';
 import { entityId, pageEntities, pageSubject, renderFacts, schemaType } from './facts';
+import { deriveGraphTree } from './graph-tree';
 import { collapseAdjacentImages, ignoredContent, removePageChrome } from './html';
 import type { Config, Pipeline } from './index';
 import { http, linkKey, markdownHref, rewriteMarkdownLinks, routeKey, twinLink } from './navigation';
@@ -42,13 +43,15 @@ function validatePlacement(row: Placement) {
   if (row.rank !== undefined && !Number.isFinite(row.rank)) throw new Error(`Invalid tree rank: ${row.key}`);
 }
 
-function pageCanonical(page: ParsedPage, siteUrl: string, allowed: HostPolicy['allowed']): URL {
-  const canonical = page.canonical ?? page.url;
+function pageCanonical(page: ParsedPage, siteUrl: string, allowed: HostPolicy['allowed'], local = false): URL {
+  const exported = sitePath(siteUrl, page.route);
+  const useExported = local && (!page.canonical || !matchesExportRoute(page.canonical, exported));
+  const canonical = useExported ? exported : page.canonical ?? page.url;
   if (!http(canonical) || canonical.hash || canonical.search || !allowed(canonical) ||
-      (page.$('link[rel="canonical"]').attr('href') && !page.canonical)) {
+      (!useExported && page.$('link[rel="canonical"]').attr('href') && !page.canonical)) {
     throw new Error(`Invalid HTML canonical for ${page.route}`);
   }
-  return page.canonical || sitePath(siteUrl, page.route);
+  return useExported ? exported : page.canonical ?? exported;
 }
 
 function matchesExportRoute(canonical: URL, route: URL): boolean {
@@ -190,7 +193,8 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
   const entries = new Map<string, Entry>();
   const routes = new Set<string>();
   const entities = new Set<string>();
-  for (const row of tree.placements) {
+  const derived = tree.graph && deriveGraphTree(pages, tree.sections, tree.graph);
+  for (const row of derived?.placements ?? tree.placements ?? []) {
     validatePlacement(row);
     if (entries.has(row.key) || sections.has(row.key)) throw new Error(`Duplicate tree key: ${row.key}`);
     const entry: Entry = { ...row, title: '', summary: '' };
@@ -209,7 +213,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     const page = route === undefined ? undefined : pages.get(route);
     if (!page && route !== undefined) throw new Error(`Unknown HTML route: ${row.route}`);
     if (page) {
-      entry.source = pageCanonical(page, siteUrl, policy.allowed);
+      entry.source = pageCanonical(page, siteUrl, policy.allowed, !!derived);
       if (!matchesExportRoute(entry.source, sitePath(siteUrl, page.route))) {
         if (row.tier === 'page') entry.tier = 'child';
       } else if (hasTwin) {
@@ -224,20 +228,24 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     if (id && entities.has(id)) throw new Error(`Duplicate tree entity: ${row.entityId}`);
     if (id) entities.add(id);
     const located = id && !page ? lookup(row) : undefined;
-    const subject = page ? (id ? graph(page).get(id) : pageSubject(page, graph(page))) : located?.node;
+    const subject = page ? (id ? graph(page).get(id) :
+      derived?.subjects.get(route!) ?? pageSubject(page, graph(page))) : located?.node;
     if (row.entityId && !subject) throw new Error(`Unknown page entity for ${row.key}: ${row.entityId}`);
-    if (entry.page && row.tier === 'page' && !row.collection && route && !subject) {
+    if (!derived && entry.page && row.tier === 'page' && !row.collection && route && !subject) {
       throw new Error(`Missing page entity for ${row.key}; declare entityId or a collection`);
     }
     entry.subject = subject;
     entry.subjectBase = page?.url ?? located?.base;
     entry.title = policy.clean(text(row.title || entry.override?.title || entry.native?.title || name(subject) ||
       page?.$('h1').first().text() || page?.$('title').first().text()));
-    if (!entry.title) throw new Error(`Missing title for tree placement: ${row.key}`);
+    if (!entry.title) {
+      if (!derived || !page) throw new Error(`Missing title for tree placement: ${row.key}`);
+      entry.title = policy.clean(route?.split('/').at(-1) ?? '') || site.title;
+    }
     const summaries = [row.summary, entry.override?.description, entry.native?.description, text(subject?.description)];
     entry.summary = summaries.map((value) => policy.clean(text(value))).find((value) =>
       value && (route === '' || !commonSummary.has(value.toLowerCase()))) ?? '';
-    if (entry.tier === 'page' && route && subject && !entry.summary) {
+    if (!derived && entry.tier === 'page' && route && subject && !entry.summary) {
       throw new Error(`Missing page-specific description for ${row.key}`);
     }
   }

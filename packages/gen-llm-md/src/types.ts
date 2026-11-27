@@ -68,9 +68,17 @@ export type PageRule = {
 };
 export type PageRenderer = 'default' | 'entity' | 'collection' |
   ((ctx: RenderContext) => Awaitable<string>);
+export type GraphSection = Section & { match?: RouteMatch; types?: readonly string[] };
+export type GraphTreeRules = {
+  parents?: readonly ('isPartOf' | 'parentOrganization' | 'creator' | 'subjectOf' | 'hasPart')[];
+  context?: {
+    relations: readonly string[];
+    types: readonly string[];
+    external?: 'optional' | 'child' | 'omit';
+  };
+  rankProperty?: string;
+};
 export type TreeOptions = {
-  sections: readonly Section[];
-  placements: readonly Placement[];
   inferParents?: readonly ('isPartOf' | 'hasPart' | 'creator' | 'publisher')[];
   rewriteInternalLinks?: boolean;
   facts?: boolean;
@@ -82,4 +90,7 @@ export type TreeOptions = {
     transformMarkdown?: (markdown: string, ctx: RenderContext) => Awaitable<string>;
   };
   canonicalMapFile?: string;
-};
+} & (
+  | { sections: readonly Section[]; placements: readonly Placement[]; graph?: never }
+  | { sections: readonly GraphSection[]; graph: GraphTreeRules; placements?: never }
+);

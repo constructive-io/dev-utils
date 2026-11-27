@@ -10,8 +10,10 @@ description: Generate an LLM index and Markdown twins from a built static export
 2. Run without `--dry-run` to write the artifacts. Check the site identity in
    `out/llms.txt`, follow sample index links to local files, and check that
    excluded routes do not appear.
-3. For a curated index, use `--config ./llms.config.mjs` with `tree.sections`
-   and `tree.placements` (or load a JSON placement file with
+3. For a graph-driven index, use `--config ./llms.config.mjs` with `tree.sections`
+   and `tree.graph`. Define section route/type rules, then let inline JSON-LD
+   identify subjects, parents, order, and optional contextual entries.
+   For explicit editorial placement, use `tree.placements` instead (or load a JSON placement file with
    `readPlacements`). Set relevance as `page`, `child`, `optional`, or
    `omit`. Use a `pageContent` provider for authored Markdown
    (see `markdownSource`), or `nativeMarkdown` to preserve existing bytes.
