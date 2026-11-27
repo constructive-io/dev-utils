@@ -5,7 +5,7 @@ import { parseArgs } from 'node:util';
 
 import { type Config, generate, planGeneration } from './index';
 
-const usage = 'Usage: llms-markdown generate [--dir out] [--site-url https://example.com] [--exclude /preview] [--config ./llms.config.mjs] [--dry-run]';
+const usage = 'Usage: gen-llm-md generate [--dir out] [--site-url https://example.com] [--exclude /preview] [--config ./llms.config.mjs] [--dry-run]';
 
 async function main() {
   const { values, positionals } = parseArgs({

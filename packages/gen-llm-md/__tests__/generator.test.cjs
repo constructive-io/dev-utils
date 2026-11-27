@@ -17,7 +17,7 @@ const write = (file, html) => {
 const graph = (...nodes) => `<script type="application/ld+json">${JSON.stringify({ "@graph": nodes })}</script>`;
 
 beforeEach(() => {
-  outDir = fs.mkdtempSync(join(tmpdir(), "llms-markdown-"));
+  outDir = fs.mkdtempSync(join(tmpdir(), "gen-llm-md-"));
   write("index.html", "<main><h1>Home</h1></main>");
 });
 afterEach(() => fs.rmSync(outDir, { recursive: true, force: true }));
@@ -205,6 +205,15 @@ test("protects hand-edited native twins even with a custom file extension", asyn
   const { artifacts } = await planGeneration(config);
   assert.throws(() => writeArtifacts(outDir, artifacts), /unowned Markdown: guide\.mdown/);
   assert.equal(read(file), "Hand-edited guide");
+});
+
+test("ships the gen-llm-md binary and names it in the CLI help", () => {
+  const { name, bin } = require("../dist/package.json");
+  assert.equal(name, "gen-llm-md");
+  assert.equal(bin[name], "cli.js");
+  const help = spawnSync(process.execPath, [resolve(__dirname, "../dist", bin[name]), "--help"], { encoding: "utf8" });
+  assert.equal(help.status, 0, help.stderr);
+  assert.match(help.stdout, /^Usage: gen-llm-md generate /);
 });
 
 test("CLI loads an ESM config and dry-run never writes artifacts", () => {
