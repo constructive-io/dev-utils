@@ -37,13 +37,13 @@
     "deepmerge": "^4.3.1",
     "find-and-require-package-json": "workspace:*",
     "minimist": "^1.2.8",
+    "string-width": "4.2.3",
     "yanse": "workspace:*"
   },
   "keywords": [],
   "devDependencies": {
     "@types/minimist": "^1.2.5",
     "clean-ansi": "workspace:*",
-    "makage": "0.1.10",
-    "string-width": "4.2.3"
+    "makage": "0.1.10"
   }
 }
