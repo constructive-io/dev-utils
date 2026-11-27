@@ -16,6 +16,7 @@ export type { StaleOptions } from './files';
 export { discoverPages, manifestFile, planManifest, writeArtifacts } from './files';
 export { flattenLayoutTables, htmlToMarkdown, normalizeRoleTables, parsePage } from './html';
 export { defaultSections, indexTitles, renderIndex, renderTwin } from './render';
+export { retiredPageNotice } from './retired';
 export type { SourceIntro, SourceRule } from './source';
 export { formatMarkdownIntro, markdownSource, readPlacements, splitLeadingH1 } from './source';
 export * from './types';

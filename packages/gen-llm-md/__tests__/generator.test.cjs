@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const { tmpdir } = require("node:os");
 const { dirname, join, resolve } = require("node:path");
 
-const { flattenLayoutTables, generate, manifestFile, planGeneration, writeArtifacts } = require("../dist");
+const { flattenLayoutTables, generate, manifestFile, planGeneration, retiredPageNotice, writeArtifacts } = require("../dist");
 
 const siteUrl = "https://example.com";
 let outDir;
@@ -262,6 +262,21 @@ test("writes an unavailable notice when a reused page becomes noindex and notice
   assert.match(read("guide.md"), /no longer available/);
   assert.doesNotMatch(read("llms.txt"), /guide\.md/);
   assert(JSON.parse(read(manifestFile)).twins.some(({ file, unavailable }) => file === "guide.md" && unavailable));
+});
+
+test("points retired Markdown at a local HTML refresh destination", async () => {
+  const config = { outDir, siteUrl: siteUrl + "/docs" };
+  write("guide.html", "<main><h1>Original guide</h1></main>");
+  write("manual.html", "<main><h1>Original manual</h1></main>");
+  await generate(config);
+  const noindex = '<meta name="robots" content="noindex">';
+  write("guide.html", noindex + '<meta http-equiv="refresh" content="0; url=/docs/reference">');
+  write("manual.html", noindex + '<meta http-equiv="refresh" content="0; url=https://elsewhere.example/reference">');
+  write("reference.html", "<main><h1>Reference</h1></main>");
+  await generate({ ...config, stale: { unavailable: retiredPageNotice(outDir, config.siteUrl) } });
+  assert.match(read("guide.md"), /Moved to \[\/docs\/reference\]\(https:\/\/example\.com\/docs\/reference\)/);
+  assert.match(read("manual.md"), /Markdown copy no longer available/);
+  assert.doesNotMatch(read("llms.txt"), /guide\.md|manual\.md/);
 });
 
 test("refuses planned deletions after the target is edited or replaced by a symlink", async () => {
