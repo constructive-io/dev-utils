@@ -733,7 +733,7 @@ export class Inquirerer {
 
   private applyDefaultValues(questions: Question[], obj: any): void {
     questions.forEach(question => {
-      if ('default' in question) {
+      if ('default' in question && !(question.name in obj)) {
         obj[question.name] = question.default;  // Set default value if specified
       }
     });

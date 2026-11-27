@@ -338,6 +338,19 @@ describe('Inquirerer', () => {
     });
   });
 
+  it('preserves provided flags when filling missing required answers in noTty mode', async () => {
+    const prompter = new Inquirerer({ input: mockInput, output: mockOutput, noTty: true });
+    const questions: Question[] = [
+      { name: 'fullName', type: 'text', required: true, default: 'Default Name' },
+      { name: 'email', type: 'text', required: true, default: 'default@example.com' },
+      { name: 'role', type: 'text', required: true, default: 'editor' },
+    ];
+
+    const result = await prompter.prompt({ fullName: 'Example User', email: 'user@example.com' }, questions);
+
+    expect(result).toEqual({ fullName: 'Example User', email: 'user@example.com', role: 'editor' });
+  });
+
   describe('boolean type (alias for confirm)', () => {
     it('should treat boolean type as confirm — yes input', async () => {
       enqueueInputResponse({ type: 'read', value: 'y' });
