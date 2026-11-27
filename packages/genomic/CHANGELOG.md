@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.10](https://github.com/constructive-io/dev-utils/compare/genomic@5.6.9...genomic@5.6.10) (2026-11-27)
+
+**Note:** Version bump only for package genomic
+
 ## [5.6.9](https://github.com/constructive-io/dev-utils/compare/genomic@5.6.8...genomic@5.6.9) (2026-11-27)
 
 **Note:** Version bump only for package genomic

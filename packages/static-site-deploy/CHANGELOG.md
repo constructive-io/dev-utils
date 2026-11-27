@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/constructive-io/dev-utils/compare/@constructive-io/static-site-deploy@0.3.4...@constructive-io/static-site-deploy@0.3.5) (2026-11-27)
+
+**Note:** Version bump only for package @constructive-io/static-site-deploy
+
 ## [0.3.4](https://github.com/constructive-io/dev-utils/compare/@constructive-io/static-site-deploy@0.3.3...@constructive-io/static-site-deploy@0.3.4) (2026-11-27)
 
 **Note:** Version bump only for package @constructive-io/static-site-deploy

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.8](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.7...inquirerer@4.9.8) (2026-11-27)
+
+### Bug Fixes
+
+- **inquirerer:** keep string-array checkbox defaults in noninteractive mode ([#159](https://github.com/constructive-io/dev-utils/issues/159)) ([af7a527](https://github.com/constructive-io/dev-utils/commit/af7a527335d2dbaee92fb3a82218e2aea3607a5d))
+
 ## [4.9.7](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.6...inquirerer@4.9.7) (2026-11-27)
 
 ### Bug Fixes
