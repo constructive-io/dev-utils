@@ -6,6 +6,7 @@ import type { Entity, GraphSection, GraphTreeRules, ParsedPage, Placement } from
 
 type Node = { entity: Entity; page: ParsedPage };
 type Row = { placement: Placement; node?: Node; document?: Node; page: ParsedPage };
+export const optionalKey = 'Optional';
 const schemaTypes = (entity: Entity) => types(entity).map(schemaType);
 const pageType = (entity: Entity) => schemaTypes(entity).some((type) => type.endsWith('Page'));
 const id = ({ entity, page }: Node) => entityId(entity, page.url);
@@ -61,7 +62,7 @@ export function deriveGraphTree(
     rows.set(route, {
       page, node: entity && { page, entity }, document: document && { page, entity: document },
       placement: {
-        key: `page:${page.route}`, route: page.route, tier: 'page', parentKey: section.key,
+        key: `page:${page.route}`, route: page.route, tier: section.key === optionalKey ? 'optional' : 'page', parentKey: section.key,
         rank: rank(entity, rules.rankProperty),
         title: name(entity) || undefined,
         summary: text(entity?.description) || text(document?.description) || page.meta('description'),
@@ -86,6 +87,7 @@ export function deriveGraphTree(
   for (const [route, row] of rows) {
     if (!route) continue;
     const section = row.placement.parentKey;
+    const canParent = (candidate: Row) => candidate.placement.tier === row.placement.tier && !wouldCycle(row, candidate);
     for (const relation of relations) {
       if (!row.node) break;
       const keys = identities(row);
@@ -94,7 +96,7 @@ export function deriveGraphTree(
           [node, document].some((target) => target && refs(target, relation).some((ref) => keys.includes(ref))))
         : [row.node, row.document].flatMap((node) =>
           node ? refs(node, relation).flatMap((ref) => pageIds.get(ref) ?? []) : []);
-      const parent = related.find((candidate) => routeKey(candidate.page.route) !== '' && !wouldCycle(row, candidate));
+      const parent = related.find((candidate) => routeKey(candidate.page.route) !== '' && canParent(candidate));
       if (parent) {
         row.placement.parentKey = parent.placement.key;
         break;
@@ -105,7 +107,7 @@ export function deriveGraphTree(
     while (routeParts.length > 2) {
       routeParts.pop();
       const parent = rows.get(routeParts.join('/'));
-      if (parent && !wouldCycle(row, parent)) {
+      if (parent && canParent(parent)) {
         row.placement.parentKey = parent.placement.key;
         break;
       }

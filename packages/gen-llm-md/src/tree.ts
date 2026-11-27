@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { renderCollection } from './collection';
 import { list, name, sameRoute, sitePath, text, types, urlFor } from './entities';
 import { entityId, pageEntities, pageSubject, renderFacts, schemaType } from './facts';
-import { deriveGraphTree } from './graph-tree';
+import { deriveGraphTree, optionalKey } from './graph-tree';
 import { collapseAdjacentImages, ignoredContent, removePageChrome } from './html';
 import type { Config, Pipeline } from './index';
 import { http, linkKey, markdownHref, rewriteMarkdownLinks, routeKey, twinLink } from './navigation';
@@ -27,7 +27,6 @@ type Entry = Placement & {
   skip?: boolean;
 };
 
-const optionalKey = 'Optional';
 const homeKey = Symbol('home');
 type ParentKey = string | typeof homeKey;
 const relativeRoute = /^\/(?!\/)[^?#\\]*$/;
@@ -121,7 +120,8 @@ function renderTreeIndex(
     lines.push('');
     render(children.get(homeKey) ?? []);
   }
-  for (const section of [...sections].sort(order).concat({ key: optionalKey, title: optionalKey, rank: Infinity })) {
+  const optional = sections.find(({ key }) => key === optionalKey) ?? { key: optionalKey, title: optionalKey, rank: Infinity };
+  for (const section of sections.filter(({ key }) => key !== optionalKey).sort(order).concat(optional)) {
     const group = children.get(section.key);
     if (!group?.length) continue;
     lines.push('', `## ${inline(section.title)}`, '');
@@ -137,13 +137,15 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
   const excluded = new Set((config.exclude ?? []).map(routeKey));
   const suppressed = new Set<string>();
   const pages = new Map<string, ParsedPage>();
-  const sections = new Set<string>([optionalKey]);
+  const sections = new Set<string>();
   for (const section of tree.sections) {
-    if (!section.key || !text(section.title) || !Number.isFinite(section.rank) || sections.has(section.key)) {
+    if (!section.key || !text(section.title) || !Number.isFinite(section.rank) || sections.has(section.key) ||
+        (!tree.graph && section.key === optionalKey)) {
       throw new Error(`Invalid or duplicate tree section: ${section.key}`);
     }
     sections.add(section.key);
   }
+  sections.add(optionalKey);
   for (const page of pipeline.discoverPages(outDir)) {
     const key = routeKey(page.route);
     if (excluded.has(key)) {

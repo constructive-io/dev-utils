@@ -4,7 +4,9 @@
 
 Use `tree.graph` instead of `tree.placements` to retain every discovered
 indexable HTML page. Declare sections in match order, with an unconditional
-section last as a fallback. Section rank controls presentation order.
+section last as a fallback. Section rank controls presentation order. Use
+the section key `Optional` to put matching local pages under the final
+Optional heading without dropping their twins.
 
 ```js
 tree: {

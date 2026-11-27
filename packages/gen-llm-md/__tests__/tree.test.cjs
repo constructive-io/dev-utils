@@ -50,12 +50,15 @@ test("derives public twins, graph parents and contextual entries without an enti
   const early = entity("early", "First release.", { mainEntityOfPage: siteUrl + "/first", datePublished: "2024-02-01" });
   const late = entity("late", "Latest release.", { mainEntityOfPage: siteUrl + "/second", datePublished: "2024-03-01" });
   const local = entity("local", "Supporting capability.");
-  const external = entity("external", "External reference.", { url: "https://example.net/reference" });
+  const external = entity("external", "External reference.", { url: "https://example.net/reference", rank: 1 });
   page("widget", [root, early, late, local, external], '<a href="/second">Current release</a>',
     '<link rel="canonical" href="https://upstream.example.net/widget?preview=true">');
   page("first", [early]);
   page("second", [late]);
   page("plain", [], "<p>Plain page.</p>");
+  page("archive", [entity("Archive", "Historical reference.", {
+    mainEntityOfPage: siteUrl + "/archive", isPartOf: { "@id": root["@id"] },
+  })]);
   page("noindex", [entity("hidden", "Hidden.")], undefined, '<meta name="robots" content="noindex">');
   const result = await generate({
     outDir, siteUrl,
@@ -63,6 +66,7 @@ test("derives public twins, graph parents and contextual entries without an enti
     tree: {
       sections: [
         { key: "home", title: "Home", rank: 0, match: "/" },
+        { key: "Optional", title: "Optional", rank: 0, match: "/archive" },
         { key: "reference", title: "Reference", rank: 1, types: ["SoftwareApplication"] },
         { key: "other", title: "Other", rank: 2 },
       ],
@@ -73,10 +77,13 @@ test("derives public twins, graph parents and contextual entries without an enti
   assert.match(index, /## Home\n\n- \[Home\]\(https:\/\/example\.com\/index\.md\)/);
   assert.match(index, /## Reference\n\n- \[Widget\].*\n  - \[late\].*\n  - \[early\].*\n  - local: Supporting capability\./);
   assert.match(index, /## Optional\n\n- \[external\]\(https:\/\/example\.net\/reference\)/);
+  assert.equal(index.match(/## Optional/g).length, 1);
+  assert.match(index.split("## Optional")[1], /\n- \[Archive\]\(https:\/\/example\.com\/archive\.md\)/);
+  assert.match(read("archive.md"), /Source: https:\/\/example\.com\/archive\n/);
   assert.doesNotMatch(index, /upstream\.example\.net|noindex|hidden/);
   assert.match(read("widget.md"), /Source: https:\/\/example\.com\/widget\n/);
   assert.match(read("widget.md"), /\[Current release\]\(https:\/\/example\.com\/second\.md\)/);
-  assert.deepEqual(result.twins.map(({ file }) => file).sort(), ["first.md", "index.md", "plain.md", "second.md", "widget.md"]);
+  assert.deepEqual(result.twins.map(({ file }) => file).sort(), ["archive.md", "first.md", "index.md", "plain.md", "second.md", "widget.md"]);
 });
 
 test("matches JSON-LD documents and local targets under a site path prefix", async () => {
