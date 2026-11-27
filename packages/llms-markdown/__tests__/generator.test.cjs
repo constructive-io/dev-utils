@@ -194,6 +194,19 @@ test("does not overwrite handwritten .markdown files", async () => {
   assert.equal(read(file), "Hand-written guide");
 });
 
+test("protects hand-edited native twins even with a custom file extension", async () => {
+  const file = "guide.mdown";
+  const config = {
+    outDir, siteUrl,
+    nativeMarkdown: () => [{ route: "/guide", file, title: "Guide", markdown: "# Guide" }],
+  };
+  await generate(config);
+  write(file, "Hand-edited guide");
+  const { artifacts } = await planGeneration(config);
+  assert.throws(() => writeArtifacts(outDir, artifacts), /unowned Markdown: guide\.mdown/);
+  assert.equal(read(file), "Hand-edited guide");
+});
+
 test("CLI loads an ESM config and dry-run never writes artifacts", () => {
   write("llms.config.mjs", `export default { siteUrl: "${siteUrl}", outDir: ".", pageContent: () => ({ title: "Configured" }) };`);
   const cli = resolve(__dirname, "../dist/cli.js");

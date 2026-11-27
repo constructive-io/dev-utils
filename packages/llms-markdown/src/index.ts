@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { name, selectPageEntity, selectSiteIdentity, text, types, urlFor } from './entities';
-import { discoverPages, planManifest, type StaleOptions, writeArtifacts } from './files';
+import { discoverPages, markdownArtifact, planManifest, type StaleOptions, writeArtifacts } from './files';
 import { htmlToMarkdown, parsePage } from './html';
 import { defaultSections, renderIndex, renderTwin } from './render';
 import type {
@@ -120,7 +120,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
     twins.push(twin);
   }
   const sections = (config.index?.sections ?? defaultSections)(twins);
-  const artifacts: Artifact[] = twins.map(({ file, markdown }) => ({ file, contents: markdown }));
+  const artifacts = twins.map(({ file, markdown }) => markdownArtifact(file, markdown));
   artifacts.push({ file: 'llms.txt', contents: pipeline.renderIndex(site, sections, siteUrl) });
   artifacts.push(...pipeline.planManifest(outDir, twins, config.stale));
   return { site, twins, artifacts };

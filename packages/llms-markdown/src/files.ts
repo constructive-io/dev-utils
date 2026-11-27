@@ -39,9 +39,14 @@ function artifactPath(outDir: string, file: string) {
   return target;
 }
 
+export function markdownArtifact(file: string, contents: Artifact['contents']): Artifact {
+  return { file, contents, markdown: true };
+}
+
 export function writeArtifacts(outDir: string, artifacts: readonly Artifact[], stale: StaleOptions = {}) {
-  const targets = artifacts.map(({ file, contents }) => ({ file, target: artifactPath(outDir, file), contents }));
-  const existingTwins = targets.filter(({ file, target }) => /\.(?:md|markdown)$/i.test(file) && existsSync(target));
+  const targets = artifacts.map((artifact) => ({ ...artifact, target: artifactPath(outDir, artifact.file) }));
+  const existingTwins = targets.filter(({ file, target, markdown }) =>
+    (markdown || /\.(?:md|markdown)$/i.test(file)) && existsSync(target));
   if (existingTwins.length) {
     const current = artifactPath(outDir, manifestFile);
     const manifests = [current];
@@ -100,7 +105,7 @@ export function planManifest(outDir: string, twins: readonly Twin[], stale: Stal
         ? stale.unavailable({ route, file })
         : '# Page no longer available\n\nThis page is no longer part of the site.\n';
       entries.push({ route, file, sha256: digest(contents), unavailable: true });
-      tombstones.push({ file, contents });
+      tombstones.push(markdownArtifact(file, contents));
     } else if (existing) {
       entries.push(entry);
     }
