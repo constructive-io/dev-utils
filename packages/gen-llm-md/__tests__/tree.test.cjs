@@ -236,3 +236,11 @@ test("resolves fragment entity IDs on the pages that define them when inferring 
   ], { inferParents: ["isPartOf", "hasPart"] }));
   assert.match(read("llms.txt"), /parent\.md\): Parent details\.\n  - .*direct\.md\).*\n  - .*inverse\.md\)/);
 });
+
+test("falls back to body content when the export has no main or article", async () => {
+  write("plain.html", graph(entity("plain", "Plain page description.")) +
+    "<body><h1>plain</h1><p>Public body content.</p><aside data-llm-ignore>Private chrome.</aside></body>");
+  await generate(config([placement("plain")]));
+  assert.match(read("plain.md"), /Public body content\./);
+  assert.doesNotMatch(read("plain.md"), /Private chrome|## plain/);
+});

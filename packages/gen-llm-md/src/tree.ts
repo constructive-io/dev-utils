@@ -308,7 +308,8 @@ async function renderEntry(
   $('[data-llm-ignore]').remove();
   removePageChrome($, page.url, origin);
   const main = $('main, [role="main"]').first();
-  const content = main.length ? main : $('article').first();
+  const primary = main.length ? main : $('article').first();
+  const content = primary.length ? primary : $('body').first();
   content.find(ignoredContent).remove();
   const headingNode = content.find('h1').first();
   const heading = text(headingNode.clone().find('br').replaceWith(' ').end().text());
