@@ -5,7 +5,7 @@ import { renderCollection } from './collection';
 import { list, name, sameRoute, sitePath, text, types, urlFor } from './entities';
 import { entityId, pageEntities, pageSubject, renderFacts, schemaType } from './facts';
 import { deriveGraphTree, optionalKey } from './graph-tree';
-import { collapseAdjacentImages, ignoredContent, removePageChrome, renderPageBody } from './html';
+import { collapseAdjacentImages, demoteHeadings, ignoredContent, removePageChrome, renderPageBody } from './html';
 import type { Config, Pipeline } from './index';
 import { http, linkKey, markdownHref, rewriteMarkdownLinks, routeKey, twinLink } from './navigation';
 import { inline } from './render';
@@ -324,7 +324,7 @@ async function renderEntry(
   const headingNode = content.find('h1').first();
   const heading = text(headingNode.clone().find('br').replaceWith(' ').end().text());
   if (heading === title) headingNode.remove();
-  content.find('h1').each((_, node) => { $(node).replaceWith($('<h2>').append($(node).contents())); });
+  demoteHeadings($, content);
   if (renderer === 'collection' && rule?.content !== 'omit') {
     if (!rule?.collection) throw new Error(`Missing collection options for ${page.route}`);
     renderCollection(page, content, subject, graph, rule.collection, policy.allowed);

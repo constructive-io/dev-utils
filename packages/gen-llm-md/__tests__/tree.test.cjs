@@ -282,6 +282,14 @@ test("reads policy and native source through generic helpers and separates the o
   assert.deepEqual(parsed.jsonld, []);
 });
 
+test.each([false, true])("retains a standalone marked heading after normalization (tree %s)", async (tree) => {
+  page("widget", [entity("Widget", "Widget details.", { "@id": id("widget") })],
+    '<h1 data-llm-supplement>Usage information</h1>');
+  await generate({ outDir, siteUrl, ...(tree ? config([placement("widget")]) : {}),
+    pageContent: ({ route }) => route === "/widget" ? { title: "Widget", body: "Authored body." } : undefined });
+  assert.match(read("widget.md"), /Authored body\.\n\n## Usage information/);
+});
+
 test("renders an explicitly metadata-only page twin", async () => {
   page("widget", [entity("widget", "Widget details.")]);
   await generate(config([placement("widget")], {

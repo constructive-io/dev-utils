@@ -3,7 +3,7 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 
 import { name, selectPageEntity, selectSiteIdentity, sitePath, text, types, urlFor } from './entities';
 import { discoverPages, markdownArtifact, planManifest, type StaleOptions, writeArtifacts } from './files';
-import { collapseAdjacentImages, htmlToMarkdown, ignoredContent, parsePage, removePageChrome, renderPageBody } from './html';
+import { collapseAdjacentImages, demoteHeadings, htmlToMarkdown, ignoredContent, parsePage, removePageChrome, renderPageBody } from './html';
 import { defaultSections, renderIndex, renderTwin } from './render';
 import { matches } from './source';
 import { planTree } from './tree';
@@ -112,9 +112,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
       if (files.has(file)) continue;
     }
     if (heading === title) headingNode.remove();
-    content.find('h1').each((_, element) => {
-      $(element).replaceWith($('<h2>').append($(element).contents()));
-    });
+    demoteHeadings($, content);
     content.find('a[href], img[src]').each((_, element) => {
       const node = $(element);
       const attr = element.tagName === 'a' ? 'href' : 'src';
