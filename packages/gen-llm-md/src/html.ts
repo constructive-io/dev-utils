@@ -90,9 +90,59 @@ export function normalizeRoleTables($: CheerioAPI) {
   }
 }
 
+export const ignoredContent = 'nav, script, style, template, noscript, iframe, svg, form, dialog, [hidden], [aria-hidden="true"], [data-llm-ignore]';
+
+export function removePageChrome($: CheerioAPI, pageUrl: URL, homeUrl: URL) {
+  const navigation = 'nav, [role="navigation" i]';
+  const landmarks = `${navigation}, [role="banner" i], [role="contentinfo" i]`;
+  $(`${landmarks}, header, footer`)
+    .filter((_, element) => {
+      const node = $(element);
+      if (node.is(landmarks)) return true;
+      if (node.parents('article, section, aside, [role="article" i]').length) return false;
+      if (!node.is('main > header, [role="main" i] > header') || !node.find('h1').length) return true;
+
+      const siblings = node.siblings();
+      const hasOtherHeading = siblings.filter('h1').add(siblings.find('h1')).toArray().some(
+        (heading) => !$(heading).closest(`${ignoredContent}, ${landmarks}, footer`).length);
+      if (!hasOtherHeading) return false;
+
+      const linksHome = node.find('h1 a[href], a[href]:has(h1)').toArray().some((link) => {
+        const target = urlFor($(link).attr('href'), pageUrl);
+        return target && !target.hash && sameRoute(target, homeUrl);
+      });
+      const hasSiteNavigation = node.find(navigation).find('a[href]').toArray().some((link) => {
+        const target = urlFor($(link).attr('href'), pageUrl);
+        return target && target.origin === homeUrl.origin && !sameRoute(target, pageUrl);
+      });
+      return linksHome || hasSiteNavigation;
+    }).remove();
+}
+
+export function collapseAdjacentImages($: CheerioAPI) {
+  const image = (element: Parameters<CheerioAPI>[0]) => {
+    const node = $(element);
+    return node.is('picture') ? node.children('img').first() : node.filter('img');
+  };
+  $('img, picture').not('picture img').each((_, element) => {
+    const src = image(element).attr('src');
+    if (!src) return;
+    let previous = element.prev;
+    while (previous && (previous.type === 'comment' || (previous.type === 'text' && !previous.data.trim()))) {
+      previous = previous.prev;
+    }
+    if (!previous) return;
+    const previousImage = image(previous);
+    if (previousImage.attr('src') !== src) return;
+    if (!previousImage.attr('alt')?.trim() && image(element).attr('alt')?.trim()) $(previous).remove();
+    else $(element).remove();
+  });
+}
+
 export function htmlToMarkdown(html: string): string {
   const $ = load(html, {}, false);
-  $('nav, script, style, template, noscript, iframe, svg, form, dialog, [hidden], [aria-hidden="true"], [data-llm-ignore]').remove();
+  $(ignoredContent).remove();
+  collapseAdjacentImages($);
   $('button').each((_, button) => {
     const node = $(button);
     const label = node.attr('aria-label');
