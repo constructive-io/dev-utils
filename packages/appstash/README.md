@@ -262,6 +262,14 @@ Every file it writes is atomic (temp file + `rename`) and mode `0600`. A stored 
 that exists but does not parse throws with its path — it is never silently replaced
 with defaults.
 
+The directories appstash creates are mode `0700`, and the store sets the ones it owns
+to `0700` when it opens, so a store that a group shared through its directory modes
+is private to its owner from then on. A context name becomes a file name, so every
+method that takes one throws for a name that could reach a file outside the store:
+an empty name, `.`, `..`, or a name with `/`, `\` or a NUL character. Any other name
+works. `assertContextName(name)` runs the same check, for a caller that wants to fail
+before it touches the store.
+
 ### One signed-in state across several tools
 
 Pass `stashName` when multiple binaries are really one product. They then share

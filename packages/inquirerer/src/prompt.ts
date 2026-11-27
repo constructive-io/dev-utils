@@ -1,8 +1,9 @@
 import readline from 'readline';
 import { Readable, Writable } from 'stream';
+import stringWidth from 'string-width';
 import { blue, dim, gray, red, white, whiteBright, yellow } from 'yanse';
 
-import { KEY_CODES, TerminalKeypress } from './keypress';
+import { CancelReason, KEY_CODES, TerminalKeypress } from './keypress';
 import { AutocompleteQuestion, CheckboxQuestion, ConfirmQuestion, JsonQuestion, ListQuestion, NumberQuestion, OptionValue, PasswordQuestion, Question, TextQuestion, Validation } from './question';
 import { DefaultResolverRegistry, globalResolverRegistry } from './resolvers';
 // import { writeFileSync } from 'fs';
@@ -212,7 +213,21 @@ export interface InquirererOptions {
   mutateArgs?: boolean;
   resolverRegistry?: DefaultResolverRegistry;
   timeout?: number;
+  /**
+   * True (the default) resets the terminal (ESC c) before each prompt. False keeps what is on the screen:
+   * a prompt is written below it, and a prompt that redraws erases only its own last drawing.
+   */
+  clearScreen?: boolean;
+  /**
+   * When set, a prompt that ends without an answer rejects with the returned error: Ctrl-C ('interrupt', in place
+   * of exiting the process), or the end of input ('end-of-input': Ctrl-D, or a closed stdin). Ctrl-C while no
+   * prompt is pending raises SIGINT for the process.
+   */
+  onCancel?: (reason: CancelReason) => Error;
 }
+
+/** How one pending question ended; a prompt with no answer can only end as `cancelled`, never fall through. */
+type PromptOutcome = { kind: 'answer'; value: unknown } | { kind: 'cancelled'; reason: CancelReason };
 export class Inquirerer {
   private rl: readline.Interface | null;
   private keypress: TerminalKeypress | null;
@@ -224,6 +239,14 @@ export class Inquirerer {
   private mutateArgs: boolean;
   private resolverRegistry: DefaultResolverRegistry;
   private timeout: number | undefined;
+  private resetsScreen: boolean;
+  /** Lines written since the current prompt last drew itself; what a redraw erases when the screen is kept. */
+  private drawnLines = 0;
+  private cancelError: ((reason: CancelReason) => Error) | undefined;
+  private cancelPending: ((reason: CancelReason) => void) | null = null;
+  private stopPassword: (() => void) | null = null;
+  private closed = false;
+  private onInputEnd: (() => void) | null = null;
 
   private _inactivityTimer: ReturnType<typeof setTimeout> | null = null;
   private _inactivityReject: ((err: PromptTimeoutError) => void) | null = null;
@@ -242,7 +265,9 @@ export class Inquirerer {
       globalMaxLines = 10,
       mutateArgs = true,
       resolverRegistry = globalResolverRegistry,
-      timeout
+      timeout,
+      clearScreen = true,
+      onCancel
     } = options ?? {};
 
     this.useDefaults = useDefaults;
@@ -252,6 +277,8 @@ export class Inquirerer {
     this.input = input;
     this.globalMaxLines = globalMaxLines;
     this.resolverRegistry = resolverRegistry;
+    this.resetsScreen = clearScreen;
+    this.cancelError = onCancel;
 
     if (timeout !== undefined) {
       this.timeout = timeout;
@@ -264,28 +291,67 @@ export class Inquirerer {
     }
 
     if (!noTty) {
-      this.rl = readline.createInterface({
-        input,
-        output
-      });
+      this.rl = this.createReadline();
       this.keypress = new TerminalKeypress(noTty, input);
+      if (onCancel) {
+        this.keypress.onCancelKey((reason) => this.cancel(reason));
+        this.onInputEnd = () => this.cancel('end-of-input');
+        input.on('end', this.onInputEnd);
+      }
     } else {
       this.rl = null;
       this.keypress = null;
     }
   }
 
+  private createReadline(): readline.Interface {
+    const rl = readline.createInterface({ input: this.input, output: this.output });
+    if (this.cancelError) {
+      // Without a listener readline closes itself on Ctrl-C; with onCancel the keypress handler decides instead.
+      rl.on('SIGINT', () => undefined);
+      // Readline also closes itself at the end of input (Ctrl-D on a terminal); a close by this class unsets this.rl first.
+      rl.on('close', () => {
+        if (this.rl !== rl) return;
+        this.rl = null;
+        this.cancel('end-of-input');
+      });
+    }
+    return rl;
+  }
+
   private clearScreen() {
-    // same as console.clear()
-    this.output.write('\x1Bc'); // This is the escape sequence to clear the terminal screen.
+    if (this.resetsScreen) {
+      // same as console.clear()
+      this.output.write('\x1Bc'); // This is the escape sequence to clear the terminal screen.
+      return;
+    }
+    if (this.drawnLines > 0) this.output.write(`\x1b[${this.drawnLines}A\r\x1b[J`);
+    this.drawnLines = 0;
   }
 
   private write(message: string) {
     this.output.write(message);
+    const columns = (this.output as Writable & { columns?: number }).columns;
+    const lines = message.split('\n').slice(0, -1);
+    this.drawnLines += columns > 0
+      ? lines.reduce((rows, line) => rows + Math.max(1, Math.ceil(stringWidth(line) / columns)), 0)
+      : lines.length;
   }
 
   private log(message: string) {
-    this.output.write(message + '\n');
+    this.write(message + '\n');
+  }
+
+  /** With onCancel set: the pending prompt ends as cancelled; Ctrl-C with no prompt pending sends SIGINT to the process. */
+  private cancel(reason: CancelReason): void {
+    const settle = this.cancelPending;
+    if (settle) {
+      this.cancelPending = null;
+      this.write('\n');
+      settle(reason);
+    } else if (reason === 'interrupt') {
+      process.kill(process.pid, 'SIGINT');
+    }
   }
 
   private getInput(input: string) {
@@ -550,16 +616,37 @@ export class Inquirerer {
       }
 
       while (ctx.needsInput) {
+        if (this.closed || (this.cancelError && !this.noTty && (this.input.readableEnded || this.input.destroyed))) {
+          throw this.cancelError?.('end-of-input') ?? new Error('Prompt input is closed.');
+        }
+        if (this.cancelError && !this.noTty && !this.rl) this.rl = this.createReadline();
         const timeoutPromise = this.startInactivityTimeout(question, ordered);
+        const cancelled = new Promise<PromptOutcome>((resolve) => {
+          this.cancelPending = (reason) => resolve({ kind: 'cancelled', reason });
+        });
         const removeActivityListener = this.setupInputActivityListener();
+        let answeredNormally = false;
         try {
-          const questionPromise = this.handleQuestionType(question, ctx);
-          obj[question.name] = timeoutPromise
-            ? await Promise.race([questionPromise, timeoutPromise])
-            : await questionPromise;
+          this.drawnLines = 0;
+          const answered = this.handleQuestionType(question, ctx).then((value): PromptOutcome => ({ kind: 'answer', value }));
+          const outcome = await Promise.race<PromptOutcome>([
+            answered,
+            ...(timeoutPromise ? [timeoutPromise] : []),
+            cancelled
+          ]);
+          switch (outcome.kind) {
+          case 'answer':
+            obj[question.name] = outcome.value;
+            answeredNormally = true;
+            break;
+          case 'cancelled':
+            throw this.cancelError?.(outcome.reason) ?? new Error('Prompt input is closed.');
+          }
         } finally {
           removeActivityListener();
           this.clearInactivityTimeout();
+          this.cancelPending = null;
+          if (!answeredNormally && !this.closed) this.resetQuestion();
         }
 
         if (!this.isValid(question, obj, ctx)) {
@@ -981,46 +1068,59 @@ export class Inquirerer {
       return null; // Password input requires interactive terminal
     }
 
+    // A readline interface writes back every key it reads, so none may be attached while a secret is typed.
+    // It is made again once the secret is read, for the prompts that use it.
+    const rl = this.rl;
+    this.rl = null;
+    rl.close();
+    this.input.resume();
     this.keypress.resume();
+
     const mask = question.mask ?? '*';
     let input = '';
+    const maskedLine = (): string => this.getInput(mask.repeat(Array.from(input).length));
+    const redraw = (): void => this.write(`\r\x1b[2K${maskedLine()}`);
 
-    // Display the prompt with masked input
-    const display = (): void => {
-      this.clearScreen();
-      const maskedInput = mask.repeat(input.length);
-      this.displayPrompt(question, ctx, maskedInput);
+    this.clearScreen();
+    this.write(generatePromptMessage(question, ctx) + maskedLine());
+
+    const erase = (): void => {
+      if (input.length === 0) return;
+      input = Array.from(input).slice(0, -1).join('');
+      redraw();
     };
-
-    display();
-
-    // Handle backspace
-    this.keypress.on(KEY_CODES.BACKSPACE, () => {
-      if (input.length > 0) {
-        input = input.slice(0, -1);
-        display();
-      }
-    });
-
-    // Register alphanumeric, symbols, and space keypresses
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()_+-=[]{}|;:\'",.<>?/`~\\';
-    chars.split('').forEach(char => {
-      this.keypress.on(char, () => {
-        input += char;
-        display();
-      });
+    this.keypress.on(KEY_CODES.BACKSPACE, erase);
+    this.keypress.on(KEY_CODES.BACKSPACE_LEGACY, erase);
+    this.keypress.onUnhandled((key) => {
+      // Escape sequences and control characters are keys, not text.
+      if (/[\u0000-\u001f\u007f-\u009f]/.test(key)) return;
+      input += key;
+      redraw();
     });
 
     return new Promise<string | null>((resolve) => {
+      this.stopPassword = () => {
+        this.stopPassword = null;
+        resolve(null);
+      };
       this.keypress.on(KEY_CODES.ENTER, () => {
-        this.keypress.pause();
-        if (input.trim() !== '') {
-          resolve(input);
-        } else {
-          resolve(null);
-        }
+        this.stopPassword = null;
+        this.write('\n');
+        this.resetQuestion();
+        resolve(input.trim() !== '' ? input : null);
       });
     });
+  }
+
+  private resetQuestion(): void {
+    this.stopPassword?.();
+    this.keypress?.pause();
+    const rl = this.rl;
+    this.rl = null;
+    rl?.close();
+    if (!this.noTty && !this.input.readableEnded && !this.input.destroyed) {
+      this.rl = this.createReadline();
+    }
   }
 
   private checkboxSelections(question: CheckboxQuestion, options: OptionValue[]): boolean[] {
@@ -1521,9 +1621,17 @@ export class Inquirerer {
   // Method to cleanly close the readline interface
   // NOTE: use exit() to close!
   public close() {
+    this.closed = true;
+    this.cancelPending?.('end-of-input');
+    this.stopPassword?.();
     if (this.rl) {
-      this.rl.close();
+      const rl = this.rl;
       this.rl = null;
+      rl.close();
+    }
+    if (this.onInputEnd) {
+      this.input.removeListener('end', this.onInputEnd);
+      this.onInputEnd = null;
     }
     if (this.keypress) {
       this.keypress.destroy();

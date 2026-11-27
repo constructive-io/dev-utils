@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { appstash, resolve } from './index';
+import { appstash, DIRECTORY_MODE, resolve } from './index';
 
 export interface ContextTargetEndpoint {
   endpoint: string;
@@ -131,7 +131,7 @@ function readJson<T>(filePath: string, fallback: T): T {
  */
 function writeJson(filePath: string, data: unknown, mode = 0o600): void {
   const dir = path.dirname(filePath);
-  fs.mkdirSync(dir, { recursive: true });
+  fs.mkdirSync(dir, { recursive: true, mode: DIRECTORY_MODE });
   const tmp = path.join(dir, `.${path.basename(filePath)}.${process.pid}.tmp`);
   try {
     fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + '\n', { mode });
@@ -146,11 +146,45 @@ function writeJson(filePath: string, data: unknown, mode = 0o600): void {
   }
 }
 
+// `\` separates paths on Windows; NUL ends a path in the system calls.
+const PATH_CHARACTERS = ['/', '\\', '\0'];
+
+/**
+ * Throws when `name` could reach a file outside the store's directory, because a context name becomes part of a
+ * file path. Any other name is the caller's choice.
+ */
+export function assertContextName(name: string): void {
+  if (typeof name === 'string' && name !== '' && name !== '.' && name !== '..' && !PATH_CHARACTERS.some((c) => name.includes(c))) return;
+  const shown = typeof name === 'string' && name.length > 100 ? `${name.slice(0, 100)}...` : name;
+  throw new Error(
+    `${JSON.stringify(shown)} is not a valid context name, because a context name becomes a file name in the store. ` +
+    'Use a name that is not empty, is not "." or "..", and has no "/", "\\" or NUL character.'
+  );
+}
+
+const ownValue = <T>(map: Record<string, T>, key: string): T | undefined =>
+  Object.hasOwn(map, key) ? map[key] : undefined;
+
+/** A map the store writes by a caller's key; with no prototype, a key such as `__proto__` is a plain entry. */
+const keyedMap = <T>(entries: Record<string, T>): Record<string, T> => Object.assign(Object.create(null), entries);
+
 export function createConfigStore(toolName: string, options?: ConfigStoreOptions): ConfigStore {
   const stashName = options?.stashName ?? toolName;
   const codec = options?.codec;
   const codecName = codec?.name ?? PLAINTEXT_CODEC;
   const dirs = appstash(stashName, { ensure: true, baseDir: options?.baseDir });
+  // Directories that already exist may be readable by others; tighten only the ones this store owns.
+  const owned = [dirs.root, dirs.config, dirs.cache, dirs.data, dirs.logs, resolve(dirs, 'config', 'contexts'), resolve(dirs, 'config', 'vars')];
+  const skipped: string[] = [];
+  for (const dir of new Set(owned)) {
+    if (skipped.some((parent) => dir.startsWith(parent + path.sep))) continue;
+    const stat = fs.lstatSync(dir, { throwIfNoEntry: false });
+    if (!stat?.isDirectory()) {
+      skipped.push(dir);
+      continue;
+    }
+    if ((stat.mode & 0o777) !== DIRECTORY_MODE) fs.chmodSync(dir, DIRECTORY_MODE);
+  }
 
   function settingsPath(): string {
     return resolve(dirs, 'config', 'settings.json');
@@ -161,9 +195,10 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
   }
 
   function contextPath(name: string): string {
+    assertContextName(name);
     const contextsDir = resolve(dirs, 'config', 'contexts');
     if (!fs.existsSync(contextsDir)) {
-      fs.mkdirSync(contextsDir, { recursive: true });
+      fs.mkdirSync(contextsDir, { recursive: true, mode: DIRECTORY_MODE });
     }
     return path.join(contextsDir, `${name}.json`);
   }
@@ -256,6 +291,7 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
   /** Stored credentials, still encoded. */
   function loadCredentials(): Credentials {
     const credentials = readJson<Credentials>(credentialsPath(), { tokens: {} });
+    credentials.tokens = keyedMap(credentials.tokens);
     const fileCodec = credentials.codec ?? PLAINTEXT_CODEC;
     if (Object.keys(credentials.tokens).length > 0 && fileCodec !== codecName) {
       throw new Error(
@@ -271,21 +307,24 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
   }
 
   function setCredentials(contextName: string, creds: ContextCredentials): void {
+    assertContextName(contextName);
     const credentials = loadCredentials();
     credentials.tokens[contextName] = codec ? mapSecrets(creds, codec.encode) : creds;
     saveCredentials(credentials);
   }
 
   function getCredentials(contextName: string): ContextCredentials | null {
+    assertContextName(contextName);
     const credentials = loadCredentials();
-    const stored = credentials.tokens[contextName];
+    const stored = ownValue(credentials.tokens, contextName);
     if (!stored) return null;
     return codec ? mapSecrets(stored, codec.decode) : stored;
   }
 
   function removeCredentials(contextName: string): boolean {
+    assertContextName(contextName);
     const credentials = loadCredentials();
-    if (credentials.tokens[contextName]) {
+    if (ownValue(credentials.tokens, contextName)) {
       delete credentials.tokens[contextName];
       saveCredentials(credentials);
       return true;
@@ -315,22 +354,21 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
       ctx = getCurrentContext();
     }
     if (!ctx) return null;
-    if (ctx.targets && ctx.targets[targetName]) {
-      return ctx.targets[targetName].endpoint;
-    }
-    return ctx.endpoint;
+    const target = ctx.targets && ownValue(ctx.targets, targetName);
+    return target ? target.endpoint : ctx.endpoint;
   }
 
   function varsPath(ctxName: string): string {
+    assertContextName(ctxName);
     const varsDir = resolve(dirs, 'config', 'vars');
     if (!fs.existsSync(varsDir)) {
-      fs.mkdirSync(varsDir, { recursive: true });
+      fs.mkdirSync(varsDir, { recursive: true, mode: DIRECTORY_MODE });
     }
     return path.join(varsDir, `${ctxName}.json`);
   }
 
   function loadVars(ctxName: string): Record<string, string> {
-    return readJson<Record<string, string>>(varsPath(ctxName), {});
+    return keyedMap(readJson<Record<string, string>>(varsPath(ctxName), {}));
   }
 
   function saveVars(ctxName: string, vars: Record<string, string>): void {
@@ -338,7 +376,10 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
   }
 
   function resolveContextName(contextName?: string): string | null {
-    if (contextName) return contextName;
+    if (contextName) {
+      assertContextName(contextName);
+      return contextName;
+    }
     const settings = loadSettings();
     return settings.currentContext || null;
   }
@@ -357,14 +398,14 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
     const ctxName = resolveContextName(contextName);
     if (!ctxName) return null;
     const vars = loadVars(ctxName);
-    return vars[key] ?? null;
+    return ownValue(vars, key) ?? null;
   }
 
   function deleteVar(key: string, contextName?: string): boolean {
     const ctxName = resolveContextName(contextName);
     if (!ctxName) return false;
     const vars = loadVars(ctxName);
-    if (key in vars) {
+    if (Object.hasOwn(vars, key)) {
       delete vars[key];
       saveVars(ctxName, vars);
       return true;
@@ -375,7 +416,7 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
   function listVars(contextName?: string): Record<string, string> {
     const ctxName = resolveContextName(contextName);
     if (!ctxName) return {};
-    return loadVars(ctxName);
+    return { ...loadVars(ctxName) };
   }
 
   function getClientConfig(targetName: string, contextName?: string): ClientConfig {

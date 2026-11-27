@@ -1,4 +1,5 @@
 export * from './commander';
+export type { CancelReason } from './keypress';
 export * from './prompt';
 export * from './question';
 export * from './resolvers';
