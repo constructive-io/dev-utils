@@ -200,3 +200,12 @@ test("reads policy and native source through generic helpers and separates the o
   assert.equal(parsed.jsonldDocuments[0]["@graph"][0]["@id"], id("native"));
   assert.deepEqual(parsed.jsonld, []);
 });
+
+test("renders an explicitly metadata-only page twin", async () => {
+  page("widget", [entity("widget", "Widget details.")]);
+  await generate(config([placement("widget")], {
+    pages: [{ match: "/widget", content: "omit" }],
+  }));
+  assert.match(read("widget.md"), /> Source: https:\/\/example\.com\/widget\n> Type: SoftwareApplication/);
+  assert.doesNotMatch(read("widget.md"), /Public main content/);
+});

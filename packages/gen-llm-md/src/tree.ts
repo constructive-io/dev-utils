@@ -330,7 +330,7 @@ async function renderEntry(
     body = await tree.hooks.transformMarkdown(body, { ...context, body });
   }
   body = policy.clean(await rewriteMarkdownLinks(body, resolveLink));
-  if (!body && entry.tier === 'page' && entry.route !== '/' && !entry.collection) {
+  if (!body && rule?.content !== 'omit' && entry.tier === 'page' && entry.route !== '/' && !entry.collection) {
     throw new Error(`Missing main content for ${entry.key}`);
   }
   const filter = (entity: Entity) => tree.hooks?.filterEntities?.(entity, { ...context, body }) !== false;
