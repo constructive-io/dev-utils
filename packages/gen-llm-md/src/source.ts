@@ -1,6 +1,7 @@
 import { readFileSync, realpathSync } from 'node:fs';
 import { isAbsolute, relative, resolve, sep } from 'node:path';
 
+import { htmlText } from './html';
 import { inline } from './render';
 import type { Awaitable, PageContent, ParsedPage, Placement, RouteMatch } from './types';
 
@@ -53,7 +54,7 @@ export function markdownSource(
 ) {
   return async (page: ParsedPage): Promise<PageContent | undefined> => {
     const rule = rules.find(({ match }) => matches(page, match));
-    const title = titleSelector ? page.$(titleSelector).first().text().trim() || undefined : undefined;
+    const title = titleSelector ? htmlText(page.$(titleSelector).first()) || undefined : undefined;
     const file = rule?.file(page);
     if (!rule || !file) return title ? { title } : undefined;
     const path = resolve(root, file);

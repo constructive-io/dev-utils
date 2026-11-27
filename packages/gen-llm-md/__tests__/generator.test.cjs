@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const { tmpdir } = require("node:os");
 const { dirname, join, resolve } = require("node:path");
 
-const { flattenLayoutTables, generate, manifestFile, planGeneration, retiredPageNotice, writeArtifacts } = require("../dist");
+const { flattenLayoutTables, generate, htmlToMarkdown, manifestFile, markdownSource, planGeneration, retiredPageNotice, writeArtifacts } = require("../dist");
 
 const siteUrl = "https://example.com";
 let outDir;
@@ -21,6 +21,24 @@ beforeEach(() => {
   write("index.html", "<main><h1>Home</h1></main>");
 });
 afterEach(() => fs.rmSync(outDir, { recursive: true, force: true }));
+
+test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
+  "separates heading lines without splitting inline text with tree=%p",
+  async (tree) => {
+    write("index.html", "<main><h1>Example<br>Site</h1><p>Welcome.</p></main>");
+    write("guide.html", "<main><h1>Example<br>Guide <span>for <strong>new</strong></span> users</h1><p>Introduction.</p></main>");
+    write("reference.html", "<main><h1 data-title>Example <span>Reference</span></h1><p>Details.</p></main>");
+    write("language.html", "<main><h1>C<span>++</span><br>Example (see <em>guide</em>)</h1><p>Details.</p></main>");
+    await generate({ outDir, siteUrl, tree, pageContent: markdownSource([], { titleSelector: "[data-title]" }) });
+
+    assert.match(read("llms.txt"), /^# Example Site\n/);
+    assert.match(read("llms.txt"), /\[Example Guide for new users\]/);
+    assert.match(read("llms.txt"), /\[Example Reference\]/);
+    assert.match(read("guide.md"), /^# Example Guide for new users\n/);
+    assert.doesNotMatch(read("guide.md"), /^## /m);
+    assert.match(read("language.md"), /^# C\+\+ Example \(see guide\)\n/);
+  }
+);
 
 test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
   "keeps the custom converter receiver with tree=%p",
@@ -53,6 +71,29 @@ test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }],
     assert.doesNotMatch(twin, /Rendered body is replaced|Ignored citation/);
   }
 );
+
+test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
+  "separates adjacent sibling links without changing inline punctuation with tree=%p",
+  async (tree) => {
+    write("guide.html", `<main><h1>Guide</h1>
+      <div><a href="/website"><span>Website</span></a><a href="/source">Source</a><!-- gap --><a href="/package">Package</a></div>
+      <p>See (<a href="/docs">the docs</a>).</p>
+      <p><a href="/one">One</a>, <a href="/two">Two</a>.</p>
+    </main>`);
+    await generate({ outDir, siteUrl, tree });
+    const twin = read("guide.md");
+    assert.ok(twin.includes(`[Website](${siteUrl}/website) [Source](${siteUrl}/source) [Package](${siteUrl}/package)`));
+    assert.ok(twin.includes(`See ([the docs](${siteUrl}/docs)).`));
+    assert.ok(twin.includes(`[One](${siteUrl}/one), [Two](${siteUrl}/two).`));
+  }
+);
+
+test("does not insert spaces between links inside preformatted or inline code", () => {
+  const links = '<a href="/foo">foo</a><a href="/bar">.bar</a>';
+  assert.equal(htmlToMarkdown(`<pre><code class="language-js">${links}</code></pre>`), "```js\nfoo.bar\n```");
+  assert.equal(htmlToMarkdown(`<pre>${links}</pre>`), "[foo](/foo)[.bar](/bar)");
+  assert.equal(htmlToMarkdown(`<code>${links}</code>`), "`[foo](/foo)[.bar](/bar)`");
+});
 
 test("refuses symlinked artifact files and parent directories before writing", () => {
   const outside = fs.mkdtempSync(join(tmpdir(), "llms-outside-"));

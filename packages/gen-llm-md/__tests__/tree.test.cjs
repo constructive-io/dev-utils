@@ -208,6 +208,42 @@ test("uses the page's own subject and direct facts only, rejects the site bio an
   assert.match(read("widget.md"), /Transformed\./);
 });
 
+test("renders a graph page whose only content is its split heading", async () => {
+  write("guide.html", "<main><h1>Example<br>Guide</h1></main>");
+  await generate({ outDir, siteUrl, tree: { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} } });
+  assert.match(read("llms.txt"), /\[Example Guide\]\(https:\/\/example\.com\/guide\.md\)/);
+  assert.equal(read("guide.md"), "# Example Guide\n\n> Source: https://example.com/guide\n");
+});
+
+test("retains a linked heading that matches its title after host filtering", async () => {
+  write("guide.html", '<main><h1><a href="/details">Example Guide</a> blocked.example.net</h1><p>Introduction.</p></main>');
+  await generate({
+    outDir, siteUrl, blockedHosts: ["blocked.example.net"],
+    tree: { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} },
+  });
+  const twin = read("guide.md");
+  assert.match(twin, /^# Example Guide\n/);
+  assert.match(twin, /\[Example Guide\]\(https:\/\/example\.com\/details\)/);
+  assert.doesNotMatch(twin, /blocked\.example\.net/);
+});
+
+test("separates HTML collection titles and summaries at element boundaries", async () => {
+  page("guide", [], `<div data-cards><a href="/example">
+    <h2>Example <span>Item</span></h2><div data-summary><div>First</div><div>detail<br>here</div></div>
+  </a></div>`);
+  await generate({
+    outDir, siteUrl,
+    tree: {
+      sections: [{ key: "guides", title: "Guides", rank: 0 }],
+      graph: {},
+      pages: [{ match: "/guide", collection: {
+        selector: "[data-cards]", relation: "hasPart", descriptionSelector: "[data-summary]",
+      } }],
+    },
+  });
+  assert.match(read("guide.md"), /\[Example Item\]\(https:\/\/example\.com\/example\): First detail here/);
+});
+
 test("renders ordered visible cards and rewrites Markdown link destinations without changing code or images", async () => {
   const lesson = (slug, title, description) => ({ "@type": "LearningResource", "@id": id(slug), name: title, description, url: `${siteUrl}/${slug}` });
   page("course", [{

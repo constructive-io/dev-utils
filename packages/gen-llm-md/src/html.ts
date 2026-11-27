@@ -11,6 +11,14 @@ const converter = new NodeHtmlMarkdown({ codeFence: '```' }, {
   }),
 });
 
+const textBoundaries = 'br, hr, address, article, aside, blockquote, caption, dd, details, dialog, div, dl, dt, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, li, main, menu, nav, ol, p, pre, section, summary, table, tbody, td, tfoot, th, thead, tr, ul';
+
+export function htmlText(node: ReturnType<CheerioAPI>): string {
+  const copy = node.clone();
+  copy.find(textBoundaries).before(' ').after(' ');
+  return text(copy.text());
+}
+
 export function parsePage(page: ExportPage, html: string, siteUrl: string): ParsedPage {
   const $ = load(html);
   const url = sitePath(siteUrl, page.route);
@@ -179,5 +187,12 @@ export function htmlToMarkdown(html: string): string {
   });
   flattenLayoutTables($);
   normalizeRoleTables($);
+  $('a[href]').each((_, link) => {
+    const anchor = $(link);
+    if (anchor.closest('pre, code').length) return;
+    let next = link.next;
+    while (next?.type === 'comment') next = next.next;
+    if (next?.type === 'tag' && next.name === 'a' && next.attribs.href !== undefined) anchor.after(' ');
+  });
   return converter.translate($.root().html() ?? '').trim();
 }

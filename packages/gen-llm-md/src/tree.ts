@@ -5,7 +5,7 @@ import { renderCollection } from './collection';
 import { list, name, sameRoute, sitePath, text, types, urlFor } from './entities';
 import { entityId, pageEntities, pageSubject, renderFacts, schemaType } from './facts';
 import { deriveGraphTree, optionalKey } from './graph-tree';
-import { collapseAdjacentImages, demoteHeadings, ignoredContent, removePageChrome, renderPageBody } from './html';
+import { collapseAdjacentImages, demoteHeadings, htmlText, ignoredContent, removePageChrome, renderPageBody } from './html';
 import type { Config, Pipeline } from './index';
 import { http, linkKey, markdownHref, rewriteMarkdownLinks, routeKey, twinLink } from './navigation';
 import { inline } from './render';
@@ -165,7 +165,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
   }
   const home = pages.get('');
   const site: SiteIdentity = home ? pipeline.selectSiteIdentity(home) : { title: origin.hostname };
-  site.title = policy.clean(site.title) || policy.clean(home?.$('h1').first().text() ?? '') || origin.hostname;
+  site.title = policy.clean(site.title) || (home && policy.clean(htmlText(home.$('h1').first()))) || origin.hostname;
   site.description = policy.clean(site.description || home?.meta('description') || '');
   const siteDescriptions = [site.description, home?.meta('description'),
     ...(home?.jsonld.filter((node) => types(node).map(schemaType).some(
@@ -239,7 +239,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     entry.subject = subject;
     entry.subjectBase = page?.url ?? located?.base;
     entry.title = policy.clean(text(row.title || entry.override?.title || entry.native?.title || name(subject) ||
-      page?.$('h1').first().text() || page?.$('title').first().text()));
+      (page && (htmlText(page.$('h1').first()) || htmlText(page.$('title').first())))));
     if (!entry.title) {
       if (!derived || !page) throw new Error(`Missing title for tree placement: ${row.key}`);
       entry.title = policy.clean(route?.split('/').at(-1) ?? '') || site.title;
@@ -321,9 +321,16 @@ async function renderEntry(
   const primary = main.length ? main : $('article').first();
   const content = primary.length ? primary : $('body').first();
   content.find(ignoredContent).remove();
+  const allowedContentUrl = (href?: string) => {
+    const url = urlFor(href, page.url);
+    return url && policy.allowed(url) && (http(url) || /^(mailto:|tel:)$/.test(url.protocol)) ? url : undefined;
+  };
   const headingNode = content.find('h1').first();
-  const heading = text(headingNode.clone().find('br').replaceWith(' ').end().text());
-  if (heading === title) headingNode.remove();
+  const heading = policy.clean(htmlText(headingNode));
+  const hasAllowedLink = headingNode.find('a[href]').add(headingNode.closest('a[href]')).toArray()
+    .some((link) => allowedContentUrl($(link).attr('href')));
+  const duplicateHeading = Boolean(heading && heading === title && !hasAllowedLink);
+  if (duplicateHeading) headingNode.remove();
   demoteHeadings($, content);
   if (renderer === 'collection' && rule?.content !== 'omit') {
     if (!rule?.collection) throw new Error(`Missing collection options for ${page.route}`);
@@ -332,8 +339,8 @@ async function renderEntry(
   content.find('a[href], img[src]').each((_, node) => {
     const element = $(node);
     const attr = node.tagName === 'a' ? 'href' : 'src';
-    const url = urlFor(element.attr(attr), page.url);
-    if (url && policy.allowed(url) && (http(url) || /^(mailto:|tel:)$/.test(url.protocol))) element.attr(attr, url.href);
+    const url = allowedContentUrl(element.attr(attr));
+    if (url) element.attr(attr, url.href);
     else element.removeAttr(attr);
   });
   collapseAdjacentImages($);
@@ -345,13 +352,14 @@ async function renderEntry(
   };
   let body = rule?.content === 'omit' ? '' :
     renderPageBody($, content, (html) => pipeline.htmlToMarkdown.call(pipeline, html), override?.body);
+  const headingOnly = duplicateHeading && override?.body === undefined && !body;
   const context: RenderContext = { page, subject, body, twinHref: resolveLink };
   if (typeof renderer === 'function' && rule?.content !== 'omit') body = await renderer(context);
   if (tree.hooks?.transformMarkdown && rule?.content !== 'omit') {
     body = await tree.hooks.transformMarkdown(body, { ...context, body });
   }
   body = policy.clean(await rewriteMarkdownLinks(body, resolveLink));
-  if (!body && rule?.content !== 'omit' && entry.tier === 'page' && entry.route !== '/' && !entry.collection) {
+  if (!body && !headingOnly && rule?.content !== 'omit' && entry.tier === 'page' && entry.route !== '/' && !entry.collection) {
     throw new Error(`Missing main content for ${entry.key}`);
   }
   const filter = (entity: Entity) => tree.hooks?.filterEntities?.(entity, { ...context, body }) !== false;
