@@ -514,7 +514,9 @@ export class Inquirerer {
         if (!('default' in question)) {
           this.throwMissingArgsError(options);
         }
-        obj[question.name] = this.defaultAnswer(question);
+        obj[question.name] = question.type === 'checkbox' && !question.returnFullResults
+          ? question.default
+          : this.defaultAnswer(question);
         if (!this.isValid(question, obj, ctx)) {
           this.throwMissingArgsError(options);
         }

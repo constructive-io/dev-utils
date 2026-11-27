@@ -66,7 +66,9 @@ describe('answer resolution', () => {
   it.each([false, true])('resolves defaults by type in noTty mode (required: %s)', async required => {
     const prompter = new Inquirerer({ noTty: true });
     const inputs = questions().map(question => ({ ...question, required }));
-    await expect(prompter.prompt({}, inputs)).resolves.toEqual(defaults);
+    await expect(prompter.prompt({}, inputs)).resolves.toEqual({
+      ...defaults, features: required ? ['search'] : defaults.features,
+    });
   });
 
   it('rejects a required answer without a default and preserves provided flags', async () => {
@@ -106,6 +108,18 @@ describe('answer resolution', () => {
     }
   });
 
+  it('returns required checkbox defaults in their supplied shape in noTty mode', async () => {
+    const options = ['main', 'history'];
+    const prompter = new Inquirerer({ noTty: true });
+    await expect(prompter.prompt({}, [{
+      name: 'selection',
+      type: 'checkbox',
+      options,
+      default: options,
+      required: true,
+    }])).resolves.toEqual({ selection: options });
+  });
+
   it('includes unselected checkbox options when resolving a required default with returnFullResults', async () => {
     const prompter = new Inquirerer({ noTty: true });
     await expect(prompter.prompt({}, [{
@@ -134,7 +148,9 @@ describe('answer resolution', () => {
       features.push({ name: 'reporting', value: 'reporting', selected: false });
     }
     const prompter = new Inquirerer({ noTty: true });
-    await expect(prompter.prompt({}, [question])).resolves.toEqual({ features });
+    await expect(prompter.prompt({}, [question])).resolves.toEqual({
+      features: returnFullResults ? features : ['search'],
+    });
     const withFlag = new Inquirerer({ noTty: true });
     await expect(withFlag.prompt({ features: ['search'] }, [question])).resolves.toEqual({ features });
     const interactive = new Inquirerer(mockTerminal([''], '\r'));
