@@ -17,6 +17,9 @@ description: Generate an LLM index and Markdown twins from a built static export
    `readPlacements`). Set relevance as `page`, `child`, `optional`, or
    `omit`. Use a `pageContent` provider for authored Markdown
    (see `markdownSource`), or `nativeMarkdown` to preserve existing bytes.
+   With a `pageContent` body override, mark supplemental HTML inside the
+   main content with `data-llm-supplement` (for example, a usage section).
+   The generator appends those sections after the authored body.
    Configure collection regions with per-route rules. Facts come from
    the page's inline JSON-LD; no graph files are generated. Body links
    prefer existing twins, while the `Source:` link stays on HTML.

@@ -3,7 +3,7 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 
 import { name, selectPageEntity, selectSiteIdentity, sitePath, text, types, urlFor } from './entities';
 import { discoverPages, markdownArtifact, planManifest, type StaleOptions, writeArtifacts } from './files';
-import { collapseAdjacentImages, htmlToMarkdown, ignoredContent, parsePage, removePageChrome } from './html';
+import { collapseAdjacentImages, demoteHeadings, htmlToMarkdown, ignoredContent, parsePage, removePageChrome, renderPageBody } from './html';
 import { defaultSections, renderIndex, renderTwin } from './render';
 import { matches } from './source';
 import { planTree } from './tree';
@@ -16,6 +16,7 @@ export type { StaleOptions } from './files';
 export { discoverPages, manifestFile, planManifest, writeArtifacts } from './files';
 export { flattenLayoutTables, htmlToMarkdown, normalizeRoleTables, parsePage } from './html';
 export { defaultSections, indexTitles, renderIndex, renderTwin } from './render';
+export { retiredPageNotice } from './retired';
 export type { SourceIntro, SourceRule } from './source';
 export { formatMarkdownIntro, markdownSource, readPlacements, splitLeadingH1 } from './source';
 export * from './types';
@@ -73,7 +74,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
     const { site, twins, index, canonicalMap } = await planTree(config, config.tree, pipeline, { allowed, clean });
     const artifacts = twins.map(({ file, markdown }) => markdownArtifact(file, markdown));
     artifacts.push({ file: 'llms.txt', contents: index });
-    artifacts.push(...pipeline.planManifest(outDir, twins, config.stale));
+    artifacts.push(...pipeline.planManifest(outDir, twins, config.stale, siteUrl));
     return { site, twins, artifacts, canonicalMap };
   }
   const twins: Twin[] = [...await (config.nativeMarkdown?.() ?? [])];
@@ -111,9 +112,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
       if (files.has(file)) continue;
     }
     if (heading === title) headingNode.remove();
-    content.find('h1').each((_, element) => {
-      $(element).replaceWith($('<h2>').append($(element).contents()));
-    });
+    demoteHeadings($, content);
     content.find('a[href], img[src]').each((_, element) => {
       const node = $(element);
       const attr = element.tagName === 'a' ? 'href' : 'src';
@@ -122,7 +121,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
       else node.removeAttr(attr);
     });
     collapseAdjacentImages($);
-    const body = clean(override?.body ?? pipeline.htmlToMarkdown(content.html() ?? ''));
+    const body = clean(renderPageBody($, content, (html) => pipeline.htmlToMarkdown.call(pipeline, html), override?.body));
     if (!primary.length && override?.body === undefined && !heading && !body) continue;
     const id = entity && urlFor(entity['@id'], page.url);
     const schema = entity ? { type: types(entity).join(', '), id: id && allowed(id) ? id : undefined } : undefined;
@@ -134,7 +133,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
   const sections = (config.index?.sections ?? defaultSections)(twins);
   const artifacts = twins.map(({ file, markdown }) => markdownArtifact(file, markdown));
   artifacts.push({ file: 'llms.txt', contents: pipeline.renderIndex(site, sections, siteUrl) });
-  artifacts.push(...pipeline.planManifest(outDir, twins, config.stale));
+  artifacts.push(...pipeline.planManifest(outDir, twins, config.stale, siteUrl));
   return { site, twins, artifacts };
 }
 

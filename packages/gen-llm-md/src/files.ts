@@ -100,7 +100,7 @@ type Entry = Pick<Twin, 'route' | 'file'> & { sha256: string; unavailable?: true
 export const manifestFile = '.llms-markdown.json';
 export type StaleOptions = {
   previousManifest?: string;
-  unavailable?: boolean | ((entry: Pick<Twin, 'route' | 'file'>) => string);
+  unavailable?: boolean | ((entry: Pick<Twin, 'route' | 'file'>, exportOptions?: { outDir: string; siteUrl?: string }) => string);
 };
 
 function readManifest(path: string): Entry[] {
@@ -114,13 +114,14 @@ function manifestHashes(path: string) {
   return new Map(readManifest(path).map(({ file, sha256 }) => [file, sha256]));
 }
 
-export function planManifest(outDir: string, twins: readonly Twin[], stale: StaleOptions = {}): Artifact[] {
+export function planManifest(outDir: string, twins: readonly Twin[], stale: StaleOptions = {}, siteUrl?: string): Artifact[] {
   const entries: Entry[] = twins.map(({ route, file, markdown }) => ({ route, file, sha256: digest(markdown) }));
   const changes: Artifact[] = [];
   const current = artifactPath(outDir, manifestFile);
   const manifests = [current];
   if (stale.unavailable && stale.previousManifest && stale.previousManifest !== current) manifests.push(stale.previousManifest);
   const files = new Set(entries.map(({ file }) => file));
+  const exportOptions = { outDir, siteUrl };
   for (const manifest of manifests) {
     for (const { route, file, sha256 } of readManifest(manifest)) {
       if (typeof route !== 'string' || typeof file !== 'string' || !/^[a-f\d]{64}$/.test(sha256)) {
@@ -133,7 +134,7 @@ export function planManifest(outDir: string, twins: readonly Twin[], stale: Stal
       files.add(file);
       if (stale.unavailable) {
         const contents = typeof stale.unavailable === 'function'
-          ? stale.unavailable({ route, file })
+          ? stale.unavailable({ route, file }, exportOptions)
           : '# Page no longer available\n\nThis page is no longer part of the site.\n';
         entries.push({ route, file, sha256: digest(contents), unavailable: true });
         changes.push(markdownArtifact(file, contents));

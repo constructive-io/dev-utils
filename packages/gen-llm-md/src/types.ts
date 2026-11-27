@@ -71,6 +71,7 @@ export type PageRenderer = 'default' | 'entity' | 'collection' |
 export type GraphSection = Section & { match?: RouteMatch; types?: readonly string[] };
 export type GraphTreeRules = {
   parents?: readonly ('isPartOf' | 'parentOrganization' | 'creator' | 'subjectOf' | 'hasPart')[];
+  crossSectionParents?: boolean;
   context?: {
     relations: readonly string[];
     types: readonly string[];

@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const { tmpdir } = require("node:os");
 const { dirname, join, resolve } = require("node:path");
 
-const { flattenLayoutTables, generate, manifestFile, planGeneration, writeArtifacts } = require("../dist");
+const { flattenLayoutTables, generate, manifestFile, planGeneration, retiredPageNotice, writeArtifacts } = require("../dist");
 
 const siteUrl = "https://example.com";
 let outDir;
@@ -21,6 +21,38 @@ beforeEach(() => {
   write("index.html", "<main><h1>Home</h1></main>");
 });
 afterEach(() => fs.rmSync(outDir, { recursive: true, force: true }));
+
+test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
+  "keeps the custom converter receiver with tree=%p",
+  async (tree) => {
+    const pipeline = {
+      htmlToMarkdown() {
+        return this.marker;
+      },
+      marker: "Custom converter content.",
+    };
+    await generate({ outDir, siteUrl, tree, pipeline });
+    assert.match(read("index.md"), /Custom converter content\./);
+  }
+);
+
+test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
+  "keeps marked HTML usage citations after an authored body with tree=%p",
+  async (tree) => {
+    write("guide.html", `<main><h1>Guide</h1><p>Rendered body is replaced.</p>
+      <section data-llm-supplement><h2>Usage</h2>
+        <p data-llm-supplement>Used in <a href="/guide-related">another guide</a>.</p>
+        <p data-llm-ignore>Ignored citation</p>
+      </section><ul data-llm-supplement><li>Package information</li></ul></main>`);
+    write("guide-related.html", "<main><h1>Another guide</h1><p>Related guide.</p></main>");
+    await generate({ outDir, siteUrl, tree, pageContent: ({ route }) => route === "/guide" ? { body: "Authored body." } : undefined });
+    const twin = read("guide.md");
+    assert.match(twin, /Authored body\.[\s\S]*## Usage[\s\S]*Package information/);
+    assert.equal((twin.match(/Used in/g) ?? []).length, 1);
+    assert.ok(twin.includes(`[another guide](${siteUrl}/guide-related${tree ? ".md" : ""})`));
+    assert.doesNotMatch(twin, /Rendered body is replaced|Ignored citation/);
+  }
+);
 
 test("refuses symlinked artifact files and parent directories before writing", () => {
   const outside = fs.mkdtempSync(join(tmpdir(), "llms-outside-"));
@@ -264,6 +296,47 @@ test("writes an unavailable notice when a reused page becomes noindex and notice
   assert(JSON.parse(read(manifestFile)).twins.some(({ file, unavailable }) => file === "guide.md" && unavailable));
 });
 
+test("points retired Markdown at a local HTML refresh destination", async () => {
+  const config = { outDir, siteUrl: siteUrl + "/docs" };
+  write("guide.html", "<main><h1>Original guide</h1></main>");
+  write("manual.html", "<main><h1>Original manual</h1></main>");
+  await generate(config);
+  const noindex = '<meta name="robots" content="noindex">';
+  write("guide.html", noindex + '<meta http-equiv="refresh" content="0; url=/docs/reference">');
+  write("manual.html", noindex + '<meta http-equiv="refresh" content="0; url=https://elsewhere.example/reference">');
+  write("reference.html", "<main><h1>Reference</h1></main>");
+  await generate({ ...config, stale: { unavailable: retiredPageNotice(outDir, config.siteUrl) } });
+  assert.match(read("guide.md"), /Moved to \[\/docs\/reference\]\(https:\/\/example\.com\/docs\/reference\)/);
+  assert.match(read("manual.md"), /Markdown copy no longer available/);
+  assert.doesNotMatch(read("llms.txt"), /guide\.md|manual\.md/);
+});
+
+test("a reused retirement callback handles removed redirect exports", async () => {
+  const config = { outDir, siteUrl };
+  write("guide.html", "<main><h1>Original guide</h1></main>");
+  await generate(config);
+  write("guide.html", '<meta http-equiv="refresh" content="0; url=/reference">');
+  write("reference.html", "<main><h1>Reference</h1></main>");
+  const withNotices = { ...config, stale: { unavailable: retiredPageNotice(outDir, siteUrl) } };
+  await generate(withNotices);
+  assert.match(read("guide.md"), /^# Page moved/);
+  fs.unlinkSync(join(outDir, "guide.html"));
+  await generate(withNotices);
+  assert.match(read("guide.md"), /^# Page no longer available/);
+});
+
+test("resolves relative refreshes against the current export layout", async () => {
+  const config = { outDir, siteUrl };
+  write("guide/index.html", "<main><h1>Original guide</h1></main>");
+  await generate(config);
+  fs.unlinkSync(join(outDir, "guide/index.html"));
+  write("guide.html", '<meta http-equiv="refresh" content="0; url=reference">');
+  write("reference.html", "<main><h1>Reference</h1></main>");
+  write("guide/reference.html", "<main><h1>Another reference</h1></main>");
+  await generate({ ...config, stale: { unavailable: retiredPageNotice(outDir, siteUrl) } });
+  assert.match(read("guide.md"), /\(https:\/\/example\.com\/reference\)/);
+});
+
 test("refuses planned deletions after the target is edited or replaced by a symlink", async () => {
   const config = { outDir, siteUrl };
   write("guide.html", "<main><h1>Original guide</h1></main>");
@@ -398,6 +471,25 @@ test("CLI loads an ESM config and dry-run never writes artifacts", () => {
   const full = run([]);
   assert.equal(full.status, 0, full.stderr);
   assert.match(read("index.md"), /^# Configured\n/);
+});
+
+test("CLI retirement notices use the overridden export directory and site URL", async () => {
+  write("actual/index.html", "<main><h1>Home</h1></main>");
+  write("actual/guide.html", "<main><h1>Original guide</h1></main>");
+  await generate({ outDir: join(outDir, "actual"), siteUrl });
+  write("actual/guide.html", '<meta http-equiv="refresh" content="0; url=/reference">');
+  write("actual/reference.html", "<main><h1>Reference</h1></main>");
+  write("llms.config.mjs", `
+    import { retiredPageNotice } from ${JSON.stringify(resolve(__dirname, "../dist/index.js"))};
+    export default { siteUrl: "https://configured.example", outDir: "absent",
+      stale: { unavailable: retiredPageNotice("absent", "https://configured.example") } };
+  `);
+  const cli = resolve(__dirname, "../dist/cli.js");
+  const run = spawnSync(process.execPath,
+    [cli, "generate", "--config", "./llms.config.mjs", "--dir", "actual", "--site-url", siteUrl],
+    { encoding: "utf8", cwd: outDir });
+  assert.equal(run.status, 0, run.stderr);
+  assert.match(read("actual/guide.md"), /https:\/\/example\.com\/reference/);
 });
 
 test.each(["https://example.com/project/", "https://example.com/project"])(
