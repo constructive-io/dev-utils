@@ -98,7 +98,8 @@ export function removePageChrome($: CheerioAPI) {
       const node = $(element);
       return !node.is('header, footer') ||
         node.is('nav, [role="navigation" i], [role="banner" i], [role="contentinfo" i]') ||
-        !node.parents('article, section, aside, [role="article" i]').length;
+        (!node.parents('article, section, aside, [role="article" i]').length &&
+          !(node.is('main > header, [role="main" i] > header') && node.find('h1').length));
     }).remove();
 }
 
