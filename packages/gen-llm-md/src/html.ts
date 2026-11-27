@@ -188,9 +188,11 @@ export function htmlToMarkdown(html: string): string {
   flattenLayoutTables($);
   normalizeRoleTables($);
   $('a[href]').each((_, link) => {
+    const anchor = $(link);
+    if (anchor.closest('pre, code').length) return;
     let next = link.next;
     while (next?.type === 'comment') next = next.next;
-    if (next?.type === 'tag' && next.name === 'a' && next.attribs.href !== undefined) $(link).after(' ');
+    if (next?.type === 'tag' && next.name === 'a' && next.attribs.href !== undefined) anchor.after(' ');
   });
   return converter.translate($.root().html() ?? '').trim();
 }

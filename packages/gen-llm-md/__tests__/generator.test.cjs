@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const { tmpdir } = require("node:os");
 const { dirname, join, resolve } = require("node:path");
 
-const { flattenLayoutTables, generate, manifestFile, markdownSource, planGeneration, retiredPageNotice, writeArtifacts } = require("../dist");
+const { flattenLayoutTables, generate, htmlToMarkdown, manifestFile, markdownSource, planGeneration, retiredPageNotice, writeArtifacts } = require("../dist");
 
 const siteUrl = "https://example.com";
 let outDir;
@@ -87,6 +87,13 @@ test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }],
     assert.ok(twin.includes(`[One](${siteUrl}/one), [Two](${siteUrl}/two).`));
   }
 );
+
+test("does not insert spaces between links inside preformatted or inline code", () => {
+  const links = '<a href="/foo">foo</a><a href="/bar">.bar</a>';
+  assert.equal(htmlToMarkdown(`<pre><code class="language-js">${links}</code></pre>`), "```js\nfoo.bar\n```");
+  assert.equal(htmlToMarkdown(`<pre>${links}</pre>`), "[foo](/foo)[.bar](/bar)");
+  assert.equal(htmlToMarkdown(`<code>${links}</code>`), "`[foo](/foo)[.bar](/bar)`");
+});
 
 test("refuses symlinked artifact files and parent directories before writing", () => {
   const outside = fs.mkdtempSync(join(tmpdir(), "llms-outside-"));
