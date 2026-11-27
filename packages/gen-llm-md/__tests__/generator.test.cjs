@@ -279,6 +279,20 @@ test("points retired Markdown at a local HTML refresh destination", async () => 
   assert.doesNotMatch(read("llms.txt"), /guide\.md|manual\.md/);
 });
 
+test("a reused retirement callback handles removed redirect exports", async () => {
+  const config = { outDir, siteUrl };
+  write("guide.html", "<main><h1>Original guide</h1></main>");
+  await generate(config);
+  write("guide.html", '<meta http-equiv="refresh" content="0; url=/reference">');
+  write("reference.html", "<main><h1>Reference</h1></main>");
+  const withNotices = { ...config, stale: { unavailable: retiredPageNotice(outDir, siteUrl) } };
+  await generate(withNotices);
+  assert.match(read("guide.md"), /^# Page moved/);
+  fs.unlinkSync(join(outDir, "guide.html"));
+  await generate(withNotices);
+  assert.match(read("guide.md"), /^# Page no longer available/);
+});
+
 test("refuses planned deletions after the target is edited or replaced by a symlink", async () => {
   const config = { outDir, siteUrl };
   write("guide.html", "<main><h1>Original guide</h1></main>");
