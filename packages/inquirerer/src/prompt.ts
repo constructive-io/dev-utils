@@ -376,6 +376,7 @@ export class Inquirerer {
   }
 
   private isValid(question: Question, obj: any, ctx: PromptContext): boolean {
+    const unselectedCheckbox = question.required && this.isUnselectedCheckbox(question, obj[question.name]);
     if (this.isValidatableAnswer(obj[question.name])) {
       obj[question.name] = this.sanitizeAnswer(question, obj[question.name], obj);
       const validationResult = this.validateAnswer(question, obj[question.name], obj, ctx);
@@ -384,7 +385,7 @@ export class Inquirerer {
       }
     }
 
-    if (question.required && this.isEmptyAnswer(question, obj[question.name])) {
+    if (question.required && (unselectedCheckbox || this.isEmptyAnswer(obj[question.name]))) {
       ctx.tryAgain({ type: 'required' });
       return false;
     }
@@ -413,17 +414,20 @@ export class Inquirerer {
     };
   }
 
-  private isEmptyAnswer(question: Question, answer: any): boolean {
+  private isEmptyAnswer(answer: any): boolean {
     switch (true) {
     case answer === undefined:
     case answer === null:
     case answer === '':
     case Array.isArray(answer) && answer.length === 0:
       return true;
-    case question.type === 'checkbox' && question.returnFullResults && Array.isArray(answer):
-      return !answer.some(option => option?.selected === true);
     }
     return false;
+  }
+
+  private isUnselectedCheckbox(question: Question, answer: any): boolean {
+    return question.type === 'checkbox' && question.returnFullResults && Array.isArray(answer)
+      && !answer.some(option => option?.selected === true);
   }
 
   private sanitizeAnswer(question: Question, answer: any, obj: any): any {
@@ -579,7 +583,8 @@ export class Inquirerer {
   }
 
   private isMissingRequiredAnswer(question: Question, answers: any): boolean {
-    return question.required && this.isEmptyAnswer(question, answers[question.name]);
+    const answer = answers[question.name];
+    return question.required && (this.isEmptyAnswer(answer) || this.isUnselectedCheckbox(question, answer));
   }
 
   private hasMissingRequiredArgs(questions: Question[], answers: any): boolean {
