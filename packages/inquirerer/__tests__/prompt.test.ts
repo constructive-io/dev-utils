@@ -351,6 +351,18 @@ describe('Inquirerer', () => {
     expect(result).toEqual({ fullName: 'Example User', email: 'user@example.com', role: 'editor' });
   });
 
+  it('checks resolved required answers on the working copy in noTty mode', async () => {
+    const prompter = new Inquirerer({ input: mockInput, output: mockOutput, noTty: true, mutateArgs: false });
+    const argv = { n: 'Example User' };
+    const questions: Question[] = [
+      { name: 'fullName', alias: 'n', type: 'text', required: true },
+      { name: 'role', type: 'text', required: true, default: 'editor' },
+    ];
+
+    await expect(prompter.prompt(argv, questions)).resolves.toEqual({ fullName: 'Example User', role: 'editor' });
+    expect(argv).toEqual({ n: 'Example User' });
+  });
+
   describe('boolean type (alias for confirm)', () => {
     it('should treat boolean type as confirm — yes input', async () => {
       enqueueInputResponse({ type: 'read', value: 'y' });

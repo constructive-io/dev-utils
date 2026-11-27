@@ -483,14 +483,14 @@ export class Inquirerer {
     this.applyOverrides(obj, obj, questions);
 
     // Check for required arguments when no terminal is available (non-interactive mode)
-    if (this.noTty && this.hasMissingRequiredArgs(questions, argv)) {
+    if (this.noTty && this.hasMissingRequiredArgs(questions, obj)) {
 
       // Apply default values for all questions
       this.applyDefaultValues(questions, obj);
 
       // Recheck for missing required arguments after applying defaults
       // NOT so sure this would ever happen, but possible if developer did something wrong
-      if (!this.hasMissingRequiredArgs(questions, argv)) {
+      if (!this.hasMissingRequiredArgs(questions, obj)) {
         return obj as T;  // Return the updated object if no required arguments are missing
       }
 
