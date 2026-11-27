@@ -532,7 +532,7 @@ export class Inquirerer {
       // this is if useDefault is set, rare! not typical defaults which happen AFTER
       // this is mostly to avoid a prompt for "hidden" options
       if ('default' in question && (this.useDefaults || question.useDefault)) {
-        obj[question.name] = question.default;
+        obj[question.name] = this.defaultAnswer(question);
         continue;  // Skip to the next question since the default is applied
       }
 
@@ -731,10 +731,14 @@ export class Inquirerer {
     return positionalIndex;
   }
 
+  private defaultAnswer(question: Question): any {
+    return question.type === 'checkbox' ? this.checkboxDefault(question) : question.default;
+  }
+
   private applyDefaultValues(questions: Question[], obj: any): void {
     questions.forEach(question => {
       if ('default' in question && !(question.name in obj)) {
-        obj[question.name] = question.default;  // Set default value if specified
+        obj[question.name] = this.defaultAnswer(question);
       }
     });
   }
@@ -1015,32 +1019,32 @@ export class Inquirerer {
     });
   }
 
+  private checkboxDefault(question: CheckboxQuestion): OptionValue[] {
+    const options = this.sanitizeOptions(question);
+    const defaults = Array.isArray(question.default)
+      ? question.default
+      : [question.default];
+
+    if (question.returnFullResults) {
+      return options.map(opt => ({
+        name: opt.name,
+        value: opt.value,
+        selected: defaults.includes(opt.name)
+      }));
+    }
+
+    return options
+      .filter(opt => defaults.includes(opt.name) || defaults.includes(opt.value))
+      .map(opt => ({
+        name: opt.name,
+        value: opt.value,
+        selected: true
+      }));
+  }
+
   public async checkbox(question: CheckboxQuestion, ctx: PromptContext): Promise<OptionValue[]> {
     if (this.noTty || !this.rl) {
-      const options = this.sanitizeOptions(question);
-
-      const defaults = Array.isArray(question.default)
-        ? question.default
-        : [question.default];
-
-      // If returnFullResults is true, return all options with boolean selection
-      if (question.returnFullResults) {
-        return options.map(opt => ({
-          name: opt.name,
-          value: opt.value,
-          selected: defaults.includes(opt.name)
-        }));
-      }
-
-      // Otherwise, return only selected options
-      return options
-        .filter(opt => defaults.includes(opt.name) || defaults.includes(opt.value))
-        .map(opt => ({
-          name: opt.name,
-          value: opt.value,
-          selected: true
-        }));
-
+      return this.checkboxDefault(question);
     }
 
     if (!question.options.length) {
