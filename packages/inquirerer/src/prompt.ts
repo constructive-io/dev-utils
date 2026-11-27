@@ -385,7 +385,7 @@ export class Inquirerer {
       }
     }
 
-    if (question.required && (unselectedCheckbox || this.isEmptyAnswer(obj[question.name]))) {
+    if (question.required && (unselectedCheckbox || this.isMissingAnswer(question, obj[question.name]))) {
       ctx.tryAgain({ type: 'required' });
       return false;
     }
@@ -427,7 +427,7 @@ export class Inquirerer {
 
   private isUnselectedCheckbox(question: Question, answer: any): boolean {
     return question.type === 'checkbox' && question.returnFullResults && Array.isArray(answer)
-      && !answer.some(option => option?.selected === true);
+      && answer.every(option => option?.selected === false);
   }
 
   private sanitizeAnswer(question: Question, answer: any, obj: any): any {
