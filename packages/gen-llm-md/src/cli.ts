@@ -35,7 +35,7 @@ async function main() {
   };
   if (values['dry-run']) {
     const { artifacts } = await planGeneration(config);
-    for (const artifact of artifacts) console.log(artifact.file);
+    for (const artifact of artifacts) console.log(artifact.remove ? `delete ${artifact.file}` : artifact.file);
   } else {
     const { twins } = await generate(config);
     console.log(`Generated ${twins.length} Markdown twins and llms.txt in ${config.outDir}`);

@@ -22,5 +22,7 @@ export type IndexPage = {
 export type Twin = IndexPage & { markdown: string | Uint8Array };
 export type PageContent = { title?: string; description?: string; body?: string };
 export type IndexSection = { title: string; pages: readonly IndexPage[] };
-export type Artifact = { file: string; contents: string | Uint8Array; markdown?: true };
+export type Artifact =
+  | { file: string; contents: string | Uint8Array; markdown?: true; remove?: false }
+  | { file: string; remove: true; sha256: string };
 export type Awaitable<T> = T | Promise<T>;
