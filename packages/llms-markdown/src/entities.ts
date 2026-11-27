@@ -33,7 +33,7 @@ export const sameRoute = (a: URL, b: URL) => a.origin === b.origin && pathKey(a)
 export function sitePath(siteUrl: string, path: string): URL {
   const base = new URL(siteUrl);
   base.pathname = `${pathKey(base)}/`;
-  return new URL(path.replace(/^\/+/, ''), base);
+  return new URL(`./${path.replace(/^\/+/, '')}`, base);
 }
 
 function matches(value: unknown, url: URL): boolean {

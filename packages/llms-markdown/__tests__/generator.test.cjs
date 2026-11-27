@@ -195,6 +195,13 @@ test.each(["https://example.com/project/", "https://example.com/project"])(
   }
 );
 
+test("keeps paths with a colon relative to the site URL", async () => {
+  write("Help:Contents.html", "<main><h1>Help</h1></main>");
+  await generate({ outDir, siteUrl: `${siteUrl}/project/` });
+  assert.match(read("llms.txt"), /\[Help\]\(https:\/\/example\.com\/project\/Help:Contents\.md\)/);
+  assert.match(read("Help:Contents.md"), /> Source: https:\/\/example\.com\/project\/Help:Contents\n/);
+});
+
 test("uses the directory index when a flat export shares its public route", async () => {
   write("guide.html", "<main><h1>Flat guide</h1></main>");
   write("guide/index.html", "<main><h1>Directory guide</h1></main>");
