@@ -1,6 +1,6 @@
 import { PassThrough } from 'stream';
 
-import { Inquirerer, OptionValue, Question } from '../src';
+import { DefaultResolverRegistry, Inquirerer, OptionValue, Question } from '../src';
 
 function questions(): Question[] {
   return [
@@ -132,6 +132,41 @@ describe('answer resolution', () => {
     }])).resolves.toEqual({
       features: [...defaults.features, { name: 'reporting', value: 'reporting', selected: false }],
     });
+  });
+
+  it('rejects a required noninteractive checkbox when no default matches an option', async () => {
+    const prompter = new Inquirerer({ noTty: true, output: new PassThrough() });
+    await expect(prompter.prompt({}, [{
+      name: 'features',
+      type: 'checkbox',
+      options: ['search', 'reporting'],
+      default: ['unknown'],
+      required: true,
+    }])).rejects.toThrow('Missing required arguments');
+  });
+
+  it('keeps matching checkbox defaults in their original name or value spelling and order', async () => {
+    const prompter = new Inquirerer({ noTty: true });
+    await expect(prompter.prompt({}, [{
+      name: 'features',
+      type: 'checkbox',
+      options: [{ name: 'Search', value: 'search' }, { name: 'Reports', value: 'reporting' }],
+      default: ['reporting', 'unknown', 'Search'],
+      required: true,
+    }])).resolves.toEqual({ features: ['reporting', 'Search'] });
+  });
+
+  it('keeps a matching string returned by a checkbox default resolver', async () => {
+    const resolverRegistry = new DefaultResolverRegistry();
+    resolverRegistry.register('features.default', () => 'search');
+    const prompter = new Inquirerer({ noTty: true, resolverRegistry });
+    await expect(prompter.prompt({}, [{
+      name: 'features',
+      type: 'checkbox',
+      options: ['search', 'reporting'],
+      defaultFrom: 'features.default',
+      required: true,
+    }])).resolves.toEqual({ features: ['search'] });
   });
 
   it.each([false, true])('accepts checkbox defaults by option value (returnFullResults: %s)', async returnFullResults => {
