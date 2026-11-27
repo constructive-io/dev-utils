@@ -1020,27 +1020,21 @@ export class Inquirerer {
     });
   }
 
+  private checkboxSelections(question: CheckboxQuestion, options: OptionValue[]): boolean[] {
+    const value = question.default;
+    const defaults = Array.isArray(value) ? value : [value];
+    return options.map(opt => defaults.includes(opt.name) || defaults.includes(String(opt.value)));
+  }
+
   private checkboxDefault(question: CheckboxQuestion): OptionValue[] {
     const options = this.sanitizeOptions(question);
-    const defaults = Array.isArray(question.default)
-      ? question.default
-      : [question.default];
-
-    if (question.returnFullResults) {
-      return options.map(opt => ({
-        name: opt.name,
-        value: opt.value,
-        selected: defaults.includes(opt.name)
-      }));
-    }
-
-    return options
-      .filter(opt => defaults.includes(opt.name) || defaults.includes(opt.value))
-      .map(opt => ({
-        name: opt.name,
-        value: opt.value,
-        selected: true
-      }));
+    const selections = this.checkboxSelections(question, options);
+    const results = options.map(({ name, value }, index) => ({
+      name,
+      value,
+      selected: selections[index]
+    }));
+    return question.returnFullResults ? results : results.filter(opt => opt.selected);
   }
 
   public async checkbox(question: CheckboxQuestion, ctx: PromptContext): Promise<OptionValue[]> {
@@ -1062,15 +1056,7 @@ export class Inquirerer {
     const maxLines = this.getMaxLines(question, options.length); // Use provided max or total options
     // const selections: boolean[] = new Array(options.length).fill(false);
 
-    const selections: boolean[] = options.map(opt => {
-      if (!question.default) return false;
-
-      const defaults = Array.isArray(question.default)
-        ? question.default
-        : [question.default];
-
-      return defaults.includes(opt.name);
-    });
+    const selections = this.checkboxSelections(question, options);
 
     const updateFilteredOptions = (): void => {
       filteredOptions = this.filterOptions(options, input);

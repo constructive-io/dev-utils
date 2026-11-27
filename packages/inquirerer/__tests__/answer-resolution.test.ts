@@ -41,7 +41,7 @@ const defaults = {
   features: [{ name: 'search', value: 'search', selected: true }],
 };
 
-function mockTerminal(responses: string[] = []) {
+function mockTerminal(responses: string[] = [], enter = '\n') {
   const input = Object.assign(new PassThrough(), { isTTY: true, setRawMode: jest.fn() });
   const output = new PassThrough();
   let prompts = 0;
@@ -49,7 +49,7 @@ function mockTerminal(responses: string[] = []) {
     if (chunk.toString().includes('Read the missing answer')) {
       const response = responses[prompts++];
       if (response !== undefined) {
-        queueMicrotask(() => input.write(response + '\n'));
+        queueMicrotask(() => input.write(response + enter));
       }
     }
   });
@@ -118,6 +118,32 @@ describe('answer resolution', () => {
     }])).resolves.toEqual({
       features: [...defaults.features, { name: 'reporting', value: 'reporting', selected: false }],
     });
+  });
+
+  it.each([false, true])('accepts checkbox defaults by option value (returnFullResults: %s)', async returnFullResults => {
+    const question: Question = {
+      name: 'features',
+      type: 'checkbox',
+      options: [{ name: 'Search', value: 'search' }, 'reporting'],
+      default: ['search'],
+      required: true,
+      returnFullResults,
+    };
+    const features = [{ name: 'Search', value: 'search', selected: true }];
+    if (returnFullResults) {
+      features.push({ name: 'reporting', value: 'reporting', selected: false });
+    }
+    const prompter = new Inquirerer({ noTty: true });
+    await expect(prompter.prompt({}, [question])).resolves.toEqual({ features });
+    const withFlag = new Inquirerer({ noTty: true });
+    await expect(withFlag.prompt({ features: ['search'] }, [question])).resolves.toEqual({ features });
+    const interactive = new Inquirerer(mockTerminal([''], '\r'));
+    try {
+      await expect(interactive.prompt({}, [{ ...question, message: 'Read the missing answer' }]))
+        .resolves.toEqual({ features });
+    } finally {
+      interactive.close();
+    }
   });
 
   it.each([false, true])('preserves all flag types while reading a missing TTY answer (retry: %s)', async retry => {
