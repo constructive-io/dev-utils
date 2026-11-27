@@ -136,6 +136,21 @@ test("keeps ownership when an exclusion is lifted without unavailable notices", 
   assert.match(read("llms.txt"), /guide\.md/);
 });
 
+test("uses the configured previous manifest to verify a retained twin before replacing it", async () => {
+  const config = { outDir, siteUrl };
+  write("guide.html", "<main><h1>Original guide</h1></main>");
+  await generate(config);
+  const original = read("guide.md");
+  write("previous.json", read(manifestFile));
+  write("guide.html", "<main><h1>Updated guide</h1></main>");
+  await generate(config);
+  write("guide.md", original);
+  fs.unlinkSync(join(outDir, "guide.html"));
+  await generate({ ...config, stale: { previousManifest: join(outDir, "previous.json"), unavailable: true } });
+  assert.match(read("guide.md"), /no longer available/);
+  assert.doesNotMatch(read("llms.txt"), /guide\.md/);
+});
+
 test("does not overwrite Markdown without matching ownership in the export manifest", async () => {
   const config = { outDir, siteUrl };
   write("guide.html", "<main><h1>Guide</h1></main>");

@@ -128,6 +128,6 @@ export async function planGeneration(config: Config): Promise<Generation> {
 
 export async function generate(config: Config): Promise<Generation> {
   const result = await planGeneration(config);
-  (config.pipeline?.writeArtifacts ?? writeArtifacts)(config.outDir, result.artifacts);
+  (config.pipeline?.writeArtifacts ?? writeArtifacts)(config.outDir, result.artifacts, config.stale);
   return result;
 }

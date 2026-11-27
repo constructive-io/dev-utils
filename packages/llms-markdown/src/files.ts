@@ -39,13 +39,17 @@ function artifactPath(outDir: string, file: string) {
   return target;
 }
 
-export function writeArtifacts(outDir: string, artifacts: readonly Artifact[]) {
+export function writeArtifacts(outDir: string, artifacts: readonly Artifact[], stale: StaleOptions = {}) {
   const targets = artifacts.map(({ file, contents }) => ({ file, target: artifactPath(outDir, file), contents }));
   const existingTwins = targets.filter(({ file, target }) => /\.md$/i.test(file) && existsSync(target));
   if (existingTwins.length) {
-    const owned = new Map(readManifest(artifactPath(outDir, manifestFile)).map(({ file, sha256 }) => [file, sha256]));
+    const current = artifactPath(outDir, manifestFile);
+    const manifests = [current];
+    if (stale.previousManifest && stale.previousManifest !== current) manifests.push(stale.previousManifest);
+    const owned = manifests.map((path) => new Map(readManifest(path).map(({ file, sha256 }) => [file, sha256])));
     for (const { file, target } of existingTwins) {
-      if (!owned.has(file) || !lstatSync(target).isFile() || digest(readFileSync(target)) !== owned.get(file)) {
+      const sha256 = lstatSync(target).isFile() ? digest(readFileSync(target)) : undefined;
+      if (!sha256 || !owned.some((manifest) => manifest.get(file) === sha256)) {
         throw new Error(`Refusing to overwrite unowned Markdown: ${file}`);
       }
     }
