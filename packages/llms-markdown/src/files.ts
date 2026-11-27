@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { constants, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { closeSync, constants, existsSync, lstatSync, mkdirSync, openSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, sep } from 'node:path';
 
 import type { Artifact, ExportPage, Twin } from './types';
@@ -52,7 +52,12 @@ export function writeArtifacts(outDir: string, artifacts: readonly Artifact[]) {
   }
   for (const { target, contents } of targets) {
     mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, contents, { flag: constants.O_CREAT | constants.O_TRUNC | constants.O_WRONLY | constants.O_NOFOLLOW });
+    const handle = openSync(target, constants.O_CREAT | constants.O_TRUNC | constants.O_WRONLY | constants.O_NOFOLLOW);
+    try {
+      writeFileSync(handle, contents);
+    } finally {
+      closeSync(handle);
+    }
   }
 }
 
