@@ -5,7 +5,7 @@ import { matches } from './source';
 import type { Entity, GraphSection, GraphTreeRules, ParsedPage, Placement } from './types';
 
 type Node = { entity: Entity; page: ParsedPage };
-type Row = { placement: Placement; node?: Node; document?: Node; page: ParsedPage };
+type Row = { placement: Placement; node?: Node; document?: Node; page: ParsedPage; section: string };
 export const optionalKey = 'Optional';
 const schemaTypes = (entity: Entity) => types(entity).map(schemaType);
 const pageType = (entity: Entity) => schemaTypes(entity).some((type) => type.endsWith('Page'));
@@ -60,7 +60,7 @@ export function deriveGraphTree(
       (!section.types || entity && schemaTypes(entity).some((type) => section.types?.includes(type))));
     if (!section) throw new Error(`No graph tree section matches ${page.route}`);
     rows.set(route, {
-      page, node: entity && { page, entity }, document: document && { page, entity: document },
+      page, node: entity && { page, entity }, document: document && { page, entity: document }, section: section.key,
       placement: {
         key: `page:${page.route}`, route: page.route, tier: section.key === optionalKey ? 'optional' : 'page', parentKey: section.key,
         rank: rank(entity, rules.rankProperty),
@@ -87,7 +87,8 @@ export function deriveGraphTree(
   for (const [route, row] of rows) {
     if (!route) continue;
     const section = row.placement.parentKey;
-    const canParent = (candidate: Row) => candidate.placement.tier === row.placement.tier && !wouldCycle(row, candidate);
+    const canParent = (candidate: Row) => candidate.placement.tier === row.placement.tier &&
+      (rules.crossSectionParents !== false || candidate.section === row.section) && !wouldCycle(row, candidate);
     for (const relation of relations) {
       if (!row.node) break;
       const keys = identities(row);

@@ -26,6 +26,8 @@ tree: {
 Associate a subject with its exported page through `mainEntityOfPage`, a
 matching `url` or `@id`, or the page document's `mainEntity`. Graph relations
 establish parents first, then a matching parent route, then the section.
+Set `crossSectionParents: false` to keep derived child pages in their
+matched sections.
 Entities sort by `rank` (overridable with `rankProperty`), `position`, then
 newest date (`datePublished`, `startDate`, or `dateCreated`). Contextual
 references are opt-in by relation and type and never replace a local page

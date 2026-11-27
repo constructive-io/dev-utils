@@ -55,7 +55,8 @@ test("derives public twins, graph parents and contextual entries without an enti
     '<link rel="canonical" href="https://upstream.example.net/widget?preview=true">');
   page("first", [early]);
   page("second", [late]);
-  page("plain", [], "<p>Plain page.</p>");
+  page("plain", [{ "@id": id("plain"), "@type": "WebPage", name: "Plain",
+    url: siteUrl + "/plain", isPartOf: { "@id": root["@id"] } }], "<p>Plain page.</p>");
   page("archive", [entity("Archive", "Historical reference.", {
     mainEntityOfPage: siteUrl + "/archive", isPartOf: { "@id": root["@id"] },
   })]);
@@ -70,12 +71,13 @@ test("derives public twins, graph parents and contextual entries without an enti
         { key: "reference", title: "Reference", rank: 1, types: ["SoftwareApplication"] },
         { key: "other", title: "Other", rank: 2 },
       ],
-      graph: { context: { relations: ["mentions"], types: ["SoftwareApplication"] } },
+      graph: { crossSectionParents: false, context: { relations: ["mentions"], types: ["SoftwareApplication"] } },
     },
   });
   const index = read("llms.txt");
   assert.match(index, /## Home\n\n- \[Home\]\(https:\/\/example\.com\/index\.md\)/);
   assert.match(index, /## Reference\n\n- \[Widget\].*\n  - \[late\].*\n  - \[early\].*\n  - local: Supporting capability\./);
+  assert.match(index, /## Other\n\n- \[Plain\]/);
   assert.match(index, /## Optional\n\n- \[external\]\(https:\/\/example\.net\/reference\)/);
   assert.equal(index.match(/## Optional/g).length, 1);
   assert.match(index.split("## Optional")[1], /\n- \[Archive\]\(https:\/\/example\.com\/archive\.md\)/);
