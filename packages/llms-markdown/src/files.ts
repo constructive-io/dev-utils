@@ -37,7 +37,16 @@ function artifactPath(outDir: string, file: string) {
 }
 
 export function writeArtifacts(outDir: string, artifacts: readonly Artifact[]) {
-  const targets = artifacts.map(({ file, contents }) => ({ target: artifactPath(outDir, file), contents }));
+  const targets = artifacts.map(({ file, contents }) => ({ file, target: artifactPath(outDir, file), contents }));
+  const existingTwins = targets.filter(({ file, target }) => /\.md$/i.test(file) && existsSync(target));
+  if (existingTwins.length) {
+    const owned = new Map(readManifest(artifactPath(outDir, manifestFile)).map(({ file, sha256 }) => [file, sha256]));
+    for (const { file, target } of existingTwins) {
+      if (!owned.has(file) || !lstatSync(target).isFile() || digest(readFileSync(target)) !== owned.get(file)) {
+        throw new Error(`Refusing to overwrite unowned Markdown: ${file}`);
+      }
+    }
+  }
   for (const { target, contents } of targets) {
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, contents, { flag: constants.O_CREAT | constants.O_TRUNC | constants.O_WRONLY | constants.O_NOFOLLOW });
@@ -52,15 +61,20 @@ export type StaleOptions = {
   unavailable?: boolean | ((entry: Pick<Twin, 'route' | 'file'>) => string);
 };
 
+function readManifest(path: string): Entry[] {
+  if (!existsSync(path)) return [];
+  const manifest: { version: number; twins: Entry[] } = JSON.parse(readFileSync(path, 'utf8'));
+  if (manifest.version !== 1 || !Array.isArray(manifest.twins)) throw new Error(`Invalid twin manifest: ${path}`);
+  return manifest.twins;
+}
+
 export function planManifest(outDir: string, twins: readonly Twin[], stale: StaleOptions = {}): Artifact[] {
   const entries: Entry[] = twins.map(({ route, file, markdown }) => ({ route, file, sha256: digest(markdown) }));
   const tombstones: Artifact[] = [];
   const previous = stale.previousManifest ?? join(outDir, manifestFile);
-  if (stale.unavailable && existsSync(previous)) {
-    const manifest: { version: number; twins: Entry[] } = JSON.parse(readFileSync(previous, 'utf8'));
-    if (manifest.version !== 1 || !Array.isArray(manifest.twins)) throw new Error(`Invalid twin manifest: ${previous}`);
+  if (stale.unavailable) {
     const files = new Set(entries.map(({ file }) => file));
-    for (const { route, file, sha256 } of manifest.twins) {
+    for (const { route, file, sha256 } of readManifest(previous)) {
       if (typeof route !== 'string' || typeof file !== 'string' || !file.endsWith('.md')) {
         throw new Error(`Invalid twin manifest entry: ${previous}`);
       }
