@@ -52,13 +52,14 @@ test("derives public twins, graph parents and contextual entries without an enti
   const local = entity("local", "Supporting capability.");
   const external = entity("external", "External reference.", { url: "https://example.net/reference" });
   page("widget", [root, early, late, local, external], '<a href="/second">Current release</a>',
-    '<link rel="canonical" href="https://example.net/widget">');
+    '<link rel="canonical" href="https://upstream.example.net/widget?preview=true">');
   page("first", [early]);
   page("second", [late]);
   page("plain", [], "<p>Plain page.</p>");
   page("noindex", [entity("hidden", "Hidden.")], undefined, '<meta name="robots" content="noindex">');
   const result = await generate({
     outDir, siteUrl,
+    blockedHosts: ["upstream.example.net"],
     tree: {
       sections: [
         { key: "home", title: "Home", rank: 0, match: "/" },
@@ -72,7 +73,7 @@ test("derives public twins, graph parents and contextual entries without an enti
   assert.match(index, /## Home\n\n- \[Home\]\(https:\/\/example\.com\/index\.md\)/);
   assert.match(index, /## Reference\n\n- \[Widget\].*\n  - \[late\].*\n  - \[early\].*\n  - local: Supporting capability\./);
   assert.match(index, /## Optional\n\n- \[external\]\(https:\/\/example\.net\/reference\)/);
-  assert.doesNotMatch(index, /example\.net\/widget|noindex|hidden/);
+  assert.doesNotMatch(index, /upstream\.example\.net|noindex|hidden/);
   assert.match(read("widget.md"), /Source: https:\/\/example\.com\/widget\n/);
   assert.match(read("widget.md"), /\[Current release\]\(https:\/\/example\.com\/second\.md\)/);
   assert.deepEqual(result.twins.map(({ file }) => file).sort(), ["first.md", "index.md", "plain.md", "second.md", "widget.md"]);

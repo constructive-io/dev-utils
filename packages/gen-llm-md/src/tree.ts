@@ -43,13 +43,15 @@ function validatePlacement(row: Placement) {
   if (row.rank !== undefined && !Number.isFinite(row.rank)) throw new Error(`Invalid tree rank: ${row.key}`);
 }
 
-function pageCanonical(page: ParsedPage, siteUrl: string, allowed: HostPolicy['allowed']): URL {
-  const canonical = page.canonical ?? page.url;
+function pageCanonical(page: ParsedPage, siteUrl: string, allowed: HostPolicy['allowed'], local = false): URL {
+  const exported = sitePath(siteUrl, page.route);
+  const useExported = local && (!page.canonical || !matchesExportRoute(page.canonical, exported));
+  const canonical = useExported ? exported : page.canonical ?? page.url;
   if (!http(canonical) || canonical.hash || canonical.search || !allowed(canonical) ||
-      (page.$('link[rel="canonical"]').attr('href') && !page.canonical)) {
+      (!useExported && page.$('link[rel="canonical"]').attr('href') && !page.canonical)) {
     throw new Error(`Invalid HTML canonical for ${page.route}`);
   }
-  return page.canonical || sitePath(siteUrl, page.route);
+  return useExported ? exported : page.canonical ?? exported;
 }
 
 function matchesExportRoute(canonical: URL, route: URL): boolean {
@@ -211,8 +213,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     const page = route === undefined ? undefined : pages.get(route);
     if (!page && route !== undefined) throw new Error(`Unknown HTML route: ${row.route}`);
     if (page) {
-      entry.source = pageCanonical(page, siteUrl, policy.allowed);
-      if (derived && !matchesExportRoute(entry.source, sitePath(siteUrl, page.route))) entry.source = page.url;
+      entry.source = pageCanonical(page, siteUrl, policy.allowed, !!derived);
       if (!matchesExportRoute(entry.source, sitePath(siteUrl, page.route))) {
         if (row.tier === 'page') entry.tier = 'child';
       } else if (hasTwin) {
