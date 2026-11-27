@@ -92,14 +92,30 @@ export function normalizeRoleTables($: CheerioAPI) {
 
 export const ignoredContent = 'nav, script, style, template, noscript, iframe, svg, form, dialog, [hidden], [aria-hidden="true"], [data-llm-ignore]';
 
-export function removePageChrome($: CheerioAPI) {
-  $('nav, [role="navigation" i], [role="banner" i], [role="contentinfo" i], header, footer')
+export function removePageChrome($: CheerioAPI, pageUrl: URL, homeUrl: URL) {
+  const navigation = 'nav, [role="navigation" i]';
+  const landmarks = `${navigation}, [role="banner" i], [role="contentinfo" i]`;
+  $(`${landmarks}, header, footer`)
     .filter((_, element) => {
       const node = $(element);
-      return !node.is('header, footer') ||
-        node.is('nav, [role="navigation" i], [role="banner" i], [role="contentinfo" i]') ||
-        (!node.parents('article, section, aside, [role="article" i]').length &&
-          !(node.is('main > header, [role="main" i] > header') && node.find('h1').length));
+      if (node.is(landmarks)) return true;
+      if (node.parents('article, section, aside, [role="article" i]').length) return false;
+      if (!node.is('main > header, [role="main" i] > header') || !node.find('h1').length) return true;
+
+      const siblings = node.siblings();
+      const hasOtherHeading = siblings.filter('h1').add(siblings.find('h1')).toArray().some(
+        (heading) => !$(heading).closest(`${ignoredContent}, ${landmarks}, footer`).length);
+      if (!hasOtherHeading) return false;
+
+      const linksHome = node.find('h1 a[href], a[href]:has(h1)').toArray().some((link) => {
+        const target = urlFor($(link).attr('href'), pageUrl);
+        return target && !target.hash && sameRoute(target, homeUrl);
+      });
+      const hasSiteNavigation = node.find(navigation).find('a[href]').toArray().some((link) => {
+        const target = urlFor($(link).attr('href'), pageUrl);
+        return target && target.origin === homeUrl.origin && !sameRoute(target, pageUrl);
+      });
+      return linksHome || hasSiteNavigation;
     }).remove();
 }
 

@@ -149,6 +149,25 @@ test("keeps editorial headers inside main", async () => {
   assert.match(read("guide.md"), /Intro text\./);
 });
 
+test.each([
+  '<h1>Site name</h1><nav><a href="/news">News</a></nav>',
+  '<h1><a href="/">Site name</a></h1><a href="/news">News</a>',
+])("strips branded headers inside main (%s)", async header => {
+  write("guide.html", `<main><header>${header}</header><header><h1>Guide</h1><p>Intro text.</p></header></main>`);
+  await generate({ outDir, siteUrl });
+  const markdown = read("guide.md");
+  assert.match(markdown, /^# Guide\n/);
+  assert.match(markdown, /Intro text\./);
+  assert.doesNotMatch(markdown, /Site name|News/);
+});
+
+test("keeps the sole page heading in an editorial header with a table of contents", async () => {
+  write("guide.html", '<div role="main"><header><h1>Guide</h1><p>Intro text.</p><nav><a href="#details">Details</a></nav></header><h2 id="details">Page details</h2></div>');
+  await generate({ outDir, siteUrl });
+  assert.match(read("guide.md"), /^# Guide\n/);
+  assert.match(read("guide.md"), /Intro text\./);
+});
+
 test("honors data-llm-ignore on a content root", async () => {
   write("ignored-body.html", '<body data-llm-ignore><main><h1>Ignored body</h1></main></body>');
   write("ignored-article.html", '<article data-llm-ignore><h1>Ignored article</h1></article><p>Visible content.</p>');

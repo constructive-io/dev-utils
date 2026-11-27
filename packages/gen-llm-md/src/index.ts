@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { name, selectPageEntity, selectSiteIdentity, text, types, urlFor } from './entities';
+import { name, selectPageEntity, selectSiteIdentity, sitePath, text, types, urlFor } from './entities';
 import { discoverPages, markdownArtifact, planManifest, type StaleOptions, writeArtifacts } from './files';
 import { collapseAdjacentImages, htmlToMarkdown, ignoredContent, parsePage, removePageChrome } from './html';
 import { defaultSections, renderIndex, renderTwin } from './render';
@@ -65,6 +65,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
   const { outDir, siteUrl, exclude = [], transforms = [] } = config;
   const origin = new URL(siteUrl);
   if (!['https:', 'http:'].includes(origin.protocol)) throw new Error('siteUrl must be an HTTP(S) URL');
+  const homeUrl = sitePath(siteUrl, '/');
   const { allowed, clean } = hostPolicy(config.blockedHosts ?? []);
   if (!allowed(origin)) throw new Error('siteUrl must not be a blocked host');
   const pipeline = { ...defaults, ...config.pipeline };
@@ -87,7 +88,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
     const override = await config.pageContent?.(page);
     const entity = pipeline.selectPageEntity(page);
     $('[data-llm-ignore]').remove();
-    removePageChrome($);
+    removePageChrome($, page.url, homeUrl);
     const main = $('main, [role="main"]').first();
     const primary = main.length ? main : $('article').first();
     const content = primary.length ? primary : $('body').first();
