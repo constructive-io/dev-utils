@@ -65,16 +65,17 @@ export function writeArtifacts(outDir: string, artifacts: readonly Artifact[], s
     }
   }
   for (const artifact of targets) {
-    const { target } = artifact;
-    if (artifact.remove) {
-      const path = artifactPath(outDir, artifact.file);
-      if (!lstatSync(path, { throwIfNoEntry: false })) continue;
-      if (fileDigest(path) !== artifact.sha256) {
-        throw new Error(`Refusing to delete unowned Markdown: ${artifact.file}`);
-      }
-      unlinkSync(path);
-      continue;
+    if (!artifact.remove) continue;
+    const path = artifactPath(outDir, artifact.file);
+    if (!lstatSync(path, { throwIfNoEntry: false })) continue;
+    if (fileDigest(path) !== artifact.sha256) {
+      throw new Error(`Refusing to delete unowned Markdown: ${artifact.file}`);
     }
+    unlinkSync(path);
+  }
+  for (const artifact of targets) {
+    if (artifact.remove) continue;
+    const { target } = artifact;
     mkdirSync(dirname(target), { recursive: true });
     const handle = openSync(target, constants.O_CREAT | constants.O_TRUNC | constants.O_WRONLY | constants.O_NOFOLLOW);
     try {

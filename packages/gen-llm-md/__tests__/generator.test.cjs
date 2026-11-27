@@ -208,6 +208,28 @@ test("refuses planned deletions after the target is edited or replaced by a syml
   assert.equal(read(manifestFile), manifest);
 });
 
+test("can retry generation after deleting a stale twin fails", async () => {
+  const config = { outDir, siteUrl };
+  write("guide.html", "<main><h1>Original guide</h1></main>");
+  write("removed.html", "<main><h1>Old article</h1></main>");
+  await generate(config);
+  fs.unlinkSync(join(outDir, "removed.html"));
+  write("guide.html", "<main><h1>Updated guide</h1></main>");
+  const failure = Object.assign(new Error("Permission denied while removing stale twin"), { code: "EACCES" });
+  const unlink = jest.spyOn(fs, "unlinkSync").mockImplementationOnce(() => { throw failure; });
+  try {
+    await assert.rejects(generate(config), { code: "EACCES" });
+    assert.match(read("guide.md"), /^# Original guide/);
+    assert.match(read("removed.md"), /^# Old article/);
+  } finally {
+    unlink.mockRestore();
+  }
+  await generate(config);
+  assert.match(read("guide.md"), /^# Updated guide/);
+  assert.equal(fs.existsSync(join(outDir, "removed.md")), false);
+  assert(!JSON.parse(read(manifestFile)).twins.some(({ file }) => file === "removed.md"));
+});
+
 test("uses the configured previous manifest to verify a retained twin before replacing it", async () => {
   const config = { outDir, siteUrl };
   write("guide.html", "<main><h1>Original guide</h1></main>");
