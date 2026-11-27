@@ -1,11 +1,11 @@
 {
-  "name": "@constructive-io/llms-markdown",
+  "name": "gen-llm-md",
   "version": "0.1.0",
   "description": "Generate llms.txt and Markdown twins from a static HTML export",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "bin": { "llms-markdown": "cli.js" },
+  "bin": { "gen-llm-md": "cli.js" },
   "license": "MIT",
   "engines": { "node": ">=22.12" },
   "publishConfig": { "access": "public", "directory": "dist" },

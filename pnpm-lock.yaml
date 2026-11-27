@@ -237,6 +237,20 @@ importers:
         version: 0.1.10
     publishDirectory: dist
 
+  packages/gen-llm-md:
+    dependencies:
+      cheerio:
+        specifier: ^1.2.0
+        version: 1.2.0
+      node-html-markdown:
+        specifier: ^2.0.0
+        version: 2.0.0
+    devDependencies:
+      makage:
+        specifier: 0.1.10
+        version: 0.1.10
+    publishDirectory: dist
+
   packages/genomic:
     dependencies:
       appstash:
@@ -383,20 +397,6 @@ importers:
       kubernetesjs:
         specifier: ^0.7.6
         version: 0.7.6
-    devDependencies:
-      makage:
-        specifier: 0.1.10
-        version: 0.1.10
-    publishDirectory: dist
-
-  packages/llms-markdown:
-    dependencies:
-      cheerio:
-        specifier: ^1.2.0
-        version: 1.2.0
-      node-html-markdown:
-        specifier: ^2.0.0
-        version: 2.0.0
     devDependencies:
       makage:
         specifier: 0.1.10

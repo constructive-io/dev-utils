@@ -1,12 +1,12 @@
 ---
-name: llms-markdown
+name: gen-llm-md
 description: Generate an LLM index and Markdown twins from a built static export; configure native Markdown and custom page rules.
 ---
 
 # Generate Markdown twins
 
 1. Build the site to a local static export, then run
-   `pnpm exec llms-markdown generate --dir out --site-url https://example.com --dry-run`.
+   `pnpm exec gen-llm-md generate --dir out --site-url https://example.com --dry-run`.
 2. Run without `--dry-run` to write the artifacts. Check the site identity in
    `out/llms.txt`, follow sample index links to local files, and check that
    excluded routes do not appear.
@@ -18,4 +18,4 @@ description: Generate an LLM index and Markdown twins from a built static export
    manifest and enable unavailable notices. Never deploy with this tool;
    it only writes local artifacts.
 
-See the [package reference](../../../packages/llms-markdown/README.md).
+See the [package reference](../../../packages/gen-llm-md/README.md).

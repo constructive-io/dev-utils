@@ -1,12 +1,12 @@
-# llms-markdown
+# gen-llm-md
 
 Generate `llms.txt` and Markdown twins from an existing static HTML export. The
 tool reads each page's main content, embedded JSON-LD, and HTML metadata. It
 never crawls the site or fetches a separate JSON-LD dataset.
 
 ```sh
-pnpm exec llms-markdown generate --dir out --site-url https://example.com --exclude /preview
-pnpm exec llms-markdown generate --config ./llms.config.mjs --dry-run
+pnpm exec gen-llm-md generate --dir out --site-url https://example.com --exclude /preview
+pnpm exec gen-llm-md generate --config ./llms.config.mjs --dry-run
 ```
 
 Requires Node 22.12+. `--dir` defaults to `out`; paths are relative to the
@@ -25,7 +25,7 @@ its own identity when the graph lists collection members or related topics.
 ## Library
 
 ```js
-import { generate, flattenLayoutTables } from '@constructive-io/llms-markdown';
+import { generate, flattenLayoutTables } from 'gen-llm-md';
 
 const isIssue = ({ route }) => route.startsWith('/issues/');
 const config = {
