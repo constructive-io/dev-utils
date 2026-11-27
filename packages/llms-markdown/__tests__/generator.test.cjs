@@ -175,3 +175,13 @@ test("uses the directory index when a flat export shares its public route", asyn
   assert.match(read("guide.md"), /^# Directory guide\n/);
   assert.match(read("guide.md"), /> Source: https:\/\/example\.com\/guide\/\n/);
 });
+
+test("does not parse JSON-LD on redirects or noindex pages", async () => {
+  const malformed = '<script type="application/ld+json">{</script><main>Body</main>';
+  write("redirect.html", '<meta http-equiv="refresh" content="0; url=/">' + malformed);
+  write("hidden.html", '<meta name="robots" content="noindex">' + malformed);
+  const { twins } = await generate({ outDir, siteUrl });
+  assert.deepEqual(twins.map(({ file }) => file), ["index.md"]);
+  write("visible.html", malformed);
+  await assert.rejects(planGeneration({ outDir, siteUrl }), /Invalid JSON-LD in visible\.html/);
+});

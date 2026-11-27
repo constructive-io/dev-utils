@@ -15,7 +15,7 @@ export function parsePage(page: ExportPage, html: string, siteUrl: string): Pars
   const $ = load(html);
   const url = sitePath(siteUrl, page.route);
   const canonical = urlFor($('link[rel="canonical"]').attr('href'), url);
-  const jsonld = $('script[type="application/ld+json"]').toArray().flatMap((script) => {
+  const readJsonld = () => $('script[type="application/ld+json"]').toArray().flatMap((script) => {
     try {
       return entities(JSON.parse($(script).text()));
     } catch (error) {
@@ -24,7 +24,14 @@ export function parsePage(page: ExportPage, html: string, siteUrl: string): Pars
   });
   const meta = (name: string) => text($('meta[name]').filter((_, node) =>
     $(node).attr('name')?.toLowerCase() === name.toLowerCase()).first().attr('content'));
-  return { ...page, html, $, jsonld, meta, url: canonical && sameRoute(canonical, url) ? canonical : url };
+  let jsonld: ParsedPage['jsonld'] | undefined;
+  return {
+    ...page, html, $, meta,
+    url: canonical && sameRoute(canonical, url) ? canonical : url,
+    get jsonld() {
+      return (jsonld ??= readJsonld());
+    },
+  };
 }
 
 export function flattenLayoutTables($: CheerioAPI, selector = 'table[role="presentation"], table[role="none"]') {
