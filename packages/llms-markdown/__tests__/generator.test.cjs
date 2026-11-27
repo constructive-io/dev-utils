@@ -166,3 +166,12 @@ test.each(["https://example.com/project/", "https://example.com/project"])(
     assert.match(twin, /\[Guides\]\(https:\/\/example\.com\/project\/guides\/\)/);
   }
 );
+
+test("uses the directory index when a flat export shares its public route", async () => {
+  write("guide.html", "<main><h1>Flat guide</h1></main>");
+  write("guide/index.html", "<main><h1>Directory guide</h1></main>");
+  const { twins } = await generate({ outDir, siteUrl });
+  assert.deepEqual(twins.map(({ file }) => file), ["index.md", "guide.md"]);
+  assert.match(read("guide.md"), /^# Directory guide\n/);
+  assert.match(read("guide.md"), /> Source: https:\/\/example\.com\/guide\/\n/);
+});

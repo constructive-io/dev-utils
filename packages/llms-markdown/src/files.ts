@@ -11,7 +11,10 @@ export function discoverPages(outDir: string): ExportPage[] {
     .map((entry) => relative(outDir, join(entry.parentPath, entry.name)).split(sep).join('/'))
     .filter((file) => !file.startsWith('_next/') && file !== '404.html' && file !== '404/index.html')
     .sort();
-  return ['index.html', ...files.filter((file) => file !== 'index.html')].map((htmlFile) => {
+  const exported = new Set(files);
+  const pages = files.filter((file) => file !== 'index.html' &&
+    (file.endsWith('/index.html') || !exported.has(`${file.slice(0, -'.html'.length)}/index.html`)));
+  return ['index.html', ...pages].map((htmlFile) => {
     const route = htmlFile === 'index.html' ? '/' : `/${htmlFile.replace(/\/index\.html$/, '/').replace(/\.html$/, '')}`;
     return { route, htmlFile, file: route === '/' ? 'index.md' : `${route.slice(1).replace(/\/$/, '')}.md` };
   });
