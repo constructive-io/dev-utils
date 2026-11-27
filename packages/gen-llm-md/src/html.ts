@@ -115,7 +115,11 @@ export function collapseAdjacentImages($: CheerioAPI) {
     while (previous && (previous.type === 'comment' || (previous.type === 'text' && !previous.data.trim()))) {
       previous = previous.prev;
     }
-    if (previous && image(previous).attr('src') === src) $(element).remove();
+    if (!previous) return;
+    const previousImage = image(previous);
+    if (previousImage.attr('src') !== src) return;
+    if (!previousImage.attr('alt')?.trim() && image(element).attr('alt')?.trim()) $(previous).remove();
+    else $(element).remove();
   });
 }
 
