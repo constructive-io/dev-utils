@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.1](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.10.0...inquirerer@4.10.1) (2026-11-27)
+
+### Bug Fixes
+
+- **inquirerer:** ship string-width as a runtime dependency ([#165](https://github.com/constructive-io/dev-utils/issues/165)) ([1343ccf](https://github.com/constructive-io/dev-utils/commit/1343ccfc41bff82e0a39150c919c6e971cfd154d))
+
 # [4.10.0](https://github.com/constructive-io/dev-utils/compare/inquirerer@4.9.8...inquirerer@4.10.0) (2026-11-27)
 
 ### Features
