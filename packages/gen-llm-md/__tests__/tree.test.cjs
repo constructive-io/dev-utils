@@ -244,3 +244,17 @@ test("falls back to body content when the export has no main or article", async 
   assert.match(read("plain.md"), /Public body content\./);
   assert.doesNotMatch(read("plain.md"), /Private chrome|## plain/);
 });
+
+test("keeps card facts distinct for two anchors on the same page", async () => {
+  page("guide", [entity("guide", "Guide description.", {
+    hasPart: [
+      { "@type": "LearningResource", url: "/guide#first", name: "First topic", description: "First details." },
+      { "@type": "LearningResource", url: "/guide#second", name: "Second topic", description: "Second details." },
+    ],
+  })], '<div data-cards><a href="#first">Read more</a><a href="#second">Read more</a></div>');
+  await generate(config([placement("guide")], {
+    pages: [{ match: "/guide", collection: { selector: "[data-cards]", relation: "hasPart" } }],
+  }));
+  assert.match(read("guide.md"), /\[First topic\]\(https:\/\/example\.com\/guide#first\): First details\./);
+  assert.match(read("guide.md"), /\[Second topic\]\(https:\/\/example\.com\/guide#second\): Second details\./);
+});

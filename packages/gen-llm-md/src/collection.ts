@@ -25,7 +25,7 @@ export function renderCollection(
     const candidate = item ?? ref;
     const resolved = resolveEntity(candidate, page, byId) ?? (isEntity(candidate) ? candidate : undefined);
     const url = urlFor(resolved?.url || resolved?.['@id'], page.url);
-    if (url && http(url) && resolved) related.set(linkKey(url), resolved);
+    if (url && http(url) && resolved) related.set(cardKey(url), resolved);
   }
 
   content.find(options.selector).add(content.filter(options.selector)).toArray().reverse().forEach((region) => {
@@ -37,7 +37,7 @@ export function renderCollection(
       const link = card.is('a[href]') ? card : card.find('a[href]').first();
       const url = urlFor(link.attr('href'), page.url);
       if (!url || !http(url) || !allowed(url) || seen.has(url.href)) return;
-      const relatedNode = related.get(linkKey(url));
+      const relatedNode = related.get(cardKey(url));
       const duration = text((options.durationSelector ? card.find(options.durationSelector).first().text() : '') ||
         text(relatedNode?.duration) || text(relatedNode?.timeRequired));
       const fallback = link.clone();
@@ -54,3 +54,5 @@ export function renderCollection(
     if (items.children().length) $(region).empty().append(items);
   });
 }
+
+const cardKey = (url: URL) => linkKey(url) + url.search + url.hash;
