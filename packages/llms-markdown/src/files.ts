@@ -79,21 +79,26 @@ function readManifest(path: string): Entry[] {
 export function planManifest(outDir: string, twins: readonly Twin[], stale: StaleOptions = {}): Artifact[] {
   const entries: Entry[] = twins.map(({ route, file, markdown }) => ({ route, file, sha256: digest(markdown) }));
   const tombstones: Artifact[] = [];
-  const previous = stale.previousManifest ?? join(outDir, manifestFile);
-  if (stale.unavailable) {
-    const files = new Set(entries.map(({ file }) => file));
-    for (const { route, file, sha256 } of readManifest(previous)) {
-      if (typeof route !== 'string' || typeof file !== 'string' || !file.endsWith('.md')) {
-        throw new Error(`Invalid twin manifest entry: ${previous}`);
-      }
-      const path = artifactPath(outDir, file);
-      if (files.has(file) || (existsSync(path) && digest(readFileSync(path)) !== sha256)) continue;
-      files.add(file);
+  const previous = (stale.unavailable && stale.previousManifest) || artifactPath(outDir, manifestFile);
+  const files = new Set(entries.map(({ file }) => file));
+  for (const entry of readManifest(previous)) {
+    const { route, file, sha256 } = entry;
+    if (typeof route !== 'string' || typeof file !== 'string' || !file.endsWith('.md')) {
+      throw new Error(`Invalid twin manifest entry: ${previous}`);
+    }
+    if (files.has(file)) continue;
+    const path = artifactPath(outDir, file);
+    const existing = lstatSync(path, { throwIfNoEntry: false });
+    if (existing && (!existing.isFile() || digest(readFileSync(path)) !== sha256)) continue;
+    files.add(file);
+    if (stale.unavailable) {
       const contents = typeof stale.unavailable === 'function'
         ? stale.unavailable({ route, file })
         : '# Page no longer available\n\nThis page is no longer part of the site.\n';
       entries.push({ route, file, sha256: digest(contents), unavailable: true });
       tombstones.push({ file, contents });
+    } else if (existing) {
+      entries.push(entry);
     }
   }
   return [...tombstones, { file: manifestFile, contents: `${JSON.stringify({ version: 1, twins: entries }, null, 2)}\n` }];
