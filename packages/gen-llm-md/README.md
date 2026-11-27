@@ -19,6 +19,9 @@ Flat and trailing-slash exports (for example, `guide.html` and
 `guide/index.html`) both map to `guide.md`. The generator skips 404s,
 redirects, and noindex pages (except legal pages), and resolves relative
 content links against the page URL. Mark UI to omit with `data-llm-ignore`.
+Content is taken from the main landmark, the first article, or the body,
+in that order. Site headers, footers, and navigation are omitted, and
+adjacent images with the same resolved source are emitted once.
 ARIA tables convert to Markdown tables; presentation tables are flattened.
 An explicit primary entity can supply page metadata. A named page retains
 its own identity when the graph lists collection members or related topics.

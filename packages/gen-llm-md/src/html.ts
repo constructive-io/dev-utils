@@ -90,9 +90,38 @@ export function normalizeRoleTables($: CheerioAPI) {
   }
 }
 
+export const ignoredContent = 'nav, script, style, template, noscript, iframe, svg, form, dialog, [hidden], [aria-hidden="true"], [data-llm-ignore]';
+
+export function removePageChrome($: CheerioAPI) {
+  $('nav, [role="navigation" i], [role="banner" i], [role="contentinfo" i], header, footer')
+    .filter((_, element) => {
+      const node = $(element);
+      return !node.is('header, footer') ||
+        node.is('nav, [role="navigation" i], [role="banner" i], [role="contentinfo" i]') ||
+        !node.parents('article, section, aside, [role="article" i]').length;
+    }).remove();
+}
+
+export function collapseAdjacentImages($: CheerioAPI) {
+  const image = (element: Parameters<CheerioAPI>[0]) => {
+    const node = $(element);
+    return node.is('picture') ? node.children('img').first() : node.filter('img');
+  };
+  $('img, picture').not('picture img').each((_, element) => {
+    const src = image(element).attr('src');
+    if (!src) return;
+    let previous = element.prev;
+    while (previous && (previous.type === 'comment' || (previous.type === 'text' && !previous.data.trim()))) {
+      previous = previous.prev;
+    }
+    if (previous && image(previous).attr('src') === src) $(element).remove();
+  });
+}
+
 export function htmlToMarkdown(html: string): string {
   const $ = load(html, {}, false);
-  $('nav, script, style, template, noscript, iframe, svg, form, dialog, [hidden], [aria-hidden="true"], [data-llm-ignore]').remove();
+  $(ignoredContent).remove();
+  collapseAdjacentImages($);
   $('button').each((_, button) => {
     const node = $(button);
     const label = node.attr('aria-label');

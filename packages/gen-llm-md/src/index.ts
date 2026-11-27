@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { name, selectPageEntity, selectSiteIdentity, text, types, urlFor } from './entities';
 import { discoverPages, markdownArtifact, planManifest, type StaleOptions, writeArtifacts } from './files';
-import { htmlToMarkdown, parsePage } from './html';
+import { collapseAdjacentImages, htmlToMarkdown, ignoredContent, parsePage, removePageChrome } from './html';
 import { defaultSections, renderIndex, renderTwin } from './render';
 import type {
   Artifact, Awaitable, IndexPage, IndexSection, PageContent, ParsedPage, SiteIdentity, Twin,
@@ -85,11 +85,12 @@ export async function planGeneration(config: Config): Promise<Generation> {
         /\b(noindex|none)\b/i.test($(node).attr('content') ?? '')))) continue;
     for (const transform of transforms) if (matches(page, transform.match)) await transform.apply(page);
     const override = await config.pageContent?.(page);
-    const main = $('main, [role="main"]').first();
-    const content = main.length ? main : $('article').first();
-    if (!content.length && override?.body === undefined && route !== '/') continue;
     const entity = pipeline.selectPageEntity(page);
-    content.find('nav, script, style, template, noscript, iframe, svg, form, dialog, [hidden], [aria-hidden="true"], [data-llm-ignore]').remove();
+    removePageChrome($);
+    const main = $('main, [role="main"]').first();
+    const primary = main.length ? main : $('article').first();
+    const content = primary.length ? primary : $('body').first();
+    content.find(ignoredContent).remove();
     const headingNode = content.find('h1').first();
     const heading = text(headingNode.clone().find('br').replaceWith(' ').end().text());
     const title = clean(override?.title || name(entity) || heading || text($('title').first().text()) || route) || route;
@@ -98,7 +99,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
       const identity = pipeline.selectSiteIdentity(page);
       site.title = clean(identity.title || title) || origin.hostname;
       site.description = clean(identity.description || page.meta('description') || description);
-      if (files.has(file) || (!content.length && override?.body === undefined)) continue;
+      if (files.has(file)) continue;
     }
     if (heading === title) headingNode.remove();
     content.find('h1').each((_, element) => {
@@ -111,7 +112,9 @@ export async function planGeneration(config: Config): Promise<Generation> {
       if (url && allowed(url) && /^(https?:|mailto:|tel:)$/.test(url.protocol)) node.attr(attr, url.href);
       else node.removeAttr(attr);
     });
+    collapseAdjacentImages($);
     const body = clean(override?.body ?? pipeline.htmlToMarkdown(content.html() ?? ''));
+    if (!primary.length && override?.body === undefined && !heading && !body) continue;
     const id = entity && urlFor(entity['@id'], page.url);
     const schema = entity ? { type: types(entity).join(', '), id: id && allowed(id) ? id : undefined } : undefined;
     const twin = pipeline.renderTwin(page, { title, description, body }, schema);
