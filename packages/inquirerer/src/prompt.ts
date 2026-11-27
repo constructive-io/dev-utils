@@ -514,7 +514,15 @@ export class Inquirerer {
         if (!('default' in question)) {
           this.throwMissingArgsError(options);
         }
-        obj[question.name] = this.defaultAnswer(question);
+        const answer = this.defaultAnswer(question);
+        if (question.type === 'checkbox' && !question.returnFullResults) {
+          const selected: OptionValue[] = answer;
+          const matches = new Set(selected.flatMap(({ name, value }) => [name, String(value)]));
+          const defaults = Array.isArray(question.default) ? question.default : [question.default];
+          obj[question.name] = defaults.filter(value => typeof value === 'string' && matches.has(value));
+        } else {
+          obj[question.name] = answer;
+        }
         if (!this.isValid(question, obj, ctx)) {
           this.throwMissingArgsError(options);
         }
