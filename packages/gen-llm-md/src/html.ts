@@ -96,6 +96,17 @@ export function normalizeRoleTables($: CheerioAPI) {
 
 export const ignoredContent = 'nav, script, style, template, noscript, iframe, svg, form, dialog, [hidden], [aria-hidden="true"], [data-llm-ignore]';
 
+export function renderPageBody(
+  $: CheerioAPI, content: ReturnType<CheerioAPI>,
+  convert: (html: string) => string, body?: string,
+) {
+  if (body === undefined) return convert(content.html() ?? '');
+  const selector = '[data-llm-supplement]';
+  const marked = new Set(content.find(selector).toArray());
+  const supplements = [...marked].filter((node) => !$(node).parents(selector).toArray().some((parent) => marked.has(parent)));
+  return [body, ...supplements.map((node) => convert($.html(node)))].filter(Boolean).join('\n\n');
+}
+
 export function removePageChrome($: CheerioAPI, pageUrl: URL, homeUrl: URL) {
   const navigation = 'nav, [role="navigation" i]';
   const landmarks = `${navigation}, [role="banner" i], [role="contentinfo" i]`;

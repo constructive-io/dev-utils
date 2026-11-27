@@ -93,6 +93,12 @@ await generate(config);
   `title` or `description` to override the defaults. Parsed pages expose
   `html`, `$` (Cheerio), `jsonld`, `meta(name)`, the canonical `url`,
   and the exported HTML and Markdown paths.
+- When `pageContent` provides a body, mark supplemental sections inside the
+  main content with `data-llm-supplement` (for example,
+  `<section data-llm-supplement><h2>Usage</h2>…</section>`). Their Markdown
+  follows the authored body in page order. Leave this content out of the
+  authored source to avoid repeating it. Without a body override, the
+  sections appear in their usual places.
 - Use `nativeMarkdown()` to supply complete twins and their index metadata.
   A twin's `markdown` string or byte array is written as supplied, without
   normalization or content filtering. Providers must apply site policy to

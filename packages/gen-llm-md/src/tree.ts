@@ -5,7 +5,7 @@ import { renderCollection } from './collection';
 import { list, name, sameRoute, sitePath, text, types, urlFor } from './entities';
 import { entityId, pageEntities, pageSubject, renderFacts, schemaType } from './facts';
 import { deriveGraphTree, optionalKey } from './graph-tree';
-import { collapseAdjacentImages, ignoredContent, removePageChrome } from './html';
+import { collapseAdjacentImages, ignoredContent, removePageChrome, renderPageBody } from './html';
 import type { Config, Pipeline } from './index';
 import { http, linkKey, markdownHref, rewriteMarkdownLinks, routeKey, twinLink } from './navigation';
 import { inline } from './render';
@@ -343,7 +343,7 @@ async function renderEntry(
     if (!url || !http(url)) return href;
     return rewrite ? twinLink(markdownHref(url), source, files) : markdownHref(url);
   };
-  let body = rule?.content === 'omit' ? '' : override?.body ?? pipeline.htmlToMarkdown(content.html() ?? '');
+  let body = rule?.content === 'omit' ? '' : renderPageBody($, content, pipeline.htmlToMarkdown, override?.body);
   const context: RenderContext = { page, subject, body, twinHref: resolveLink };
   if (typeof renderer === 'function' && rule?.content !== 'omit') body = await renderer(context);
   if (tree.hooks?.transformMarkdown && rule?.content !== 'omit') {

@@ -22,6 +22,24 @@ beforeEach(() => {
 });
 afterEach(() => fs.rmSync(outDir, { recursive: true, force: true }));
 
+test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
+  "keeps marked HTML usage citations after an authored body with tree=%p",
+  async (tree) => {
+    write("guide.html", `<main><h1>Guide</h1><p>Rendered body is replaced.</p>
+      <section data-llm-supplement><h2>Usage</h2>
+        <p data-llm-supplement>Used in <a href="/guide-related">another guide</a>.</p>
+        <p data-llm-ignore>Ignored citation</p>
+      </section><ul data-llm-supplement><li>Package information</li></ul></main>`);
+    write("guide-related.html", "<main><h1>Another guide</h1><p>Related guide.</p></main>");
+    await generate({ outDir, siteUrl, tree, pageContent: ({ route }) => route === "/guide" ? { body: "Authored body." } : undefined });
+    const twin = read("guide.md");
+    assert.match(twin, /Authored body\.[\s\S]*## Usage[\s\S]*Package information/);
+    assert.equal((twin.match(/Used in/g) ?? []).length, 1);
+    assert.ok(twin.includes(`[another guide](${siteUrl}/guide-related${tree ? ".md" : ""})`));
+    assert.doesNotMatch(twin, /Rendered body is replaced|Ignored citation/);
+  }
+);
+
 test("refuses symlinked artifact files and parent directories before writing", () => {
   const outside = fs.mkdtempSync(join(tmpdir(), "llms-outside-"));
   try {
