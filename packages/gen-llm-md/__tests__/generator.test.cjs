@@ -23,11 +23,12 @@ beforeEach(() => {
 afterEach(() => fs.rmSync(outDir, { recursive: true, force: true }));
 
 test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
-  "separates HTML heading text at element boundaries with tree=%p",
+  "separates heading lines without splitting inline text with tree=%p",
   async (tree) => {
     write("index.html", "<main><h1>Example<br>Site</h1><p>Welcome.</p></main>");
-    write("guide.html", "<main><h1>Example<br>Guide<span>for<strong>new</strong></span>users</h1><p>Introduction.</p></main>");
-    write("reference.html", "<main><h1 data-title>Example<span>Reference</span></h1><p>Details.</p></main>");
+    write("guide.html", "<main><h1>Example<br>Guide <span>for <strong>new</strong></span> users</h1><p>Introduction.</p></main>");
+    write("reference.html", "<main><h1 data-title>Example <span>Reference</span></h1><p>Details.</p></main>");
+    write("language.html", "<main><h1>C<span>++</span><br>Example (see <em>guide</em>)</h1><p>Details.</p></main>");
     await generate({ outDir, siteUrl, tree, pageContent: markdownSource([], { titleSelector: "[data-title]" }) });
 
     assert.match(read("llms.txt"), /^# Example Site\n/);
@@ -35,6 +36,7 @@ test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }],
     assert.match(read("llms.txt"), /\[Example Reference\]/);
     assert.match(read("guide.md"), /^# Example Guide for new users\n/);
     assert.doesNotMatch(read("guide.md"), /^## /m);
+    assert.match(read("language.md"), /^# C\+\+ Example \(see guide\)\n/);
   }
 );
 

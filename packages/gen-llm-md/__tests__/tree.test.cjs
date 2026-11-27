@@ -217,7 +217,7 @@ test("renders a graph page whose only content is its split heading", async () =>
 
 test("separates HTML collection titles and summaries at element boundaries", async () => {
   page("guide", [], `<div data-cards><a href="/example">
-    <h2>Example<span>Item</span></h2><div data-summary><div>First</div><div>detail<br>here</div></div>
+    <h2>Example <span>Item</span></h2><div data-summary><div>First</div><div>detail<br>here</div></div>
   </a></div>`);
   await generate({
     outDir, siteUrl,

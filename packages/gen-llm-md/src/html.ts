@@ -11,9 +11,11 @@ const converter = new NodeHtmlMarkdown({ codeFence: '```' }, {
   }),
 });
 
+const textBoundaries = 'br, hr, address, article, aside, blockquote, caption, dd, details, dialog, div, dl, dt, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, li, main, menu, nav, ol, p, pre, section, summary, table, tbody, td, tfoot, th, thead, tr, ul';
+
 export function htmlText(node: ReturnType<CheerioAPI>): string {
   const copy = node.clone();
-  copy.find('*').before(' ').after(' ');
+  copy.find(textBoundaries).before(' ').after(' ');
   return text(copy.text());
 }
 
