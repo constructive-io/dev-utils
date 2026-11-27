@@ -74,7 +74,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
     const { site, twins, index, canonicalMap } = await planTree(config, config.tree, pipeline, { allowed, clean });
     const artifacts = twins.map(({ file, markdown }) => markdownArtifact(file, markdown));
     artifacts.push({ file: 'llms.txt', contents: index });
-    artifacts.push(...pipeline.planManifest(outDir, twins, config.stale));
+    artifacts.push(...pipeline.planManifest(outDir, twins, config.stale, siteUrl));
     return { site, twins, artifacts, canonicalMap };
   }
   const twins: Twin[] = [...await (config.nativeMarkdown?.() ?? [])];
@@ -135,7 +135,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
   const sections = (config.index?.sections ?? defaultSections)(twins);
   const artifacts = twins.map(({ file, markdown }) => markdownArtifact(file, markdown));
   artifacts.push({ file: 'llms.txt', contents: pipeline.renderIndex(site, sections, siteUrl) });
-  artifacts.push(...pipeline.planManifest(outDir, twins, config.stale));
+  artifacts.push(...pipeline.planManifest(outDir, twins, config.stale, siteUrl));
   return { site, twins, artifacts };
 }
 

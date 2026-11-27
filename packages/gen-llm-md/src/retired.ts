@@ -7,9 +7,10 @@ import { parsePage } from './html';
 import { http, linkKey, markdownHref } from './navigation';
 import { inline } from './render';
 
-export function retiredPageNotice(outDir: string, siteUrl: string): Exclude<StaleOptions['unavailable'], boolean | undefined> {
+export function retiredPageNotice(defaultDir: string, defaultSiteUrl: string): Exclude<StaleOptions['unavailable'], boolean | undefined> {
   let exports: Map<string, ReturnType<typeof discoverPages>[number]> | undefined;
-  return ({ route }) => {
+  return ({ route }, options) => {
+    const { outDir = defaultDir, siteUrl = defaultSiteUrl } = options ?? {};
     exports ??= new Map(discoverPages(outDir).map((page) => [linkKey(sitePath(siteUrl, page.route)), page]));
     const source = sitePath(siteUrl, route);
     const key = linkKey(source);

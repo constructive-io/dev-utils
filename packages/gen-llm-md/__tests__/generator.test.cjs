@@ -415,6 +415,25 @@ test("CLI loads an ESM config and dry-run never writes artifacts", () => {
   assert.match(read("index.md"), /^# Configured\n/);
 });
 
+test("CLI retirement notices use the overridden export directory and site URL", async () => {
+  write("actual/index.html", "<main><h1>Home</h1></main>");
+  write("actual/guide.html", "<main><h1>Original guide</h1></main>");
+  await generate({ outDir: join(outDir, "actual"), siteUrl });
+  write("actual/guide.html", '<meta http-equiv="refresh" content="0; url=/reference">');
+  write("actual/reference.html", "<main><h1>Reference</h1></main>");
+  write("llms.config.mjs", `
+    import { retiredPageNotice } from ${JSON.stringify(resolve(__dirname, "../dist/index.js"))};
+    export default { siteUrl: "https://configured.example", outDir: "absent",
+      stale: { unavailable: retiredPageNotice("absent", "https://configured.example") } };
+  `);
+  const cli = resolve(__dirname, "../dist/cli.js");
+  const run = spawnSync(process.execPath,
+    [cli, "generate", "--config", "./llms.config.mjs", "--dir", "actual", "--site-url", siteUrl],
+    { encoding: "utf8", cwd: outDir });
+  assert.equal(run.status, 0, run.stderr);
+  assert.match(read("actual/guide.md"), /https:\/\/example\.com\/reference/);
+});
+
 test.each(["https://example.com/project/", "https://example.com/project"])(
   "keeps the site path prefix in the index and Markdown sources for %s",
   async (base) => {
