@@ -169,8 +169,8 @@ export class TerminalKeypress {
   private setupListeners(): void {
     this.dataHandler = (chunk: string) => {
       if (!this.active) {
-        // A cancel-key handler hears Ctrl-C also while no prompt reads keys.
         if (this.cancelKey && chunk.includes(KEY_CODES.CTRL_C)) this.cancelKey('interrupt');
+        else if (this.cancelKey && chunk.includes(KEY_CODES.CTRL_D)) this.cancelKey('end-of-input');
         return;
       }
       // A chunk carrying several keypresses (paste, fast typing) matches no

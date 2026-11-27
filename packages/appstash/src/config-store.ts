@@ -175,8 +175,15 @@ export function createConfigStore(toolName: string, options?: ConfigStoreOptions
   const dirs = appstash(stashName, { ensure: true, baseDir: options?.baseDir });
   // Directories that already exist may be readable by others; tighten only the ones this store owns.
   const owned = [dirs.root, dirs.config, dirs.cache, dirs.data, dirs.logs, resolve(dirs, 'config', 'contexts'), resolve(dirs, 'config', 'vars')];
-  for (const dir of owned) {
-    if (fs.existsSync(dir) && (fs.statSync(dir).mode & 0o777) !== DIRECTORY_MODE) fs.chmodSync(dir, DIRECTORY_MODE);
+  const skipped: string[] = [];
+  for (const dir of new Set(owned)) {
+    if (skipped.some((parent) => dir.startsWith(parent + path.sep))) continue;
+    const stat = fs.lstatSync(dir, { throwIfNoEntry: false });
+    if (!stat?.isDirectory()) {
+      skipped.push(dir);
+      continue;
+    }
+    if ((stat.mode & 0o777) !== DIRECTORY_MODE) fs.chmodSync(dir, DIRECTORY_MODE);
   }
 
   function settingsPath(): string {

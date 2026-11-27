@@ -1,5 +1,6 @@
 import readline from 'readline';
 import { Readable, Writable } from 'stream';
+import stringWidth from 'string-width';
 import { blue, dim, gray, red, white, whiteBright, yellow } from 'yanse';
 
 import { CancelReason, KEY_CODES, TerminalKeypress } from './keypress';
@@ -243,7 +244,8 @@ export class Inquirerer {
   private drawnLines = 0;
   private cancelError: ((reason: CancelReason) => Error) | undefined;
   private cancelPending: ((reason: CancelReason) => void) | null = null;
-  private inputEnded = false;
+  private stopPassword: (() => void) | null = null;
+  private closed = false;
   private onInputEnd: (() => void) | null = null;
 
   private _inactivityTimer: ReturnType<typeof setTimeout> | null = null;
@@ -309,7 +311,9 @@ export class Inquirerer {
       rl.on('SIGINT', () => undefined);
       // Readline also closes itself at the end of input (Ctrl-D on a terminal); a close by this class unsets this.rl first.
       rl.on('close', () => {
-        if (this.rl === rl) this.cancel('end-of-input');
+        if (this.rl !== rl) return;
+        this.rl = null;
+        this.cancel('end-of-input');
       });
     }
     return rl;
@@ -327,7 +331,11 @@ export class Inquirerer {
 
   private write(message: string) {
     this.output.write(message);
-    this.drawnLines += message.split('\n').length - 1;
+    const columns = (this.output as Writable & { columns?: number }).columns;
+    const lines = message.split('\n').slice(0, -1);
+    this.drawnLines += columns > 0
+      ? lines.reduce((rows, line) => rows + Math.max(1, Math.ceil(stringWidth(line) / columns)), 0)
+      : lines.length;
   }
 
   private log(message: string) {
@@ -336,7 +344,6 @@ export class Inquirerer {
 
   /** With onCancel set: the pending prompt ends as cancelled; Ctrl-C with no prompt pending sends SIGINT to the process. */
   private cancel(reason: CancelReason): void {
-    if (reason === 'end-of-input') this.inputEnded = true;
     const settle = this.cancelPending;
     if (settle) {
       this.cancelPending = null;
@@ -596,31 +603,37 @@ export class Inquirerer {
       }
 
       while (ctx.needsInput) {
-        if (this.cancelError && !this.noTty && (this.inputEnded || this.input.readableEnded)) throw this.cancelError('end-of-input');
+        if (this.closed || (this.cancelError && !this.noTty && (this.input.readableEnded || this.input.destroyed))) {
+          throw this.cancelError?.('end-of-input') ?? new Error('Prompt input is closed.');
+        }
+        if (this.cancelError && !this.noTty && !this.rl) this.rl = this.createReadline();
         const timeoutPromise = this.startInactivityTimeout(question, ordered);
-        const cancelled = this.cancelError
-          ? new Promise<CancelReason>((resolve) => { this.cancelPending = resolve; })
-          : null;
+        const cancelled = new Promise<PromptOutcome>((resolve) => {
+          this.cancelPending = (reason) => resolve({ kind: 'cancelled', reason });
+        });
         const removeActivityListener = this.setupInputActivityListener();
+        let answeredNormally = false;
         try {
           this.drawnLines = 0;
           const answered = this.handleQuestionType(question, ctx).then((value): PromptOutcome => ({ kind: 'answer', value }));
           const outcome = await Promise.race<PromptOutcome>([
             answered,
             ...(timeoutPromise ? [timeoutPromise] : []),
-            ...(cancelled ? [cancelled.then((reason): PromptOutcome => ({ kind: 'cancelled', reason }))] : [])
+            cancelled
           ]);
           switch (outcome.kind) {
           case 'answer':
             obj[question.name] = outcome.value;
+            answeredNormally = true;
             break;
           case 'cancelled':
-            throw this.cancelError(outcome.reason);
+            throw this.cancelError?.(outcome.reason) ?? new Error('Prompt input is closed.');
           }
         } finally {
           removeActivityListener();
           this.clearInactivityTimeout();
           this.cancelPending = null;
+          if (!answeredNormally && !this.closed) this.resetQuestion();
         }
 
         if (!this.isValid(question, obj, ctx)) {
@@ -1078,13 +1091,28 @@ export class Inquirerer {
     });
 
     return new Promise<string | null>((resolve) => {
+      this.stopPassword = () => {
+        this.stopPassword = null;
+        resolve(null);
+      };
       this.keypress.on(KEY_CODES.ENTER, () => {
-        this.keypress.pause();
+        this.stopPassword = null;
         this.write('\n');
-        this.rl = this.createReadline();
+        this.resetQuestion();
         resolve(input.trim() !== '' ? input : null);
       });
     });
+  }
+
+  private resetQuestion(): void {
+    this.stopPassword?.();
+    this.keypress?.pause();
+    const rl = this.rl;
+    this.rl = null;
+    rl?.close();
+    if (!this.noTty && !this.input.readableEnded && !this.input.destroyed) {
+      this.rl = this.createReadline();
+    }
   }
 
   public async checkbox(question: CheckboxQuestion, ctx: PromptContext): Promise<OptionValue[]> {
@@ -1599,6 +1627,9 @@ export class Inquirerer {
   // Method to cleanly close the readline interface
   // NOTE: use exit() to close!
   public close() {
+    this.closed = true;
+    this.cancelPending?.('end-of-input');
+    this.stopPassword?.();
     if (this.rl) {
       const rl = this.rl;
       this.rl = null;

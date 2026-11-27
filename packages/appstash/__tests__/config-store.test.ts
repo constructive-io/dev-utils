@@ -735,5 +735,21 @@ describe('createConfigStore', () => {
       expect(owned().map(mode)).toEqual(owned().map(() => 0o700));
       expect(mode(tempBase)).toBe(0o755);
     });
+
+    (posix ? it : it.skip)('does not chmod a symlink target or directories under it', () => {
+      const dirs = appstash('testapp', { baseDir: tempBase });
+      const target = path.join(tempBase, 'elsewhere');
+      const contexts = path.join(target, 'contexts');
+      fs.mkdirSync(contexts, { recursive: true });
+      fs.chmodSync(target, 0o755);
+      fs.chmodSync(contexts, 0o755);
+      fs.mkdirSync(dirs.root);
+      fs.symlinkSync(target, dirs.config);
+
+      createStore();
+
+      expect(mode(target)).toBe(0o755);
+      expect(mode(contexts)).toBe(0o755);
+    });
   });
 });

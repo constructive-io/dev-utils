@@ -4,7 +4,7 @@ import { CancelReason, Inquirerer } from '../src';
 import { Question } from '../src/question';
 
 /** A fake terminal: readline sees a TTY on both ends, so it runs in terminal mode as it does for a person. */
-function terminal() {
+function terminal(columns = 80) {
   const input = new PassThrough();
   Object.assign(input, { isTTY: true, setRawMode: () => input });
   let raw = '';
@@ -14,7 +14,7 @@ function terminal() {
       callback();
     }
   });
-  Object.assign(output, { isTTY: true, columns: 80, rows: 24 });
+  Object.assign(output, { isTTY: true, columns, rows: 24 });
   return { input, output, raw: () => raw };
 }
 
@@ -60,6 +60,18 @@ describe('the clearScreen option', () => {
     expect(erased.length).toBeGreaterThanOrEqual(2);
     expect(erased).toEqual(drawn);
   });
+
+  it('erases wrapped rows, including wide and colorized text', async () => {
+    const term = terminal(20);
+    const prompter = new Inquirerer({ input: term.input, output: term.output, clearScreen: false });
+    const answers = prompter.prompt({}, [{ ...list, type: 'list', options: ['界'.repeat(20), 'b'] }]);
+    await tick();
+    await type(term.input, ['\u001b[B', '\r']);
+    expect(await answers).toEqual({ pick: 'b' });
+    prompter.close();
+
+    expect(term.raw()).toContain('\x1b[6A\r\x1b[J');
+  });
 });
 
 describe('the onCancel option', () => {
@@ -100,6 +112,45 @@ describe('the onCancel option', () => {
     await tick();
     term.input.end();
     expect(await outcome).toEqual(new Cancelled('end-of-input'));
+    prompter.close();
+  });
+
+  it('handles Ctrl-D on a nonempty readline line after a list, without closing later prompts', async () => {
+    const term = terminal();
+    const prompter = new Inquirerer({ input: term.input, output: term.output, onCancel: (why) => new Cancelled(why) });
+    const outcome = outcomeOf(prompter.prompt({}, [list, text]));
+    await tick();
+    await type(term.input, ['\r', 'abc', '\x04']);
+    expect(await outcome).toEqual(new Cancelled('end-of-input'));
+
+    const next = outcomeOf(prompter.prompt({}, [text]));
+    await tick();
+    await type(term.input, ['next', '\r']);
+    expect(await next).toEqual({ name: 'next' });
+    prompter.close();
+  });
+
+  it.each([true, false])('settles a pending prompt on close (onCancel=%s)', async (withCancel) => {
+    const term = terminal();
+    const prompter = new Inquirerer({
+      input: term.input,
+      output: term.output,
+      onCancel: withCancel ? (why) => new Cancelled(why) : undefined
+    });
+    const outcome = outcomeOf(prompter.prompt({}, [list]));
+    await tick();
+    prompter.close();
+    expect(await outcome).toEqual(withCancel ? new Cancelled('end-of-input') : new Error('Prompt input is closed.'));
+  });
+
+  it('does not lose the ability to prompt after Ctrl-D while idle', async () => {
+    const term = terminal();
+    const prompter = new Inquirerer({ input: term.input, output: term.output, onCancel: (why) => new Cancelled(why) });
+    await type(term.input, ['\x04']);
+    const next = outcomeOf(prompter.prompt({}, [text]));
+    await tick();
+    await type(term.input, ['next', '\r']);
+    expect(await next).toEqual({ name: 'next' });
     prompter.close();
   });
 

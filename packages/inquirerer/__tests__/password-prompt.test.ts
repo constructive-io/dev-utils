@@ -1,12 +1,18 @@
 import { stripAnsi } from 'clean-ansi';
 import { PassThrough, Writable } from 'stream';
 
-import { Inquirerer } from '../src';
+import { Inquirerer, PromptTimeoutError } from '../src';
 
 /** A fake terminal: readline sees a TTY on both ends, so it runs in terminal mode and echoes what it reads. */
 function terminal() {
-  const input = new PassThrough();
-  Object.assign(input, { isTTY: true, setRawMode: () => input });
+  const input = Object.assign(new PassThrough(), {
+    isTTY: true,
+    isRaw: false,
+    setRawMode(raw: boolean) {
+      this.isRaw = raw;
+      return this;
+    }
+  });
   let raw = '';
   const output = new Writable({
     write(chunk, _encoding, callback) {
@@ -61,5 +67,36 @@ describe('the password prompt', () => {
     await type(term.input, ['\x04']);
     expect(await next).toEqual(new Error('end-of-input'));
     prompter.close();
+  });
+
+  it.each([
+    ['interrupt', '\x03'],
+    ['end-of-input', '\x04'],
+    ['timeout', undefined]
+  ])('restores the terminal and accepts another question after %s', async (reason, key) => {
+    const term = terminal();
+    const prompter = new Inquirerer({
+      input: term.input,
+      output: term.output,
+      ...(key ? { onCancel: (why) => new Error(why) } : { timeout: 50 })
+    });
+    const isRaw = term.input.isRaw;
+    try {
+      const failure = prompter.prompt({}, [{ type: 'password', name: 'pw', message: 'Enter it' }]).catch((error) => error);
+      await tick();
+      term.input.write('secret');
+      if (key) term.input.write(key);
+      expect(await failure).toEqual(key ? new Error(reason) : expect.any(PromptTimeoutError));
+      expect(term.input.isRaw).toBe(isRaw);
+
+      const next = prompter.prompt({}, [{ type: 'text', name: 'name', message: 'Name' }]);
+      await tick();
+      term.input.write('next\r');
+      expect(await next).toEqual({ name: 'next' });
+      expect(term.text()).not.toContain('secret');
+    } finally {
+      prompter.close();
+    }
+    expect(term.input.isRaw).toBe(false);
   });
 });
