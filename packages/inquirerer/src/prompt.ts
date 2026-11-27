@@ -376,6 +376,7 @@ export class Inquirerer {
   }
 
   private isValid(question: Question, obj: any, ctx: PromptContext): boolean {
+    const unselectedCheckbox = question.required && this.isUnselectedCheckbox(question, obj[question.name]);
     if (this.isValidatableAnswer(obj[question.name])) {
       obj[question.name] = this.sanitizeAnswer(question, obj[question.name], obj);
       const validationResult = this.validateAnswer(question, obj[question.name], obj, ctx);
@@ -384,7 +385,7 @@ export class Inquirerer {
       }
     }
 
-    if (question.required && this.isEmptyAnswer(obj[question.name])) {
+    if (question.required && (unselectedCheckbox || this.isMissingAnswer(question, obj[question.name]))) {
       ctx.tryAgain({ type: 'required' });
       return false;
     }
@@ -422,6 +423,11 @@ export class Inquirerer {
       return true;
     }
     return false;
+  }
+
+  private isUnselectedCheckbox(question: Question, answer: any): boolean {
+    return question.type === 'checkbox' && question.returnFullResults && Array.isArray(answer)
+      && answer.every(option => option?.selected === false);
   }
 
   private sanitizeAnswer(question: Question, answer: any, obj: any): any {
@@ -482,25 +488,6 @@ export class Inquirerer {
     // first loop through the question, and set any overrides in case other questions use objs for validation
     this.applyOverrides(obj, obj, questions);
 
-    // Check for required arguments when no terminal is available (non-interactive mode)
-    if (this.noTty && this.hasMissingRequiredArgs(questions, argv)) {
-
-      // Apply default values for all questions
-      this.applyDefaultValues(questions, obj);
-
-      // Recheck for missing required arguments after applying defaults
-      // NOT so sure this would ever happen, but possible if developer did something wrong
-      if (!this.hasMissingRequiredArgs(questions, argv)) {
-        return obj as T;  // Return the updated object if no required arguments are missing
-      }
-
-      // Handle error for missing required arguments
-      this.handleMissingArgsError(options);
-      throw new Error('Missing required arguments. Please provide all required parameters.');
-    }
-
-
-
     const ordered = reorderQuestionsByDeps(questions);
 
     for (let index = 0; index < ordered.length; index++) {
@@ -509,6 +496,10 @@ export class Inquirerer {
 
       // obj is already either argv itself, or a clone, but let's check if it has the property
       if (question.name in obj) {
+        if (this.noTty && question.required && this.isMissingAnswer(question, obj[question.name])
+          && (!question.when || question.when(obj))) {
+          this.throwMissingArgsError(options);
+        }
         this.handleOverrides(argv, obj, question);
         ctx.nextQuestion();
         continue;
@@ -516,6 +507,17 @@ export class Inquirerer {
 
       if (question.when && !question.when(obj)) {
         ctx.nextQuestion();
+        continue;
+      }
+
+      if (this.noTty && question.required) {
+        if (!('default' in question)) {
+          this.throwMissingArgsError(options);
+        }
+        obj[question.name] = this.defaultAnswer(question);
+        if (!this.isValid(question, obj, ctx)) {
+          this.throwMissingArgsError(options);
+        }
         continue;
       }
 
@@ -532,7 +534,10 @@ export class Inquirerer {
       // this is if useDefault is set, rare! not typical defaults which happen AFTER
       // this is mostly to avoid a prompt for "hidden" options
       if ('default' in question && (this.useDefaults || question.useDefault)) {
-        obj[question.name] = question.default;
+        obj[question.name] = this.defaultAnswer(question);
+        if (this.noTty && !this.isValid(question, obj, ctx)) {
+          this.throwMissingArgsError(options);
+        }
         continue;  // Skip to the next question since the default is applied
       }
 
@@ -551,9 +556,7 @@ export class Inquirerer {
 
         if (!this.isValid(question, obj, ctx)) {
           if (this.noTty) {
-            // If you're not valid and here with noTty, you're out!
-            this.clearScreen(); // clear before leaving, not calling exit() since it may be a bad pattern to continue, devs should try/catch
-            throw new Error('Missing required arguments. Please provide all required parameters.');
+            this.throwMissingArgsError(options);
           }
           continue;
         }
@@ -565,7 +568,7 @@ export class Inquirerer {
     return obj as T;
   }
 
-  private handleMissingArgsError(options?: { usageText?: string; manPageInfo?: any }): void {
+  private throwMissingArgsError(options?: PromptOptions): never {
     this.clearScreen();
     if (options?.usageText) {
       this.log(options.usageText);
@@ -574,10 +577,11 @@ export class Inquirerer {
     } else {
       this.log('Missing required arguments. Please provide all required parameters.');
     }
+    throw new Error('Missing required arguments. Please provide all required parameters.');
   }
 
-  private hasMissingRequiredArgs(questions: Question[], argv: any): boolean {
-    return questions.some(question => question.required && this.isEmptyAnswer(argv[question.name]));
+  private isMissingAnswer(question: Question, answer: any): boolean {
+    return this.isEmptyAnswer(answer) || this.isUnselectedCheckbox(question, answer);
   }
 
   /**
@@ -731,12 +735,8 @@ export class Inquirerer {
     return positionalIndex;
   }
 
-  private applyDefaultValues(questions: Question[], obj: any): void {
-    questions.forEach(question => {
-      if ('default' in question) {
-        obj[question.name] = question.default;  // Set default value if specified
-      }
-    });
+  private defaultAnswer(question: Question): any {
+    return question.type === 'checkbox' ? this.checkboxDefault(question) : question.default;
   }
 
   private applyOverrides(argv: any, obj: any, questions: Question[]): void {
@@ -1015,32 +1015,26 @@ export class Inquirerer {
     });
   }
 
+  private checkboxSelections(question: CheckboxQuestion, options: OptionValue[]): boolean[] {
+    const value = question.default;
+    const defaults = Array.isArray(value) ? value : [value];
+    return options.map(opt => defaults.includes(opt.name) || defaults.includes(String(opt.value)));
+  }
+
+  private checkboxDefault(question: CheckboxQuestion): OptionValue[] {
+    const options = this.sanitizeOptions(question);
+    const selections = this.checkboxSelections(question, options);
+    const results = options.map(({ name, value }, index) => ({
+      name,
+      value,
+      selected: selections[index]
+    }));
+    return question.returnFullResults ? results : results.filter(opt => opt.selected);
+  }
+
   public async checkbox(question: CheckboxQuestion, ctx: PromptContext): Promise<OptionValue[]> {
     if (this.noTty || !this.rl) {
-      const options = this.sanitizeOptions(question);
-
-      const defaults = Array.isArray(question.default)
-        ? question.default
-        : [question.default];
-
-      // If returnFullResults is true, return all options with boolean selection
-      if (question.returnFullResults) {
-        return options.map(opt => ({
-          name: opt.name,
-          value: opt.value,
-          selected: defaults.includes(opt.name)
-        }));
-      }
-
-      // Otherwise, return only selected options
-      return options
-        .filter(opt => defaults.includes(opt.name) || defaults.includes(opt.value))
-        .map(opt => ({
-          name: opt.name,
-          value: opt.value,
-          selected: true
-        }));
-
+      return this.checkboxDefault(question);
     }
 
     if (!question.options.length) {
@@ -1057,15 +1051,7 @@ export class Inquirerer {
     const maxLines = this.getMaxLines(question, options.length); // Use provided max or total options
     // const selections: boolean[] = new Array(options.length).fill(false);
 
-    const selections: boolean[] = options.map(opt => {
-      if (!question.default) return false;
-
-      const defaults = Array.isArray(question.default)
-        ? question.default
-        : [question.default];
-
-      return defaults.includes(opt.name);
-    });
+    const selections = this.checkboxSelections(question, options);
 
     const updateFilteredOptions = (): void => {
       filteredOptions = this.filterOptions(options, input);
