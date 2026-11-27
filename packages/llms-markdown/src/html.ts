@@ -31,6 +31,9 @@ export function parsePage(page: ExportPage, html: string, siteUrl: string): Pars
     get jsonld() {
       return (jsonld ??= readJsonld());
     },
+    set jsonld(value: ParsedPage['jsonld']) {
+      jsonld = value;
+    },
   };
 }
 

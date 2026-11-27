@@ -220,3 +220,16 @@ test("does not parse JSON-LD on redirects or noindex pages", async () => {
   write("visible.html", malformed);
   await assert.rejects(planGeneration({ outDir, siteUrl }), /Invalid JSON-LD in visible\.html/);
 });
+
+test("allows a route transform to replace parsed JSON-LD", async () => {
+  const url = `${siteUrl}/guide`;
+  write("guide.html", graph({ "@type": "WebPage", url, name: "Original title" }) + "<main><p>Guide</p></main>");
+  await generate({
+    outDir, siteUrl,
+    transforms: [{ match: "/guide", apply(page) {
+      "use strict";
+      page.jsonld = [{ "@type": "WebPage", url, name: "Replacement title" }];
+    } }],
+  });
+  assert.match(read("guide.md"), /^# Replacement title\n/);
+});
