@@ -30,6 +30,12 @@ export function urlFor(value: unknown, base: URL): URL | undefined {
 const pathKey = (url: URL) => url.pathname.replace(/\/$/, '');
 export const sameRoute = (a: URL, b: URL) => a.origin === b.origin && pathKey(a) === pathKey(b);
 
+export function sitePath(siteUrl: string, path: string): URL {
+  const base = new URL(siteUrl);
+  base.pathname = `${pathKey(base)}/`;
+  return new URL(path.replace(/^\/+/, ''), base);
+}
+
 function matches(value: unknown, url: URL): boolean {
   const candidate = urlFor(value, url);
   return !!candidate && sameRoute(candidate, url);

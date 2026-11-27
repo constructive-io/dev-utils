@@ -1,7 +1,7 @@
 import { type CheerioAPI, load } from 'cheerio';
 import { NodeHtmlMarkdown } from 'node-html-markdown';
 
-import { entities, sameRoute, text, urlFor } from './entities';
+import { entities, sameRoute, sitePath, text, urlFor } from './entities';
 import type { ExportPage, ParsedPage } from './types';
 
 const converter = new NodeHtmlMarkdown({ codeFence: '```' }, {
@@ -13,7 +13,7 @@ const converter = new NodeHtmlMarkdown({ codeFence: '```' }, {
 
 export function parsePage(page: ExportPage, html: string, siteUrl: string): ParsedPage {
   const $ = load(html);
-  const url = new URL(page.route, siteUrl);
+  const url = sitePath(siteUrl, page.route);
   const canonical = urlFor($('link[rel="canonical"]').attr('href'), url);
   const jsonld = $('script[type="application/ld+json"]').toArray().flatMap((script) => {
     try {

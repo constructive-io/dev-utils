@@ -1,3 +1,4 @@
+import { sitePath } from './entities';
 import type { IndexPage, IndexSection, PageContent, ParsedPage, SiteIdentity, Twin } from './types';
 
 export const inline = (value: string) => value.replace(/([\\`*_[\]<>])/g, '\\$1');
@@ -56,7 +57,7 @@ export function renderIndex(site: SiteIdentity, sections: readonly IndexSection[
     if (!section.pages.length) continue;
     lines.push('', `## ${inline(section.title)}`, '');
     for (const page of section.pages) {
-      const href = new URL(`/${page.file}`, siteUrl).href;
+      const href = sitePath(siteUrl, page.file).href;
       lines.push(`- [${inline(indexTitle(page))}](${href})${page.description ? `: ${inline(page.description)}` : ''}`);
     }
   }

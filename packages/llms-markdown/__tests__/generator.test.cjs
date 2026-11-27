@@ -153,3 +153,16 @@ test("CLI loads an ESM config and dry-run never writes artifacts", () => {
   assert.equal(full.status, 0, full.stderr);
   assert.match(read("index.md"), /^# Configured\n/);
 });
+
+test.each(["https://example.com/project/", "https://example.com/project"])(
+  "keeps the site path prefix in the index and Markdown sources for %s",
+  async (base) => {
+    write("guides/topic/index.html", '<main><h1>Topic</h1><a href="../">Guides</a></main>');
+    await generate({ outDir, siteUrl: base });
+    assert.match(read("llms.txt"), /https:\/\/example\.com\/project\/guides\/topic\.md/);
+    assert.match(read("index.md"), /> Source: https:\/\/example\.com\/project\/\n/);
+    const twin = read("guides/topic.md");
+    assert.match(twin, /> Source: https:\/\/example\.com\/project\/guides\/topic\/\n/);
+    assert.match(twin, /\[Guides\]\(https:\/\/example\.com\/project\/guides\/\)/);
+  }
+);
