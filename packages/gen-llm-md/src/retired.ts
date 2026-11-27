@@ -18,10 +18,10 @@ export function retiredPageNotice(defaultDir: string, defaultSiteUrl: string): E
       exports = new Map(discoverPages(outDir).map((page) => [linkKey(sitePath(siteUrl, page.route)), page]));
       if (options) inventories.set(options, exports);
     }
-    const source = sitePath(siteUrl, route);
-    const key = linkKey(source);
+    const key = linkKey(sitePath(siteUrl, route));
     const entry = exports.get(key);
     if (!entry) return unavailable;
+    const source = sitePath(siteUrl, entry.route);
 
     let html: string;
     try {

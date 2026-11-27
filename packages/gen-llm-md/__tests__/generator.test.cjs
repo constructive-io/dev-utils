@@ -293,6 +293,18 @@ test("a reused retirement callback handles removed redirect exports", async () =
   assert.match(read("guide.md"), /^# Page no longer available/);
 });
 
+test("resolves relative refreshes against the current export layout", async () => {
+  const config = { outDir, siteUrl };
+  write("guide/index.html", "<main><h1>Original guide</h1></main>");
+  await generate(config);
+  fs.unlinkSync(join(outDir, "guide/index.html"));
+  write("guide.html", '<meta http-equiv="refresh" content="0; url=reference">');
+  write("reference.html", "<main><h1>Reference</h1></main>");
+  write("guide/reference.html", "<main><h1>Another reference</h1></main>");
+  await generate({ ...config, stale: { unavailable: retiredPageNotice(outDir, siteUrl) } });
+  assert.match(read("guide.md"), /\(https:\/\/example\.com\/reference\)/);
+});
+
 test("refuses planned deletions after the target is edited or replaced by a symlink", async () => {
   const config = { outDir, siteUrl };
   write("guide.html", "<main><h1>Original guide</h1></main>");
