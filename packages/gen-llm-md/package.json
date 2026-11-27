@@ -1,6 +1,6 @@
 {
   "name": "gen-llm-md",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Generate llms.txt and Markdown twins from a static HTML export",
   "main": "index.js",
   "module": "esm/index.js",
