@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { renderCollection } from './collection';
 import { list, name, sameRoute, sitePath, text, types, urlFor } from './entities';
 import { entityId, pageEntities, pageSubject, renderFacts, schemaType } from './facts';
+import { deriveGraphTree } from './graph-tree';
 import { collapseAdjacentImages, ignoredContent, removePageChrome } from './html';
 import type { Config, Pipeline } from './index';
 import { http, linkKey, markdownHref, rewriteMarkdownLinks, routeKey, twinLink } from './navigation';
@@ -190,7 +191,8 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
   const entries = new Map<string, Entry>();
   const routes = new Set<string>();
   const entities = new Set<string>();
-  for (const row of tree.placements) {
+  const derived = tree.graph && deriveGraphTree(pages, tree.sections, tree.graph);
+  for (const row of derived?.placements ?? tree.placements ?? []) {
     validatePlacement(row);
     if (entries.has(row.key) || sections.has(row.key)) throw new Error(`Duplicate tree key: ${row.key}`);
     const entry: Entry = { ...row, title: '', summary: '' };
@@ -210,6 +212,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     if (!page && route !== undefined) throw new Error(`Unknown HTML route: ${row.route}`);
     if (page) {
       entry.source = pageCanonical(page, siteUrl, policy.allowed);
+      if (derived && !matchesExportRoute(entry.source, sitePath(siteUrl, page.route))) entry.source = page.url;
       if (!matchesExportRoute(entry.source, sitePath(siteUrl, page.route))) {
         if (row.tier === 'page') entry.tier = 'child';
       } else if (hasTwin) {
@@ -224,9 +227,10 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     if (id && entities.has(id)) throw new Error(`Duplicate tree entity: ${row.entityId}`);
     if (id) entities.add(id);
     const located = id && !page ? lookup(row) : undefined;
-    const subject = page ? (id ? graph(page).get(id) : pageSubject(page, graph(page))) : located?.node;
+    const subject = page ? (id ? graph(page).get(id) :
+      derived?.subjects.get(route!) ?? pageSubject(page, graph(page))) : located?.node;
     if (row.entityId && !subject) throw new Error(`Unknown page entity for ${row.key}: ${row.entityId}`);
-    if (entry.page && row.tier === 'page' && !row.collection && route && !subject) {
+    if (!derived && entry.page && row.tier === 'page' && !row.collection && route && !subject) {
       throw new Error(`Missing page entity for ${row.key}; declare entityId or a collection`);
     }
     entry.subject = subject;
@@ -237,7 +241,7 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     const summaries = [row.summary, entry.override?.description, entry.native?.description, text(subject?.description)];
     entry.summary = summaries.map((value) => policy.clean(text(value))).find((value) =>
       value && (route === '' || !commonSummary.has(value.toLowerCase()))) ?? '';
-    if (entry.tier === 'page' && route && subject && !entry.summary) {
+    if (!derived && entry.tier === 'page' && route && subject && !entry.summary) {
       throw new Error(`Missing page-specific description for ${row.key}`);
     }
   }

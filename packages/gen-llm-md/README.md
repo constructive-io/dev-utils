@@ -1,5 +1,36 @@
 # gen-llm-md
 
+### Derive the tree from page JSON-LD
+
+Use `tree.graph` instead of `tree.placements` to retain every discovered
+indexable HTML page. Declare sections in match order, with an unconditional
+section last as a fallback. Section rank controls presentation order.
+
+```js
+tree: {
+  sections: [
+    { key: 'home', title: 'Home', rank: 0, match: '/' },
+    { key: 'guide', title: 'Guides', rank: 1, match: /^\/guide(?:\/|$)/ },
+    { key: 'products', title: 'Products', rank: 2, types: ['SoftwareApplication'] },
+    { key: 'other', title: 'Other', rank: 3 },
+  ],
+  graph: {
+    parents: ['isPartOf', 'parentOrganization', 'hasPart', 'creator', 'subjectOf'],
+    context: { relations: ['mentions'], types: ['SoftwareApplication'], external: 'optional' },
+  },
+}
+```
+
+Associate a subject with its exported page through `mainEntityOfPage`, a
+matching `url` or `@id`, or the page document's `mainEntity`. Graph relations
+establish parents first, then a matching parent route, then the section.
+Entities sort by `rank` (overridable with `rankProperty`), `position`, then
+newest date (`datePublished`, `startDate`, or `dateCreated`). Contextual
+references are opt-in by relation and type and never replace a local page
+twin. Use `external: 'child'` for unlinked external context or `'omit'` to
+hide it. Titles and descriptions use the page graph first and page-local
+HTML as a fallback when a page has no suitable graph values.
+
 Generate `llms.txt` and Markdown twins from an existing static HTML export. The
 tool reads each page's main content, embedded JSON-LD, and HTML metadata. It
 never crawls the site or fetches a separate JSON-LD dataset.

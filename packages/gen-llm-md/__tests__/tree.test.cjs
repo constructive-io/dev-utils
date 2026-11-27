@@ -42,6 +42,42 @@ beforeEach(() => {
 });
 afterEach(() => fs.rmSync(dir, { recursive: true, force: true }));
 
+test("derives public twins, graph parents and contextual entries without an entity list", async () => {
+  const root = { "@id": id("widget"), "@type": "SoftwareApplication", name: "Widget",
+    description: "The local widget.", mainEntityOfPage: siteUrl + "/widget",
+    hasPart: [{ "@id": id("early") }, { "@id": id("late") }],
+    mentions: [{ "@id": id("local") }, { "@id": id("external") }, { "@id": id("late") }] };
+  const early = entity("early", "First release.", { mainEntityOfPage: siteUrl + "/first", datePublished: "2024-02-01" });
+  const late = entity("late", "Latest release.", { mainEntityOfPage: siteUrl + "/second", datePublished: "2024-03-01" });
+  const local = entity("local", "Supporting capability.");
+  const external = entity("external", "External reference.", { url: "https://example.net/reference" });
+  page("widget", [root, early, late, local, external], '<a href="/second">Current release</a>',
+    '<link rel="canonical" href="https://example.net/widget">');
+  page("first", [early]);
+  page("second", [late]);
+  page("plain", [], "<p>Plain page.</p>");
+  page("noindex", [entity("hidden", "Hidden.")], undefined, '<meta name="robots" content="noindex">');
+  const result = await generate({
+    outDir, siteUrl,
+    tree: {
+      sections: [
+        { key: "home", title: "Home", rank: 0, match: "/" },
+        { key: "reference", title: "Reference", rank: 1, types: ["SoftwareApplication"] },
+        { key: "other", title: "Other", rank: 2 },
+      ],
+      graph: { context: { relations: ["mentions"], types: ["SoftwareApplication"] } },
+    },
+  });
+  const index = read("llms.txt");
+  assert.match(index, /## Home\n\n- \[Home\]\(https:\/\/example\.com\/index\.md\)/);
+  assert.match(index, /## Reference\n\n- \[Widget\].*\n  - \[late\].*\n  - \[early\].*\n  - local: Supporting capability\./);
+  assert.match(index, /## Optional\n\n- \[external\]\(https:\/\/example\.net\/reference\)/);
+  assert.doesNotMatch(index, /example\.net\/widget|noindex|hidden/);
+  assert.match(read("widget.md"), /Source: https:\/\/example\.com\/widget\n/);
+  assert.match(read("widget.md"), /\[Current release\]\(https:\/\/example\.com\/second\.md\)/);
+  assert.deepEqual(result.twins.map(({ file }) => file).sort(), ["first.md", "index.md", "plain.md", "second.md", "widget.md"]);
+});
+
 test("curates a ranked multilevel tree and does not generate twins for contextual, excluded, or unplaced routes", async () => {
   page("parent", [entity("parent", "Project overview.")]);
   page("item", [entity("item", "The useful project.", { isPartOf: { "@id": id("parent") } })]);
