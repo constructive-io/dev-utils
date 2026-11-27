@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/constructive-io/dev-utils/compare/gen-llm-md@0.3.0...gen-llm-md@0.4.0) (2026-11-27)
+
+### Features
+
+- **gen-llm-md:** derive tree placement from exported JSON-LD graphs ([#162](https://github.com/constructive-io/dev-utils/issues/162)) ([15e6b63](https://github.com/constructive-io/dev-utils/commit/15e6b63c66d35b7645879e225f2f6b47bbf258d7))
+- **gen-llm-md:** moved/retired notices and Optional twins in graph mode ([#163](https://github.com/constructive-io/dev-utils/issues/163)) ([c4e19e2](https://github.com/constructive-io/dev-utils/commit/c4e19e2829ba93c7d1a01519c634aaa182354076))
+
 # [0.3.0](https://github.com/constructive-io/dev-utils/compare/gen-llm-md@0.2.2...gen-llm-md@0.3.0) (2026-11-27)
 
 ### Bug Fixes
