@@ -41,6 +41,21 @@ const defaults = {
   features: [{ name: 'search', value: 'search', selected: true }],
 };
 
+function mockTerminal(responses: string[] = []) {
+  const input = Object.assign(new PassThrough(), { isTTY: true, setRawMode: jest.fn() });
+  const output = new PassThrough();
+  let prompts = 0;
+  output.on('data', chunk => {
+    if (chunk.toString().includes('Read the missing answer')) {
+      const response = responses[prompts++];
+      if (response !== undefined) {
+        queueMicrotask(() => input.write(response + '\n'));
+      }
+    }
+  });
+  return { input, output, timeout: 500, prompts: () => prompts };
+}
+
 describe('answer resolution', () => {
   it('uses all supplied required flags instead of defaults in noTty mode', async () => {
     const prompter = new Inquirerer({ noTty: true });
@@ -104,4 +119,88 @@ describe('answer resolution', () => {
       features: [...defaults.features, { name: 'reporting', value: 'reporting', selected: false }],
     });
   });
+
+  it.each([false, true])('preserves all flag types while reading a missing TTY answer (retry: %s)', async retry => {
+    const terminal = mockTerminal(retry ? ['invalid', 'accepted'] : ['accepted']);
+    const prompter = new Inquirerer(terminal);
+    const validate = jest.fn((answer, answers) => answer === 'accepted' && answers.count === 0);
+    try {
+      await expect(prompter.prompt({ ...flags }, [
+        ...questions(),
+        { name: 'extra', type: 'text', message: 'Read the missing answer', validate },
+      ])).resolves.toEqual({ ...resolvedFlags, extra: 'accepted' });
+      expect(terminal.prompts()).toBe(retry ? 2 : 1);
+      expect(validate.mock.calls.map(([answer]) => answer)).toEqual(retry ? ['invalid', 'accepted'] : ['accepted']);
+    } finally {
+      prompter.close();
+    }
+  });
+
+  it('keeps named flags ahead of positionals and positionals ahead of required defaults', async () => {
+    const prompter = new Inquirerer({ noTty: true, mutateArgs: false });
+    const inputs = questions().map(question => ({ ...question, _: true, required: true }));
+    const argv = { label: flags.label, _: [flags.count, flags.confirm, flags.enabled, flags.settings,
+      flags.mode, flags.color, flags.features] };
+    await expect(prompter.prompt(argv, [
+      ...inputs,
+      { name: 'role', type: 'text', required: true, default: 'editor' },
+    ])).resolves.toEqual({ ...resolvedFlags, _: [], role: 'editor' });
+    expect(argv._).toHaveLength(7);
+  });
+
+  it.each([false, true])('keeps supplied answers even when their question is disabled (noTty: %s)', async noTty => {
+    const prompter = new Inquirerer({ ...mockTerminal(), noTty, useDefaults: true });
+    const inputs: Question[] = [
+      ...questions().map(question => ({ ...question, dependsOn: ['role'], when: () => false })),
+      { name: 'hidden', type: 'text', required: true, dependsOn: ['role'], when: () => false },
+      { name: 'unused', type: 'text', default: 'unused', dependsOn: ['role'], when: () => false },
+      { name: 'shown', type: 'text', required: true, default: 'shown', dependsOn: ['role'],
+        when: answers => answers.role === 'editor' },
+      { name: 'role', type: 'text', required: true, default: 'editor' },
+    ];
+    try {
+      await expect(prompter.prompt({ ...flags }, inputs))
+        .resolves.toEqual({ ...resolvedFlags, role: 'editor', shown: 'shown' });
+    } finally {
+      prompter.close();
+    }
+  });
+
+  it('preserves supplied flags when a noninteractive answer fails validation', async () => {
+    const prompter = new Inquirerer({ noTty: true, output: new PassThrough() });
+    const argv = { ...flags };
+    const validate = jest.fn(() => false);
+    await expect(prompter.prompt(argv, [
+      ...questions(),
+      { name: 'extra', type: 'text', default: 'invalid', validate },
+    ])).rejects.toThrow('Missing required arguments');
+    expect(validate).toHaveBeenCalledTimes(1);
+    expect(argv).toMatchObject(resolvedFlags);
+  });
+
+  it.each(['TTY', 'noTty', 'useDefault', 'useDefaults'])(
+    'resolves aliases for every flag type without falling back to defaults (%s)',
+    async path => {
+      const noTty = path === 'noTty';
+      const terminal = mockTerminal(['typed']);
+      const prompter = new Inquirerer({ ...terminal, noTty, useDefaults: path === 'useDefaults' });
+      const inputs = questions().map(question => ({ ...question, alias: 'alias-' + question.name }));
+      const aliases = Object.fromEntries(Object.entries(flags).map(([key, value]) => ['alias-' + key, value]));
+      const argv = { ...aliases };
+      try {
+        await expect(prompter.prompt(argv, [
+          ...inputs,
+          { name: 'extra', type: 'text', required: true, default: 'default', message: 'Read the missing answer',
+            useDefault: path === 'useDefault' },
+        ], { mutateArgs: false })).resolves.toEqual({
+          ...resolvedFlags,
+          extra: path === 'TTY' ? 'typed' : 'default',
+        });
+        expect(argv).toEqual(aliases);
+        expect(terminal.prompts()).toBe(path === 'TTY' ? 1 : 0);
+      } finally {
+        prompter.close();
+      }
+    }
+  );
 });

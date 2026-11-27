@@ -482,15 +482,17 @@ export class Inquirerer {
     // first loop through the question, and set any overrides in case other questions use objs for validation
     this.applyOverrides(obj, obj, questions);
 
+    const ordered = reorderQuestionsByDeps(questions);
+
     // Check for required arguments when no terminal is available (non-interactive mode)
-    if (this.noTty && this.hasMissingRequiredArgs(questions, obj)) {
+    if (this.noTty && this.hasMissingRequiredArgs(ordered, obj)) {
 
       // Apply default values for all questions
-      this.applyDefaultValues(questions, obj);
+      this.applyDefaultValues(ordered, obj);
 
       // Recheck for missing required arguments after applying defaults
       // NOT so sure this would ever happen, but possible if developer did something wrong
-      if (!this.hasMissingRequiredArgs(questions, obj)) {
+      if (!this.hasMissingRequiredArgs(ordered, obj)) {
         return obj as T;  // Return the updated object if no required arguments are missing
       }
 
@@ -500,8 +502,6 @@ export class Inquirerer {
     }
 
 
-
-    const ordered = reorderQuestionsByDeps(questions);
 
     for (let index = 0; index < ordered.length; index++) {
       const question = ordered[index];
@@ -577,7 +577,8 @@ export class Inquirerer {
   }
 
   private hasMissingRequiredArgs(questions: Question[], argv: any): boolean {
-    return questions.some(question => question.required && this.isEmptyAnswer(argv[question.name]));
+    return questions.some(question => question.required && this.isEmptyAnswer(argv[question.name])
+      && (!question.when || question.when(argv)));
   }
 
   /**
@@ -737,7 +738,7 @@ export class Inquirerer {
 
   private applyDefaultValues(questions: Question[], obj: any): void {
     questions.forEach(question => {
-      if ('default' in question && !(question.name in obj)) {
+      if ('default' in question && !(question.name in obj) && (!question.when || question.when(obj))) {
         obj[question.name] = this.defaultAnswer(question);
       }
     });
