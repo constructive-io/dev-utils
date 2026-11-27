@@ -343,7 +343,8 @@ async function renderEntry(
     if (!url || !http(url)) return href;
     return rewrite ? twinLink(markdownHref(url), source, files) : markdownHref(url);
   };
-  let body = rule?.content === 'omit' ? '' : renderPageBody($, content, pipeline.htmlToMarkdown, override?.body);
+  let body = rule?.content === 'omit' ? '' :
+    renderPageBody($, content, (html) => pipeline.htmlToMarkdown.call(pipeline, html), override?.body);
   const context: RenderContext = { page, subject, body, twinHref: resolveLink };
   if (typeof renderer === 'function' && rule?.content !== 'omit') body = await renderer(context);
   if (tree.hooks?.transformMarkdown && rule?.content !== 'omit') {

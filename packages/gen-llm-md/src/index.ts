@@ -123,7 +123,7 @@ export async function planGeneration(config: Config): Promise<Generation> {
       else node.removeAttr(attr);
     });
     collapseAdjacentImages($);
-    const body = clean(renderPageBody($, content, pipeline.htmlToMarkdown, override?.body));
+    const body = clean(renderPageBody($, content, (html) => pipeline.htmlToMarkdown.call(pipeline, html), override?.body));
     if (!primary.length && override?.body === undefined && !heading && !body) continue;
     const id = entity && urlFor(entity['@id'], page.url);
     const schema = entity ? { type: types(entity).join(', '), id: id && allowed(id) ? id : undefined } : undefined;

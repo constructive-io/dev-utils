@@ -23,6 +23,20 @@ beforeEach(() => {
 afterEach(() => fs.rmSync(outDir, { recursive: true, force: true }));
 
 test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
+  "keeps the custom converter receiver with tree=%p",
+  async (tree) => {
+    const pipeline = {
+      htmlToMarkdown() {
+        return this.marker;
+      },
+      marker: "Custom converter content.",
+    };
+    await generate({ outDir, siteUrl, tree, pipeline });
+    assert.match(read("index.md"), /Custom converter content\./);
+  }
+);
+
+test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
   "keeps marked HTML usage citations after an authored body with tree=%p",
   async (tree) => {
     write("guide.html", `<main><h1>Guide</h1><p>Rendered body is replaced.</p>
