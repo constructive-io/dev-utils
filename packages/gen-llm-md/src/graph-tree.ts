@@ -42,7 +42,7 @@ export function deriveGraphTree(
     for (const [key, entity] of local) if (!nodes.has(key)) nodes.set(key, { entity, page });
     const matchesRoute = (value: unknown, allowFragment = true) => {
       const url = urlFor(value, page.url);
-      return url?.origin === page.url.origin && routeKey(url.pathname) === route &&
+      return url?.origin === page.url.origin && routeKey(url.pathname) === routeKey(page.url.pathname) &&
         (allowFragment || ['', '#page', '#webpage', '#home', '#profilepage'].includes(url.hash.toLowerCase()));
     };
     const matched = page.jsonld.filter((entity) =>
@@ -124,7 +124,8 @@ export function deriveGraphTree(
         if (!target || !name(target.entity) ||
             !schemaTypes(target.entity).some((type) => rules.context?.types.includes(type))) continue;
         const url = urlFor(target.entity.url, target.page.url);
-        if (url?.origin === page.url.origin && rows.has(routeKey(url.pathname))) continue;
+        if (url && [...rows.values()].some(({ page }) =>
+          url.origin === page.url.origin && routeKey(url.pathname) === routeKey(page.url.pathname))) continue;
         const external = url && http(url) && url.origin !== page.url.origin;
         const tier = external ? rules.context.external ?? 'optional' : 'child';
         if (tier === 'omit') continue;

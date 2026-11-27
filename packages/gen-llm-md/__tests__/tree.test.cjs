@@ -79,6 +79,27 @@ test("derives public twins, graph parents and contextual entries without an enti
   assert.deepEqual(result.twins.map(({ file }) => file).sort(), ["first.md", "index.md", "plain.md", "second.md", "widget.md"]);
 });
 
+test("matches JSON-LD documents and local targets under a site path prefix", async () => {
+  const prefixed = siteUrl + "/docs/";
+  const subject = entity("widget", "Product summary.", { mentions: [{ "@id": id("alias") }] });
+  const alias = entity("alias", "Duplicate context.", { url: prefixed + "widget" });
+  page("widget", [{ "@type": "WebPage", "@id": prefixed + "widget#page", mainEntity: { "@id": id("widget") } },
+    subject, alias]);
+  await generate({
+    outDir, siteUrl: prefixed,
+    tree: {
+      sections: [
+        { key: "products", title: "Products", rank: 0, types: ["SoftwareApplication"] },
+        { key: "other", title: "Other", rank: 1 },
+      ],
+      graph: { context: { relations: ["mentions"], types: ["SoftwareApplication"] } },
+    },
+  });
+  const index = read("llms.txt");
+  assert.match(index, /## Products\n\n- \[widget\]\(https:\/\/example\.com\/docs\/widget\.md\): Product summary\./);
+  assert.doesNotMatch(index, /Duplicate context/);
+});
+
 test("curates a ranked multilevel tree and does not generate twins for contextual, excluded, or unplaced routes", async () => {
   page("parent", [entity("parent", "Project overview.")]);
   page("item", [entity("item", "The useful project.", { isPartOf: { "@id": id("parent") } })]);
