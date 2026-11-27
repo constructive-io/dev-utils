@@ -217,6 +217,22 @@ describe('answer resolution', () => {
     expect(argv).toMatchObject(resolvedFlags);
   });
 
+  it.each([true, false])('sanitizes and validates noTty defaults even when a required question is disabled (valid: %s)', async valid => {
+    const prompter = new Inquirerer({ noTty: true, output: new PassThrough() });
+    const validate = jest.fn(answer => valid && answer === 'clean');
+    const result = prompter.prompt({ label: flags.label }, [
+      { name: 'disabled', type: 'text', required: true, when: () => false },
+      { name: 'extra', type: 'text', default: ' clean ', sanitize: answer => answer.trim(), validate },
+      ...questions().slice(0, 1),
+    ]);
+    if (valid) {
+      await expect(result).resolves.toEqual({ label: flags.label, extra: 'clean' });
+    } else {
+      await expect(result).rejects.toThrow('Missing required arguments');
+    }
+    expect(validate).toHaveBeenCalledTimes(1);
+  });
+
   it('resolves dependency defaults before checking a required condition in noTty mode', async () => {
     const prompter = new Inquirerer({ noTty: true });
     await expect(prompter.prompt({}, [
@@ -250,6 +266,30 @@ describe('answer resolution', () => {
         message: 'Read the missing answer',
         sanitize: (options: OptionValue[]) => options.filter(option => option.selected).map(option => option.value),
       }])).resolves.toEqual({ features: ['search'] });
+    } finally {
+      prompter.close();
+    }
+  });
+
+  it('retries a required interactive checkbox when sanitization clears its selections', async () => {
+    const terminal = mockTerminal(['', ''], '\r');
+    const prompter = new Inquirerer(terminal);
+    const sanitize = jest.fn((options: OptionValue[]) => options)
+      .mockImplementationOnce(options => options.map((option: OptionValue) => ({ ...option, selected: false })));
+    try {
+      await expect(prompter.prompt({}, [{
+        name: 'features',
+        type: 'checkbox',
+        options: ['search', 'reporting'],
+        default: ['search'],
+        required: true,
+        returnFullResults: true,
+        message: 'Read the missing answer',
+        sanitize,
+      }])).resolves.toEqual({
+        features: [...defaults.features, { name: 'reporting', value: 'reporting', selected: false }],
+      });
+      expect(terminal.prompts()).toBe(2);
     } finally {
       prompter.close();
     }
