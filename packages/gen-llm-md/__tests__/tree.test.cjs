@@ -100,6 +100,20 @@ test("matches JSON-LD documents and local targets under a site path prefix", asy
   assert.doesNotMatch(index, /Duplicate context/);
 });
 
+test("keeps untitled graph-mode pages using the graph name or route slug", async () => {
+  write("catalog/named.html", graph(entity("Graph name", "Public item.", {
+    mainEntityOfPage: siteUrl + "/catalog/named",
+  })) + "<main><p>Known item.</p></main>");
+  write("catalog/untitled.html", "<main><p>Entry without title metadata.</p></main>");
+  await generate({
+    outDir, siteUrl,
+    tree: { sections: [{ key: "pages", title: "Pages", rank: 0 }], graph: {} },
+  });
+  assert.match(read("catalog/named.md"), /^# Graph name\n/);
+  assert.match(read("catalog/untitled.md"), /^# untitled\n/);
+  assert.match(read("llms.txt"), /\[untitled\]\(https:\/\/example\.com\/catalog\/untitled\.md\)/);
+});
+
 test("curates a ranked multilevel tree and does not generate twins for contextual, excluded, or unplaced routes", async () => {
   page("parent", [entity("parent", "Project overview.")]);
   page("item", [entity("item", "The useful project.", { isPartOf: { "@id": id("parent") } })]);

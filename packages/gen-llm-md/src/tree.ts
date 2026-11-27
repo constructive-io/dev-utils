@@ -238,7 +238,10 @@ export async function planTree(config: Config, tree: TreeOptions, pipeline: Pipe
     entry.subjectBase = page?.url ?? located?.base;
     entry.title = policy.clean(text(row.title || entry.override?.title || entry.native?.title || name(subject) ||
       page?.$('h1').first().text() || page?.$('title').first().text()));
-    if (!entry.title) throw new Error(`Missing title for tree placement: ${row.key}`);
+    if (!entry.title) {
+      if (!derived || !page) throw new Error(`Missing title for tree placement: ${row.key}`);
+      entry.title = policy.clean(route?.split('/').at(-1) ?? '') || site.title;
+    }
     const summaries = [row.summary, entry.override?.description, entry.native?.description, text(subject?.description)];
     entry.summary = summaries.map((value) => policy.clean(text(value))).find((value) =>
       value && (route === '' || !commonSummary.has(value.toLowerCase()))) ?? '';
