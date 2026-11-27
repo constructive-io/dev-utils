@@ -1,6 +1,6 @@
 import { PassThrough } from 'stream';
 
-import { Inquirerer, Question } from '../src';
+import { Inquirerer, OptionValue, Question } from '../src';
 
 function questions(): Question[] {
   return [
@@ -215,6 +215,44 @@ describe('answer resolution', () => {
     ])).rejects.toThrow('Missing required arguments');
     expect(validate).toHaveBeenCalledTimes(1);
     expect(argv).toMatchObject(resolvedFlags);
+  });
+
+  it('resolves dependency defaults before checking a required condition in noTty mode', async () => {
+    const prompter = new Inquirerer({ noTty: true });
+    await expect(prompter.prompt({}, [
+      { name: 'role', type: 'text', required: true, default: 'editor', dependsOn: ['settings'],
+        when: answers => answers.settings.enabled },
+      { name: 'settings', type: 'json', default: { enabled: true } },
+    ])).resolves.toEqual({ settings: { enabled: true }, role: 'editor' });
+  });
+
+  it('rejects but does not replace a supplied empty flag when a default activates its requirement', async () => {
+    const prompter = new Inquirerer({ noTty: true, output: new PassThrough() });
+    const argv = { role: '' };
+    await expect(prompter.prompt(argv, [
+      { name: 'role', type: 'text', required: true, default: 'editor', dependsOn: ['enabled'],
+        when: answers => answers.enabled === true },
+      { name: 'enabled', type: 'confirm', default: true },
+    ])).rejects.toThrow('Missing required arguments');
+    expect(argv.role).toBe('');
+  });
+
+  it('accepts a required interactive checkbox after sanitizing selections to IDs', async () => {
+    const prompter = new Inquirerer(mockTerminal([''], '\r'));
+    try {
+      await expect(prompter.prompt({}, [{
+        name: 'features',
+        type: 'checkbox',
+        options: ['search', 'reporting'],
+        default: ['search'],
+        required: true,
+        returnFullResults: true,
+        message: 'Read the missing answer',
+        sanitize: (options: OptionValue[]) => options.filter(option => option.selected).map(option => option.value),
+      }])).resolves.toEqual({ features: ['search'] });
+    } finally {
+      prompter.close();
+    }
   });
 
   it.each(['TTY', 'noTty', 'useDefault', 'useDefaults'])(
