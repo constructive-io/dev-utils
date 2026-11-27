@@ -187,5 +187,10 @@ export function htmlToMarkdown(html: string): string {
   });
   flattenLayoutTables($);
   normalizeRoleTables($);
+  $('a[href]').each((_, link) => {
+    let next = link.next;
+    while (next?.type === 'comment') next = next.next;
+    if (next?.type === 'tag' && next.name === 'a' && next.attribs.href !== undefined) $(link).after(' ');
+  });
   return converter.translate($.root().html() ?? '').trim();
 }

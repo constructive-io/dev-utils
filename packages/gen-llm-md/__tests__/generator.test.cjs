@@ -72,6 +72,22 @@ test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }],
   }
 );
 
+test.each([undefined, { sections: [{ key: "guides", title: "Guides", rank: 0 }], graph: {} }])(
+  "separates adjacent sibling links without changing inline punctuation with tree=%p",
+  async (tree) => {
+    write("guide.html", `<main><h1>Guide</h1>
+      <div><a href="/website"><span>Website</span></a><a href="/source">Source</a><!-- gap --><a href="/package">Package</a></div>
+      <p>See (<a href="/docs">the docs</a>).</p>
+      <p><a href="/one">One</a>, <a href="/two">Two</a>.</p>
+    </main>`);
+    await generate({ outDir, siteUrl, tree });
+    const twin = read("guide.md");
+    assert.ok(twin.includes(`[Website](${siteUrl}/website) [Source](${siteUrl}/source) [Package](${siteUrl}/package)`));
+    assert.ok(twin.includes(`See ([the docs](${siteUrl}/docs)).`));
+    assert.ok(twin.includes(`[One](${siteUrl}/one), [Two](${siteUrl}/two).`));
+  }
+);
+
 test("refuses symlinked artifact files and parent directories before writing", () => {
   const outside = fs.mkdtempSync(join(tmpdir(), "llms-outside-"));
   try {
