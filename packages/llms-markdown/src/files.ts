@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { constants, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, sep } from 'node:path';
 
 import type { Artifact, ExportPage, Twin } from './types';
@@ -24,11 +24,23 @@ function safePath(file: string) {
   return file;
 }
 
+function artifactPath(outDir: string, file: string) {
+  const segments = safePath(file).split('/');
+  let target = outDir;
+  for (const segment of ['', ...segments]) {
+    target = join(target, segment);
+    if (lstatSync(target, { throwIfNoEntry: false })?.isSymbolicLink()) {
+      throw new Error(`Refusing to follow artifact symlink: ${target}`);
+    }
+  }
+  return target;
+}
+
 export function writeArtifacts(outDir: string, artifacts: readonly Artifact[]) {
-  for (const { file, contents } of artifacts) {
-    const target = join(outDir, safePath(file));
+  const targets = artifacts.map(({ file, contents }) => ({ target: artifactPath(outDir, file), contents }));
+  for (const { target, contents } of targets) {
     mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, contents);
+    writeFileSync(target, contents, { flag: constants.O_CREAT | constants.O_TRUNC | constants.O_WRONLY | constants.O_NOFOLLOW });
   }
 }
 
@@ -52,8 +64,7 @@ export function planManifest(outDir: string, twins: readonly Twin[], stale: Stal
       if (typeof route !== 'string' || typeof file !== 'string' || !file.endsWith('.md')) {
         throw new Error(`Invalid twin manifest entry: ${previous}`);
       }
-      safePath(file);
-      const path = join(outDir, file);
+      const path = artifactPath(outDir, file);
       if (files.has(file) || (existsSync(path) && digest(readFileSync(path)) !== sha256)) continue;
       files.add(file);
       const contents = typeof stale.unavailable === 'function'

@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const { tmpdir } = require("node:os");
 const { dirname, join, resolve } = require("node:path");
 
-const { flattenLayoutTables, generate, manifestFile, planGeneration } = require("../dist");
+const { flattenLayoutTables, generate, manifestFile, planGeneration, writeArtifacts } = require("../dist");
 
 const siteUrl = "https://example.com";
 let outDir;
@@ -21,6 +21,22 @@ beforeEach(() => {
   write("index.html", "<main><h1>Home</h1></main>");
 });
 afterEach(() => fs.rmSync(outDir, { recursive: true, force: true }));
+
+test("refuses symlinked artifact files and parent directories before writing", () => {
+  const outside = fs.mkdtempSync(join(tmpdir(), "llms-outside-"));
+  try {
+    const protectedFile = join(outside, "protected.md");
+    fs.writeFileSync(protectedFile, "untouched");
+    fs.symlinkSync(protectedFile, join(outDir, "leaf.md"));
+    fs.symlinkSync(outside, join(outDir, "nested"), "dir");
+    for (const file of ["leaf.md", "nested/protected.md"]) {
+      assert.throws(() => writeArtifacts(outDir, [{ file, contents: "overwrite" }]), /artifact symlink/);
+    }
+    assert.equal(fs.readFileSync(protectedFile, "utf8"), "untouched");
+  } finally {
+    fs.rmSync(outside, { recursive: true, force: true });
+  }
+});
 
 test("uses canonical site and page identities, preserves the body, and indexes trailing-slash exports", async () => {
   write("index.html", graph(
