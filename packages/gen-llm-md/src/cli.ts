@@ -5,7 +5,7 @@ import { parseArgs } from 'node:util';
 
 import { type Config, generate, planGeneration } from './index';
 
-const usage = 'Usage: gen-llm-md generate [--dir out] [--site-url https://example.com] [--exclude /preview] [--config ./llms.config.mjs] [--dry-run]';
+const usage = 'Usage: gen-llm-md generate [--dir out] [--site-url https://example.com] [--exclude /preview] [--config ./llms.config.mjs] [--previous-manifest ./last-export.json] [--dry-run]';
 
 async function main() {
   const { values, positionals } = parseArgs({
@@ -15,6 +15,7 @@ async function main() {
       'site-url': { type: 'string' },
       exclude: { type: 'string', multiple: true },
       config: { type: 'string' },
+      'previous-manifest': { type: 'string' },
       'dry-run': { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
     },
@@ -32,6 +33,7 @@ async function main() {
   const config: Config = {
     ...options, siteUrl, outDir: values.dir ?? options.outDir ?? 'out',
     exclude: [...(options.exclude ?? []), ...(values.exclude ?? [])],
+    stale: values['previous-manifest'] ? { ...options.stale, previousManifest: values['previous-manifest'] } : options.stale,
   };
   if (values['dry-run']) {
     const { artifacts } = await planGeneration(config);

@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "cheerio": "^1.2.0",
+    "micromark": "^4.0.2",
     "node-html-markdown": "^2.0.0"
   },
   "devDependencies": {
